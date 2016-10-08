@@ -11,17 +11,30 @@
     <div class = "row">
         <div class = "col-md-3 col-md-offset-1">
             <div class = "panel panel-default">
-                TIME
+                <div class = "panel-body">
+                    <div class="radio">
+                        <div class="radio">
+                            <label><input type="radio" name="optradio">Today (mm/dd/yyyy)</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio">Tomorrow (mm/dd/yyyy)</label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class = "panel panel-default">
-                BLDGS AND ROOMS
+                <div class = "panel-body">
+                    BLDGS AND ROOMS
+                </div>
             </div>
         </div>
 
         <div class = "col-md-7">
             <div class = "panel panel-default">
-                SLOTS
+                <div class = "panel-body">
+                    SLOTS
+                </div>
             </div>
         </div>
     </div>
