@@ -1,1 +1,0 @@
-http://www.kodingmadesimple.com/2014/06/integrate-twitter-bootstrap3-with-codeigniter-framework.html

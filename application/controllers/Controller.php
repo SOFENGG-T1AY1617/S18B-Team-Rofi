@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include_once ('/../views/InnerViews/InnerViewList.php');
 
-class Welcome extends CI_Controller {
+class Controller extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,6 +21,22 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+		$this->home();
 	}
+
+	public function home()
+    {
+        //$this->load->model('');
+
+        /*
+         * PART WHERE YOU RETRIEVE DATA FROM THE DATABASE USING THE MODEL
+         * $data['data-name'] = value;
+         */
+
+
+
+        $this->load->view('template/header'); // include bootstrap 3 header
+        $this->load->view('home'); // $this->load->view('home', $data); set to this if data is set
+        $this->load->view('template/footer'); // include bootstrap 3 footer
+    }
 }
