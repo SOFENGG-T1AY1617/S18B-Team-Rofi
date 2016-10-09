@@ -14,10 +14,10 @@
                 <div class = "panel-body">
                     <div class="radio">
                         <div class="radio">
-                            <label><input type="radio" name="optradio">Today (mm/dd/yyyy)</label>
+                            <label><input type="radio" name="optradio">Today (<?=date("m-d-Y")?>)</label>
                         </div>
                         <div class="radio">
-                            <label><input type="radio" name="optradio">Tomorrow (mm/dd/yyyy)</label>
+                            <label><input type="radio" name="optradio">Tomorrow (<?=date("m-d-Y", strtotime("tomorrow"))?>)</label>
                         </div>
                     </div>
                 </div>
