@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>Computer Reservation</title>
 
     <!-- Bootstrap -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -27,19 +27,11 @@
         var currentStep = 1;
 
         function nextStep () {
-            $("#step"+currentStep).hide();
 
-            currentStep++;
-
-            $("#step"+currentStep).show();
         }
 
         function prevStep () {
-            $("#step"+currentStep).hide();
 
-            currentStep--;
-
-            $("#step"+currentStep).show();
         }
 
         $(function () { // put functions in respective buttons
@@ -53,12 +45,6 @@
             });
 
         });
-
-
-        $(document).ready(function () {
-            $("#step2").hide();
-            $("#step3").hide();
-        })
     </script>
 </head>
 <body>

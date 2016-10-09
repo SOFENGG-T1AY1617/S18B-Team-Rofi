@@ -4,9 +4,13 @@
  * User: Patrick
  * Date: 10/8/2016
  * Time: 3:41 PM
- */?>
+ */
 
-<div id = "step3" class="step">
+$stepNo = 3;
+
+?>
+
+<div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
 
     <div class = "row">
         <div class = "col-md-10 col-md-offset-1">

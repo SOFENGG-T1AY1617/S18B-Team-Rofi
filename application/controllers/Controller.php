@@ -38,7 +38,7 @@ class Controller extends CI_Controller {
          * $data['data-name'] = value;
          */
 
-
+        $data['tab'] = 1;
 
         $this->load->view('template/header'); // include bootstrap 3 header
         $this->load->view('home', $data); // $this->load->view('home', $data); set to this if data is set

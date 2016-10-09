@@ -20,6 +20,9 @@ function addSteps ($stepsList) {
         include $stepsList->getInnerView ($i);
     }
 }*/
+
+$defaultTab = 1;
+
 ?>
 
 <div class="container">
@@ -28,19 +31,33 @@ function addSteps ($stepsList) {
         <div id = "tabs" class="row" style="margin-bottom: 20px">
             <div class = "col-md-12">
                 <ul class="nav nav-tabs nav-justified">
-                   <li role="presentation" class="active"><a href="#">Step 1 : Choose a time slot</a></li>
-                   <li role="presentation" class="disabled"><a href="#">Step 2 : Provide your personal information</a></li>
-                    <li role="presentation" class="disabled"><a href="#">Final Step : Email Confirmation</a></li>
+
+                   <li role="presentation" class="tab_1 active">
+                       <a href="#">Step 1 : Choose a time slot</a>
+                   </li>
+
+                   <li role="presentation" class="tab_2 disabled">
+                       <a href="#">Step 2 : Provide your personal information</a>
+                   </li>
+
+                    <li role="presentation" class="tab_3 disabled">
+                        <a href="#">Final Step : Email Confirmation</a>
+                    </li>
+
                 </ul>
             </div>
         </div>
-
-        <?php
+        <div class="tab-content">
+            <?php
             //addSteps($stepsList);
+
+            $tab = (isset($tab)) ? $tab : 'tab' . $defaultTab;
+
             $this->load->view('InnerViews/step1.php', $data);
             $this->load->view('InnerViews/step2.php', $data);
             $this->load->view('InnerViews/step3.php', $data);
-        ?>
+            ?>
+        </div>
 
     </div>
 

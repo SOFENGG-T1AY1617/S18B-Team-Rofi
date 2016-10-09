@@ -4,9 +4,31 @@
  * User: Patrick
  * Date: 10/8/2016
  * Time: 3:41 PM
- */?>
+ */
 
-<div id = "step1" class="step">
+$stepNo = 1;
+
+?>
+
+<script type = "text/javascript">
+
+    $(function () { // put functions in respective buttons
+
+        $('.pager li.nextStep_<?php echo $stepNo ?>').on('click', function () { // for next step
+            if ($(this).hasClass('active'))
+                $(this).removeClass('active');
+
+            $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
+            $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
+
+            $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
+        });
+
+    });
+
+</script>
+
+<div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
 
     <div class = "row">
         <div class = "col-md-3 col-md-offset-1">
@@ -48,8 +70,12 @@
 
         <div class = "col-md-3 col-md-offset-8">
             <ul class="pager">
-                <!--<li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>-->
-                <li rel = "step1" class="next"><a href="#">Proceed to next step <span aria-hidden="true">&rarr;</span></a></li>
+                <!--<li class="previous prevStep_</?php echo $stepNo ?>">
+                    <a href="#tab_1_</?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
+                </li>-->
+                <li class="nextStep_<?php echo $stepNo ?>">
+                    <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                </li>
             </ul>
         </div>
 
