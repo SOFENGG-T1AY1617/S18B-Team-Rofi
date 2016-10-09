@@ -26,6 +26,11 @@
             <div class = "panel panel-default">
                 <div class = "panel-body">
                     BLDGS AND ROOMS
+                    <?php foreach($rooms as $row):?>
+                    <br>
+                    <?=$row->roomid?>
+                    <?=$row->name?>
+                    <?php endforeach;?>
                 </div>
             </div>
         </div>

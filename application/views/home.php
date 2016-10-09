@@ -1,6 +1,6 @@
 <?php
 
-include_once ("/InnerViews/InnerViewList.php");
+//include_once ("/InnerViews/InnerViewList.php");
 
 /**
  * Created by PhpStorm.
@@ -9,7 +9,7 @@ include_once ("/InnerViews/InnerViewList.php");
  * Time: 1:44 PM
  */
 
-$stepsList = new InnerViewList();
+/*$stepsList = new InnerViewList();
 
 $stepsList -> addInnerView('InnerViews/step1.php');
 $stepsList -> addInnerView('InnerViews/step2.php');
@@ -19,8 +19,7 @@ function addSteps ($stepsList) {
     for ($i = 0; $i < $stepsList->getSize(); $i++ ) {
         include $stepsList->getInnerView ($i);
     }
-}
-
+}*/
 ?>
 
 <div class="container">
@@ -37,7 +36,10 @@ function addSteps ($stepsList) {
         </div>
 
         <?php
-            addSteps($stepsList);
+            //addSteps($stepsList);
+            $this->load->view('InnerViews/step1.php', $data);
+            $this->load->view('InnerViews/step2.php', $data);
+            $this->load->view('InnerViews/step3.php', $data);
         ?>
 
     </div>
