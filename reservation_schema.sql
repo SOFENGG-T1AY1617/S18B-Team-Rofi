@@ -1,11 +1,22 @@
 DROP SCHEMA IF EXISTS `reservation_system`;
 CREATE SCHEMA `reservation_system`;
 
+CREATE TABLE `reservation_system`.`buildings` (
+  `buildingid` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`buildingid`));
+
 CREATE TABLE `reservation_system`.`rooms` (
   `roomid` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
-  `building` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`roomid`));
+  `buildingid` INT NOT NULL,
+  PRIMARY KEY (`roomid`),
+  INDEX `buildingid_idx` (`buildingid` ASC),
+  CONSTRAINT `buildingid`
+    FOREIGN KEY (`buildingid`)
+    REFERENCES `reservation_system`.`buildings` (`buildingid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
 CREATE TABLE `reservation_system`.`computers` (
   `computerid` INT NOT NULL AUTO_INCREMENT,
@@ -62,10 +73,15 @@ CREATE TABLE `reservation_system`.`reservations` (
 
 
 /*dummy data*/
+INSERT INTO `reservation_system`.`buildings` (`name`)
+VALUES ("Gokongwei Hall"),
+	   ("Henry Sy Sr. Hall"),
+	   ("Miguel Hall"),
+	   ("Saint Joseph Hall");
 
-INSERT INTO `reservation_system`.`rooms` (`name`, `building`)
-VALUES ("G202A", "Gokongwei"),
-	   ("G202B", "Gokongwei");
+INSERT INTO `reservation_system`.`rooms` (`name`, `buildingid`)
+VALUES ("G202A", 1),
+	   ("G202B", 1);
 
 INSERT INTO `reservation_system`.`computers` (`computerno`, `roomid`)
 VALUES (1, 1),
