@@ -47,14 +47,16 @@ class ReservationSystem_Model extends CI_Model
              FROM computers NATURAL JOIN 
               (SELECT roomid
                FROM rooms
-               WHERE name = $name)")->result();
+               WHERE name = $name) t1")->result();
     }
 
     function queryComputersAtRoomID($id) {
         return $this->db->query(
             "SELECT * 
-             FROM computers NATURAL JOIN rooms
-             WHERE roomid = $id")->result();
+             FROM computers NATURAL JOIN 
+              (SELECT roomid
+               FROM rooms
+               WHERE roomid = $id) t1")->result();
     }
 
     function queryAllBuildings() {
@@ -65,17 +67,17 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->query(
             "SELECT * 
              FROM rooms NATURAL JOIN 
-              (SELECT roomid
+              (SELECT buildingid
                FROM buildings
-               WHERE buildingid = $id)")->result();
+               WHERE buildingid = $id) t1")->result();
     }
 
     function queryAllRoomsAtBuildingName($name) {
         return $this->db->query(
             "SELECT * 
              FROM rooms NATURAL JOIN 
-              (SELECT roomid
+              (SELECT buildingid
                FROM buildings
-               WHERE name = $name)")->result();
+               WHERE name = $name) t1")->result();
     }
 }
