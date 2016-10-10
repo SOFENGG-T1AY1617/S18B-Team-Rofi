@@ -20,12 +20,12 @@ CREATE TABLE `reservation_system`.`computers` (
     ON UPDATE NO ACTION);
 
 CREATE TABLE `reservation_system`.`colleges` (
-  `collegeid` INT NOT NULL,
+  `collegeid` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`collegeid`));
 
 CREATE TABLE `reservation_system`.`types` (
-  `typeid` INT NOT NULL,
+  `typeid` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`typeid`));
 
@@ -98,7 +98,7 @@ VALUES ("College of Business"),
 	   ("College of Liberal Arts"),
 	   ("College of Science");
 
-INSERT INTO `reservation_system`.`types` (`name`)
+INSERT INTO `reservation_system`.`types` (`type`)
 VALUES ("Senior High School"),
 	   ("Undergraduate"),
 	   ("Graduate"),
