@@ -53,9 +53,9 @@ $defaultTab = 1;
 
             $tab = (isset($tab)) ? $tab : 'tab' . $defaultTab;
 
-            $this->load->view('InnerViews/step1.php', $data);
-            $this->load->view('InnerViews/step2.php', $data);
-            $this->load->view('InnerViews/step3.php', $data);
+            $this->load->view('InnerViews/step1.php', $step1);
+            $this->load->view('InnerViews/step2.php', $step1);
+            $this->load->view('InnerViews/step3.php', $step1);
             ?>
         </div>
 

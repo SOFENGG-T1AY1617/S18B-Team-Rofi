@@ -28,15 +28,7 @@ class Controller extends CI_Controller {
     {
         $this->load->model('reservationsystem_model');
 
-        $data['data']['rooms'] = $this->reservationsystem_model->queryRooms();
-        //$data['step1'] = $this->load->view('InnerViews/step1', $data, true);
-
-        //$this->load->model('');
-
-        /*
-         * PART WHERE YOU RETRIEVE DATA FROM THE DATABASE USING THE MODEL
-         * $data['data-name'] = value;
-         */
+        $data['step1']['buildings'] = $this->reservationsystem_model->queryAllBuildings();
 
         $data['tab'] = 1;
 

@@ -10,7 +10,7 @@
 
 class ReservationSystem_Model extends CI_Model
 {
-    const TABLE_ROOMS = "rooms";
+    /*const TABLE_ROOMS = "rooms";
     const COLUMN_ROOMID = "roomid";
     const COLUMN_NAME = "name";
     const COLUMN_BUILDING = "building";
@@ -25,7 +25,7 @@ class ReservationSystem_Model extends CI_Model
     const COLUMN_RESERVEDATETIME = "reservedatetime";
     const COLUMN_COLLEGE = "college";
     const COLUMN_VERIFIED = "verified";
-    const COLUMN_VERFICATIONCODE = "verificationcode";
+    const COLUMN_VERFICATIONCODE = "verificationcode";*/
 
     public function __construct()
     {
@@ -47,7 +47,7 @@ class ReservationSystem_Model extends CI_Model
              FROM computers NATURAL JOIN 
               (SELECT roomid
                FROM rooms
-               WHERE COLUMN_NAME = $name)")->result();
+               WHERE name = $name)")->result();
     }
 
     function queryComputersAtRoomID($id) {
@@ -55,5 +55,27 @@ class ReservationSystem_Model extends CI_Model
             "SELECT * 
              FROM computers NATURAL JOIN rooms
              WHERE roomid = $id")->result();
+    }
+
+    function queryAllBuildings() {
+        return $this->db->get("buildings")->result();
+    }
+
+    function queryAllRoomsAtBuildingID($id) {
+        return $this->db->query(
+            "SELECT * 
+             FROM rooms NATURAL JOIN 
+              (SELECT roomid
+               FROM buildings
+               WHERE buildingid = $id)")->result();
+    }
+
+    function queryAllRoomsAtBuildingName($name) {
+        return $this->db->query(
+            "SELECT * 
+             FROM rooms NATURAL JOIN 
+              (SELECT roomid
+               FROM buildings
+               WHERE name = $name)")->result();
     }
 }

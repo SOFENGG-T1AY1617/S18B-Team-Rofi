@@ -47,12 +47,14 @@ $stepNo = 1;
 
             <div class = "panel panel-default">
                 <div class = "panel-body">
-                    BLDGS AND ROOMS
-                    <?php foreach($rooms as $row):?>
-                    <br>
-                    <?=$row->roomid?>
-                    <?=$row->name?>
-                    <?php endforeach;?>
+                    Building:
+                    <select name="form-building">
+                        <option value="" disabled selected>Select...</option>
+                        <?php foreach($buildings as $row):?>
+                            <option value="<?=$row->buildingid?>"><?=$row->name?></option>
+                        <?php endforeach;?>
+                    </select>
+
                 </div>
             </div>
         </div>
