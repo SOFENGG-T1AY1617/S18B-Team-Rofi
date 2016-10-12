@@ -80,4 +80,12 @@ class ReservationSystem_Model extends CI_Model
                FROM buildings
                WHERE name = $name) t1")->result();
     }
+
+    function queryColleges() {
+        return $this->db->get("colleges")->result();
+    }
+
+    function queryTypes() {
+        return $this->db->get("types")->result();
+    }
 }

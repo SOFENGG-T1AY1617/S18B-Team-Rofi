@@ -1,25 +1,11 @@
 <?php
 
-//include_once ("/InnerViews/InnerViewList.php");
-
 /**
  * Created by PhpStorm.
  * User: Patrick
  * Date: 10/8/2016
  * Time: 1:44 PM
  */
-
-/*$stepsList = new InnerViewList();
-
-$stepsList -> addInnerView('InnerViews/step1.php');
-$stepsList -> addInnerView('InnerViews/step2.php');
-$stepsList -> addInnerView('InnerViews/step3.php');
-
-function addSteps ($stepsList) {
-    for ($i = 0; $i < $stepsList->getSize(); $i++ ) {
-        include $stepsList->getInnerView ($i);
-    }
-}*/
 
 $defaultTab = 1;
 
@@ -49,13 +35,9 @@ $defaultTab = 1;
         </div>
         <div class="tab-content">
             <?php
-            //addSteps($stepsList);
 
             $tab = (isset($tab)) ? $tab : 'tab' . $defaultTab;
 
-            //$this->load->view('InnerViews/step1.php', $step1);
-            //$this->load->view('InnerViews/step2.php', $step1);
-            //$this->load->view('InnerViews/step3.php', $step1);
             ?>
 
             <?php
@@ -72,6 +54,15 @@ $defaultTab = 1;
 
             <script type = "text/javascript">
 
+                $(document).ready(function() {
+                    $("#proceed-to-step2").click(function() {
+                        console.log("clicked");
+                        var date_selected = $("input[name=optradio]:checked").val();
+                        console.log(date_selected);
+                        $("#text-date").text(date_selected);
+                    });
+                });
+
                 $(function () { // put functions in respective buttons
 
                     $('.pager li.nextStep_<?php echo $stepNo ?>').on('click', function () { // for next step
@@ -87,7 +78,7 @@ $defaultTab = 1;
                 });
 
             </script>
-
+<!--Step 1-->
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
 
                 <div class = "row">
@@ -95,11 +86,9 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 <div class="radio">
-                                    <div class="radio">
-                                        <label><input type="radio" name="optradio">Today (<?=date("m-d-Y")?>)</label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input type="radio" name="optradio">Tomorrow (<?=date("m-d-Y", strtotime("tomorrow"))?>)</label>
+                                    <div class="radio" id="radio-date" name="form-date">
+                                        <label><input type="radio" id="radio-today" name="optradio" value="<?=date("m-d-Y")?>"checked>Today (<?=date("m-d-Y")?>)</label>
+                                        <label><input type="radio" id="radio-tomorrow" name="optradio" value="<?=date("m-d-Y", strtotime("tomorrow"))?>">Tomorrow (<?=date("m-d-Y", strtotime("tomorrow"))?>)</label>
                                     </div>
                                 </div>
                             </div>
@@ -108,8 +97,8 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 Building:
-                                <select name="form-building">
-                                    <option value="" disabled selected>Select...</option>
+                                <select class="form-control" name="form-building">
+                                    <option selected disabled>Choose a building...</option>
                                     <?php foreach($buildings as $row):?>
                                         <option value="<?=$row->buildingid?>"><?=$row->name?></option>
                                     <?php endforeach;?>
@@ -136,7 +125,7 @@ $defaultTab = 1;
                                 <a href="#tab_1_</?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>-->
                             <li class="nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="proceed-to-step2">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
                     </div>
@@ -144,6 +133,7 @@ $defaultTab = 1;
                 </div>
 
             </div>
+<!--End of Step 1-->
 
             <?php
             /**
@@ -197,22 +187,22 @@ $defaultTab = 1;
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="college">College:</label> <!-- THIS SHOULDN'T BE HARDCODED -->
-                                    <select class="form-control" id="college">
+                                    <label for="college">College:</label>
+                                    <select class="form-control" name="form-college" id="select-college">
                                         <option selected disabled>Choose your college...</option>
-                                        <option>CCS</option>
-                                        <option>COB</option>
-                                        <option>COS</option>
-                                        <option>CLA</option>
+                                        <?php foreach($colleges as $row):?>
+                                            <option value="<?=$row->collegeid?>"><?=$row->name?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="type">Type:</label>
-                                    <select class="form-control" id="type"> <!-- THIS SHOULDN'T BE HARDCODED -->
+                                    <select class="form-control" name="form-type" id="select-type">
                                         <option selected disabled>Choose your type...</option>
-                                        <option>Student</option>
-                                        <option>Faculty</option>
+                                        <?php foreach($types as $row):?>
+                                            <option value="<?=$row->typeid?>"><?=$row->type?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
 
@@ -221,7 +211,7 @@ $defaultTab = 1;
                                     <input type="email" class="form-control" id="email">
                                 </div>
 
-                                <b>Date:</b> mm/dd/yyyy
+                                <b>Date:</b> <span id="text-date"></span>
                                 <br /><br />
                                 <b>Time Slots:</b>
                                 <div class = "row">
