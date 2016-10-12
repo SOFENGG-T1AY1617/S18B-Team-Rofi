@@ -26,6 +26,10 @@ $stepNo = 1;
 
     });
 
+    function selectBuilding(val){
+        console.log(val);
+    }
+
 </script>
 
 <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
@@ -48,7 +52,7 @@ $stepNo = 1;
             <div class = "panel panel-default">
                 <div class = "panel-body">
                     Building:
-                    <select name="form-building">
+                    <select name="form-building" onchange="selectBuilding(this.value)">
                         <option value="" disabled selected>Select...</option>
                         <?php foreach($buildings as $row):?>
                             <option value="<?=$row->buildingid?>"><?=$row->name?></option>
