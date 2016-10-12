@@ -86,7 +86,7 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 <div class="radio">
-                                    <div class="radio" id="radio-date" name="form-date">
+                                    <div class="radio" id="radio-date">
                                         <label><input type="radio" id="radio-today" name="optradio" value="<?=date("m-d-Y")?>"checked>Today (<?=date("m-d-Y")?>)</label>
                                         <label><input type="radio" id="radio-tomorrow" name="optradio" value="<?=date("m-d-Y", strtotime("tomorrow"))?>">Tomorrow (<?=date("m-d-Y", strtotime("tomorrow"))?>)</label>
                                     </div>
@@ -182,8 +182,8 @@ $defaultTab = 1;
                         <div class = "col-md-3 col-md-offset-2">
                             <form>
                                 <div class="form-group">
-                                    <label for="idno">ID Number:</label>
-                                    <input type="number" class="form-control" id="idno">
+                                    <label for="id-number">ID Number:</label>
+                                    <input type="number" class="form-control" name="form-id" id="id-number">
                                 </div>
 
                                 <div class="form-group">
@@ -208,7 +208,7 @@ $defaultTab = 1;
 
                                 <div class="form-group">
                                     <label for="email">Email:</label>
-                                    <input type="email" class="form-control" id="email">
+                                    <input type="email" class="form-control" name="form-email" id="email">
                                 </div>
 
                                 <b>Date:</b> <span id="text-date"></span>
@@ -218,13 +218,13 @@ $defaultTab = 1;
                                     <div class = "col-md-6">
                                         <div class="form-group">
                                             <label for="starttime">Start:</label>
-                                            <input type="starttime" class="form-control" id="starttime">
+                                            <input type="starttime" class="form-control" name="form-start-time" id="start-time" disabled>
                                         </div>
                                     </div>
                                     <div class = "col-md-6">
                                         <div class="form-group">
                                             <label for="endtime">End:</label>
-                                            <input type="endtime" class="form-control" id="endtime">
+                                            <input type="endtime" class="form-control" name="form-end-time" id="end-time" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@ $defaultTab = 1;
                                 <a href="#tab_1_<?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>
                             <li class="next nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="finish">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
                     </div>
