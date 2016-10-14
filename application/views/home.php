@@ -147,9 +147,15 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 <div class="radio">
-                                    <div class="radio" id="radio-date">
-                                        <label><input type="radio" id="radio-today" name="optradio" value="<?=date("m-d-Y")?>"checked>Today (<?=date("m-d-Y")?>)</label>
-                                        <label><input type="radio" id="radio-tomorrow" name="optradio" value="<?=date("m-d-Y", strtotime("tomorrow"))?>">Tomorrow (<?=date("m-d-Y", strtotime("tomorrow"))?>)</label>
+                                    <div class="radio" id="radio-date" name="form-date">
+                                        <label><input type="radio" id="radio-today" name="optradio" value="<?=date("m-d-Y")?>"checked>
+                                            Today
+                                            <div class = "date-font"> (<?=date("F d, Y")?>) </div>
+                                        </label>
+                                        <label><input type="radio" id="radio-tomorrow" name="optradio" value="<?=date("m-d-Y", strtotime("tomorrow"))?>">
+                                            Tomorrow
+                                            <div class = "date-font"> (<?=date("F d, Y", strtotime("tomorrow"))?>) </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -170,9 +176,28 @@ $defaultTab = 1;
                     </div>
 
                     <div class = "col-md-7">
-                        <div class = "panel panel-default">
-                            <div class = "panel-body">
-                                SLOTS
+                        <div id = "slots" class = "panel panel-default">
+                            <div class = "panel-body nopadding">
+                                <table class = "table table-bordered">
+                                    <tr>
+                                        <th>PC Numbers</th>
+                                        <?php
+                                            foreach ($times as $time) {
+                                                echo "<th>" . date("h:i A", $time) . "</th>";
+                                            }
+                                        ?>
+                                    </tr>
+                                    <!-- LOOP FOR EACH ROOM -->
+                                    <!-- LOOP FOR EACH TIME SLOT -->
+                                    <tr>
+                                        <td>PC NO</td>
+                                        <?php
+                                            foreach ($times as $time) { // if slot.time == $time
+                                                echo "<td></td>";
+                                            }
+                                        ?>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -204,12 +229,12 @@ $defaultTab = 1;
              * Time: 3:41 PM
              */
 
-            $stepNo++;
+            $stepNo++; // make step into 2
 
             ?>
 
             <script type = "text/javascript">
-
+                // js functions for step no 2
                 $(function () { // put functions in respective buttons
 
                     $('.pager li.nextStep_<?php echo $stepNo ?>').on('click', function () { // for next step
@@ -319,7 +344,7 @@ $defaultTab = 1;
              * Time: 3:41 PM
              */
 
-            $stepNo++;
+            $stepNo++; // make step into 3
 
             ?>
 
