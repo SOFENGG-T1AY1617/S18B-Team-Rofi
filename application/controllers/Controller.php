@@ -1,4 +1,4 @@
-<?php
+<?php header('Access-Control-Allow-Origin: *');
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Controller extends CI_Controller {
@@ -38,7 +38,7 @@ class Controller extends CI_Controller {
         $this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
-    public function selectBuilding() {
+    public function getBuildings() {
 
     }
 

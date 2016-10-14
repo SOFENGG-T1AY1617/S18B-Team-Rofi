@@ -55,10 +55,7 @@ $defaultTab = 1;
             <script type = "text/javascript">
 
 
-                var CFG = {
-                    url: '<?php echo $this->config->item('base_url');?>',
-                    token: '<?php echo $this->security->get_csrf_hash();?>'
-                };
+
 
                 var request;
                 $(document).ready(function() {
@@ -69,12 +66,12 @@ $defaultTab = 1;
                         $("#text-date").text(date_selected);
                     });
 
-                    $.ajaxSetup({data: {token: CFG.token}});
+                    /*$.ajaxSetup({data: {token: CFG.token}});
                     $(document).ajaxSuccess(function(e,x) {
                         var result = $.parseJSON(x.responseText);
                         $('input:hidden[name="token"]').val(result.token);
                         $.ajaxSetup({data: {token: result.token}});
-                    });
+                    });*/
 
                 });
 
@@ -116,9 +113,27 @@ $defaultTab = 1;
                     if (str != "") {
                         console.log(str);
 
-                        $.post('application/controllers/ajax/foo', function(data) {
+                        $.ajax({
+                            url: '<?php echo base_url('getBuildings') ?>',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+
+                            }
+                        })
+                        .done(function() {
+                            console.log("done");
+                        })
+                        .fail(function() {
+                            console.log("fail");
+                        })
+                        .always(function() {
+                            console.log("complete");
+                        });
+
+                        /*$.post('application/controllers/ajax/foo', function(data) {
                             console.log(data)
-                        }, 'json');
+                        }, 'json');*/
 
                     }
                 }
