@@ -87,8 +87,14 @@ $defaultTab = 1;
                             <div class = "panel-body">
                                 <div class="radio">
                                     <div class="radio" id="radio-date" name="form-date">
-                                        <label><input type="radio" id="radio-today" name="optradio" value="<?=date("m-d-Y")?>"checked>Today (<?=date("m-d-Y")?>)</label>
-                                        <label><input type="radio" id="radio-tomorrow" name="optradio" value="<?=date("m-d-Y", strtotime("tomorrow"))?>">Tomorrow (<?=date("m-d-Y", strtotime("tomorrow"))?>)</label>
+                                        <label><input type="radio" id="radio-today" name="optradio" value="<?=date("m-d-Y")?>"checked>
+                                            Today
+                                            <div class = "date-font"> (<?=date("F d, Y")?>) </div>
+                                        </label>
+                                        <label><input type="radio" id="radio-tomorrow" name="optradio" value="<?=date("m-d-Y", strtotime("tomorrow"))?>">
+                                            Tomorrow
+                                            <div class = "date-font"> (<?=date("F d, Y", strtotime("tomorrow"))?>) </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +122,17 @@ $defaultTab = 1;
                                         <th>PC Numbers</th>
                                         <?php
                                             foreach ($times as $time) {
-                                                echo "<th class='col-md-12'>" . date("h:i A", $time) . "</th>";
+                                                echo "<th>" . date("h:i A", $time) . "</th>";
+                                            }
+                                        ?>
+                                    </tr>
+                                    <!-- LOOP FOR EACH ROOM -->
+                                    <!-- LOOP FOR EACH TIME SLOT -->
+                                    <tr>
+                                        <td>PC NO</td>
+                                        <?php
+                                            foreach ($times as $time) { // if slot.time == $time
+                                                echo "<td></td>";
                                             }
                                         ?>
                                     </tr>
