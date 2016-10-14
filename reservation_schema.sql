@@ -48,7 +48,7 @@ CREATE TABLE `reservation_system`.`reservations` (
   `reservedatetime` DATETIME NOT NULL,
   `collegeid` INT NOT NULL,
   `typeid` INT NOT NULL,
-  `verified` BIT NOT NULL,
+  `verified` BIT NOT NULL DEFAULT 0,
   `verificationcode` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`reservationid`),
   INDEX `typeid_idx` (`typeid` ASC),
