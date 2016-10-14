@@ -54,6 +54,12 @@ $defaultTab = 1;
 
             <script type = "text/javascript">
 
+
+                var CFG = {
+                    url: '<?php echo $this->config->item('base_url');?>',
+                    token: '<?php echo $this->security->get_csrf_hash();?>'
+                };
+
                 var request;
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
@@ -62,6 +68,14 @@ $defaultTab = 1;
                         console.log(date_selected);
                         $("#text-date").text(date_selected);
                     });
+
+                    $.ajaxSetup({data: {token: CFG.token}});
+                    $(document).ajaxSuccess(function(e,x) {
+                        var result = $.parseJSON(x.responseText);
+                        $('input:hidden[name="token"]').val(result.token);
+                        $.ajaxSetup({data: {token: result.token}});
+                    });
+
                 });
 
                 $(function () { // put functions in respective buttons
@@ -102,13 +116,9 @@ $defaultTab = 1;
                     if (str != "") {
                         console.log(str);
 
-                        jQuery.ajax({
-                                type: "GET",
-                                url: "application/controllers/Controller.php/selectBuilding",
-                                dataType: 'json',
-                                //data: {buildingID: str}
-
-                            });
+                        $.post('application/controllers/ajax/foo', function(data) {
+                            console.log(data)
+                        }, 'json');
 
                     }
                 }

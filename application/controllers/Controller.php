@@ -39,7 +39,7 @@ class Controller extends CI_Controller {
     }
 
     public function selectBuilding() {
-        
+
     }
 
 
