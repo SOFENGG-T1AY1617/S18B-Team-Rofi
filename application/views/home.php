@@ -54,6 +54,7 @@ $defaultTab = 1;
 
             <script type = "text/javascript">
 
+                var request;
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
                         console.log("clicked");
@@ -77,6 +78,41 @@ $defaultTab = 1;
 
                 });
 
+                function selectBuilding(str) {
+
+                    // Abort any pending request
+                    if (request) {
+                        request.abort();
+                    }
+                    // setup some local variables
+                    var $form = $(this);
+
+                    // Let's select and cache all the fields
+                    var $inputs = $form.find("input, select, button, textarea");
+
+                    // Serialize the data in the form
+                    var serializedData = $form.serialize();
+
+                    // Let's disable the inputs for the duration of the Ajax request.
+                    // Note: we disable elements AFTER the form data has been serialized.
+                    // Disabled form elements will not be serialized.
+                    $inputs.prop("disabled", true);
+
+
+                    if (str != "") {
+                        console.log(str);
+
+                        jQuery.ajax({
+                                type: "GET",
+                                url: "application/controllers/Controller.php/selectBuilding",
+                                dataType: 'json',
+                                //data: {buildingID: str}
+
+                            });
+
+                    }
+                }
+
             </script>
 <!--Step 1-->
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
@@ -97,8 +133,8 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 Building:
-                                <select class="form-control" name="form-building">
-                                    <option selected disabled>Choose a building...</option>
+                                <select class="form-control" name="form-building" onchange="selectBuilding(this.value)">
+                                    <option value="" selected disabled>Choose a building...</option>
                                     <?php foreach($buildings as $row):?>
                                         <option value="<?=$row->buildingid?>"><?=$row->name?></option>
                                     <?php endforeach;?>

@@ -37,4 +37,10 @@ class Controller extends CI_Controller {
         $this->load->view('home', $data); // $this->load->view('home', $data); set to this if data is set
         $this->load->view('template/footer'); // include bootstrap 3 footer
     }
+
+    public function selectBuilding() {
+        
+    }
+
+
 }
