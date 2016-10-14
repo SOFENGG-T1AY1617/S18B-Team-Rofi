@@ -109,9 +109,18 @@ $defaultTab = 1;
                     </div>
 
                     <div class = "col-md-7">
-                        <div class = "panel panel-default">
-                            <div class = "panel-body">
-                                SLOTS
+                        <div id = "slots" class = "panel panel-default">
+                            <div class = "panel-body nopadding">
+                                <table class = "table table-bordered">
+                                    <tr>
+                                        <th>PC Numbers</th>
+                                        <?php
+                                            foreach ($times as $time) {
+                                                echo "<th class='col-md-12'>" . date("h:i A", $time) . "</th>";
+                                            }
+                                        ?>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -143,12 +152,12 @@ $defaultTab = 1;
              * Time: 3:41 PM
              */
 
-            $stepNo++;
+            $stepNo++; // make step into 2
 
             ?>
 
             <script type = "text/javascript">
-
+                // js functions for step no 2
                 $(function () { // put functions in respective buttons
 
                     $('.pager li.nextStep_<?php echo $stepNo ?>').on('click', function () { // for next step
@@ -258,7 +267,7 @@ $defaultTab = 1;
              * Time: 3:41 PM
              */
 
-            $stepNo++;
+            $stepNo++; // make step into 3
 
             ?>
 

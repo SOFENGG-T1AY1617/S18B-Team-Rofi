@@ -1,0 +1,17 @@
+body {
+    padding-top: 50px;
+}
+
+#slots{
+    overflow-x: scroll;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+th {
+    font-size: 12px;
+    white-space: nowrap;
+}

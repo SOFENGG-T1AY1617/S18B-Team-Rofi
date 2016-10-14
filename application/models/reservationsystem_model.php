@@ -7,7 +7,6 @@
  * Time: 8:11 PM
  */
 
-
 class ReservationSystem_Model extends CI_Model
 {
     /*const TABLE_ROOMS = "rooms";
@@ -31,6 +30,19 @@ class ReservationSystem_Model extends CI_Model
     {
         parent::__construct();
         $this->load->database();
+    }
+
+    public function getTimes() {
+        $times = array();
+        $minute_interval = 15; // minute intervals per hour
+
+        for ($hour = 0; $hour < 24 ; $hour++) {
+            for ($minute = 0; $minute < 60; $minute += $minute_interval) {
+                $times[] = mktime($hour, $minute, 0, 0, 0, 0);
+            }
+        }
+
+        return $times;
     }
 
     function queryRooms() {
