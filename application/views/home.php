@@ -54,6 +54,13 @@ $defaultTab = 1;
 
             <script type = "text/javascript">
 
+
+                var CFG = {
+                    url: '<?php echo $this->config->item('base_url');?>',
+                    token: '<?php echo $this->security->get_csrf_hash();?>'
+                };
+
+                var request;
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
                         console.log("clicked");
@@ -61,6 +68,14 @@ $defaultTab = 1;
                         console.log(date_selected);
                         $("#text-date").text(date_selected);
                     });
+
+                    $.ajaxSetup({data: {token: CFG.token}});
+                    $(document).ajaxSuccess(function(e,x) {
+                        var result = $.parseJSON(x.responseText);
+                        $('input:hidden[name="token"]').val(result.token);
+                        $.ajaxSetup({data: {token: result.token}});
+                    });
+
                 });
 
                 $(function () { // put functions in respective buttons
@@ -76,6 +91,37 @@ $defaultTab = 1;
                     });
 
                 });
+
+                function selectBuilding(str) {
+
+                    // Abort any pending request
+                    if (request) {
+                        request.abort();
+                    }
+                    // setup some local variables
+                    var $form = $(this);
+
+                    // Let's select and cache all the fields
+                    var $inputs = $form.find("input, select, button, textarea");
+
+                    // Serialize the data in the form
+                    var serializedData = $form.serialize();
+
+                    // Let's disable the inputs for the duration of the Ajax request.
+                    // Note: we disable elements AFTER the form data has been serialized.
+                    // Disabled form elements will not be serialized.
+                    $inputs.prop("disabled", true);
+
+
+                    if (str != "") {
+                        console.log(str);
+
+                        $.post('application/controllers/ajax/foo', function(data) {
+                            console.log(data)
+                        }, 'json');
+
+                    }
+                }
 
             </script>
 <!--Step 1-->
@@ -97,8 +143,8 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 Building:
-                                <select class="form-control" name="form-building">
-                                    <option selected disabled>Choose a building...</option>
+                                <select class="form-control" name="form-building" onchange="selectBuilding(this.value)">
+                                    <option value="" selected disabled>Choose a building...</option>
                                     <?php foreach($buildings as $row):?>
                                         <option value="<?=$row->buildingid?>"><?=$row->name?></option>
                                     <?php endforeach;?>
