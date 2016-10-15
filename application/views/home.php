@@ -66,6 +66,8 @@ $defaultTab = 1;
                         $("#text-date").text(date_selected);
                     });
 
+
+                    $("#form_room").hide();
                     /*$.ajaxSetup({data: {token: CFG.token}});
                     $(document).ajaxSuccess(function(e,x) {
                         var result = $.parseJSON(x.responseText);
@@ -124,6 +126,21 @@ $defaultTab = 1;
                         .done(function(result) {
                             console.log(result);
                             console.log("done");
+                            $("#form_room").show();
+
+                            var out=[];
+
+
+                            out[0]= '<option value="0" selected >All Rooms</option>';
+
+                            for(i=1;i<=result.length;i++){
+                                out[i]= '<option value="'+i+'" >'+result[i-1].name+'</option>';
+                            };
+
+
+                            $("#form_room").empty().append(out);
+
+
                         })
                         .fail(function() {
                             console.log("fail");
@@ -170,6 +187,10 @@ $defaultTab = 1;
                                     <?php foreach($buildings as $row):?>
                                         <option value="<?=$row->buildingid?>"><?=$row->name?></option>
                                     <?php endforeach;?>
+                                </select>
+
+                                <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)">
+                                    <option value="0" selected>All Rooms</option>
                                 </select>
 
                             </div>
