@@ -25,7 +25,7 @@ class Controller extends CI_Controller {
 
 	public function home()
     {
-        $this->load->model('reservationsystem_model');
+        //$this->load->model('reservationsystem_model');
 
         $data['buildings'] = $this->reservationsystem_model->queryAllBuildings();
         $data['colleges'] = $this->reservationsystem_model->queryColleges();
@@ -39,8 +39,16 @@ class Controller extends CI_Controller {
         $this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
-    public function getBuildings() {
+    public function getRooms() {
+        $getData = array(
+            'buildingid' => $this->input->get('buildingid'),
+        );
 
+        $data = $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']);
+        /*$data = array(
+          'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
+        );*/
+        echo json_encode($data);
     }
 
 

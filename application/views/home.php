@@ -89,7 +89,7 @@ $defaultTab = 1;
 
                 });
 
-                function selectBuilding(str) {
+                function selectBuilding(buildingid) {
 
                     // Abort any pending request
                     if (request) {
@@ -110,18 +110,18 @@ $defaultTab = 1;
                     $inputs.prop("disabled", true);
 
 
-                    if (str != "") {
-                        console.log(str);
+                    if (buildingid != "") {
+                        console.log(buildingid);
 
                         $.ajax({
-                            url: '<?php echo base_url('getBuildings') ?>',
+                            url: '<?php echo base_url('getRooms') ?>',
                             type: 'GET',
                             dataType: 'json',
                             data: {
-
+                                buildingid: buildingid,
                             }
                         })
-                        .done(function() {
+                        .done(function(result) {
                             console.log("done");
                         })
                         .fail(function() {
