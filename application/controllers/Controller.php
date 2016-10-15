@@ -52,4 +52,21 @@ class Controller extends CI_Controller {
     }
 
 
+    public function getComputers() {
+        $getData = array(
+            'buildingid' => $this->input->get('buildingid'),
+
+            'roomid' => $this->input->get('roomid'),
+        );
+
+        if($getData['roomid']==0)
+        $data = $this->reservationsystem_model->queryAllComputersAtBuildingID($getData['buildingid']);
+        else
+        $data = $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']);
+        /*$data = array(
+          'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
+        );*/
+        echo json_encode($data);
+    }
+
 }

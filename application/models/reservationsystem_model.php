@@ -55,6 +55,24 @@ class ReservationSystem_Model extends CI_Model
                WHERE roomid = " . $id . ") t1")->result();
     }
 
+    function queryAllComputersAtBuildingID($id) {
+        return $this->db->query(
+            "SELECT * 
+             FROM computers NATURAL JOIN 
+              (SELECT buildingid
+               FROM buildings
+               WHERE buildingid = " . $id . ") t1")->result();
+    }
+
+    function queryComputersAtBuildingIDAndRoomID($bid,$id) {
+        return $this->db->query(
+            "SELECT * 
+             FROM computers NATURAL JOIN 
+              (SELECT roomid
+               FROM rooms
+               WHERE roomid = " . $id . " AND buildingid = " . $bid . ") t1")->result();
+    }
+
     function queryAllBuildings() {
         return $this->db->get(TABLE_BUILDINGS)->result();
     }

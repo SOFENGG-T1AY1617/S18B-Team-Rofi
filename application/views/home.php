@@ -55,6 +55,7 @@ $defaultTab = 1;
             <script type = "text/javascript">
 
 
+                var computers = [];
 
 
                 var request;
@@ -93,6 +94,7 @@ $defaultTab = 1;
 
                 function selectBuilding(buildingid) {
 
+
                     // Abort any pending request
                     if (request) {
                         request.abort();
@@ -120,26 +122,26 @@ $defaultTab = 1;
                             type: 'GET',
                             dataType: 'json',
                             data: {
-                                buildingid: buildingid,
+                                buildingid: buildingid
                             }
                         })
                         .done(function(result) {
                             console.log(result);
                             console.log("done");
+
                             $("#form_room").show();
 
                             var out=[];
 
-
                             out[0]= '<option value="0" selected >All Rooms</option>';
 
                             for(i=1;i<=result.length;i++){
-                                out[i]= '<option value="'+i+'" >'+result[i-1].name+'</option>';
+                                out[i]= '<option value="'+result[i-1].roomid+'" >'+result[i-1].name+'</option>';
                             };
-
 
                             $("#form_room").empty().append(out);
 
+                            selectRoom("0")
 
                         })
                         .fail(function() {
@@ -152,6 +154,69 @@ $defaultTab = 1;
                         /*$.post('application/controllers/ajax/foo', function(data) {
                             console.log(data)
                         }, 'json');*/
+
+                    }
+                }
+
+                function selectRoom(roomid) {
+
+                    $computers = [];
+
+                    var buildingid = $("#form_building").val();
+
+                    // Abort any pending request
+                    if (request) {
+                        request.abort();
+                    }
+                    // setup some local variables
+                    var $form = $(this);
+
+                    // Let's select and cache all the fields
+                    var $inputs = $form.find("input, select, button, textarea");
+
+                    // Serialize the data in the form
+                    var serializedData = $form.serialize();
+
+                    // Let's disable the inputs for the duration of the Ajax request.
+                    // Note: we disable elements AFTER the form data has been serialized.
+                    // Disabled form elements will not be serialized.
+                    $inputs.prop("disabled", true);
+
+
+                    if (buildingid!=""&&roomid != "") {
+                        console.log(buildingid+"-"+roomid);
+
+                        $.ajax({
+                            url: '<?php echo base_url('getComputers') ?>',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                buildingid: buildingid,
+                                roomid:roomid
+                            }
+                        })
+                            .done(function(result) {
+                                console.log(result);
+                                console.log("done");
+
+                                $("#form_room").show();
+
+                                for(i=0;i<result.length;i++){
+                                    computers[i]=result[i];
+                                }
+
+
+                            })
+                            .fail(function() {
+                                console.log("fail");
+                            })
+                            .always(function() {
+                                console.log("complete");
+                            });
+
+                        /*$.post('application/controllers/ajax/foo', function(data) {
+                         console.log(data)
+                         }, 'json');*/
 
                     }
                 }
@@ -182,7 +247,7 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 Building:
-                                <select class="form-control" name="form-building" onchange="selectBuilding(this.value)">
+                                <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
                                     <option value="" selected disabled>Choose a building...</option>
                                     <?php foreach($buildings as $row):?>
                                         <option value="<?=$row->buildingid?>"><?=$row->name?></option>
@@ -190,7 +255,7 @@ $defaultTab = 1;
                                 </select>
 
                                 <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)">
-                                    <option value="0" selected>All Rooms</option>
+                                    <option value="" selected></option>
                                 </select>
 
                             </div>
