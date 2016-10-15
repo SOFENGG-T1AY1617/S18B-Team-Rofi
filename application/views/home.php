@@ -206,6 +206,8 @@ $defaultTab = 1;
                                 }
 
 
+                                //TODO call function here for updating the view to pick a PC Goodluck :) @TOBI
+
                             })
                             .fail(function() {
                                 console.log("fail");
