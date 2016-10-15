@@ -122,6 +122,7 @@ $defaultTab = 1;
                             }
                         })
                         .done(function(result) {
+                            console.log(result);
                             console.log("done");
                         })
                         .fail(function() {

@@ -83,3 +83,29 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+
+
+define("TABLE_BUILDINGS", "buildings");
+define("COLUMN_BUILDINGID", "buildingid");
+
+define("TABLE_ROOMS", "rooms");
+define("COLUMN_ROOMID", "roomid");
+define("COLUMN_NAME", "name");
+
+define("TABLE_COMPUTERS", "computers");
+define("COLUMN_COMPUTERID", "computerid");
+define("COLUMN_COMPUTERNO", "computerno");
+
+define("TABLE_COLLEGES", "colleges");
+define("COLUMN_COLLEGEID", "collegeid");
+
+define("TABLE_TYPES", "types");
+define("COLUMN_TYPEID", "typeid");
+define("COLUMN_TYPE", "type");
+
+define("TABLE_RESERVATIONS", "reservations");
+define("COLUMN_RESERVATIONID", "reservationid");
+define("COLUMN_USERIDNO", "useridno");
+define("COLUMN_RESERVEDATETIME", "reservedatetime");
+define("COLUMN_VERIFIED", "verified");
+define("COLUMN_VERFICATIONCODE", "verificationcode");
