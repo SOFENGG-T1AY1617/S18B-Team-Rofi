@@ -228,13 +228,17 @@ $defaultTab = 1;
 
                     //date("h:i A", $time)
 
-                    var roomNumbers = [];
+                    var roomIDs = [];
+                    var roomNames = [];
 
-                    for (var i = 0; i < computers.length; i++) // retrieve all room numbers
+                    // index of ID corresponds with index of NAME
+
+                    for (var i = 0; i < computers.length; i++) // retrieve all room numbers and room names
                     {
-                        if (($.inArray(computers[i].roomid, roomNumbers)) == -1)
+                        if (($.inArray(computers[i].roomid, roomIDs)) == -1)
                         {
-                            roomNumbers.push(computers[i].roomid);
+                            roomIDs.push(computers[i].roomid);
+                            roomNames.push(computers[i].name);
                         }
                     }
 
@@ -250,53 +254,36 @@ $defaultTab = 1;
                      * APPEND <tr> to <table> with ID = slotTable
                      */
 
-                    if (roomNumbers.length > 1) {
-                        for (var i = 0; i < roomNumbers.length; i++) {
-                            var roomTitleRow = document.createElement("tr");
-                            var roomTitleCell = document.createElement("td");
 
-                            roomTitleCell.appendChild(document.createTextNode("Room: " + roomNumbers[i]));
-                            roomTitleCell.setAttribute("colspan", times.length+1);
+                    for (var i = 0; i < roomIDs.length; i++) {
+                        var roomTitleRow = document.createElement("tr");
+                        var roomTitleCell = document.createElement("td");
 
-                            roomTitleRow.appendChild(roomTitleCell);
+                        roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
+                        roomTitleCell.setAttribute("colspan", times.length+1);
 
-                            $('#slotTable tr:last').after(roomTitleRow);
+                        roomTitleRow.appendChild(roomTitleCell);
 
-                            for (var k = 0; k < computers.length; k++) {
+                        $('#slotTable tr:last').after(roomTitleRow);
 
-                                if (computers[k].roomid == roomNumbers[i]) {
+                        for (var k = 0; k < computers.length; k++) {
 
-                                    var newTableRow = document.createElement("tr");
-                                    var newPCNoCell = document.createElement("td");
+                            if (computers[k].roomid == roomIDs[i]) {
 
-                                    newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
+                                var newTableRow = document.createElement("tr");
+                                var newPCNoCell = document.createElement("td");
 
-                                    newTableRow.appendChild(newPCNoCell);
+                                newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
 
-                                    for (var m = 0; m < times.length; m++) { // generate time slot cells
-                                        newTableRow.appendChild(document.createElement("td"));
-                                    }
+                                newTableRow.appendChild(newPCNoCell);
 
-                                    $('#slotTable tr:last').after(newTableRow);
+                                for (var m = 0; m < times.length; m++) { // generate time slot cells
+                                    newTableRow.appendChild(document.createElement("td"));
                                 }
 
-                            }
-                        }
-                    } else {
-                        for (var i = 0; i < computers.length; i++) {
-
-                            var newTableRow = document.createElement("tr");
-                            var newPCNoCell = document.createElement("td");
-
-                            newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[i].computerno));
-
-                            newTableRow.appendChild(newPCNoCell);
-
-                            for (var k = 0; k < times.length; k++) {
-                                newTableRow.appendChild(document.createElement("td"));
+                                $('#slotTable tr:last').after(newTableRow);
                             }
 
-                            $('#slotTable tr:last').after(newTableRow);
                         }
                     }
 

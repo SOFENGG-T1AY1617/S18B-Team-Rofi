@@ -60,7 +60,7 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->query(
             "SELECT * 
              FROM computers NATURAL JOIN 
-              (SELECT roomid
+              (SELECT roomid, name
                FROM rooms
                WHERE buildingid = " . $id . ") t1")->result();
     }
@@ -69,7 +69,7 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->query(
             "SELECT * 
              FROM computers NATURAL JOIN 
-              (SELECT roomid
+              (SELECT roomid, name
                FROM rooms
                WHERE roomid = " . $id . " AND buildingid = " . $bid . ") t1")->result();
     }

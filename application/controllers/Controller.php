@@ -60,9 +60,9 @@ class Controller extends CI_Controller {
         );
 
         if($getData['roomid']==0)
-        $data = $this->reservationsystem_model->queryAllComputersAtBuildingID($getData['buildingid']);
+            $data = $this->reservationsystem_model->queryAllComputersAtBuildingID($getData['buildingid']);
         else
-        $data = $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']);
+            $data = $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']);
         /*$data = array(
           'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/
