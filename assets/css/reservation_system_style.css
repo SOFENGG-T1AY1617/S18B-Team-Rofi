@@ -2,10 +2,6 @@ body {
     padding-top: 50px;
 }
 
-#slots{
-    overflow-x: scroll;
-}
-
 .nopadding {
     padding: 0 !important;
     margin: 0 !important;
@@ -13,6 +9,12 @@ body {
 
 div.date-font {
     font-size: 11px;
+}
+
+#slots {
+    overflow-x: scroll;
+    height: 400px;
+    max-height: 400px;
 }
 
 th {

@@ -54,10 +54,6 @@ $defaultTab = 1;
 
             <script type = "text/javascript">
 
-
-                var computers = [];
-
-
                 var request;
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
@@ -143,6 +139,8 @@ $defaultTab = 1;
 
                             selectRoom("0")
 
+                            numOfRooms = result.length;
+
                         })
                         .fail(function() {
                             console.log("fail");
@@ -160,9 +158,9 @@ $defaultTab = 1;
 
                 function selectRoom(roomid) {
 
-                    $computers = [];
-
                     var buildingid = $("#form_building").val();
+
+                    var computers = [];
 
                     // Abort any pending request
                     if (request) {
@@ -196,18 +194,17 @@ $defaultTab = 1;
                             }
                         })
                             .done(function(result) {
+
                                 console.log(result);
                                 console.log("done");
 
                                 $("#form_room").show();
 
-                                for(i=0;i<result.length;i++){
+                                for(i=0;i<result.length;i++){ // retrieve all computers from result
                                     computers[i]=result[i];
                                 }
 
-
-                                //TODO call function here for updating the view to pick a PC Goodluck :) @TOBI
-
+                                outputSlotsOf (computers);
                             })
                             .fail(function() {
                                 console.log("fail");
@@ -221,6 +218,88 @@ $defaultTab = 1;
                          }, 'json');*/
 
                     }
+                }
+
+                function outputSlotsOf (computers) {
+
+                    $("#slotTable").find("tr:gt(0)").remove(); // remove all cells except first row
+
+                    var times = <?php echo json_encode($times) ?>;
+
+                    //date("h:i A", $time)
+
+                    var roomNumbers = [];
+
+                    for (var i = 0; i < computers.length; i++) // retrieve all room numbers
+                    {
+                        if (($.inArray(computers[i].roomid, roomNumbers)) == -1)
+                        {
+                            roomNumbers.push(computers[i].roomid);
+                        }
+                    }
+
+                    /*
+                     * IF : OPTION 0
+                     *   MAKE <tr> dedicated for room number first before proceeding
+                     *
+                     * MAKE <tr> for each PC
+                     * APPEND <td>'s
+                     *   - FIRST <td> having the PC NUMBER
+                     *   - THE REST OF THE <td> having the SLOTS
+                     * APPEND all <td>'s to <tr> made earlier
+                     * APPEND <tr> to <table> with ID = slotTable
+                     */
+
+                    if (roomNumbers.length > 1) {
+                        for (var i = 0; i < roomNumbers.length; i++) {
+                            var roomTitleRow = document.createElement("tr");
+                            var roomTitleCell = document.createElement("td");
+
+                            roomTitleCell.appendChild(document.createTextNode("Room: " + roomNumbers[i]));
+                            roomTitleCell.setAttribute("colspan", times.length+1);
+
+                            roomTitleRow.appendChild(roomTitleCell);
+
+                            $('#slotTable tr:last').after(roomTitleRow);
+
+                            for (var k = 0; k < computers.length; k++) {
+
+                                if (computers[k].roomid == roomNumbers[i]) {
+
+                                    var newTableRow = document.createElement("tr");
+                                    var newPCNoCell = document.createElement("td");
+
+                                    newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
+
+                                    newTableRow.appendChild(newPCNoCell);
+
+                                    for (var m = 0; m < times.length; m++) { // generate time slot cells
+                                        newTableRow.appendChild(document.createElement("td"));
+                                    }
+
+                                    $('#slotTable tr:last').after(newTableRow);
+                                }
+
+                            }
+                        }
+                    } else {
+                        for (var i = 0; i < computers.length; i++) {
+
+                            var newTableRow = document.createElement("tr");
+                            var newPCNoCell = document.createElement("td");
+
+                            newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[i].computerno));
+
+                            newTableRow.appendChild(newPCNoCell);
+
+                            for (var k = 0; k < times.length; k++) {
+                                newTableRow.appendChild(document.createElement("td"));
+                            }
+
+                            $('#slotTable tr:last').after(newTableRow);
+                        }
+                    }
+
                 }
 
             </script>
@@ -249,17 +328,20 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 Building:
-                                <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
-                                    <option value="" selected disabled>Choose a building...</option>
-                                    <?php foreach($buildings as $row):?>
-                                        <option value="<?=$row->buildingid?>"><?=$row->name?></option>
-                                    <?php endforeach;?>
-                                </select>
+                                <div class = "form-group">
+                                    <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
+                                        <option value="" selected disabled>Choose a building...</option>
+                                        <?php foreach($buildings as $row):?>
+                                            <option value="<?=$row->buildingid?>"><?=$row->name?></option>
+                                        <?php endforeach;?>
+                                    </select>
+                                </div>
 
-                                <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)">
-                                    <option value="" selected></option>
-                                </select>
-
+                                <div class = "form-group">
+                                    <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)">
+                                        <option value="" selected></option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -267,22 +349,12 @@ $defaultTab = 1;
                     <div class = "col-md-7">
                         <div id = "slots" class = "panel panel-default">
                             <div class = "panel-body nopadding">
-                                <table class = "table table-bordered">
+                                <table id = "slotTable" class = "table table-bordered">
                                     <tr>
                                         <th>PC Numbers</th>
                                         <?php
                                             foreach ($times as $time) {
                                                 echo "<th>" . date("h:i A", $time) . "</th>";
-                                            }
-                                        ?>
-                                    </tr>
-                                    <!-- LOOP FOR EACH ROOM -->
-                                    <!-- LOOP FOR EACH TIME SLOT -->
-                                    <tr>
-                                        <td>PC NO</td>
-                                        <?php
-                                            foreach ($times as $time) { // if slot.time == $time
-                                                echo "<td></td>";
                                             }
                                         ?>
                                     </tr>

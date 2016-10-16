@@ -18,9 +18,10 @@ class ReservationSystem_Model extends CI_Model
 
     public function getTimes() {
         $times = array();
-        $minute_interval = 15; // minute intervals per hour
+        $first_hour = 6; // can start with 0
+        $minute_interval = 30; // minute intervals per hour
 
-        for ($hour = 0; $hour < 24 ; $hour++) {
+        for ($hour = $first_hour; $hour < 20 ; $hour++) {
             for ($minute = 0; $minute < 60; $minute += $minute_interval) {
                 $times[] = mktime($hour, $minute, 0, 0, 0, 0);
             }
@@ -59,8 +60,8 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->query(
             "SELECT * 
              FROM computers NATURAL JOIN 
-              (SELECT buildingid
-               FROM buildings
+              (SELECT roomid
+               FROM rooms
                WHERE buildingid = " . $id . ") t1")->result();
     }
 
