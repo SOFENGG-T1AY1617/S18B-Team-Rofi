@@ -10,6 +10,7 @@ CREATE TABLE `reservation_system`.`rooms` (
   `roomid` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   `buildingid` INT NOT NULL,
+  `department` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`roomid`),
   INDEX `buildingid_idx` (`buildingid` ASC),
   CONSTRAINT `buildingid`
@@ -45,7 +46,9 @@ CREATE TABLE `reservation_system`.`reservations` (
   `reservationid` INT NOT NULL AUTO_INCREMENT,
   `computerid` INT NOT NULL,
   `useridno` INT NOT NULL,
-  `reservedatetime` DATETIME NOT NULL,
+  `email` VARCHAR(30) NOT NULL,
+  `start_resdatetime` DATETIME NOT NULL,
+  `end_resdatetime` DATETIME NOT NULL,
   `collegeid` INT NOT NULL,
   `typeid` INT NOT NULL,
   `verified` BIT NOT NULL DEFAULT 0,
