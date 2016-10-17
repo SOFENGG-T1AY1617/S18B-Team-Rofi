@@ -39,39 +39,39 @@ class ReservationSystem_Model extends CI_Model
     }
 
     function queryComputersAtRoomName($name) {
-        return $this->db->query(
-            "SELECT * 
+        $sql = "SELECT * 
              FROM computers NATURAL JOIN 
               (SELECT roomid
                FROM rooms
-               WHERE name = " . $name . ") t1")->result();
+               WHERE name = ?) t1";
+        return $this->db->query($sql, array($name))->result();
     }
 
     function queryComputersAtRoomID($id) {
-        return $this->db->query(
-            "SELECT * 
+        $sql = "SELECT * 
              FROM computers NATURAL JOIN 
               (SELECT roomid
                FROM rooms
-               WHERE roomid = " . $id . ") t1")->result();
+               WHERE roomid = ?) t1";
+        return $this->db->query($sql, array($id))->result();
     }
 
     function queryAllComputersAtBuildingID($id) {
-        return $this->db->query(
-            "SELECT * 
+        $sql = "SELECT * 
              FROM computers NATURAL JOIN 
               (SELECT roomid, name
                FROM rooms
-               WHERE buildingid = " . $id . ") t1")->result();
+               WHERE buildingid = ?) t1";
+        return $this->db->query($sql, array($id))->result();
     }
 
     function queryComputersAtBuildingIDAndRoomID($bid,$id) {
-        return $this->db->query(
-            "SELECT * 
+        $sql = "SELECT * 
              FROM computers NATURAL JOIN 
               (SELECT roomid, name
                FROM rooms
-               WHERE roomid = " . $id . " AND buildingid = " . $bid . ") t1")->result();
+               WHERE roomid = ? AND buildingid = ?) t1";
+        return $this->db->query($sql, array($id, $bid))->result();
     }
 
     function queryAllBuildings() {
@@ -79,21 +79,21 @@ class ReservationSystem_Model extends CI_Model
     }
 
     function queryAllRoomsAtBuildingID($id) {
-        return $this->db->query(
-            "SELECT * 
+        $sql = "SELECT * 
              FROM rooms NATURAL JOIN 
               (SELECT buildingid
                FROM buildings
-               WHERE buildingid = " . $id . ") t1")->result();
+               WHERE buildingid = ?) t1";
+        return $this->db->query($sql, array($id))->result();
     }
 
     function queryAllRoomsAtBuildingName($name) {
-        return $this->db->query(
-            "SELECT * 
+        $sql = "SELECT * 
              FROM rooms NATURAL JOIN 
               (SELECT buildingid
                FROM buildings
-               WHERE name = " . $name . ") t1")->result();
+               WHERE name = ?) t1";
+        return $this->db->query($sql, array($name))->result();
     }
 
     function queryColleges() {
