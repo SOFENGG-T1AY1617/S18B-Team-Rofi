@@ -10,7 +10,7 @@ CREATE TABLE `reservation_system`.`rooms` (
   `roomid` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   `buildingid` INT NOT NULL,
-  `department` VARCHAR(30) NOT NULL,
+  `department` VARCHAR(30) NOT NULL DEFAULT 'ITS',
   PRIMARY KEY (`roomid`),
   INDEX `buildingid_idx` (`buildingid` ASC),
   CONSTRAINT `buildingid`
@@ -52,7 +52,7 @@ CREATE TABLE `reservation_system`.`reservations` (
   `collegeid` INT NOT NULL,
   `typeid` INT NOT NULL,
   `verified` BIT NOT NULL DEFAULT 0,
-  `verificationcode` VARCHAR(32) NOT NULL,
+  `verificationcode` VARCHAR(40) NOT NULL,
   PRIMARY KEY (`reservationid`),
   INDEX `typeid_idx` (`typeid` ASC),
   INDEX `collegeid_idx` (`collegeid` ASC),
@@ -123,3 +123,15 @@ VALUES ("Senior High School"),
 	   ("Graduate"),
 	   ("Faculty"),
 	   ("Staff");
+       
+INSERT INTO `reservation_system`.`reservations`
+	(`computerid`, `useridno`, `email`, `start_resdatetime`, `end_resdatetime`,
+    `collegeid`, `typeid`, `verificationcode`)
+VALUES (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18 11:00:00", "2016-10-18 11:14:59", 2, 2, "45t45y0965134213yktreioet54j209"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18 11:15:00", "2016-10-18 11:29:59", 2, 2, "45t45y0965134213yktreioet54j209"),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19 11:00:00", "2016-10-19 11:14:59", 2, 2, "45t45y0965134213yktreioet54j210"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19 11:15:00", "2016-10-19 11:29:59", 2, 2, "45t45y0965134213yktreioet54j210"),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20 11:00:00", "2016-10-20 11:14:59", 2, 2, "45t45y0965134213yktreioet54j211"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20 11:15:00", "2016-10-20 11:29:59", 2, 2, "45t45y0965134213yktreioet54j211"),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21 11:00:00", "2016-10-21 11:14:59", 2, 2, "45t45y0965134213yktreioet54j212"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21 11:15:00", "2016-10-21 11:29:59", 2, 2, "45t45y0965134213yktreioet54j212");

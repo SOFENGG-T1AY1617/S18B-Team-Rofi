@@ -57,7 +57,6 @@ $defaultTab = 1;
                 var request;
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
-                        console.log("clicked");
                         var date_selected = $("input[name=optradio]:checked").val();
                         console.log(date_selected);
                         $("#text-date").text(date_selected);
@@ -65,12 +64,29 @@ $defaultTab = 1;
 
 
                     $("#form_room").hide();
-                    /*$.ajaxSetup({data: {token: CFG.token}});
-                    $(document).ajaxSuccess(function(e,x) {
-                        var result = $.parseJSON(x.responseText);
-                        $('input:hidden[name="token"]').val(result.token);
-                        $.ajaxSetup({data: {token: result.token}});
-                    });*/
+
+                    $("#finish").click(function() {
+                        console.log($("#select-college").val());
+                        $.ajax({
+                            url: '<?php echo base_url('submitReservation') ?>',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                idnumber: $("#id-number").val(),
+                                collegeid: $("#select-college").val(),
+                            }
+                        })
+                            .done(function(result) {
+                                console.log(result);
+                                console.log("done");
+                            })
+                            .fail(function() {
+                                console.log("fail");
+                            })
+                            .always(function() {
+                                console.log("complete");
+                            });
+                    });
 
                 });
 
@@ -521,6 +537,21 @@ $defaultTab = 1;
                     </div>
 
                 </div>-->
+
+                <div class ="row">
+
+                    <div class = "col-md-10 col-md-offset-1">
+                        <ul class="pager">
+                            <li class="previous prevStep_<?php echo $stepNo ?>">
+                                <a href="#tab_1_<?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
+                            </li>
+                            <li class="next nextStep_<?php echo $stepNo ?>">
+                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="finish">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
 
             </div>
 

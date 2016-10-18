@@ -80,19 +80,19 @@ class ReservationSystem_Model extends CI_Model
 
     function queryAllRoomsAtBuildingID($id) {
         $sql = "SELECT * 
-             FROM rooms NATURAL JOIN 
-              (SELECT buildingid
-               FROM buildings
-               WHERE buildingid = ?) t1";
+                FROM rooms NATURAL JOIN 
+                  (SELECT buildingid
+                   FROM buildings
+                   WHERE buildingid = ?) b";
         return $this->db->query($sql, array($id))->result();
     }
 
     function queryAllRoomsAtBuildingName($name) {
         $sql = "SELECT * 
-             FROM rooms NATURAL JOIN 
-              (SELECT buildingid
-               FROM buildings
-               WHERE name = ?) t1";
+                FROM rooms NATURAL JOIN 
+                  (SELECT buildingid
+                   FROM buildings
+                   WHERE name = ?) b";
         return $this->db->query($sql, array($name))->result();
     }
 
@@ -102,5 +102,34 @@ class ReservationSystem_Model extends CI_Model
 
     function queryTypes() {
         return $this->db->get(TABLE_TYPES)->result();
+    }
+
+    function queryReservationsAtBuildingID($id) {
+        $sql = "SELECT *
+                FROM rooms r NATURAL JOIN 
+                  (SELECT buildingid
+                   FROM  buildings
+                   WHERE buildingid = ?) b NATURAL JOIN 
+                  computers NATURAL JOIN reservations";
+        return $this->db->query($sql, array($id))->result();
+    }
+
+    function queryReservationsAtRoomID($id) {
+        $sql = "SELECT *
+                FROM reservations NATURAL JOIN
+                  computers NATURAL JOIN
+                  (SELECT roomid
+                   FROM rooms
+                   WHERE roomid = ?) r";
+        return $this->db->query($sql, array($id))->result();
+    }
+
+    function queryReservationsOfComputerID($id) {
+        $sql = "SELECT *
+                FROM reservations NATURAL JOIN
+                  (SELECT computerid
+                   FROM computers
+                   WHERE computerid = ?) c";
+        return $this->db->query($sql, array($id))->result();
     }
 }
