@@ -264,7 +264,7 @@ $defaultTab = 1;
 
                         roomTitleRow.appendChild(roomTitleCell);
 
-                        $('#slotTable tr:last').after(roomTitleRow);
+                        $('#tableBody').append(roomTitleRow);
 
                         for (var k = 0; k < computers.length; k++) {
 
@@ -281,7 +281,7 @@ $defaultTab = 1;
                                     newTableRow.appendChild(document.createElement("td"));
                                 }
 
-                                $('#slotTable tr:last').after(newTableRow);
+                                $('#tableBody').append(newTableRow);
                             }
 
                         }
@@ -337,14 +337,19 @@ $defaultTab = 1;
                         <div id = "slots" class = "panel panel-default">
                             <div class = "panel-body nopadding">
                                 <table id = "slotTable" class = "table table-bordered">
-                                    <tr>
-                                        <th>PC Numbers</th>
-                                        <?php
+                                    <thead>
+                                        <tr>
+                                            <th>PC Numbers</th>
+                                            <?php
                                             foreach ($times as $time) {
                                                 echo "<th>" . date("h:i A", $time) . "</th>";
                                             }
-                                        ?>
-                                    </tr>
+                                            ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+
+                                    </tbody>
                                 </table>
                             </div>
                         </div>

@@ -21,3 +21,14 @@ th {
     font-size: 12px;
     white-space: nowrap;
 }
+
+tr {
+    display: inline-table;
+    table-layout: fixed;
+}
+
+tbody {
+    height: 400px;
+    overflow: hidden;
+    position: absolute;
+}
