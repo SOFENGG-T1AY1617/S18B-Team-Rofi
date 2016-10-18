@@ -57,7 +57,6 @@ $defaultTab = 1;
                 var request;
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
-                        console.log("clicked");
                         var date_selected = $("input[name=optradio]:checked").val();
                         console.log(date_selected);
                         $("#text-date").text(date_selected);
