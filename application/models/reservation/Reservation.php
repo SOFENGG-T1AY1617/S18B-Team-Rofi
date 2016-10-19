@@ -1,5 +1,6 @@
 <?php
 
+require_once '../../controllers/Controller.php';
 /**
  * Created by PhpStorm.
  * User: kevin
@@ -37,8 +38,7 @@ class Reservation
         $this->collegeID = $collegeID;
         $this->typeID = $typeID;
 
-        $this->load->helper('string');
-        $this->verificationCode = random_string('sha1');
+        $this->setVerificationCode();
     }
 
 
@@ -179,11 +179,20 @@ class Reservation
     }
 
     /**
-     * @param mixed $verificationCode
+     * Create random verification code for reservation.
      */
-    public function setVerificationCode($verificationCode)
+    public function setVerificationCode()
     {
-        $this->verificationCode = $verificationCode;
+        $this->load->helper('string');
+
+        $code = random_string('sha1');
+        $controller = new Controller();
+
+        while ($controller->isExistingVerificationCode($code)) {
+            $code = random_string('sha1');
+        }
+
+        $this->verificationCode = $code;
     }
 
 
