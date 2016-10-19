@@ -73,4 +73,7 @@ class Controller extends CI_Controller {
 
     }
 
+    public function isExistingVerificationCode($verificationCode) {
+        return $this->reservationsystem_model->isExistingVerificationCode($verificationCode);
+    }
 }

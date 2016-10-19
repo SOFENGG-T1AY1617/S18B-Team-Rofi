@@ -132,4 +132,11 @@ class ReservationSystem_Model extends CI_Model
                    WHERE computerid = ?) c";
         return $this->db->query($sql, array($id))->result();
     }
+
+    function isExistingVerificationCode($verificationCode) {
+        $result = $this->db->get_where(TABLE_RESERVATIONS, $verificationCode);
+
+        // Check if there is existing row
+        return $result->num_rows() > 0;
+    }
 }
