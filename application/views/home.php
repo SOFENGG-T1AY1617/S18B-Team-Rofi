@@ -99,6 +99,7 @@ $defaultTab = 1;
                             .always(function() {
                                 console.log("complete");
                             });
+                        
                     });
 
 
@@ -128,6 +129,13 @@ $defaultTab = 1;
                         }
 
                         console.log(slotsPicked);
+                    });
+
+                    $("input[name=optradio]:radio").change(function () {
+                        if($("#form_building").val()!=null){
+                            slotsPicked = [];
+                          selectRoom($("#form_building").val());
+                        }
                     });
 
                 });
