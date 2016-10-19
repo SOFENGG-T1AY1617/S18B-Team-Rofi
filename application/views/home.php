@@ -56,11 +56,19 @@ $defaultTab = 1;
 
                 var slotsPicked = [];
                 var request;
+                var dateSelected = "<?=date("Y-m-d")?>";
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
                         var date_selected = $("input[name=optradio]:checked").val();
                         console.log(date_selected);
-                        $("#text-date").text(date_selected);
+                        if (date_selected == "today") {
+                            dateSelected = "<?=date("Y-m-d")?>";
+                            $("#text-date").text("<?=date("F d, Y")?>");
+                        }
+                        else {
+                            dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
+                            $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
+                        }
                     });
 
 
@@ -233,6 +241,7 @@ $defaultTab = 1;
 
                     if (buildingid!=""&&roomid != "") {
                         console.log(buildingid+"-"+roomid);
+                        console.log($("input[name=optradio]:checked").val())
 
                         $.ajax({
                             url: '<?php echo base_url('getComputers') ?>',
@@ -241,11 +250,11 @@ $defaultTab = 1;
                             data: {
                                 buildingid: buildingid,
                                 roomid:roomid,
-                                currdate: $("input[name=optradio]:checked").val(),
+                                currdate: dateSelected,
                             }
                         })
                             .done(function(result) {
-
+                                console.log(result['date']);
                                 console.log(result);
                                 console.log("done");
 
@@ -390,11 +399,11 @@ $defaultTab = 1;
                             <div class = "panel-body">
                                 <div class="radio">
                                     <div class="radio" id="radio-date" name="form-date">
-                                        <label><input type="radio" id="radio-today" name="optradio" value="<?=date("m-d-Y")?>"checked>
+                                        <label><input type="radio" id="radio-today" name="optradio" value="today"checked>
                                             Today
                                             <div class = "date-font"> (<?=date("F d, Y")?>) </div>
                                         </label>
-                                        <label><input type="radio" id="radio-tomorrow" name="optradio" value="<?=date("m-d-Y", strtotime("tomorrow"))?>">
+                                        <label><input type="radio" id="radio-tomorrow" name="optradio" value="tomorrow">
                                             Tomorrow
                                             <div class = "date-font"> (<?=date("F d, Y", strtotime("tomorrow"))?>) </div>
                                         </label>

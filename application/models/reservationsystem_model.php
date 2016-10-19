@@ -123,8 +123,8 @@ class ReservationSystem_Model extends CI_Model
                   computers NATURAL JOIN
                   (SELECT roomid
                    FROM rooms
-                   WHERE roomid = ?) r";
-        return $this->db->query($sql, array($id, $date))->result();
+                   WHERE roomid = ?) ro";
+        return $this->db->query($sql, array($date, $id))->result();
     }
 
     function queryReservationsOfComputerIDOnDate($id, $date) {
@@ -135,7 +135,7 @@ class ReservationSystem_Model extends CI_Model
                   (SELECT computerid
                    FROM computers
                    WHERE computerid = ?) c";
-        return $this->db->query($sql, array($id, $date))->result();
+        return $this->db->query($sql, array($date, $id))->result();
     }
 
     function isExistingVerificationCode($verificationCode) {
