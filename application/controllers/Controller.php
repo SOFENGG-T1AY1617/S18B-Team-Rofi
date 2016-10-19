@@ -61,13 +61,27 @@ class Controller extends CI_Controller {
         );
 
         if($getData['roomid']==0)
-            $data = $this->reservationsystem_model->queryAllComputersAtBuildingID($getData['buildingid']);
+            $data = array(
+                'computers' => $this->reservationsystem_model->queryAllComputersAtBuildingID($getData['buildingid']),
+                'reservations' => $this->getReservationsAtBuildingID($getData['buildingid']),
+            );
         else
-            $data = $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']);
+            $data = array(
+                'computers' => $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']),
+                'reservations' => $this->getReservationsAtRoomID($getData['roomid']),
+            );
         /*$data = array(
           'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/
         echo json_encode($data);
+    }
+
+    public function getReservationsAtBuildingID($buildingid) {
+        return $this->reservationsystem_model->queryReservationsAtBuildingID($buildingid);
+    }
+
+    public function getReserationsAtRoomID($roomid) {
+        return $this->reservationsystem_model->queryReservationsAtRoomID($roomid);
     }
 
     public function submitReservation() {

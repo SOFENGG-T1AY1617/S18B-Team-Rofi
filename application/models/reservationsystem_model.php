@@ -102,7 +102,7 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->get(TABLE_TYPES)->result();
     }
 
-    function queryReservationsAtBuildingID($id) {
+    function queryReservationsAtBuildingID($id, $date) {
         $sql = "SELECT *
                 FROM rooms r NATURAL JOIN 
                   (SELECT buildingid

@@ -240,21 +240,24 @@ $defaultTab = 1;
                             dataType: 'json',
                             data: {
                                 buildingid: buildingid,
-                                roomid:roomid
+                                roomid:roomid,
+                                date: $("#text-date").val(),
                             }
                         })
                             .done(function(result) {
 
-                                console.log(result);
+                                console.log(result['computers']);
                                 console.log("done");
+
+                                queriedComputers = result['computers'];
 
                                 $("#form_room").show();
 
-                                for(i=0;i<result.length;i++){ // retrieve all computers from result
-                                    computers[i]=result[i];
+                                for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
+                                    computers[i]=queriedComputers[i];
                                 }
 
-                                outputSlotsOf (computers);
+                                outputSlotsOf (computers, result['reservations']);
                             })
                             .fail(function() {
                                 console.log("fail");
