@@ -54,6 +54,7 @@ $defaultTab = 1;
 
             <script type = "text/javascript">
 
+                var slotsPicked = [];
                 var request;
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
@@ -77,6 +78,7 @@ $defaultTab = 1;
                                 typeid: $("#select-type").val(),
                                 email: $("#email").val(),
                                 date: $("#text-date").val(),
+                                slots: slotsPicked,
                             }
                         })
                             .done(function(result) {
@@ -93,11 +95,31 @@ $defaultTab = 1;
 
 
                     $(document).on( "click", ".slotCell.free",function() {
-                        this.setAttribute("class", "slotCell selected")
+                        var slotID = $(this).attr('id');
+
+                        if (slotsPicked.length < 4 && (($.inArray(slotID, slotsPicked)) == -1)) {
+                            slotsPicked.push(slotID);
+                            this.setAttribute("class", "slotCell selected");
+                        }
+                        else {
+                            toastr.error("You cannot select more than 4 slots at once!", "Error");
+                        }
+
+                        console.log(slotsPicked);
+
                     });
 
                     $(document).on( "click", ".slotCell.selected",function() {
-                        this.setAttribute("class", "slotCell free")
+                        var slotID = $(this).attr('id');
+
+                        if (($.inArray(slotID, slotsPicked)) > -1) {
+                            var existIndex = slotsPicked.indexOf(slotID);
+                            slotsPicked.splice(existIndex, 1);
+
+                            this.setAttribute("class", "slotCell free");
+                        }
+
+                        console.log(slotsPicked);
                     });
 
                 });
@@ -139,7 +161,6 @@ $defaultTab = 1;
 
 
                     if (buildingid != "") {
-                        toastr.error("You cannot select more than 4 slots at once!", "Error");
                         console.log(buildingid);
 
                         $.ajax({
