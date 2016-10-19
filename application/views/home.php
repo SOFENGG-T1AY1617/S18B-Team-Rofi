@@ -240,7 +240,8 @@ $defaultTab = 1;
                             dataType: 'json',
                             data: {
                                 buildingid: buildingid,
-                                roomid:roomid
+                                roomid:roomid,
+                                currdate: $("input[name=optradio]:checked").val(),
                             }
                         })
                             .done(function(result) {
@@ -248,10 +249,12 @@ $defaultTab = 1;
                                 console.log(result);
                                 console.log("done");
 
+                                queriedComputers = result['computers'];
+
                                 $("#form_room").show();
 
-                                for(i=0;i<result.length;i++){ // retrieve all computers from result
-                                    computers[i]=result[i];
+                                for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
+                                    computers[i]=queriedComputers[i];
                                 }
 
                                 outputSlotsOf (computers);
