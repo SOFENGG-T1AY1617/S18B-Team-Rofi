@@ -310,6 +310,8 @@ $defaultTab = 1;
 
                                 newTableRow.appendChild(newPCNoCell);
 
+                                var n = 0;
+
                                 for (var m = 0; m < times30.length; m++) { // generate time slot cells
                                     var slotCell = document.createElement("td");
                                     var clickableSlot1 = document.createElement("div");
@@ -319,10 +321,10 @@ $defaultTab = 1;
 
                                     slotCell.className = "nopadding";
 
-                                    clickableSlot1.setAttribute("id", computers[k].computerid + "_" + times15[m]);
+                                    clickableSlot1.setAttribute("id", computers[k].computerid + "_" + times15[n++]);
                                     clickableSlot1.className = "slotCell pull-left";
 
-                                    clickableSlot2.setAttribute("id", computers[k].computerid + "_" + times15[m+1]);
+                                    clickableSlot2.setAttribute("id", computers[k].computerid + "_" + times15[n++]);
                                     clickableSlot2.className = "slotCell pull-right";
 
                                     leftSpacer.className = "slotDivider pull-left";
