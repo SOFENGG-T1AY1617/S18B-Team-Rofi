@@ -241,12 +241,11 @@ $defaultTab = 1;
                             data: {
                                 buildingid: buildingid,
                                 roomid:roomid,
-                                date: $("#text-date").val(),
+                                date: $("input[name=optradio]:checked").val(),
                             }
                         })
                             .done(function(result) {
-
-                                console.log(result['computers']);
+                                console.log(result['reservations']);
                                 console.log("done");
 
                                 queriedComputers = result['computers'];
