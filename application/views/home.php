@@ -91,6 +91,15 @@ $defaultTab = 1;
                             });
                     });
 
+
+                    $(document).on( "click", ".slotCell.free",function() {
+                        this.setAttribute("class", "slotCell selected")
+                    });
+
+                    $(document).on( "click", ".slotCell.selected",function() {
+                        this.setAttribute("class", "slotCell free")
+                    });
+
                 });
 
                 $(function () { // put functions in respective buttons
@@ -322,18 +331,18 @@ $defaultTab = 1;
                                     slotCell.className = "nopadding";
 
                                     clickableSlot1.setAttribute("id", computers[k].computerid + "_" + times15[n++]);
-                                    clickableSlot1.className = "slotCell pull-left";
+                                    clickableSlot1.className = "slotCell pull-left free";
 
                                     clickableSlot2.setAttribute("id", computers[k].computerid + "_" + times15[n++]);
-                                    clickableSlot2.className = "slotCell pull-right";
+                                    clickableSlot2.className = "slotCell pull-right free";
 
                                     leftSpacer.className = "slotDivider pull-left";
                                     rightSpacer.className = "slotDivider pull-right";
 
                                     slotCell.appendChild(leftSpacer);
-                                    slotCell.appendChild(clickableSlot1);
+                                    leftSpacer.appendChild(clickableSlot1);
                                     slotCell.appendChild(rightSpacer);
-                                    slotCell.appendChild(clickableSlot2);
+                                    rightSpacer.appendChild(clickableSlot2);
 
                                     newTableRow.appendChild(slotCell);
                                 }

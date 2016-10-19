@@ -23,10 +23,19 @@ th {
 }
 
 .slotCell {
-    background-color: limegreen;
-    width: 32px;
-    height: 36px;
+    width: 100%;
+    height: 35px;
+
 }
+
+.slotCell.free{
+    background-color: limegreen;
+}
+
+.slotCell.selected{
+    background-color: green;
+}
+
 
 .slotCell:hover {
     background-color: grey;
@@ -34,6 +43,6 @@ th {
 
 .slotDivider {
     background-color: white;
-    width: 2px;
-    height: 36px;
+    width: 49.5%;
+    height: 35px;
 }
