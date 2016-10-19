@@ -133,7 +133,7 @@ $defaultTab = 1;
 
                     $("input[name=optradio]:radio").change(function () {
                         if($("#form_building").val()!=null){
-                            slotsPicked = [];
+
                           selectRoom($("#form_building").val());
                         }
                     });
@@ -227,6 +227,8 @@ $defaultTab = 1;
                     var buildingid = $("#form_building").val();
 
                     var computers = [];
+
+                    slotsPicked = [];
 
                     // Abort any pending request
                     if (request) {
