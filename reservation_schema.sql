@@ -126,13 +126,13 @@ VALUES ("Senior High School"),
 	   ("Staff");
        
 INSERT INTO `reservation_system`.`reservations`
-	(`computerid`, `useridno`, `email`, `start_resdatetime`, `end_resdatetime`,
+	(`computerid`, `useridno`, `email`, `date`, `start_restime`, `end_restime`,
     `collegeid`, `typeid`, `verificationcode`)
-VALUES (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18 11:00:00", "2016-10-18 11:14:59", 2, 2, "45t45y0965134213yktreioet54j209"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18 11:15:00", "2016-10-18 11:29:59", 2, 2, "45t45y0965134213yktreioet54j209"),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19 11:00:00", "2016-10-19 11:14:59", 2, 2, "45t45y0965134213yktreioet54j210"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19 11:15:00", "2016-10-19 11:29:59", 2, 2, "45t45y0965134213yktreioet54j210"),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20 11:00:00", "2016-10-20 11:14:59", 2, 2, "45t45y0965134213yktreioet54j211"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20 11:15:00", "2016-10-20 11:29:59", 2, 2, "45t45y0965134213yktreioet54j211"),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21 11:00:00", "2016-10-21 11:14:59", 2, 2, "45t45y0965134213yktreioet54j212"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21 11:15:00", "2016-10-21 11:29:59", 2, 2, "45t45y0965134213yktreioet54j212");
+VALUES (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j209"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j209"),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j210"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j210"),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j211"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j211"),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j212"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j212");
