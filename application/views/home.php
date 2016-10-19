@@ -74,6 +74,9 @@ $defaultTab = 1;
                             data: {
                                 idnumber: $("#id-number").val(),
                                 collegeid: $("#select-college").val(),
+                                typeid: $("#select-type").val(),
+                                email: $("#email").val(),
+                                date: $("#text-date").val(),
                             }
                         })
                             .done(function(result) {
@@ -240,21 +243,7 @@ $defaultTab = 1;
 
                     $("#slotTable").find("tr:gt(0)").remove(); // remove all cells except first row
 
-                    <?php
-                        $outputArray = [];
-
-                        foreach ($times15 as $time)
-                            $outputArray[] = date("Hi", $time);
-
-                        echo "var times15 = " . json_encode($outputArray) . ";";
-
-                        $outputArray = [];
-
-                        foreach ($times30 as $time)
-                            $outputArray[] = date("Hi", $time);
-
-                        echo "var times30 = " . json_encode($outputArray) . ";";
-                    ?>
+                    var times = <?php echo json_encode($times) ?>;
 
                     //date("h:i A", $time)
 
@@ -290,11 +279,11 @@ $defaultTab = 1;
                         var roomTitleCell = document.createElement("td");
 
                         roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
-                        roomTitleCell.setAttribute("colspan", times30.length+1);
+                        roomTitleCell.setAttribute("colspan", times.length+1);
 
                         roomTitleRow.appendChild(roomTitleCell);
 
-                        $('#slotTable tr:last').after(roomTitleRow);
+                        $('#tableBody').append(roomTitleRow);
 
                         for (var k = 0; k < computers.length; k++) {
 
@@ -307,33 +296,11 @@ $defaultTab = 1;
 
                                 newTableRow.appendChild(newPCNoCell);
 
-                                for (var m = 0; m < times30.length; m++) { // generate time slot cells
-                                    var slotCell = document.createElement("td");
-                                    var clickableSlot1 = document.createElement("div");
-                                    var clickableSlot2 = document.createElement("div");
-                                    var leftSpacer = document.createElement("div");
-                                    var rightSpacer = document.createElement("div");
-
-                                    slotCell.className = "nopadding";
-
-                                    clickableSlot1.setAttribute("id", computers[k].computerid + "_" + times15[m]);
-                                    clickableSlot1.className = "slotCell pull-left";
-
-                                    clickableSlot2.setAttribute("id", computers[k].computerid + "_" + times15[m+1]);
-                                    clickableSlot2.className = "slotCell pull-right";
-
-                                    leftSpacer.className = "slotDivider pull-left";
-                                    rightSpacer.className = "slotDivider pull-right";
-
-                                    slotCell.appendChild(leftSpacer);
-                                    slotCell.appendChild(clickableSlot1);
-                                    slotCell.appendChild(rightSpacer);
-                                    slotCell.appendChild(clickableSlot2);
-
-                                    newTableRow.appendChild(slotCell);
+                                for (var m = 0; m < times.length; m++) { // generate time slot cells
+                                    newTableRow.appendChild(document.createElement("td"));
                                 }
 
-                                $('#slotTable tr:last').after(newTableRow);
+                                $('#tableBody').append(newTableRow);
                             }
 
                         }
@@ -389,14 +356,19 @@ $defaultTab = 1;
                         <div id = "slots" class = "panel panel-default">
                             <div class = "panel-body nopadding">
                                 <table id = "slotTable" class = "table table-bordered">
-                                    <tr>
-                                        <th>PC Numbers</th>
-                                        <?php
-                                            foreach ($times30 as $time) {
+                                    <thead>
+                                        <tr>
+                                            <th>PC Numbers</th>
+                                            <?php
+                                            foreach ($times as $time) {
                                                 echo "<th>" . date("h:i A", $time) . "</th>";
                                             }
-                                        ?>
-                                    </tr>
+                                            ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
