@@ -56,8 +56,9 @@ class Controller extends CI_Controller {
     public function getComputers() {
         $getData = array(
             'buildingid' => $this->input->get('buildingid'),
+
             'roomid' => $this->input->get('roomid'),
-            'date' => $this->input->get('date'),
+            'date' => $this->input->get('currdate'),
         );
 
         $date = date("Y-m-d", strtotime($getData['date']));
@@ -65,25 +66,15 @@ class Controller extends CI_Controller {
         if($getData['roomid']==0)
             $data = array(
                 'computers' => $this->reservationsystem_model->queryAllComputersAtBuildingID($getData['buildingid']),
-                'reservations' => $this->getReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
             );
         else
             $data = array(
-                'computers' => $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']),
-                'reservations' => $this->getReservationsAtRoomIDOnDate($getData['roomid'], $date),
+                'computers' => $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid'])
             );
         /*$data = array(
           'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/
         echo json_encode($data);
-    }
-
-    public function getReservationsAtBuildingID($buildingid) {
-        return $this->reservationsystem_model->queryReservationsAtBuildingID($buildingid);
-    }
-
-    public function getReserationsAtRoomID($roomid) {
-        return $this->reservationsystem_model->queryReservationsAtRoomID($roomid);
     }
 
     public function submitReservation() {

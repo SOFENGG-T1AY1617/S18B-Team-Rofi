@@ -241,11 +241,12 @@ $defaultTab = 1;
                             data: {
                                 buildingid: buildingid,
                                 roomid:roomid,
-                                date: $("input[name=optradio]:checked").val(),
+                                currdate: $("input[name=optradio]:checked").val(),
                             }
                         })
                             .done(function(result) {
-                                console.log(result['reservations']);
+
+                                console.log(result);
                                 console.log("done");
 
                                 queriedComputers = result['computers'];
@@ -256,7 +257,7 @@ $defaultTab = 1;
                                     computers[i]=queriedComputers[i];
                                 }
 
-                                outputSlotsOf (computers, result['reservations']);
+                                outputSlotsOf (computers);
                             })
                             .fail(function() {
                                 console.log("fail");
