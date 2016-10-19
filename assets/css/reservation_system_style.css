@@ -21,3 +21,19 @@ th {
     font-size: 12px;
     white-space: nowrap;
 }
+
+.slotCell {
+    background-color: lightgray;
+    width: 32px;
+    height: 36px;
+}
+
+.slotCell:hover {
+    background-color: gray;
+}
+
+.slotDivider {
+    background-color: white;
+    width: 2px;
+    height: 36px;
+}

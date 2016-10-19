@@ -16,10 +16,8 @@ class ReservationSystem_Model extends CI_Model
         $this->load->database();
     }
 
-    public function getTimes() {
+    public function getTimes($first_hour, $minute_interval) {
         $times = array();
-        $first_hour = 6; // can start with 0
-        $minute_interval = 30; // minute intervals per hour
 
         for ($hour = $first_hour; $hour < 20 ; $hour++) {
             for ($minute = 0; $minute < 60; $minute += $minute_interval) {
