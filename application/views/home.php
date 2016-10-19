@@ -130,6 +130,7 @@ $defaultTab = 1;
 
 
                     if (buildingid != "") {
+                        toastr.error("You cannot select more than 4 slots at once!", "Error");
                         console.log(buildingid);
 
                         $.ajax({
