@@ -74,6 +74,9 @@ $defaultTab = 1;
                             data: {
                                 idnumber: $("#id-number").val(),
                                 collegeid: $("#select-college").val(),
+                                typeid: $("#select-type").val(),
+                                email: $("#email").val(),
+                                date: $("#text-date").val(),
                             }
                         })
                             .done(function(result) {
