@@ -48,7 +48,7 @@
 
         });
 
-        toastr["error"]("You cannot select more than 4 slots at once!", "Error")
+        //toastr["error"]("You cannot select more than 4 slots at once!", "Error")
 
         toastr.options = {
             "closeButton": false,

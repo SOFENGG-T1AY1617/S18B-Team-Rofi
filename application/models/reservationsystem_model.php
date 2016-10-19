@@ -102,33 +102,40 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->get(TABLE_TYPES)->result();
     }
 
-    function queryReservationsAtBuildingID($id) {
+    function queryReservationsAtBuildingIDOnDate($id, $date) {
         $sql = "SELECT *
                 FROM rooms r NATURAL JOIN 
                   (SELECT buildingid
                    FROM  buildings
                    WHERE buildingid = ?) b NATURAL JOIN 
-                  computers NATURAL JOIN reservations";
-        return $this->db->query($sql, array($id))->result();
+                  computers NATURAL JOIN 
+                  (SELECT *
+                   FROM reservations
+                   WHERE date = ?) r";
+        return $this->db->query($sql, array($id, $date))->result();
     }
 
-    function queryReservationsAtRoomID($id) {
+    function queryReservationsAtRoomIDOnDate($id, $date) {
         $sql = "SELECT *
-                FROM reservations NATURAL JOIN
+                FROM (SELECT *
+                      FROM reservations
+                      WHERE date = ?) r NATURAL JOIN
                   computers NATURAL JOIN
                   (SELECT roomid
                    FROM rooms
-                   WHERE roomid = ?) r";
-        return $this->db->query($sql, array($id))->result();
+                   WHERE roomid = ?) ro";
+        return $this->db->query($sql, array($date, $id))->result();
     }
 
-    function queryReservationsOfComputerID($id) {
+    function queryReservationsOfComputerIDOnDate($id, $date) {
         $sql = "SELECT *
-                FROM reservations NATURAL JOIN
+                FROM (SELECT *
+                      FROM reservations
+                      WHERE date = ?) r NATURAL JOIN
                   (SELECT computerid
                    FROM computers
                    WHERE computerid = ?) c";
-        return $this->db->query($sql, array($id))->result();
+        return $this->db->query($sql, array($date, $id))->result();
     }
 
     function isExistingVerificationCode($verificationCode) {
