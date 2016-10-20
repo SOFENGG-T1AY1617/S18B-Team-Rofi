@@ -138,6 +138,19 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
+    function createReservation() {
+        $sql = "
+                INSERT INTO reservations
+                  (computerid, useridno, email, date, start_restime, end_restime,
+                  collegeid, typeid, verificationcode)
+                VALUES            
+            ";
+        for($i = 0; $i < count($slots) - 1; $i++) {
+            $slot = $slots[i];
+            $sql = $sql + "(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        }
+    }
+
     function isExistingVerificationCode($verificationCode) {
         $result = $this->db->get_where(TABLE_RESERVATIONS, $verificationCode);
 

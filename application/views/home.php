@@ -92,6 +92,20 @@ $defaultTab = 1;
                             .done(function(result) {
                                 console.log(result);
                                 console.log("done");
+                                if (result['status'] == "fail") {
+                                    errors = result['errors'];
+                                    $toast = "You have an error in the following input";
+                                    if (errors.length > 1)
+                                        $toast = $toast + "s: ";
+                                    else
+                                        $toast = $toast + ": ";
+
+                                    for (i = 0; i < errors.length - 1; i++) {
+                                        $toast = $toast + errors[i] + ", ";
+                                    }
+                                    $toast = $toast + errors[errors.length-1];
+                                    toastr.error($toast, "Submission failed");
+                                }
                             })
                             .fail(function() {
                                 console.log("fail");
@@ -550,7 +564,7 @@ $defaultTab = 1;
                                 <div class="form-group">
                                     <label for="college">College:</label>
                                     <select class="form-control" name="form-college" id="select-college">
-                                        <option selected disabled>Choose your college...</option>
+                                        <option value="0" selected disabled>Choose your college...</option>
                                         <?php foreach($colleges as $row):?>
                                             <option value="<?=$row->collegeid?>"><?=$row->name?></option>
                                         <?php endforeach;?>
@@ -560,7 +574,7 @@ $defaultTab = 1;
                                 <div class="form-group">
                                     <label for="type">Type:</label>
                                     <select class="form-control" name="form-type" id="select-type">
-                                        <option selected disabled>Choose your type...</option>
+                                        <option value="0" selected disabled>Choose your type...</option>
                                         <?php foreach($types as $row):?>
                                             <option value="<?=$row->typeid?>"><?=$row->type?></option>
                                         <?php endforeach;?>

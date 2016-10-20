@@ -102,8 +102,23 @@ class Controller extends CI_Controller {
             $errors[] = "ID Number";
         }
         else { // Check if valid id number start
-            $year = substr($idNumber, 0, 3);
+            $year = substr($idNumber, 1, 2);
+
+            if ($year < "08" || $year > date("y") + "") {
+                $errors[] = "ID Number";
+            }
         }
+
+        if ($getData['collegeid'] == "0") {
+            $errors[] = "College";
+        }
+        if ($getData['typeid'] == 0) {
+            $errors[] = "Type";
+        }
+        if (strlen($getData['email']) < 4) {
+            $errors[] = "Email Address";
+        }
+
 
 
         if (count($errors) > 0) {
@@ -112,7 +127,12 @@ class Controller extends CI_Controller {
                 'errors' => $errors,
             );
         }
-        else {
+        else { // Add to database
+            $slots = $getData['slots'];
+            
+
+
+
             $data = array(
                 'status' => 'success',
             );
