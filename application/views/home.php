@@ -76,7 +76,6 @@ $defaultTab = 1;
                     $("#form_room").hide();
 
                     $("#finish").click(function() {
-                        console.log($("#select-college").val());
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
                             type: 'GET',
@@ -653,7 +652,7 @@ $defaultTab = 1;
                                 <a href="#tab_1_<?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>
                             <li class="next nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="finish">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="go-back">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
                     </div>

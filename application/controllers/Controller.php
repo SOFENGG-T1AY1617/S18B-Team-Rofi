@@ -83,7 +83,42 @@ class Controller extends CI_Controller {
     }
 
     public function submitReservation() {
+        $getData = array(
+            'idnumber' => $this->input->get('idnumber'),
+            'collegeid' => $this->input->get('collegeid'),
+            'typeid' => $this->input->get('typeid'),
+            'email' => $this->input->get('email'),
+            'date' => $this->input->get('date'),
+            'slots' => $this->input->get('slots'),
+        );
 
+        $errors = [];
+        $data = array();
+
+        // Check if data is valid
+        $idNumber = $getData['idnumber'];
+        if (strlen($idNumber) > 8 || strlen($idNumber < 8) ||
+            substr($idNumber, 0, 1) != '1') { // Invalid id number
+            $errors[] = "ID Number";
+        }
+        else { // Check if valid id number start
+            $year = substr($idNumber, 0, 3);
+        }
+
+
+        if (count($errors) > 0) {
+            $data = array(
+                'status' => 'fail',
+                'errors' => $errors,
+            );
+        }
+        else {
+            $data = array(
+                'status' => 'success',
+            );
+        }
+
+        echo json_encode($data);
     }
 
     public function isExistingVerificationCode($verificationCode) {
