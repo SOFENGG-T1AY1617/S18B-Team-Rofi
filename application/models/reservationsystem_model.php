@@ -16,14 +16,26 @@ class ReservationSystem_Model extends CI_Model
         $this->load->database();
     }
 
-    public function getTimes($first_hour, $minute_interval) {
+    public function getTimes($first_hour, $minute_interval, $tomorrow) {
         $times = array();
 
         for ($hour = $first_hour; $hour < 20 ; $hour++) {
             for ($minute = 0; $minute < 60; $minute += $minute_interval) {
-                $times[] = mktime($hour, $minute, 0, 0, 0, 0);
+
+                if ($tomorrow == 1)
+                    $time = mktime($hour, $minute, 0, date("m"), date("d") + 1, date("Y"));
+                else
+                    $time = mktime($hour, $minute, 0, date("m"), date("d"), date("Y"));
+
+                $times[] = $time;
+
             }
         }
+
+        if ($tomorrow == 1)
+            $times[] = mktime($hour, 0, 0, date("m"), date("d") + 1, date("Y"));
+        else
+            $times[] = mktime($hour, 0, 0, date("m"), date("d"), date("Y"));
 
         return $times;
     }

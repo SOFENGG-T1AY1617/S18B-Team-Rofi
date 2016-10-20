@@ -33,12 +33,19 @@ th {
 }
 
 .slotCell.selected{
-    background-color: green;
+    background-color: darkgreen;
 }
 
+.slotCell.taken {
+    background-color: lightgrey;
+}
 
-.slotCell:hover {
-    background-color: grey;
+:not(.taken):not(selected).slotCell:hover {
+    background-color: greenyellow;
+}
+
+:not(.taken):not(.free).slotCell:hover {
+    background-color: green;
 }
 
 .slotDivider {
