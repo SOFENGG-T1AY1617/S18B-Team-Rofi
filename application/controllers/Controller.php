@@ -30,8 +30,9 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->reservationsystem_model->queryAllBuildings();
         $data['colleges'] = $this->reservationsystem_model->queryColleges();
         $data['types'] = $this->reservationsystem_model->queryTypes();
-        $data['times15'] = $this->reservationsystem_model->getTimes(6, 15);
-        $data['times30'] = $this->reservationsystem_model->getTimes(6, 30);
+        $data['times15_today'] = $this->reservationsystem_model->getTimes(6, 15, 0);
+        $data['times15_tomorrow'] = $this->reservationsystem_model->getTimes(6, 15, 1);
+        $data['times30'] = $this->reservationsystem_model->getTimes(6, 30, 0);
 
         $data['tab'] = 1;
 
