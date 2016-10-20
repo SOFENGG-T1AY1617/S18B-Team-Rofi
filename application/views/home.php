@@ -162,7 +162,7 @@ $defaultTab = 1;
                                 $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
                             }
 
-                            selectBuilding($("#form_building").val());
+                            selectRoom($("#form_room").val());
 
                         }
                     });
@@ -218,7 +218,7 @@ $defaultTab = 1;
 
                             $("#form_room").empty().append(out);
 
-                            selectRoom("0")
+                            selectRoom("0");
 
                             numOfRooms = result.length;
 
@@ -692,12 +692,29 @@ $defaultTab = 1;
 
             ?>
 
+            <script>
+                var reset = function reset () {
+                    
+                };
+
+                $("#ok-button").click(reset);
+            </script>
+
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
 
                 <div class = "row">
                     <div class = "col-md-10 col-md-offset-1">
                         <div class="panel-body">
-                            A URL with the confirmation code has been sent to your email address! Please click the link to confirm your reservation! Thank You!
+                            <div class = "row">
+                                <div class = "col-md-12">
+                                    A URL with the confirmation code has been sent to your email address! Please click the link to confirm your reservation! Thank You!
+                                </div>
+                            </div>
+                            <div class = "row">
+                                <div class = "col-md-3 col-md-offset-5">
+                                    <button id = "ok-button" type="button" class="btn btn-success">OK!</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -717,19 +734,18 @@ $defaultTab = 1;
 
                     <div class = "col-md-10 col-md-offset-1">
                         <ul class="pager">
-                            <li class="previous prevStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
+                            <!--<li class="previous prevStep_<?//php echo $stepNo ?>">
+                                <a href="#tab_1_<?//php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>
-                            <li class="next nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="finish">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
-                            </li>
+                            <li class="next nextStep_<?//php echo $stepNo ?>">
+                                <a href="#tab_1_<?//php echo $stepNo+1 ?>" data-toggle="tab" id="finish">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                            </li>-->
                         </ul>
                     </div>
 
                 </div>
 
             </div>
-
 
         </div> <!-- EOF -->
 
