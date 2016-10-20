@@ -89,12 +89,35 @@ class Controller extends CI_Controller {
             'collegeid' => $this->input->get('collegeid'),
             'typeid' => $this->input->get('typeid'),
             'email' => $this->input->get('email'),
-            'date' => $this->input->get('date'),
             'slots' => $this->input->get('slots'),
+            'verificationCode' => "",
         );
 
+        $errors = $this->validateInput($getData);
+
+        if (count($errors) > 0) {
+            $data = array(
+                'status' => 'fail',
+                'errors' => $errors,
+            );
+        }
+        else { // Add to database
+            $slots = $this->parseSlots($getData['slots']);
+            $getData['slots'] = $slots;
+            $getData['verificationCode'] = $this->getVerificationCode();
+            //$this->reservationsystem_model->createReservation($getData);
+
+            $data = array(
+                'status' => 'success',
+                'data' => $getData,
+            );
+        }
+
+        echo json_encode($data);
+    }
+
+    private function validateInput($getData) {
         $errors = [];
-        $data = array();
 
         // Check if data is valid
         $idNumber = $getData['idnumber'];
@@ -120,26 +143,38 @@ class Controller extends CI_Controller {
             $errors[] = "Email Address";
         }
 
+        return $errors;
+    }
 
+    private function parseSlots($slotsString) {
+        // "3_2016-10-20_06:45:00_07:00:00"
+        $slots = [];
 
-        if (count($errors) > 0) {
-            $data = array(
-                'status' => 'fail',
-                'errors' => $errors,
+        foreach($slotsString as $slotString) {
+            $slotArray = explode("_", $slotString);
+            $slot = array(
+                'computerid' => $slotArray[0],
+                'date' => $slotArray[1],
+                'startTime' => $slotArray[2],
+                'endTime' => $slotArray[3],
             );
-        }
-        else { // Add to database
-            $slots = $getData['slots'];
-            
 
-
-
-            $data = array(
-                'status' => 'success',
-            );
+            $slots[] = $slot;
         }
 
-        echo json_encode($data);
+        return $slots;
+    }
+
+    public function getVerificationCode() {
+        $this->load->helper('string');
+
+        $code = random_string('sha1');
+
+        while ($this->isExistingVerificationCode($code)) {
+            $code = random_string('sha1');
+        }
+
+        return $code;
     }
 
     public function isExistingVerificationCode($verificationCode) {

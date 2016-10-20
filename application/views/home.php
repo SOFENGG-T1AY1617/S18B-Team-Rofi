@@ -101,7 +101,6 @@ $defaultTab = 1;
                                 collegeid: $("#select-college").val(),
                                 typeid: $("#select-type").val(),
                                 email: $("#email").val(),
-                                date: $("#text-date").val(),
                                 slots: slotsPicked,
                             }
                         })

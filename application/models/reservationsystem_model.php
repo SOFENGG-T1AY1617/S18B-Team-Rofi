@@ -150,7 +150,8 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
-    function createReservation() {
+    function createReservation($data) {
+        $slots = $data['slots'];
         $sql = "
                 INSERT INTO reservations
                   (computerid, useridno, email, date, start_restime, end_restime,
@@ -159,14 +160,50 @@ class ReservationSystem_Model extends CI_Model
             ";
         for($i = 0; $i < count($slots) - 1; $i++) {
             $slot = $slots[i];
-            $sql = $sql + "(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = $sql + " (?, ?, ?, ?, ?, ?, ?, ?, ?),";
+            $stmt = array(
+                $slot['computerid'],
+                $data['idnumber'],
+                $data['email'],
+                $slot['date'],
+                $slot['startTime'],
+                $slot['endTime'],
+                $data['collegeid'],
+                $data['typeid'],
+                $data['verificationCode'],
+            );
+            $this->db->query($sql, $stmt);
         }
+
+        $slot = $slots[count($slots) - 1];
+        $sql = $sql + " (?, ?, ?, ?, ?, ?, ?, ?, ?),";
+        $stmt = array(
+            $slot['computerid'],
+            $data['idnumber'],
+            $data['email'],
+            $slot['date'],
+            $slot['startTime'],
+            $slot['endTime'],
+            $data['collegeid'],
+            $data['typeid'],
+            $data['verificationCode'],
+        );
+        $this->db->query($sql, $stmt);
+        return $this->db->get()->result();
     }
 
     function isExistingVerificationCode($verificationCode) {
-        $result = $this->db->get_where(TABLE_RESERVATIONS, $verificationCode);
+        /*$sql = "SELECT *
+                FROM reservations
+                WHERE verificationcode LIKE ?";
+        $this->db->query($sql, array($verificationCode));
+        $result = $this->db->get();*/
+        $result = $this->db->get_where(TABLE_RESERVATIONS, $verificationCode)->result;
 
         // Check if there is existing row
-        return $result->num_rows() > 0;
+        /*if ($result->num_rows() > 0)
+            return true;
+        else*/
+        return false;
     }
 }
