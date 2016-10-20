@@ -160,4 +160,13 @@ class ReservationSystem_Model extends CI_Model
     function queryReservationsAtSlotOnDate($slot, $date){
 
     }
+
+    function queryRoomAndCompNoAtComputerID($id) {
+        $sql = "SELECT name, computerno
+                FROM rooms NATURAL JOIN 
+                  (SELECT roomid, computerno
+                   FROM computers
+                   WHERE computerid = ?) b";
+        return $this->db->query($sql, array($id))->result();
+    }
 }

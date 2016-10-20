@@ -92,14 +92,15 @@ class Controller extends CI_Controller {
     }
 
     public function getMyReservations() {
-
-            $date = $this->input->get('date');
             $slots = $this->input->get('slots');
             $data =[];
 
 
         foreach ($slots as $slot ) {
-            $data.add($this->reservationsystem_model->queryReservationsAtSlotOnDate($slot,$date));
+            $arr = explode( '_', $slot);
+            $roomName = $this->reservationsystem_model->queryRoomAndCompNoAtComputerID($arr[0]);
+            $arr2 = array('roomName' => $roomName[0]->name,'compNo' => $roomName[0]->computerno,'date'=>$arr[1],'start'=>$arr[2],'end'=>$arr[3]);
+            array_push($data,$arr2);
         }
         /*$data = array(
           'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
