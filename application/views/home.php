@@ -59,7 +59,17 @@ $defaultTab = 1;
                 var dateSelected = "<?=date("Y-m-d")?>";
 
                 $(document).ready(function() {
+
+                    $("#proceed-to-step2").attr("data-toggle", "");
+
                     $("#proceed-to-step2").click(function() {
+                        if (slotsPicked == 0) {
+                            toastr.info("You must choose up to 4 slots before proceeding.", "Info");
+                            $(this).attr("data-toggle", "");
+                        } else {
+                            $(this).attr("data-toggle", "tab");
+                        }
+
                         var date_selected = $("input[name=optradio]:checked").val();
                         console.log(date_selected);
                         if (date_selected == "today") {
@@ -530,7 +540,7 @@ $defaultTab = 1;
                                 <a href="#tab_1_</?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>-->
                             <li class="nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="proceed-to-step2">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="proceed-to-step<?php echo $stepNo+1 ?>">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
                     </div>
