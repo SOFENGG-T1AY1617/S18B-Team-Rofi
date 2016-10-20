@@ -57,6 +57,7 @@ $defaultTab = 1;
                 var slotsPicked = [];
                 var request;
                 var dateSelected = "<?=date("Y-m-d")?>";
+
                 $(document).ready(function() {
                     $("#proceed-to-step2").click(function() {
                         var date_selected = $("input[name=optradio]:checked").val();
@@ -156,7 +157,20 @@ $defaultTab = 1;
                     $("input[name=optradio]:radio").change(function () {
                         if($("#form_building").val()!=null){
 
-                          selectRoom($("#form_building").val());
+                            var date_selected = $("input[name=optradio]:checked").val();
+                            console.log(date_selected);
+                            if (date_selected == "today") {
+                                dateSelected = "<?=date("Y-m-d")?>";
+                                $("#text-date").text("<?=date("F d, Y")?>");
+                            }
+                            else {
+                                dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
+                                $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
+                            }
+
+                            selectRoom($("#form_building").val());
+
+
                         }
                     });
 
@@ -273,7 +287,6 @@ $defaultTab = 1;
 
                     if (buildingid!=""&&roomid != "") {
                         console.log(buildingid+"-"+roomid);
-                        console.log($("input[name=optradio]:checked").val())
 
                         $.ajax({
                             url: '<?php echo base_url('getComputers') ?>',
