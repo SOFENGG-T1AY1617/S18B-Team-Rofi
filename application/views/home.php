@@ -162,8 +162,7 @@ $defaultTab = 1;
                                 $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
                             }
 
-                            selectRoom($("#form_building").val());
-
+                            selectBuilding($("#form_building").val());
 
                         }
                     });
@@ -244,8 +243,6 @@ $defaultTab = 1;
 
                     var computers = [];
                     var reservations = [];
-
-
 
                     // Abort any pending request
                     if (request) {
@@ -416,19 +413,19 @@ $defaultTab = 1;
                                     if (!taken) {
                                         var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
 
-                                        var selected = false;
+                                        /*var selected = false;
 
                                         for(var s=0;s<slotsPicked.length;s++)
                                         {
                                             if(strID==slotsPicked[s])
                                                 selected = true;
-                                        }
+                                        }*/
                                         clickableSlot1.setAttribute("id", strID);
 
-                                        if(selected)
+                                        if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)
                                             clickableSlot1.className = "slotCell pull-left selected";
                                         else
-                                        clickableSlot1.className = "slotCell pull-left free";
+                                            clickableSlot1.className = "slotCell pull-left free";
                                     } else {
                                         clickableSlot1.className = "slotCell pull-left taken";
                                         n++;
@@ -443,16 +440,16 @@ $defaultTab = 1;
                                     if (!taken) {
                                         var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
 
-                                        var selected = false;
+                                        /*var selected = false;
 
                                         for(var s=0;s<slotsPicked.length;s++)
                                         {
                                             if(strID==slotsPicked[s])
                                                 selected = true;
-                                        }
+                                        }*/
                                         clickableSlot2.setAttribute("id", strID);
 
-                                        if(selected)
+                                        if (($.inArray(clickableSlot2.getAttribute("id"), slotsPicked)) > -1)
                                             clickableSlot2.className = "slotCell pull-left selected";
                                         else
                                             clickableSlot2.className = "slotCell pull-left free";
@@ -700,7 +697,7 @@ $defaultTab = 1;
                 <div class = "row">
                     <div class = "col-md-10 col-md-offset-1">
                         <div class="panel-body">
-                            STEP3
+                            A URL with the confirmation code has been sent to your email address! Please click the link to confirm your reservation! Thank You!
                         </div>
                     </div>
                 </div>
