@@ -254,6 +254,7 @@ $defaultTab = 1;
                     var buildingid = $("#form_building").val();
 
                     var computers = [];
+                    var reservations = [];
 
                     slotsPicked = [];
 
@@ -295,6 +296,7 @@ $defaultTab = 1;
                                 console.log("done");
 
                                 queriedComputers = result['computers'];
+                                queriedReservations = result['reservations'];
 
                                 $("#form_room").show();
 
@@ -302,7 +304,11 @@ $defaultTab = 1;
                                     computers[i]=queriedComputers[i];
                                 }
 
-                                outputSlotsOf (computers);
+                                for(i=0;i<queriedReservations.length;i++){ // retrieve all reservations from result
+                                    reservations[i]=queriedReservations[i];
+                                }
+
+                                outputSlotsOf (computers, reservations);
                             })
                             .fail(function() {
                                 console.log("fail");
@@ -318,27 +324,32 @@ $defaultTab = 1;
                     }
                 }
 
-                function outputSlotsOf (computers) {
+                function outputSlotsOf (computers, reservations) {
 
                     $("#slotTable").find("tr:gt(0)").remove(); // remove all cells except first row
 
                     <?php
-                    $outputArray = [];
+                    $tm15_today = [];
 
-                    foreach ($times15 as $time)
-                        $outputArray[] = date("Hi", $time);
+                    foreach ($times15_today as $key => $time)
+                        $tm15_today[] = date("H:i:s", $time);
 
-                    echo "var times15 = " . json_encode($outputArray) . ";";
+                    echo "var times15_today = " . json_encode($tm15_today) . ";";
 
-                    $outputArray = [];
+                    $tm15_tomorrow = [];
+
+                    foreach ($times15_tomorrow as $time)
+                        $tm15_tomorrow[] = date("H:i:s", $time);
+
+                    echo "var times15_tomorrow = " . json_encode($tm15_tomorrow) . ";";
+
+                    $tm30_today = [];
 
                     foreach ($times30 as $time)
-                        $outputArray[] = date("Hi", $time);
+                        $tm30_today[] = date("Hi", $time);
 
-                    echo "var times30 = " . json_encode($outputArray) . ";";
+                    echo "var times30 = " . json_encode($tm30_today) . ";";
                     ?>
-
-                    //date("h:i A", $time)
 
                     var roomIDs = [];
                     var roomNames = [];
@@ -389,9 +400,16 @@ $defaultTab = 1;
 
                                 newTableRow.appendChild(newPCNoCell);
 
-                                var n = 0;
+                                var n = 0; // counter for chosenDateTimes
+                                var chosenDateTimes;
 
-                                for (var m = 0; m < times30.length; m++) { // generate time slot cells
+                                if (dateSelected == "<?php echo date("Y-m-d") ?>") {
+                                    chosenDateTimes = times15_today;
+                                } else {
+                                    chosenDateTimes = times15_tomorrow;
+                                }
+
+                                for (var m = 0; m < times30.length-1; m++) { // generate time slot cells
                                     var slotCell = document.createElement("td");
                                     var clickableSlot1 = document.createElement("div");
                                     var clickableSlot2 = document.createElement("div");
@@ -400,11 +418,33 @@ $defaultTab = 1;
 
                                     slotCell.className = "nopadding";
 
-                                    clickableSlot1.setAttribute("id", computers[k].computerid + "_" + times15[n++]);
-                                    clickableSlot1.className = "slotCell pull-left free";
+                                    var taken = false;
+                                    for (var p = 0; p < reservations.length; p++) {
+                                        if ( (reservations[p].start_restime == chosenDateTimes[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid) )
+                                            taken = true;
+                                    }
 
-                                    clickableSlot2.setAttribute("id", computers[k].computerid + "_" + times15[n++]);
-                                    clickableSlot2.className = "slotCell pull-right free";
+                                    if (!taken) {
+                                        clickableSlot1.setAttribute("id", computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n]);
+                                        clickableSlot1.className = "slotCell pull-left free";
+                                    } else {
+                                        clickableSlot1.className = "slotCell pull-left taken";
+                                        n++;
+                                    }
+
+                                    taken = false;
+                                    for (var p = 0; p < reservations.length; p++) {
+                                        if ( (reservations[p].start_restime == chosenDateTimes[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid) )
+                                            taken = true;
+                                    }
+
+                                    if (!taken) {
+                                        clickableSlot2.setAttribute("id", computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n]);
+                                        clickableSlot2.className = "slotCell pull-left free";
+                                    } else {
+                                        clickableSlot2.className = "slotCell pull-left taken";
+                                        n++;
+                                    }
 
                                     leftSpacer.className = "slotDivider pull-left";
                                     rightSpacer.className = "slotDivider pull-right";
@@ -435,7 +475,7 @@ $defaultTab = 1;
                             <div class = "panel-body">
                                 <div class="radio">
                                     <div class="radio" id="radio-date" name="form-date">
-                                        <label><input type="radio" id="radio-today" name="optradio" value="today"checked>
+                                        <label><input type="radio" id="radio-today" name="optradio" value="today" checked>
                                             Today
                                             <div class = "date-font"> (<?=date("F d, Y")?>) </div>
                                         </label>
@@ -477,9 +517,12 @@ $defaultTab = 1;
                                         <tr>
                                             <th>PC Numbers</th>
                                             <?php
-                                            foreach ($times30 as $time) {
-                                                echo "<th>" . date("h:i A", $time) . "</th>";
+
+                                            foreach ($times30 as $key => $time) {
+                                                if ($key != count($times30) - 1)
+                                                    echo "<th>" . date("h:i A", $time) . "</th>";
                                             }
+
                                             ?>
                                         </tr>
                                     </thead>
