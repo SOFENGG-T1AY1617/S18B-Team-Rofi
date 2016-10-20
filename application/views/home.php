@@ -245,7 +245,7 @@ $defaultTab = 1;
                     var computers = [];
                     var reservations = [];
 
-                    slotsPicked = [];
+
 
                     // Abort any pending request
                     if (request) {
@@ -414,7 +414,20 @@ $defaultTab = 1;
                                     }
 
                                     if (!taken) {
-                                        clickableSlot1.setAttribute("id", computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n]);
+                                        var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
+
+                                        var selected = false;
+
+                                        for(var s=0;s<slotsPicked.length;s++)
+                                        {
+                                            if(strID==slotsPicked[s])
+                                                selected = true;
+                                        }
+                                        clickableSlot1.setAttribute("id", strID);
+
+                                        if(selected)
+                                            clickableSlot1.className = "slotCell pull-left selected";
+                                        else
                                         clickableSlot1.className = "slotCell pull-left free";
                                     } else {
                                         clickableSlot1.className = "slotCell pull-left taken";
@@ -428,8 +441,21 @@ $defaultTab = 1;
                                     }
 
                                     if (!taken) {
-                                        clickableSlot2.setAttribute("id", computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n]);
-                                        clickableSlot2.className = "slotCell pull-left free";
+                                        var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
+
+                                        var selected = false;
+
+                                        for(var s=0;s<slotsPicked.length;s++)
+                                        {
+                                            if(strID==slotsPicked[s])
+                                                selected = true;
+                                        }
+                                        clickableSlot2.setAttribute("id", strID);
+
+                                        if(selected)
+                                            clickableSlot2.className = "slotCell pull-left selected";
+                                        else
+                                            clickableSlot2.className = "slotCell pull-left free";
                                     } else {
                                         clickableSlot2.className = "slotCell pull-left taken";
                                         n++;
