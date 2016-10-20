@@ -68,12 +68,13 @@ class Controller extends CI_Controller {
             $data = array(
                 'computers' => $this->reservationsystem_model->queryAllComputersAtBuildingID($getData['buildingid']),
                 'reservations' => $this->reservationsystem_model->queryReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
-                'date' => $date
+                'date' => $date,
             );
         else
             $data = array(
                 'computers' => $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']),
-                'reservations' => $this->reservationsystem_model->queryReservationsAtRoomIDOnDate($getData['roomid'], $date)
+                'reservations' => $this->reservationsystem_model->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
+                'date' => $date,
             );
         /*$data = array(
           'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
