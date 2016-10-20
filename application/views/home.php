@@ -38,9 +38,6 @@ $defaultTab = 1;
 
             $tab = (isset($tab)) ? $tab : 'tab' . $defaultTab;
 
-            ?>
-
-            <?php
             /**
              * Created by PhpStorm.
              * User: Patrick
@@ -59,7 +56,22 @@ $defaultTab = 1;
                 var dateSelected = "<?=date("Y-m-d")?>";
 
                 $(document).ready(function() {
-                    $("#proceed-to-step2").click(function() {
+
+                    $(".pager li.nextStep_<?php echo $stepNo ?> a").attr("data-toggle", "");
+
+                    $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
+                        if (slotsPicked == 0) {
+                            toastr.info("You must choose up to 4 slots before proceeding.", "Info");
+                            $(this).attr("data-toggle", "");
+                        } else {
+                            $(this).attr("data-toggle", "tab");
+
+                            $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
+                            $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
+
+                            $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
+                        }
+
                         var date_selected = $("input[name=optradio]:checked").val();
                         console.log(date_selected);
                         if (date_selected == "today") {
@@ -72,6 +84,10 @@ $defaultTab = 1;
                         }
                     });
 
+                    $(".pager li.nextStep_<?php echo $stepNo ?>").click(function() {
+                        if ($(this).hasClass('active'))
+                            $(this).removeClass('active');
+                    });
 
                     $("#form_room").hide();
 
@@ -163,20 +179,6 @@ $defaultTab = 1;
 
 
                         }
-                    });
-
-                });
-
-                $(function () { // put functions in respective buttons
-
-                    $('.pager li.nextStep_<?php echo $stepNo ?>').on('click', function () { // for next step
-                        if ($(this).hasClass('active'))
-                            $(this).removeClass('active');
-
-                        $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
-                        $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
-
-                        $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                     });
 
                 });
@@ -543,7 +545,7 @@ $defaultTab = 1;
                                 <a href="#tab_1_</?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>-->
                             <li class="nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="proceed-to-step2">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
                     </div>
