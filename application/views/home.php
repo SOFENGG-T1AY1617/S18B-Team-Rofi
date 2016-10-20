@@ -693,11 +693,13 @@ $defaultTab = 1;
             ?>
 
             <script>
-                var reset = function reset () {
-                    
+                var reset = function () {
+                    location.reload(true);
                 };
 
-                $("#ok-button").click(reset);
+                $(document).ready(function(){
+                    $("#ok-button").click(reset);
+                });
             </script>
 
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
