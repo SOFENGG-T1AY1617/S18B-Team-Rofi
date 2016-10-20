@@ -56,3 +56,4 @@ $route['translate_uri_dashes'] = FALSE;
 $route['getRooms'] = 'Controller/getRooms';
 $route['getComputers'] = 'Controller/getComputers';
 $route['submitReservation'] = 'Controller/submitReservation';
+$route['getMyReservations'] = 'Controller/getMyReservations';

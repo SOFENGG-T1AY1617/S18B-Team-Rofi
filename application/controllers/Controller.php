@@ -88,4 +88,20 @@ class Controller extends CI_Controller {
     public function isExistingVerificationCode($verificationCode) {
         return $this->reservationsystem_model->isExistingVerificationCode($verificationCode);
     }
+
+    public function getMyReservations() {
+
+            $date = $this->input->get('date');
+            $slots = $this->input->get('slots');
+            $data =[];
+
+
+        foreach ($slots as $slot ) {
+            $data.add($this->reservationsystem_model->queryReservationsAtSlotOnDate($slot,$date));
+        }
+        /*$data = array(
+          'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
+        );*/
+        echo json_encode($data);
+    }
 }

@@ -144,4 +144,8 @@ class ReservationSystem_Model extends CI_Model
         // Check if there is existing row
         return $result->num_rows() > 0;
     }
+
+    function queryReservationsAtSlotOnDate($slot, $date){
+
+    }
 }

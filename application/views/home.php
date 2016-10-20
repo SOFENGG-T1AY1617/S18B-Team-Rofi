@@ -69,6 +69,28 @@ $defaultTab = 1;
                             dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
                             $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
                         }
+
+                        if(slotsPicked!=null){
+                            $.ajax({
+                                url: '<?php echo base_url('getMyReservations') ?>',
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {
+                                    date: $("#text-date").val(),
+                                    slots: slotsPicked,
+                                }
+                            })
+                                .done(function(result) {
+                                    console.log(result);
+                                })
+                                .fail(function() {
+                                    console.log("fail");
+                                })
+                                .always(function() {
+                                    console.log("complete");
+                                });
+                        }
+
                     });
 
 
@@ -561,19 +583,32 @@ $defaultTab = 1;
                                 </div>
 
                                 <b>Date:</b> <span id="text-date"></span>
-                                <br /><br />
+                                <br />
                                 <b>Time Slots:</b>
+                                <br/>
                                 <div class = "row">
-                                    <div class = "col-md-6">
+                                    <div class = "col-md-4">
                                         <div class="form-group">
-                                            <label for="starttime">Start:</label>
-                                            <input type="starttime" class="form-control" name="form-start-time" id="start-time" disabled>
+                                            <label>Comp#:</label>
+                                            <div id="computerColumn">
+
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class = "col-md-6">
+                                    <div class = "col-md-4">
                                         <div class="form-group">
-                                            <label for="endtime">End:</label>
-                                            <input type="endtime" class="form-control" name="form-end-time" id="end-time" disabled>
+                                            <label>Start:</label>
+                                            <div id="startColumn">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class = "col-md-4">
+                                        <div class="form-group">
+                                            <label>End:</label>
+                                            <div id="endColumn">
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
