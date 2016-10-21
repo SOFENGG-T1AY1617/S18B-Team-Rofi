@@ -109,6 +109,22 @@ $defaultTab = 1;
                             .done(function(result) {
                                 console.log(result);
                                 console.log("done");
+                                if (result['status'] == "fail") {
+                                    errors = result['errors'];
+                                    toast = "You have an error in the following input ";
+                                    if (errors.length > 1) {
+                                       toast = toast + "s: ";
+                                    }
+                                    else {
+                                        toast = toast + ": ";
+                                    }
+
+                                    for (i = 0; i < errors.length; i++) {
+                                        toast = toast + errors[i] + ", ";
+                                    }
+                                    toast = toast + errors[errors.length - 1];
+                                    toastr.error(toast, "Submission failed");
+                                }
                             })
                             .fail(function() {
                                 console.log("fail");

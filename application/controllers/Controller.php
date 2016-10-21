@@ -170,9 +170,9 @@ class Controller extends CI_Controller {
 
         $code = random_string('sha1');
 
-        while ($this->isExistingVerificationCode($code)) {
+        /*while ($this->isExistingVerificationCode($code)) {
             $code = random_string('sha1');
-        }
+        }*/
 
         return $code;
     }

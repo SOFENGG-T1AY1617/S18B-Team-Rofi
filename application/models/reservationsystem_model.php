@@ -193,17 +193,9 @@ class ReservationSystem_Model extends CI_Model
     }
 
     function isExistingVerificationCode($verificationCode) {
-        /*$sql = "SELECT *
-                FROM reservations
-                WHERE verificationcode LIKE ?";
-        $this->db->query($sql, array($verificationCode));
-        $result = $this->db->get();*/
         $result = $this->db->get_where(TABLE_RESERVATIONS, $verificationCode)->result;
 
         // Check if there is existing row
-        /*if ($result->num_rows() > 0)
-            return true;
-        else*/
-        return false;
+        return $result->num_rows() > 0;
     }
 }
