@@ -84,7 +84,97 @@ class Controller extends CI_Controller {
     }
 
     public function submitReservation() {
+        $getData = array(
+            'idnumber' => $this->input->get('idnumber'),
+            'collegeid' => $this->input->get('collegeid'),
+            'typeid' => $this->input->get('typeid'),
+            'email' => $this->input->get('email'),
+            'slots' => $this->input->get('slots'),
+            'verificationCode' => "",
+        );
 
+        $errors = $this->validateInput($getData);
+
+        if (count($errors) > 0) {
+            $data = array(
+                'status' => 'fail',
+                'errors' => $errors,
+            );
+        }
+        else { // Add to database
+            $slots = $this->parseSlots($getData['slots']);
+            $getData['slots'] = $slots;
+            $getData['verificationCode'] = $this->getVerificationCode();
+            $this->reservationsystem_model->createReservation($getData);
+
+            $data = array(
+                'status' => 'success',
+                'data' => $getData,
+            );
+        }
+
+        echo json_encode($data);
+    }
+
+    private function validateInput($getData) {
+        $errors = [];
+
+        // Check if data is valid
+        $idNumber = $getData['idnumber'];
+        if (strlen($idNumber) > 8 || strlen($idNumber < 8) ||
+            substr($idNumber, 0, 1) != '1') { // Invalid id number
+            $errors[] = "ID Number";
+        }
+        else { // Check if valid id number start
+            $year = substr($idNumber, 1, 2);
+
+            if ($year < "08" || $year > date("y") + "") {
+                $errors[] = "ID Number";
+            }
+        }
+
+        if ($getData['collegeid'] == "0") {
+            $errors[] = "College";
+        }
+        if ($getData['typeid'] == 0) {
+            $errors[] = "Type";
+        }
+        if (strlen($getData['email']) < 4) {
+            $errors[] = "Email Address";
+        }
+
+        return $errors;
+    }
+
+    private function parseSlots($slotsString) {
+        // "3_2016-10-20_06:45:00_07:00:00"
+        $slots = [];
+
+        foreach($slotsString as $slotString) {
+            $slotArray = explode("_", $slotString);
+            $slot = array(
+                'computerid' => $slotArray[0],
+                'date' => $slotArray[1],
+                'startTime' => $slotArray[2],
+                'endTime' => $slotArray[3],
+            );
+
+            $slots[] = $slot;
+        }
+
+        return $slots;
+    }
+
+    public function getVerificationCode() {
+        $this->load->helper('string');
+
+        $code = random_string('sha1');
+
+        /*while ($this->isExistingVerificationCode($code)) {
+            $code = random_string('sha1');
+        }*/
+
+        return $code;
     }
 
     public function isExistingVerificationCode($verificationCode) {

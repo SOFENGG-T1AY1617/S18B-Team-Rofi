@@ -38,9 +38,6 @@ $defaultTab = 1;
 
             $tab = (isset($tab)) ? $tab : 'tab' . $defaultTab;
 
-            ?>
-
-            <?php
             /**
              * Created by PhpStorm.
              * User: Patrick
@@ -59,7 +56,22 @@ $defaultTab = 1;
                 var dateSelected = "<?=date("Y-m-d")?>";
 
                 $(document).ready(function() {
-                    $("#proceed-to-step2").click(function() {
+
+                    $(".pager li.nextStep_<?php echo $stepNo ?> a").attr("data-toggle", "");
+
+                    $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
+                        if (slotsPicked == 0) {
+                            toastr.info("You must choose up to 4 slots before proceeding.", "Info");
+                            $(this).attr("data-toggle", "");
+                        } else {
+                            $(this).attr("data-toggle", "tab");
+
+                            $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
+                            $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
+
+                            $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
+                        }
+
                         var date_selected = $("input[name=optradio]:checked").val();
                         console.log(date_selected);
                         if (date_selected == "today") {
@@ -110,6 +122,10 @@ $defaultTab = 1;
 
                     });
 
+                    $(".pager li.nextStep_<?php echo $stepNo ?>").click(function() {
+                        if ($(this).hasClass('active'))
+                            $(this).removeClass('active');
+                    });
 
                     $("#form_room").hide();
 
@@ -130,6 +146,22 @@ $defaultTab = 1;
                         })
                             .done(function(result) {
                                 console.log("done");
+                                if (result['status'] == "fail") {
+                                    errors = result['errors'];
+                                    toast = "You have an error in the following input ";
+                                    if (errors.length > 1) {
+                                       toast = toast + "s: ";
+                                    }
+                                    else {
+                                        toast = toast + ": ";
+                                    }
+
+                                    for (i = 0; i < errors.length; i++) {
+                                        toast = toast + errors[i] + ", ";
+                                    }
+                                    toast = toast + errors[errors.length - 1];
+                                    toastr.error(toast, "Submission failed");
+                                }
                             })
                             .fail(function() {
                                 console.log("fail");
@@ -183,24 +215,9 @@ $defaultTab = 1;
                                 $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
                             }
 
-                            selectRoom($("#form_building").val());
-
+                            selectRoom($("#form_room").val());
 
                         }
-                    });
-
-                });
-
-                $(function () { // put functions in respective buttons
-
-                    $('.pager li.nextStep_<?php echo $stepNo ?>').on('click', function () { // for next step
-                        if ($(this).hasClass('active'))
-                            $(this).removeClass('active');
-
-                        $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
-                        $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
-
-                        $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                     });
 
                 });
@@ -254,7 +271,7 @@ $defaultTab = 1;
 
                             $("#form_room").empty().append(out);
 
-                            selectRoom("0")
+                            selectRoom("0");
 
                             numOfRooms = result.length;
 
@@ -279,8 +296,6 @@ $defaultTab = 1;
 
                     var computers = [];
                     var reservations = [];
-
-                    slotsPicked = [];
 
                     // Abort any pending request
                     if (request) {
@@ -449,8 +464,21 @@ $defaultTab = 1;
                                     }
 
                                     if (!taken) {
-                                        clickableSlot1.setAttribute("id", computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n]);
-                                        clickableSlot1.className = "slotCell pull-left free";
+                                        var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
+
+                                        /*var selected = false;
+
+                                        for(var s=0;s<slotsPicked.length;s++)
+                                        {
+                                            if(strID==slotsPicked[s])
+                                                selected = true;
+                                        }*/
+                                        clickableSlot1.setAttribute("id", strID);
+
+                                        if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)
+                                            clickableSlot1.className = "slotCell pull-left selected";
+                                        else
+                                            clickableSlot1.className = "slotCell pull-left free";
                                     } else {
                                         clickableSlot1.className = "slotCell pull-left taken";
                                         n++;
@@ -463,8 +491,21 @@ $defaultTab = 1;
                                     }
 
                                     if (!taken) {
-                                        clickableSlot2.setAttribute("id", computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n]);
-                                        clickableSlot2.className = "slotCell pull-left free";
+                                        var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
+
+                                        /*var selected = false;
+
+                                        for(var s=0;s<slotsPicked.length;s++)
+                                        {
+                                            if(strID==slotsPicked[s])
+                                                selected = true;
+                                        }*/
+                                        clickableSlot2.setAttribute("id", strID);
+
+                                        if (($.inArray(clickableSlot2.getAttribute("id"), slotsPicked)) > -1)
+                                            clickableSlot2.className = "slotCell pull-left selected";
+                                        else
+                                            clickableSlot2.className = "slotCell pull-left free";
                                     } else {
                                         clickableSlot2.className = "slotCell pull-left taken";
                                         n++;
@@ -567,7 +608,7 @@ $defaultTab = 1;
                                 <a href="#tab_1_</?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>-->
                             <li class="nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="proceed-to-step2">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
                     </div>
@@ -625,7 +666,8 @@ $defaultTab = 1;
                             <form>
                                 <div class="form-group">
                                     <label for="id-number">ID Number:</label>
-                                    <input type="number" class="form-control" name="form-id" id="id-number">
+                                    <input type="text" class="form-control" name="form-id" id="id-number"
+                                           onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
                                 </div>
 
                                 <div class="form-group">
@@ -717,12 +759,31 @@ $defaultTab = 1;
 
             ?>
 
+            <script>
+                var reset = function () {
+                    location.reload(true);
+                };
+
+                $(document).ready(function(){
+                    $("#ok-button").click(reset);
+                });
+            </script>
+
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
 
                 <div class = "row">
                     <div class = "col-md-10 col-md-offset-1">
                         <div class="panel-body">
-                            STEP3
+                            <div class = "row">
+                                <div class = "col-md-12">
+                                    A URL with the confirmation code has been sent to your email address! Please click the link to confirm your reservation! Thank You!
+                                </div>
+                            </div>
+                            <div class = "row">
+                                <div class = "col-md-3 col-md-offset-5">
+                                    <button id = "ok-button" type="button" class="btn btn-success">OK!</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -742,19 +803,18 @@ $defaultTab = 1;
 
                     <div class = "col-md-10 col-md-offset-1">
                         <ul class="pager">
-                            <li class="previous prevStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
+                            <!--<li class="previous prevStep_<?//php echo $stepNo ?>">
+                                <a href="#tab_1_<?//php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>
-                            <li class="next nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="finish">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
-                            </li>
+                            <li class="next nextStep_<?//php echo $stepNo ?>">
+                                <a href="#tab_1_<?//php echo $stepNo+1 ?>" data-toggle="tab" id="finish">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                            </li>-->
                         </ul>
                     </div>
 
                 </div>
 
             </div>
-
 
         </div> <!-- EOF -->
 
