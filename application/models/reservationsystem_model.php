@@ -152,44 +152,23 @@ class ReservationSystem_Model extends CI_Model
 
     function createReservation($data) {
         $slots = $data['slots'];
-        $sql = "
-                INSERT INTO reservations
-                  (computerid, useridno, email, date, start_restime, end_restime,
-                  collegeid, typeid, verificationcode)
-                VALUES            
-            ";
-        for($i = 0; $i < count($slots) - 1; $i++) {
-            $slot = $slots[i];
-            $sql = $sql + " (?, ?, ?, ?, ?, ?, ?, ?, ?),";
-            $stmt = array(
-                $slot['computerid'],
-                $data['idnumber'],
-                $data['email'],
-                $slot['date'],
-                $slot['startTime'],
-                $slot['endTime'],
-                $data['collegeid'],
-                $data['typeid'],
-                $data['verificationCode'],
+
+        foreach($slots as $slot) {
+            $insertData = array(
+                'computerid' => $slot['computerid'],
+                'useridno' => $data['idnumber'],
+                'email' => $data['email'],
+                'date' => $slot['date'],
+                'start_restime' => $slot['startTime'],
+                'end_restime' => $slot['endTime'],
+                'collegeid' => $data['collegeid'],
+                'typeid' => $data['typeid'],
+                'verificationcode' => $data['verificationCode'],
             );
-            $this->db->query($sql, $stmt);
+
+            $this->db->insert(TABLE_RESERVATIONS, $insertData);
         }
 
-        $slot = $slots[count($slots) - 1];
-        $sql = $sql + " (?, ?, ?, ?, ?, ?, ?, ?, ?),";
-        $stmt = array(
-            $slot['computerid'],
-            $data['idnumber'],
-            $data['email'],
-            $slot['date'],
-            $slot['startTime'],
-            $slot['endTime'],
-            $data['collegeid'],
-            $data['typeid'],
-            $data['verificationCode'],
-        );
-        $this->db->query($sql, $stmt);
-        return $this->db->get()->result();
     }
 
     function isExistingVerificationCode($verificationCode) {

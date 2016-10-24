@@ -105,7 +105,7 @@ class Controller extends CI_Controller {
             $slots = $this->parseSlots($getData['slots']);
             $getData['slots'] = $slots;
             $getData['verificationCode'] = $this->getVerificationCode();
-            //$this->reservationsystem_model->createReservation($getData);
+            $this->reservationsystem_model->createReservation($getData);
 
             $data = array(
                 'status' => 'success',

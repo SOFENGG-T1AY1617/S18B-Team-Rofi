@@ -629,7 +629,8 @@ $defaultTab = 1;
                             <form>
                                 <div class="form-group">
                                     <label for="id-number">ID Number:</label>
-                                    <input type="number" class="form-control" name="form-id" id="id-number">
+                                    <input type="text" class="form-control" name="form-id" id="id-number"
+                                           onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
                                 </div>
 
                                 <div class="form-group">
