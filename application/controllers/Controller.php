@@ -197,6 +197,9 @@ class Controller extends CI_Controller {
             );
         }
         //echo json_encode($data);
+        $this->load->view('template/header'); // include bootstrap 3 header
+        $this->load->view('verification', $data); // $this->load->view('home', $data); set to this if data is set
+        $this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
     public function sendVerificationEmail($email, $verificationCode) {
@@ -210,15 +213,25 @@ class Controller extends CI_Controller {
             'charset' => 'iso-8859-1',
             'wordwrap' => TRUE,
         );
+        $url = site_url("verify")."/".$verificationCode;
+        $url = preg_replace(
+            "~[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]~",
+            "<a href=\"\\0\">\\0</a>",
+            $url);
+
+        $message = "Dear User,<br/><br/>
+            Please click on the URL below or paste it into your browser to verify your reservation:<br/>". $url .
+            "<br/><br/>Thanks,
+            <br/>DLSU Admin";
+
 
         $this->load->library('email', $config);
         $this->email->set_newline("\r\n");
+        $config['mailtype'] = 'html';
         $this->email->from('dlsu.pc.reservation@gmail.com', "DLSU PC Reservation");
         $this->email->to($email);
         $this->email->subject("Confirm your reservation");
-        $this->email->message("Dear User,\nPlease click on the URL below or paste it 
-            into your browser to verify your reservation.
-            \n\n". base_url("verify")."/".$verificationCode."\n"."\n\nThanks,\nDLSU Admin");
+        $this->email->message($message);
         $this->email->send();
         /*if($this->email->send())
         {
