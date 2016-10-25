@@ -127,7 +127,7 @@ $defaultTab = 1;
                                 }
                             })
                             .fail(function() {
-                                console.log("fail");
+                                console.log("Submission: fail");
                             })
                             .always(function() {
                                 console.log("complete");

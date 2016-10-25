@@ -177,4 +177,10 @@ class ReservationSystem_Model extends CI_Model
         // Check if there is existing row
         return $result->num_rows() > 0;
     }
+
+    function verifyReservation($verificationCode) {
+        $sql = "UPDATE reservations SET verified = 1 
+                  WHERE verificationcode = ?";
+        return $this->db->query($sql, array($verificationCode));
+    }
 }

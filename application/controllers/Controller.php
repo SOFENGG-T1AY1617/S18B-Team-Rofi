@@ -106,6 +106,7 @@ class Controller extends CI_Controller {
             $getData['slots'] = $slots;
             $getData['verificationCode'] = $this->getVerificationCode();
             $this->reservationsystem_model->createReservation($getData);
+            $this->sendVerificationEmail($getData['email'], $getData['verificationCode']);
 
             $data = array(
                 'status' => 'success',
@@ -179,5 +180,53 @@ class Controller extends CI_Controller {
 
     public function isExistingVerificationCode($verificationCode) {
         return $this->reservationsystem_model->isExistingVerificationCode($verificationCode);
+    }
+
+    public function verify($verificationCode = NULL) {
+        $numResult = $this->reservationsystem_model->verifyReservation($verificationCode);
+        if ($numResult > 0) {
+            $data = array(
+                'result' => "success",
+                'message' => "Reservation confirmed successfully!",
+            );
+        }
+        else {
+            $data = array(
+                'result' => "fail",
+                'message' => "Sorry, unable to verify your email.",
+            );
+        }
+        //echo json_encode($data);
+    }
+
+    public function sendVerificationEmail($email, $verificationCode) {
+        $config = array(
+            'protocol'  => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'dlsu.pc.reservation@gmail.com', // Email
+            'smtp_pass' => 'DLSU1234!',
+            'mailtype' => 'html',
+            'charset' => 'iso-8859-1',
+            'wordwrap' => TRUE,
+        );
+
+        $this->load->library('email', $config);
+        $this->email->set_newline("\r\n");
+        $this->email->from('dlsu.pc.reservation@gmail.com', "DLSU PC Reservation");
+        $this->email->to($email);
+        $this->email->subject("Confirm your reservation");
+        $this->email->message("Dear User,\nPlease click on the URL below or paste it 
+            into your browser to verify your reservation.
+            \n\n". base_url("verify")."/".$verificationCode."\n"."\n\nThanks,\nDLSU Admin");
+        $this->email->send();
+        /*if($this->email->send())
+        {
+            echo 'Email sent.';
+        }
+        else
+        {
+            show_error($this->email->print_debugger());
+        }*/
     }
 }
