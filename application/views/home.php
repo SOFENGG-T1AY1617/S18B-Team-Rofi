@@ -93,6 +93,7 @@ $defaultTab = 1;
 
                     // Submit Reservation
                     $("#finish").click(function() {
+                        $(this).attr("data-toggle", "");
                         console.log($("#select-college").val());
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
@@ -125,14 +126,18 @@ $defaultTab = 1;
                                     }
                                     toast = toast + errors[errors.length - 1];
                                     toastr.error(toast, "Submission failed");
+
+                                    if (result['email_status'] == "fail") {
+                                        toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
+                                    }
+                                    if (result['reserved_status'] == "fail") {
+                                        toast = "You've already selected " + result['reserved'] +
+                                            " slots! You can only select " + result['remaining'] + " more.";
+                                        toastr.error(toast, "Too many reservations");
+                                    }
                                 }
-                                if (result['email_status'] == "fail") {
-                                    toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
-                                }
-                                if (result['reserved_status'] == "fail") {
-                                    toast = "You've already selected " + result['reserved'] +
-                                        " slots! You can only select " + result['remaining'] + " more.";
-                                    toastr.error(toast, "Too many reservations");
+                                else {
+                                    $(this).attr("data-toggle", "tab");
                                 }
                             })
                             .fail(function() {
