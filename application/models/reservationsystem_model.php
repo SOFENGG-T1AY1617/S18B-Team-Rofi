@@ -150,6 +150,15 @@ class ReservationSystem_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
+    function queryOngoingReservationsByStudentID($id) {
+        $sql = "SELECT *
+                FROM reservations
+                WHERE useridno = ? AND
+                  date >= NOW() AND
+                  start_restime >= NOW()";
+        return $this->db->query($sql, array($id))->result();
+    }
+
     function createReservation($data) {
         $slots = $data['slots'];
 

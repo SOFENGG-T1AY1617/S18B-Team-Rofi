@@ -91,6 +91,7 @@ $defaultTab = 1;
 
                     $("#form_room").hide();
 
+                    // Submit Reservation
                     $("#finish").click(function() {
                         console.log($("#select-college").val());
                         $.ajax({
@@ -125,9 +126,13 @@ $defaultTab = 1;
                                     toast = toast + errors[errors.length - 1];
                                     toastr.error(toast, "Submission failed");
                                 }
+                                if (result['email_status'] == "fail") {
+                                    toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
+                                }
                             })
                             .fail(function() {
                                 console.log("Submission: fail");
+                                toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                             })
                             .always(function() {
                                 console.log("complete");

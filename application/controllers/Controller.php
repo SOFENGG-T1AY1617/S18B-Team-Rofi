@@ -105,13 +105,20 @@ class Controller extends CI_Controller {
             $slots = $this->parseSlots($getData['slots']);
             $getData['slots'] = $slots;
             $getData['verificationCode'] = $this->getVerificationCode();
-            $this->reservationsystem_model->createReservation($getData);
-            $this->sendVerificationEmail($getData['email'], $getData['verificationCode']);
-
-            $data = array(
-                'status' => 'success',
-                'data' => $getData,
-            );
+            if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
+                $this->reservationsystem_model->createReservation($getData);
+                $data = array(
+                    'status' => 'success',
+                    'data' => $getData,
+                );
+            }
+            else {
+                $data = array(
+                    'status' => 'fail',
+                    'errors' => $errors,
+                    'email_status' => 'fail',
+                );
+            }
         }
 
         echo json_encode($data);
@@ -232,14 +239,15 @@ class Controller extends CI_Controller {
         $this->email->to($email);
         $this->email->subject("Confirm your reservation");
         $this->email->message($message);
-        $this->email->send();
-        /*if($this->email->send())
+        //$this->email->send();
+        if($this->email->send())
         {
-            echo 'Email sent.';
+            return true;
         }
         else
         {
             show_error($this->email->print_debugger());
-        }*/
+            return false;
+        }
     }
 }
