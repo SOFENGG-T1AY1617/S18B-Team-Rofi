@@ -106,6 +106,7 @@ class Controller extends CI_Controller {
             $getData['slots'] = $slots;
             $getData['verificationCode'] = $this->getVerificationCode();
             $this->reservationsystem_model->createReservation($getData);
+            $this->sendVerificationEmail($getData['email'], $getData['verificationCode']);
 
             $data = array(
                 'status' => 'success',
@@ -181,20 +182,81 @@ class Controller extends CI_Controller {
         return $this->reservationsystem_model->isExistingVerificationCode($verificationCode);
     }
 
-    public function getMyReservations() {
-            $slots = $this->input->get('slots');
-            $data =[];
+    public function getMyReservations(){
+        $slots = $this->input->get('slots');
+        $data = [];
 
 
-        foreach ($slots as $slot ) {
-            $arr = explode( '_', $slot);
+        foreach ($slots as $slot) {
+            $arr = explode('_', $slot);
             $roomName = $this->reservationsystem_model->queryRoomAndCompNoAtComputerID($arr[0]);
-            $arr2 = array('roomName' => $roomName[0]->name,'compNo' => $roomName[0]->computerno,'date'=>$arr[1],'start'=>$arr[2],'end'=>$arr[3]);
-            array_push($data,$arr2);
+            $arr2 = array('roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $arr[1], 'start' => $arr[2], 'end' => $arr[3]);
+            array_push($data, $arr2);
         }
         /*$data = array(
           'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/
         echo json_encode($data);
+    }
+
+    public function verify($verificationCode = NULL) {
+        $numResult = $this->reservationsystem_model->verifyReservation($verificationCode);
+        if ($numResult > 0) {
+            $data = array(
+                'result' => "success",
+                'message' => "Reservation confirmed successfully!",
+            );
+        }
+        else {
+            $data = array(
+                'result' => "fail",
+                'message' => "Sorry, unable to verify your email.",
+            );
+        }
+        //echo json_encode($data);
+        $this->load->view('template/header'); // include bootstrap 3 header
+        $this->load->view('verification', $data); // $this->load->view('home', $data); set to this if data is set
+        $this->load->view('template/footer'); // include bootstrap 3 footer
+    }
+
+    public function sendVerificationEmail($email, $verificationCode) {
+        $config = array(
+            'protocol'  => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'dlsu.pc.reservation@gmail.com', // Email
+            'smtp_pass' => 'DLSU1234!',
+            'mailtype' => 'html',
+            'charset' => 'iso-8859-1',
+            'wordwrap' => TRUE,
+        );
+        $url = site_url("verify")."/".$verificationCode;
+        $url = preg_replace(
+            "~[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]~",
+            "<a href=\"\\0\">\\0</a>",
+            $url);
+
+        $message = "Dear User,<br/><br/>
+            Please click on the URL below or paste it into your browser to verify your reservation:<br/>". $url .
+            "<br/><br/>Thanks,
+            <br/>DLSU Admin";
+
+
+        $this->load->library('email', $config);
+        $this->email->set_newline("\r\n");
+        $config['mailtype'] = 'html';
+        $this->email->from('dlsu.pc.reservation@gmail.com', "DLSU PC Reservation");
+        $this->email->to($email);
+        $this->email->subject("Confirm your reservation");
+        $this->email->message($message);
+        $this->email->send();
+        /*if($this->email->send())
+        {
+            echo 'Email sent.';
+        }
+        else
+        {
+            show_error($this->email->print_debugger());
+        }*/
     }
 }

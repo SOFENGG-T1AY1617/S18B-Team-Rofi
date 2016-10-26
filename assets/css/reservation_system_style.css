@@ -17,9 +17,19 @@ div.date-font {
     max-height: 400px;
 }
 
+#slots_selected {
+    height: 200px;
+    max-height: 200px;
+}
+
 th {
     font-size: 12px;
     white-space: nowrap;
+    background-color: white;
+}
+
+th:first-child {
+    left: 5px
 }
 
 .slotCell {
@@ -56,4 +66,8 @@ th {
 
 #ok-button {
     margin-top: 30px;
+}
+
+.previous {
+    margin-left: 20px;
 }
