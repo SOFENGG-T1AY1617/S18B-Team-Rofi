@@ -57,6 +57,26 @@ $defaultTab = 1;
 
                 $(document).ready(function() {
 
+                    var $table = $('#slotTable');
+                    $table.floatThead({
+                        scrollContainer: function($table){
+                            return $table.closest('#slots');
+                        }
+                    });
+
+                    $(function () {
+                        $('#slots tr').each(function () {
+                            var tr = $(this),
+                                h = 0;
+                            tr.children().each(function () {
+                                var td = $(this),
+                                    tdh = td.height();
+                                if (tdh > h) h = tdh;
+                            });
+                            tr.css({height: h + 'px'});
+                        });
+                    });
+
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").attr("data-toggle", "");
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
@@ -378,7 +398,7 @@ $defaultTab = 1;
 
                     for (var i = 0; i < roomIDs.length; i++) {
                         var roomTitleRow = document.createElement("tr");
-                        var roomTitleCell = document.createElement("td");
+                        var roomTitleCell = document.createElement("th");
 
                         roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
                         roomTitleCell.setAttribute("colspan", times30.length+1);
@@ -387,12 +407,19 @@ $defaultTab = 1;
 
                         $('#tableBody').append(roomTitleRow);
 
+                        var $table = $('#slotTable');
+                        $table.floatThead({
+                            scrollContainer: function($table){
+                                return $table.closest('#slots');
+                            }
+                        });
+
                         for (var k = 0; k < computers.length; k++) {
 
                             if (computers[k].roomid == roomIDs[i]) {
 
                                 var newTableRow = document.createElement("tr");
-                                var newPCNoCell = document.createElement("td");
+                                var newPCNoCell = document.createElement("th");
 
                                 newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
 

@@ -25,6 +25,11 @@ div.date-font {
 th {
     font-size: 12px;
     white-space: nowrap;
+    background-color: white;
+}
+
+th:first-child {
+    left: 5px
 }
 
 .slotCell {
