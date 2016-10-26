@@ -672,7 +672,7 @@ $defaultTab = 1;
 
                             <div  class = "panel-body">
                                 <p id = "my_slots"></p>
-                            <div>
+                            </div>
                         </div>
 
                     </div>
