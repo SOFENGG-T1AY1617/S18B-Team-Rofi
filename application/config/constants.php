@@ -109,3 +109,5 @@ define("COLUMN_USERIDNO", "useridno");
 define("COLUMN_RESERVEDATETIME", "reservedatetime");
 define("COLUMN_VERIFIED", "verified");
 define("COLUMN_VERFICATIONCODE", "verificationcode");
+
+define("MAX_RESERVATIONS", 4);

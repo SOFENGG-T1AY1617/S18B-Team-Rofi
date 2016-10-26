@@ -129,6 +129,11 @@ $defaultTab = 1;
                                 if (result['email_status'] == "fail") {
                                     toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                                 }
+                                if (result['reserved_status'] == "fail") {
+                                    toast = "You've already selected " + result['reserved'] +
+                                        " slots! You can only select " + result['remaining'] + " more.";
+                                    toastr.error(toast, "Too many reservations");
+                                }
                             })
                             .fail(function() {
                                 console.log("Submission: fail");

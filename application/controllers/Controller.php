@@ -101,6 +101,16 @@ class Controller extends CI_Controller {
                 'errors' => $errors,
             );
         }
+        if (count($getData['slots']) +
+            ($numReservations = $this->numReservations($getData['idnumber'])) > MAX_RESERVATIONS) {
+            $data = array(
+                'status' => 'fail',
+                'errors' => $errors,
+                'reserved_status' => 'fail',
+                'reserved' => $numReservations,
+                'remaining' => MAX_RESERVATIONS - $numReservations,
+            );
+        }
         else { // Add to database
             $slots = $this->parseSlots($getData['slots']);
             $getData['slots'] = $slots;
@@ -122,6 +132,12 @@ class Controller extends CI_Controller {
         }
 
         echo json_encode($data);
+    }
+
+    private function numReservations($id) {
+        $reservations = $this->reservationsystem_model->queryOngoingReservationsByStudentID($id);
+
+        return count($reservations);
     }
 
     private function validateInput($getData) {
@@ -149,6 +165,12 @@ class Controller extends CI_Controller {
         }
         if (strlen($getData['email']) < 4) {
             $errors[] = "Email Address";
+        }
+        else { // Check if valid email address
+            $emailArray = explode("@", $getData['email']);
+            if ($emailArray[1] != "dlsu.edu.ph") {
+                $errors[] = "Email Address";
+            }
         }
 
         return $errors;
