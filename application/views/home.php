@@ -89,8 +89,6 @@ $defaultTab = 1;
                             $(this).removeClass('active');
                     });
 
-                    $("#form_room").hide();
-
                     $("#finish").click(function() {
                         console.log($("#select-college").val());
                         $.ajax({
@@ -222,8 +220,6 @@ $defaultTab = 1;
                             console.log(result);
                             console.log("done");
 
-                            $("#form_room").show();
-
                             var out=[];
 
                             out[0]= '<option value="0" selected >All Rooms</option>';
@@ -278,6 +274,7 @@ $defaultTab = 1;
                     // Disabled form elements will not be serialized.
                     $inputs.prop("disabled", true);
 
+                    $("#form_room").attr('disabled', false);
 
                     if (buildingid!=""&&roomid != "") {
                         console.log(buildingid+"-"+roomid);
@@ -299,8 +296,6 @@ $defaultTab = 1;
 
                                 queriedComputers = result['computers'];
                                 queriedReservations = result['reservations'];
-
-                                $("#form_room").show();
 
                                 for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
                                     computers[i]=queriedComputers[i];
@@ -324,6 +319,7 @@ $defaultTab = 1;
                          }, 'json');*/
 
                     }
+
                 }
 
                 function outputSlotsOf (computers, reservations) {
@@ -515,11 +511,13 @@ $defaultTab = 1;
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div class = "col-md-5">
                         <div class = "panel panel-default">
                             <div class = "panel-body">
-                                Building:
-                                <div class = "form-group">
+                                <div class = "form-group col-md-7">
+                                    Building:
                                     <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
                                         <option value="" selected disabled>Choose a building...</option>
                                         <?php foreach($buildings as $row):?>
@@ -527,9 +525,9 @@ $defaultTab = 1;
                                         <?php endforeach;?>
                                     </select>
                                 </div>
-
-                                <div class = "form-group">
-                                    <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)">
+                                <div class = "form-group col-md-5">
+                                    Room:
+                                    <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)" disabled=true>
                                         <option value="" selected></option>
                                     </select>
                                 </div>
@@ -537,7 +535,11 @@ $defaultTab = 1;
                         </div>
                     </div>
 
-                    <div class = "col-md-7">
+
+                </div>
+
+                <div class = "row">
+                    <div class = "col-md-8 col-md-offset-1">
                         <div id = "slots" class = "panel panel-default">
                             <div class = "panel-body nopadding">
                                 <table id = "slotTable" class = "table table-bordered">
@@ -561,16 +563,28 @@ $defaultTab = 1;
                             </div>
                         </div>
                     </div>
+
+                    <div class = "col-md-2">
+
+                        <div id = "slots_selected" class = "panel panel-default">
+
+                            <div class = "panel-body">
+                                SELECTED SLOTS
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class ="row">
 
-                    <div class = "col-md-3 col-md-offset-8">
+                    <div class = "col-md-10 col-md-offset-1">
                         <ul class="pager">
-                            <!--<li class="previous prevStep_</?php echo $stepNo ?>">
-                                <a href="#tab_1_</?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
-                            </li>-->
-                            <li class="nextStep_<?php echo $stepNo ?>">
+                            <li class="previous pull-left">
+                                LEGEND:
+                            </li>
+                            <li class="next nextStep_<?php echo $stepNo ?>">
                                 <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
