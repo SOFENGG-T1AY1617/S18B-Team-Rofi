@@ -1,10 +1,7 @@
 <script>
     $(document).ready()
     {
-        console.log("?????");
-        $('li#overview_button').addClass("active");
-        $('li#overview_button').css("color","red");
-
+        $('li#add_button').addClass("active");
     }
 </script>
 </head>
@@ -24,8 +21,7 @@ include 'a_navbar.php';
 ?>
 
 <div>
-    ADD GRAPHS
-</div>
+ADDING SCREEN WOOO</div>
 
 </body>
 </html>
