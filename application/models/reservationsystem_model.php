@@ -154,8 +154,8 @@ class ReservationSystem_Model extends CI_Model
         $sql = "SELECT *
                 FROM reservations
                 WHERE useridno = ? AND
-                  date >= NOW() AND
-                  start_restime >= NOW()";
+                  date >= DATE(NOW()) AND
+                  start_restime >= TIME(NOW())";
         return $this->db->query($sql, array($id))->result();
     }
 
