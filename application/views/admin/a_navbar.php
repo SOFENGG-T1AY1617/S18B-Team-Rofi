@@ -15,16 +15,23 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li id="overview_button"><a href="admin/overview">Overview<span class="sr-only"></span></a></li>
-                <li id="add_button"><a href="admin/add">Add New Areas</a></li>
-                <li id="modify_button"><a href="#">Modify Schedule</a></li>
+                <li id="overview_button"><a href="overview">Reports<span class="sr-only"></span></a></li>
+                <li><a href="#">Moderator Management</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Application Settings<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li id="add_button"><a href="area_management">Manage Areas</a></li>
+                        <li id="modify_button"><a href="#">Modify Schedule</a></li>
+                        <li><a href="#">Adjust Business Rules</a></li>
+                    </ul>
+                </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Admin Tools</a></li>
                         <li><a href="#">Modify Account</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">Sign Out</a></li>
