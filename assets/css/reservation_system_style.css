@@ -7,6 +7,30 @@ body {
     margin: 0 !important;
 }
 
+/* FOR STEPS */
+
+.nav li:hover a { /* OVERRIDE BOOTSTRAP HOVER EFFECT */
+    border: none;
+    background: none;
+    color: black;
+}
+
+.nav li.active {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.nav li.disabled{
+    opacity: 0.4;
+    color: black;
+}
+
+.nav li.disabled a{
+    color: black;
+}
+
+/* END FOR STEPS */
+
 div.date-font {
     font-size: 11px;
 }
@@ -34,9 +58,6 @@ th:first-child {
 .slotCell {
     width: 100%;
     height: 35px;
-    
-
-
 }
 
 

@@ -16,7 +16,7 @@ $defaultTab = 1;
     <div id = "steps" class="panel panel-default">
         <div id = "tabs" class="row" style="margin-bottom: 20px">
             <div class = "col-md-12">
-                <ul class="nav nav-tabs nav-justified">
+                <ul class="nav nav-pills nav-justified">
 
                    <li role="presentation" class="tab_1 active">
                        <a href="#">Step 1 : Choose a time slot</a>
@@ -92,6 +92,7 @@ $defaultTab = 1;
                             $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
                             $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
+                            $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
                             $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                         }
 
@@ -749,6 +750,7 @@ $defaultTab = 1;
                         $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
                         $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
+                        $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
                         $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                     });
 
@@ -759,6 +761,7 @@ $defaultTab = 1;
                         $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
                         $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
+                        $("#tabs li.tab_<?php echo $stepNo-1 ?>").removeClass('disabled');
                         $("#tabs li.tab_<?php echo $stepNo-1 ?>").addClass('active');
                     });
 
