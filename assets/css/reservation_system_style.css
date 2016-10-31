@@ -106,11 +106,17 @@ th:first-child {
     background-color: lightgrey;
 }
 
-:not(.taken):not(selected).slotCell:hover {
+.slotCell.free.disabled,
+.slotCell.selected.disabled,
+.slotCell.taken.disabled{
+    opacity: 0.3;
+}
+
+:not(.taken):not(.selected):not(.disabled).slotCell:hover {
     background-color: greenyellow;
 }
 
-:not(.taken):not(.free).slotCell:hover {
+:not(.taken):not(.free):not(.disabled).slotCell:hover {
     background-color: green;
 }
 

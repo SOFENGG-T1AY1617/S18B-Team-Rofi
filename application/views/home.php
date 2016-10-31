@@ -67,19 +67,6 @@ $defaultTab = 1;
                         }
                     });
 
-                    $(function () {
-                        $('#slots tr').each(function () {
-                            var tr = $(this),
-                                h = 0;
-                            tr.children().each(function () {
-                                var td = $(this),
-                                    tdh = td.height();
-                                if (tdh > h) h = tdh;
-                            });
-                            tr.css({height: h + 'px'});
-                        });
-                    });
-
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").attr("data-toggle", "");
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
@@ -195,7 +182,7 @@ $defaultTab = 1;
                     });
 
 
-                    $(document).on( "click", ".slotCell.free",function() {
+                    $(document).on( "click", ".slotCell.free:not(.disabled)",function() {
                         var slotID = $(this).attr('id');
 
                         if (slotsPicked.length < 4 && (($.inArray(slotID, slotsPicked)) == -1)) {
@@ -552,8 +539,13 @@ $defaultTab = 1;
                                                 taken = true;
                                         }
 
+                                        var chosenTime1 = chosenDateTimes[n++];
+                                        var chosenTime2 = chosenDateTimes[n];
+
                                         if (!taken) {
-                                            var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
+                                            var computerID = computers[k].computerid;
+
+                                            var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
 
                                             /*var selected = false;
 
@@ -573,14 +565,24 @@ $defaultTab = 1;
                                             n++;
                                         }
 
+                                        for (var x in slotsPicked) {
+                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
+                                                disableSlot(clickableSlot1);
+                                        }
+
                                         taken = false;
                                         for (var p = 0; p < reservations.length; p++) {
                                             if ((reservations[p].start_restime == chosenDateTimes[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
                                                 taken = true;
                                         }
 
+                                        chosenTime1 = chosenDateTimes[n++];
+                                        chosenTime2 = chosenDateTimes[n];
+
                                         if (!taken) {
-                                            var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
+                                            var computerID = computers[k].computerid;
+
+                                            var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
 
                                             /*var selected = false;
 
@@ -598,6 +600,11 @@ $defaultTab = 1;
                                         } else {
                                             clickableSlot2.className = "slotCell pull-left taken";
                                             n++;
+                                        }
+
+                                        for (var x in slotsPicked) {
+                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot2.getAttribute("id"), slotsPicked)) > -1))
+                                                disableSlot(clickableSlot2);
                                         }
 
                                         leftSpacer.className = "slotDivider pull-left";
@@ -619,6 +626,10 @@ $defaultTab = 1;
                         }
                     }
 
+                }
+
+                function disableSlot (slot) {
+                    slot.className += ' disabled';
                 }
 
             </script>
