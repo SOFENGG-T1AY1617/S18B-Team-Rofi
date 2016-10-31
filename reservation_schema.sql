@@ -6,16 +6,27 @@ CREATE TABLE `reservation_system`.`buildings` (
   `name` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`buildingid`));
 
+CREATE TABLE `reservation_system`.`departments` (
+  `departmentid` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`departmentid`));
+
 CREATE TABLE `reservation_system`.`rooms` (
   `roomid` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   `buildingid` INT NOT NULL,
-  `department` VARCHAR(30) NOT NULL DEFAULT 'ITS',
+  `departmentid` INT NOT NULL,
   PRIMARY KEY (`roomid`),
   INDEX `buildingid_idx` (`buildingid` ASC),
+  INDEX `department_idx` (`departmentid` ASC),
   CONSTRAINT `buildingid`
     FOREIGN KEY (`buildingid`)
     REFERENCES `reservation_system`.`buildings` (`buildingid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `departmentid`
+    FOREIGN KEY (`departmentid`)
+    REFERENCES `reservation_system`.`departments` (`departmentid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -74,7 +85,33 @@ CREATE TABLE `reservation_system`.`reservations` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+CREATE TABLE `reservation_system`.`administrators` (
+  `administratorid` INT NOT NULL,
+  `last_name` VARCHAR(45) NOT NULL,
+  `first_name` VARCHAR(45) NOT NULL,
+  `middle_name` VARCHAR(45) NOT NULL,
+  `admin_departmentid` INT NOT NULL,
+  PRIMARY KEY (`administratorid`),
+  INDEX `admin_departmentid_idx` (`admin_departmentid` ASC),
+	CONSTRAINT `admin_departmentid`
+	FOREIGN KEY (`admin_departmentid`)
+	REFERENCES `reservation_system`.`departments` (`departmentid`)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION);
 
+CREATE TABLE `reservation_system`.`moderators` (
+  `moderatorid` INT NOT NULL,
+  `last_name` VARCHAR(45) NOT NULL,
+  `first_name` VARCHAR(45) NOT NULL,
+  `middle_name` VARCHAR(45) NOT NULL,
+  `mod_departmentid` INT NOT NULL,
+  PRIMARY KEY (`moderatorid`),
+  INDEX `mod_departmentid_idx` (`mod_departmentid` ASC),
+	CONSTRAINT `mod_departmentid`
+	FOREIGN KEY (`mod_departmentid`)
+	REFERENCES `reservation_system`.`departments` (`departmentid`)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION);
 
 /*dummy data*/
 INSERT INTO `reservation_system`.`buildings` (`name`)
@@ -83,9 +120,13 @@ VALUES ("Gokongwei Hall"),
 	   ("Miguel Hall"),
 	   ("Saint Joseph Hall");
 
-INSERT INTO `reservation_system`.`rooms` (`name`, `buildingid`)
-VALUES ("G202A", 1),
-	   ("G202B", 1);
+INSERT INTO `reservation_system`.`departments` (`name`)
+VALUES ("ITS"),
+	   ("Library");
+
+INSERT INTO `reservation_system`.`rooms` (`name`, `buildingid`, `departmentid`)
+VALUES ("G202A", 1, 1),
+	   ("G202B", 1, 1);
 
 INSERT INTO `reservation_system`.`computers` (`computerno`, `roomid`)
 VALUES (1, 1),
