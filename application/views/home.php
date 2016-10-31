@@ -282,7 +282,7 @@ $defaultTab = 1;
                                     out[i]= "<div class='selectedSlot'>";
                                     out[i]+= "<div><b>"+result[i].roomName + " PC"+result[i].compNo +"</b></div>";
                                     out[i]+= "<div>" + result[i].start + " to "+result[i].end+"</div>";
-                                    out[i]+="<div class='unSelectSlot' id='"+result[i].id+"'><span aria-hidden='true' >&cross;</span></div>";
+                                    out[i]+="<div class='unSelectSlot' id='"+result[i].id+"'><span aria-hidden='true' >x</span></div>";
                                     out[i]+="</div>";
                                 };
 
