@@ -1,0 +1,10 @@
+table{
+    margin-bottom: 0px !important;
+}
+
+.addroom-btn{
+    color: #00CC00;
+    height: 30px;
+    width: 30px;
+    padding: 0px;
+}
