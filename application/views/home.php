@@ -626,10 +626,11 @@ $defaultTab = 1;
                                 }
 
                             }
-                            updateSelectedSlots();
+
                         }
                     }
 
+                    updateSelectedSlots();
                 }
 
                 function disableSlot (slot) {
