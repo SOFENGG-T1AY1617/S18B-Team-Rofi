@@ -23,7 +23,7 @@
                     <ul class="dropdown-menu">
                         <li id="add_button"><a href="area_management">Manage Areas</a></li>
                         <li id="modify_button"><a href="#">Modify Schedule</a></li>
-                        <li><a href="#">Adjust Business Rules</a></li>
+                        <li><a href="business_rules">Adjust Business Rules</a></li>
                     </ul>
                 </li>
             </ul>

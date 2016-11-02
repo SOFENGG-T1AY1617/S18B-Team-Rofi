@@ -64,3 +64,4 @@ $route['admin'] = 'AdminController';
 $route['overview'] = 'AdminController';
 $route['area_management'] = 'AdminController/addView';
 $route['mod_management'] = 'AdminController/modView';
+$route['business_rules'] = 'AdminController/ruleView';
