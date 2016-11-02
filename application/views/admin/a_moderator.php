@@ -61,6 +61,8 @@
 
     function changeViewToView(table, footer){
 
+        /* Change that the html reapplies the original data in the database */
+        /*
         console.log(table);
         var tableA = table;
         var rows = tableA.rows;
@@ -91,7 +93,7 @@
         for(var i=lengthofdel-1; i >= 0 ; i--){
             table.deleteRow(deleteRows[i]);
         }
-
+        */
 
         var addID = ""+table.id+"_addbtn";
         var add = document.getElementById(addID.toString());

@@ -18,6 +18,24 @@
 
     }
 
+    function cancelAddBldg(building){
+        console.log("aa");
+        console.log(building);
+        var buildingA = building;
+        buildingA.innerHTML = "<button class=\"btn btn-default col-md-2 col-md-offset-10\" type=\"button\" onclick=\"addBldg("+building.id+")\">Add Building</button>";
+    }
+
+    function addBldg(building){
+        console.log(building);
+        var buildingA = building;
+        buildingA.innerHTML = "<form class=\"form-inline\"><div class=\" col-md-6\">"+
+            "<input type=\"text\" class=\"form-control\" placeholder=\"Enter name of the building\"></div>" +
+                "<div class=\"col-md-2\"></div>"+
+            "<button class=\"btn btn-default col-md-2\" type=\"button\" onclick=\"cancelAddBldg("+building.id+")\">Cancel</button>" +
+            "<button class=\"btn btn-default col-md-2\" type=\"button\" onclick=\"\">Save Changes</button></form>";
+
+    }
+
     function changeViewToEdit(table, footer){
         console.log(table);
         var tableA = table;
@@ -205,12 +223,23 @@ include 'a_navbar.php';
                 </ul></div>
         </div>
     </div>
-
-
 </div>
 <div class = "col-md-2"></div>
 
+<div class="col-md-12"></div>
+<div class="col-md-2"></div>
+<div class="col-md-8">
 
+<div class="panel-group clearfix" role="tablist">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="collapseListGroupHeading2 ">
+            <h4 class="panel-title clearfix" id="add_building">
+            <button class="btn btn-default col-md-2 col-md-offset-10" type="button" onclick="addBldg(add_building)">Add Building</button>
+            </h4>
+        </div>
+    </div>
+</div>
 
+</div>
 </body>
 </html>
