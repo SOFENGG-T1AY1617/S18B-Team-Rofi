@@ -289,7 +289,7 @@ $defaultTab = 1;
                                 $("#my_slots").html(null);
                             })
                             .always(function() {
-                                $("#my_number_of_slots").html("SELECTED SLOTS ("+slotsPicked.length+"/"+maxNumberOfSlots+")");
+                                $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/"+maxNumberOfSlots+"):");
                                 console.log("complete");
                             });
 
