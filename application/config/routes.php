@@ -63,4 +63,3 @@ $route['verify/(:any)'] = 'Controller/verify/$1';
 $route['admin'] = 'AdminController';
 $route['overview'] = 'AdminController';
 $route['area_management'] = 'AdminController/addView';
-$route['mod_management'] = 'AdminController/modView';
