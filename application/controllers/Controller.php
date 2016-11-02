@@ -27,14 +27,18 @@ class Controller extends CI_Controller {
     {
         //$this->load->model('reservationsystem_model');
 
+        $minuteInterval = 15; // TODO get interval from Settings
+        $maxNumberOfSlots = 4; // TODO get interval from Settings
+
         $data['buildings'] = $this->reservationsystem_model->queryAllBuildings();
         $data['colleges'] = $this->reservationsystem_model->queryColleges();
         $data['types'] = $this->reservationsystem_model->queryTypes();
-        $data['times15_today'] = $this->reservationsystem_model->getTimes(6, 15, 0);
-        $data['times15_tomorrow'] = $this->reservationsystem_model->getTimes(6, 15, 1);
-        $data['times30'] = $this->reservationsystem_model->getTimes(6, 30, 0);
+        $data['times_today'] = $this->reservationsystem_model->getTimes(6, $minuteInterval, 0);
+        $data['times_tomorrow'] = $this->reservationsystem_model->getTimes(6, $minuteInterval, 1);
+        //$data['times30'] = $this->reservationsystem_model->getTimes(6, 30, 0);
 
         $data['tab'] = 1;
+        $data['maxNumberOfSlots'] = $maxNumberOfSlots;
 
         $this->load->view('template/header'); // include bootstrap 3 header
         $this->load->view('home', $data); // $this->load->view('home', $data); set to this if data is set

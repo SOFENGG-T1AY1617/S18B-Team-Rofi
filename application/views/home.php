@@ -56,7 +56,7 @@ $defaultTab = 1;
                 var reservations = [];
                 var request;
                 var dateSelected = "<?=date("Y-m-d")?>";
-                var maxNumberOfSlots = 4;//TODO select from Settings
+                var maxNumberOfSlots = <?php echo $maxNumberOfSlots?>;//TODO select from Settings
 
                 $(document).ready(function() {
 
@@ -137,65 +137,6 @@ $defaultTab = 1;
                         if ($(this).hasClass('active'))
                             $(this).removeClass('active');
                     });
-
-                    $("#finish").click(function() {
-                        $(this).attr("data-toggle", "");
-                        console.log($("#select-college").val());
-                        $.ajax({
-                            url: '<?php echo base_url('submitReservation') ?>',
-                            type: 'GET',
-                            dataType: 'json',
-                            data: {
-                                idnumber: $("#id-number").val(),
-                                collegeid: $("#select-college").val(),
-                                typeid: $("#select-type").val(),
-                                email: $("#email").val(),
-                                date: $("#text-date").val(),
-                                slots: slotsPicked,
-                            }
-                        })
-                            .done(function(result) {
-                                console.log("done");
-                                if (result['status'] == "fail") {
-                                    errors = result['errors'];
-                                    toast = "You have an error in the following input ";
-                                    if (errors.length > 1) {
-                                       toast = toast + "s: ";
-                                    }
-                                    else {
-                                        toast = toast + ": ";
-                                    }
-
-                                    for (i = 0; i < errors.length; i++) {
-                                        toast = toast + errors[i] + ", ";
-                                    }
-                                    toast = toast + errors[errors.length - 1];
-                                    toastr.error(toast, "Submission failed");
-
-                                    if (result['email_status'] == "fail") {
-                                        toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
-                                    }
-                                    if (result['reserved_status'] == "fail") {
-                                        toast = "You've already selected " + result['reserved'] +
-                                            " slots! You can only select " + result['remaining'] + " more.";
-                                        toastr.error(toast, "Too many reservations");
-                                    }
-                                }
-                                else {
-                                    $(this).attr("data-toggle", "tab");
-                                }
-                            })
-                            .fail(function() {
-                                console.log("Submission: fail");
-                                toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
-                            })
-                            .always(function() {
-                                console.log("complete");
-                            });
-
-
-                    });
-
 
                     $(document).on( "click", ".slotCell.free:not(.disabled)",function() {
                         var slotID = $(this).attr('id');
@@ -455,26 +396,19 @@ $defaultTab = 1;
                         $("#slotTable").find("tr:gt(0)").remove(); // remove all cells except first row
 
                         <?php
-                        $tm15_today = [];
+                        $tm_today = [];
 
-                        foreach ($times15_today as $key => $time)
-                            $tm15_today[] = date("H:i:s", $time);
+                        foreach ($times_today as $key => $time)
+                            $tm_today[] = date("H:i:s", $time);
 
-                        echo "var times15_today = " . json_encode($tm15_today) . ";";
+                        echo "var times_today = " . json_encode($tm_today) . ";";
 
-                        $tm15_tomorrow = [];
+                        $tm_tomorrow = [];
 
-                        foreach ($times15_tomorrow as $time)
-                            $tm15_tomorrow[] = date("H:i:s", $time);
+                        foreach ($times_tomorrow as $time)
+                            $tm_tomorrow[] = date("H:i:s", $time);
 
-                        echo "var times15_tomorrow = " . json_encode($tm15_tomorrow) . ";";
-
-                        $tm30_today = [];
-
-                        foreach ($times30 as $time)
-                            $tm30_today[] = date("Hi", $time);
-
-                        echo "var times30 = " . json_encode($tm30_today) . ";";
+                        echo "var times_tomorrow = " . json_encode($tm_tomorrow) . ";";
                         ?>
 
                         var roomIDs = [];
@@ -509,7 +443,7 @@ $defaultTab = 1;
                             var roomTitleCell = document.createElement("th");
 
                             roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
-                            roomTitleCell.setAttribute("colspan", times30.length + 1);
+                            roomTitleCell.setAttribute("colspan", times_today.length + 1);
 
                             roomTitleRow.appendChild(roomTitleCell);
 
@@ -533,16 +467,16 @@ $defaultTab = 1;
 
                                     newTableRow.appendChild(newPCNoCell);
 
-                                    var n = 0; // counter for chosenDateTimes
+                                    var n = 0; // counter for traversing through chosenDateTimes
                                     var chosenDateTimes;
 
                                     if (dateSelected == "<?php echo date("Y-m-d") ?>") {
-                                        chosenDateTimes = times15_today;
+                                        chosenDateTimes = times_today;
                                     } else {
-                                        chosenDateTimes = times15_tomorrow;
+                                        chosenDateTimes = times_tomorrow;
                                     }
 
-                                    for (var m = 0; m < times30.length - 1; m++) { // generate time slot cells
+                                    for (var m = 0; m < chosenDateTimes.length - 1; m++) { // generate time slot cells
                                         var slotCell = document.createElement("td");
                                         var clickableSlot1 = document.createElement("div");
                                         var clickableSlot2 = document.createElement("div");
@@ -588,50 +522,7 @@ $defaultTab = 1;
                                                 disableSlot(clickableSlot1);
                                         }
 
-                                        taken = false;
-                                        for (var p = 0; p < reservations.length; p++) {
-                                            if ((reservations[p].start_restime == chosenDateTimes[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
-                                                taken = true;
-                                        }
-
-                                        chosenTime1 = chosenDateTimes[n++];
-                                        chosenTime2 = chosenDateTimes[n];
-
-                                        if (!taken) {
-                                            var computerID = computers[k].computerid;
-
-                                            var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
-
-                                            /*var selected = false;
-
-                                             for(var s=0;s<slotsPicked.length;s++)
-                                             {
-                                             if(strID==slotsPicked[s])
-                                             selected = true;
-                                             }*/
-                                            clickableSlot2.setAttribute("id", strID);
-
-                                            if (($.inArray(clickableSlot2.getAttribute("id"), slotsPicked)) > -1)
-                                                clickableSlot2.className = "slotCell pull-left selected";
-                                            else
-                                                clickableSlot2.className = "slotCell pull-left free";
-                                        } else {
-                                            clickableSlot2.className = "slotCell pull-left taken";
-                                            n++;
-                                        }
-
-                                        for (var x in slotsPicked) {
-                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot2.getAttribute("id"), slotsPicked)) > -1))
-                                                disableSlot(clickableSlot2);
-                                        }
-
-                                        leftSpacer.className = "slotDivider pull-left";
-                                        rightSpacer.className = "slotDivider pull-right";
-
-                                        slotCell.appendChild(leftSpacer);
-                                        leftSpacer.appendChild(clickableSlot1);
-                                        slotCell.appendChild(rightSpacer);
-                                        rightSpacer.appendChild(clickableSlot2);
+                                        slotCell.appendChild(clickableSlot1);
 
                                         newTableRow.appendChild(slotCell);
                                     }
@@ -710,8 +601,8 @@ $defaultTab = 1;
                                             <th>PC Numbers</th>
                                             <?php
 
-                                            foreach ($times30 as $key => $time) {
-                                                if ($key != count($times30) - 1)
+                                            foreach ($times_today as $key => $time) {
+                                                if ($key != count($times_today) - 1)
                                                     echo "<th>" . date("h:i A", $time) . "</th>";
                                             }
 
@@ -793,6 +684,71 @@ $defaultTab = 1;
 
                         $("#tabs li.tab_<?php echo $stepNo-1 ?>").removeClass('disabled');
                         $("#tabs li.tab_<?php echo $stepNo-1 ?>").addClass('active');
+                    });
+
+                });
+
+                $(document).ready(function() {
+
+                    $("#finish").click(function() {
+                        $(this).attr("data-toggle", "");
+                        console.log($("#select-college").val());
+                        $.ajax({
+                            url: '<?php echo base_url('submitReservation') ?>',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                idnumber: $("#id-number").val(),
+                                collegeid: $("#select-college").val(),
+                                typeid: $("#select-type").val(),
+                                email: $("#email").val(),
+                                date: $("#text-date").val(),
+                                slots: slotsPicked
+                            }
+                        })
+                            .done(function(result) {
+                                console.log("done");
+                                if (result['status'] == "fail") {
+                                    errors = result['errors'];
+                                    toast = "You have an error in the following input ";
+
+                                    console.log ("NUMBER OF ERRORS: " + errors.length);
+
+                                    if (errors.length > 1) {
+                                        toast = toast + "s: ";
+                                    }
+                                    else {
+                                        toast = toast + ": ";
+                                    }
+
+                                    for (i = 0; i < errors.length; i++) {
+                                        toast = toast + errors[i] + ", ";
+                                    }
+                                    toast = toast + errors[errors.length - 1];
+                                    toastr.error(toast, "Submission failed");
+
+                                    if (result['email_status'] == "fail") {
+                                        toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
+                                    }
+                                    if (result['reserved_status'] == "fail") {
+                                        toast = "You've already selected " + result['reserved'] +
+                                            " slots! You can only select " + result['remaining'] + " more.";
+                                        toastr.error(toast, "Too many reservations");
+                                    }
+                                }
+                                else {
+                                    $(this).attr("data-toggle", "tab");
+                                }
+                            })
+                            .fail(function() {
+                                console.log("Submission: fail");
+                                toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
+                            })
+                            .always(function() {
+                                console.log("complete");
+                            });
+
+
                     });
 
                 });
