@@ -46,6 +46,15 @@ div.date-font {
     max-height: 200px;
 }
 
+#my_number_of_slots{
+    font-size: 90%;
+}
+
+#my_slots{
+    overflow-y: scroll;
+    height: 150px;
+}
+
 th {
     font-size: 12px;
     white-space: nowrap;
@@ -62,7 +71,7 @@ th:first-child {
 
 
 .selectedSlot{
-    font-size: 80%;
+    font-size: 75%;
     background-color: mintcream;
     position: relative;
     padding: 2px;

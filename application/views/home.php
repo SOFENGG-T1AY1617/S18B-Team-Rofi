@@ -56,7 +56,7 @@ $defaultTab = 1;
                 var reservations = [];
                 var request;
                 var dateSelected = "<?=date("Y-m-d")?>";
-
+                var maxNumberOfSlots = 4;//TODO select from Settings
 
                 $(document).ready(function() {
 
@@ -71,7 +71,7 @@ $defaultTab = 1;
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
                         if (slotsPicked == 0) {
-                            toastr.info("You must choose up to 4 slots before proceeding.", "Info");
+                            toastr.info("You must choose up to "+maxNumberOfSlots+" slots before proceeding.", "Info");
                             $(this).attr("data-toggle", "");
                         } else {
                             $(this).attr("data-toggle", "tab");
@@ -178,19 +178,20 @@ $defaultTab = 1;
                             .always(function() {
                                 console.log("complete");
                             });
-                        
+
+
                     });
 
 
                     $(document).on( "click", ".slotCell.free:not(.disabled)",function() {
                         var slotID = $(this).attr('id');
 
-                        if (slotsPicked.length < 4 && (($.inArray(slotID, slotsPicked)) == -1)) {
+                        if (slotsPicked.length < maxNumberOfSlots && (($.inArray(slotID, slotsPicked)) == -1)) {
                             slotsPicked.push(slotID);
                             this.setAttribute("class", "slotCell selected");
                         }
                         else {
-                            toastr.error("You cannot select more than 4 slots at once!", "Error");
+                            toastr.error("You cannot select more than "+ maxNumberOfSlots +" slots at once!", "Error");
                         }
 
                         console.log(slotsPicked);
@@ -249,6 +250,7 @@ $defaultTab = 1;
                         }
                     });
 
+
                 });
 
                 function updateSelectedSlots(){
@@ -275,6 +277,7 @@ $defaultTab = 1;
                                 };
 
                                 //$("#form_room").empty().append(out);
+
                                 $("#my_slots").html(out);
 
                                 console.log(out);
@@ -286,6 +289,7 @@ $defaultTab = 1;
                                 $("#my_slots").html(null);
                             })
                             .always(function() {
+                                $("#my_number_of_slots").html("SELECTED SLOTS ("+slotsPicked.length+"/"+maxNumberOfSlots+")");
                                 console.log("complete");
                             });
 
@@ -712,8 +716,8 @@ $defaultTab = 1;
                         <div id = "slots_selected" class = "panel panel-default">
 
                             <div  class = "panel-body">
-                                SELECTED SLOTS <br>
-                                <p id = "my_slots"></p>
+                                <p id="my_number_of_slots"></p>
+                                <div id = "my_slots"></div>
                             </div>
                         </div>
 
@@ -888,7 +892,9 @@ $defaultTab = 1;
 
                 $(document).ready(function(){
                     $("#ok-button").click(reset);
+
                 });
+                updateSelectedSlots();
             </script>
 
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
