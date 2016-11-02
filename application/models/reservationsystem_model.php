@@ -187,6 +187,19 @@ class ReservationSystem_Model extends CI_Model
         return $result->num_rows() > 0;
     }
 
+
+    function queryReservationsAtSlotOnDate($slot, $date){
+
+    }
+
+    function queryRoomAndCompNoAtComputerID($id){
+        $sql = "SELECT name, computerno
+                FROM rooms NATURAL JOIN 
+                  (SELECT roomid, computerno
+                   FROM computers
+                   WHERE computerid = ?) b";
+        return $this->db->query($sql, array($id))->result();
+    }
     function verifyReservation($verificationCode) {
         $sql = "UPDATE reservations SET verified = 1 
                   WHERE verificationcode = ?";

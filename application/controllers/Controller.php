@@ -27,14 +27,18 @@ class Controller extends CI_Controller {
     {
         //$this->load->model('reservationsystem_model');
 
+        $minuteInterval = 15; // TODO get interval from Settings
+        $maxNumberOfSlots = 4; // TODO get interval from Settings
+
         $data['buildings'] = $this->reservationsystem_model->queryAllBuildings();
         $data['colleges'] = $this->reservationsystem_model->queryColleges();
         $data['types'] = $this->reservationsystem_model->queryTypes();
-        $data['times15_today'] = $this->reservationsystem_model->getTimes(6, 15, 0);
-        $data['times15_tomorrow'] = $this->reservationsystem_model->getTimes(6, 15, 1);
-        $data['times30'] = $this->reservationsystem_model->getTimes(6, 30, 0);
+        $data['times_today'] = $this->reservationsystem_model->getTimes(6, $minuteInterval, 0);
+        $data['times_tomorrow'] = $this->reservationsystem_model->getTimes(6, $minuteInterval, 1);
+        //$data['times30'] = $this->reservationsystem_model->getTimes(6, 30, 0);
 
         $data['tab'] = 1;
+        $data['maxNumberOfSlots'] = $maxNumberOfSlots;
 
         $this->load->view('template/header'); // include bootstrap 3 header
         $this->load->view('home', $data); // $this->load->view('home', $data); set to this if data is set
@@ -209,6 +213,23 @@ class Controller extends CI_Controller {
 
     public function isExistingVerificationCode($verificationCode) {
         return $this->reservationsystem_model->isExistingVerificationCode($verificationCode);
+    }
+
+    public function getMyReservations(){
+        $slots = $this->input->get('slots');
+        $data = [];
+
+
+        foreach ($slots as $slot) {
+            $arr = explode('_', $slot);
+            $roomName = $this->reservationsystem_model->queryRoomAndCompNoAtComputerID($arr[0]);
+            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $arr[1], 'start' => $arr[2], 'end' => $arr[3]);
+            array_push($data, $arr2);
+        }
+        /*$data = array(
+          'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
+        );*/
+        echo json_encode($data);
     }
 
     public function verify($verificationCode = NULL) {

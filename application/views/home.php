@@ -16,7 +16,7 @@ $defaultTab = 1;
     <div id = "steps" class="panel panel-default">
         <div id = "tabs" class="row" style="margin-bottom: 20px">
             <div class = "col-md-12">
-                <ul class="nav nav-tabs nav-justified">
+                <ul class="nav nav-pills nav-justified">
 
                    <li role="presentation" class="tab_1 active">
                        <a href="#">Step 1 : Choose a time slot</a>
@@ -52,16 +52,26 @@ $defaultTab = 1;
             <script type = "text/javascript">
 
                 var slotsPicked = [];
+                var computers = [];
+                var reservations = [];
                 var request;
                 var dateSelected = "<?=date("Y-m-d")?>";
+                var maxNumberOfSlots = <?php echo $maxNumberOfSlots?>;//TODO select from Settings
 
                 $(document).ready(function() {
+
+                    var $table = $('#slotTable');
+                    $table.floatThead({
+                        scrollContainer: function($table){
+                            return $table.closest('#slots');
+                        }
+                    });
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").attr("data-toggle", "");
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
                         if (slotsPicked == 0) {
-                            toastr.info("You must choose up to 4 slots before proceeding.", "Info");
+                            toastr.info("You must choose up to "+maxNumberOfSlots+" slots before proceeding.", "Info");
                             $(this).attr("data-toggle", "");
                         } else {
                             $(this).attr("data-toggle", "tab");
@@ -69,6 +79,7 @@ $defaultTab = 1;
                             $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
                             $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
+                            $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
                             $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                         }
 
@@ -82,6 +93,44 @@ $defaultTab = 1;
                             dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
                             $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
                         }
+
+                        if(slotsPicked!=null){
+                            $.ajax({
+                                url: '<?php echo base_url('getMyReservations') ?>',
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {
+                                    slots: slotsPicked
+                                }
+                            })
+                                .done(function(result) {
+                                    console.log(result);
+
+                                    var roomOut=[];
+                                    var startOut=[];
+                                    var endOut=[];
+
+                                    for(i=0;i<result.length;i++){
+                                        roomOut[i]= result[i].roomName + " PC"+result[i].compNo +"<br>";
+                                        startOut[i]= result[i].start+"<br>";
+                                        endOut[i]= result[i].end+"<br>";
+                                    };
+
+                                    //$("#form_room").empty().append(out);
+                                    $("#computerColumn").empty().append(roomOut);
+                                    $("#startColumn").empty().append(startOut);
+                                    $("#endColumn").empty().append(endOut);
+                                    console.log(roomOut);
+
+                                })
+                                .fail(function() {
+                                    console.log("fail");
+                                })
+                                .always(function() {
+                                    console.log("complete");
+                                });
+                        }
+
                     });
 
                     $(".pager li.nextStep_<?php echo $stepNo ?>").click(function() {
@@ -89,80 +138,19 @@ $defaultTab = 1;
                             $(this).removeClass('active');
                     });
 
-                    $("#form_room").hide();
-
-                    // Submit Reservation
-                    $("#finish").click(function() {
-                        $(this).attr("data-toggle", "");
-                        console.log($("#select-college").val());
-                        $.ajax({
-                            url: '<?php echo base_url('submitReservation') ?>',
-                            type: 'GET',
-                            dataType: 'json',
-                            data: {
-                                idnumber: $("#id-number").val(),
-                                collegeid: $("#select-college").val(),
-                                typeid: $("#select-type").val(),
-                                email: $("#email").val(),
-                                date: $("#text-date").val(),
-                                slots: slotsPicked,
-                            }
-                        })
-                            .done(function(result) {
-                                console.log(result);
-                                console.log("done");
-                                if (result['status'] == "fail") {
-                                    errors = result['errors'];
-                                    toast = "You have an error in the following input ";
-                                    if (errors.length > 1) {
-                                       toast = toast + "s: ";
-                                    }
-                                    else {
-                                        toast = toast + ": ";
-                                    }
-
-                                    for (i = 0; i < errors.length; i++) {
-                                        toast = toast + errors[i] + ", ";
-                                    }
-                                    toast = toast + errors[errors.length - 1];
-                                    toastr.error(toast, "Submission failed");
-
-                                    if (result['email_status'] == "fail") {
-                                        toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
-                                    }
-                                    if (result['reserved_status'] == "fail") {
-                                        toast = "You've already selected " + result['reserved'] +
-                                            " slots! You can only select " + result['remaining'] + " more.";
-                                        toastr.error(toast, "Too many reservations");
-                                    }
-                                }
-                                else {
-                                    $(this).attr("data-toggle", "tab");
-                                }
-                            })
-                            .fail(function() {
-                                console.log("Submission: fail");
-                                toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
-                            })
-                            .always(function() {
-                                console.log("complete");
-                            });
-                        
-                    });
-
-
-                    $(document).on( "click", ".slotCell.free",function() {
+                    $(document).on( "click", ".slotCell.free:not(.disabled)",function() {
                         var slotID = $(this).attr('id');
 
-                        if (slotsPicked.length < 4 && (($.inArray(slotID, slotsPicked)) == -1)) {
+                        if (slotsPicked.length < maxNumberOfSlots && (($.inArray(slotID, slotsPicked)) == -1)) {
                             slotsPicked.push(slotID);
                             this.setAttribute("class", "slotCell selected");
                         }
                         else {
-                            toastr.error("You cannot select more than 4 slots at once!", "Error");
+                            toastr.error("You cannot select more than "+ maxNumberOfSlots +" slots at once!", "Error");
                         }
 
                         console.log(slotsPicked);
+                        outputSlots();
 
                     });
 
@@ -173,10 +161,28 @@ $defaultTab = 1;
                             var existIndex = slotsPicked.indexOf(slotID);
                             slotsPicked.splice(existIndex, 1);
 
-                            this.setAttribute("class", "slotCell free");
+                           // this.setAttribute("class", "slotCell free");
+
                         }
 
                         console.log(slotsPicked);
+                        outputSlots();
+                    });
+
+                    $(document).on( "click", ".unSelectSlot",function() {
+                        var slotID = $(this).attr('id');
+
+                        if (($.inArray(slotID, slotsPicked)) > -1) {
+                            var existIndex = slotsPicked.indexOf(slotID);
+                            slotsPicked.splice(existIndex, 1);
+                        }
+
+                        ;
+                        outputSlots();
+
+                        //console.log("slotCell.selected"+" #"+slotID);
+                        console.log(slotsPicked);
+
                     });
 
                     $("input[name=optradio]:radio").change(function () {
@@ -195,10 +201,54 @@ $defaultTab = 1;
 
                             selectRoom($("#form_room").val());
 
+
                         }
                     });
 
+
                 });
+
+                function updateSelectedSlots(){
+
+                        $.ajax({
+                            url: '<?php echo base_url('getMyReservations') ?>',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                slots: slotsPicked
+                            }
+                        })
+                            .done(function(result) {
+                                console.log(result);
+
+                                var out = [];
+
+                                for(i=0;i<result.length;i++){
+                                    out[i]= "<div class='selectedSlot'>";
+                                    out[i]+= "<div><b>"+result[i].roomName + " PC"+result[i].compNo +"</b></div>";
+                                    out[i]+= "<div>" + result[i].start + " to "+result[i].end+"</div>";
+                                    out[i]+="<div class='unSelectSlot' id='"+result[i].id+"'><span aria-hidden='true' >x</span></div>";
+                                    out[i]+="</div>";
+                                };
+
+                                //$("#form_room").empty().append(out);
+
+                                $("#my_slots").html(out);
+
+                                console.log(out);
+
+                            })
+                            .fail(function() {
+                                console.log("fail");
+
+                                $("#my_slots").html(null);
+                            })
+                            .always(function() {
+                                $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/"+maxNumberOfSlots+"):");
+                                console.log("complete");
+                            });
+
+                }
 
                 function selectBuilding(buildingid) {
 
@@ -237,8 +287,6 @@ $defaultTab = 1;
                             console.log(result);
                             console.log("done");
 
-                            $("#form_room").show();
-
                             var out=[];
 
                             out[0]= '<option value="0" selected >All Rooms</option>';
@@ -272,8 +320,8 @@ $defaultTab = 1;
 
                     var buildingid = $("#form_building").val();
 
-                    var computers = [];
-                    var reservations = [];
+                    computers = [];
+                    reservations = [];
 
                     // Abort any pending request
                     if (request) {
@@ -293,6 +341,7 @@ $defaultTab = 1;
                     // Disabled form elements will not be serialized.
                     $inputs.prop("disabled", true);
 
+                    $("#form_room").attr('disabled', false);
 
                     if (buildingid!=""&&roomid != "") {
                         console.log(buildingid+"-"+roomid);
@@ -315,8 +364,6 @@ $defaultTab = 1;
                                 queriedComputers = result['computers'];
                                 queriedReservations = result['reservations'];
 
-                                $("#form_room").show();
-
                                 for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
                                     computers[i]=queriedComputers[i];
                                 }
@@ -325,7 +372,7 @@ $defaultTab = 1;
                                     reservations[i]=queriedReservations[i];
                                 }
 
-                                outputSlotsOf (computers, reservations);
+                                outputSlots();
                             })
                             .fail(function() {
                                 console.log("fail");
@@ -339,173 +386,160 @@ $defaultTab = 1;
                          }, 'json');*/
 
                     }
+
                 }
 
-                function outputSlotsOf (computers, reservations) {
+                function outputSlots() {
 
-                    $("#slotTable").find("tr:gt(0)").remove(); // remove all cells except first row
+                    if(computers!=null){
 
-                    <?php
-                    $tm15_today = [];
+                        $("#slotTable").find("tr:gt(0)").remove(); // remove all cells except first row
 
-                    foreach ($times15_today as $key => $time)
-                        $tm15_today[] = date("H:i:s", $time);
+                        <?php
+                        $tm_today = [];
 
-                    echo "var times15_today = " . json_encode($tm15_today) . ";";
+                        foreach ($times_today as $key => $time)
+                            $tm_today[] = date("H:i:s", $time);
 
-                    $tm15_tomorrow = [];
+                        echo "var times_today = " . json_encode($tm_today) . ";";
 
-                    foreach ($times15_tomorrow as $time)
-                        $tm15_tomorrow[] = date("H:i:s", $time);
+                        $tm_tomorrow = [];
 
-                    echo "var times15_tomorrow = " . json_encode($tm15_tomorrow) . ";";
+                        foreach ($times_tomorrow as $time)
+                            $tm_tomorrow[] = date("H:i:s", $time);
 
-                    $tm30_today = [];
+                        echo "var times_tomorrow = " . json_encode($tm_tomorrow) . ";";
+                        ?>
 
-                    foreach ($times30 as $time)
-                        $tm30_today[] = date("Hi", $time);
+                        var roomIDs = [];
+                        var roomNames = [];
 
-                    echo "var times30 = " . json_encode($tm30_today) . ";";
-                    ?>
+                        // index of ID corresponds with index of NAME
 
-                    var roomIDs = [];
-                    var roomNames = [];
-
-                    // index of ID corresponds with index of NAME
-
-                    for (var i = 0; i < computers.length; i++) // retrieve all room numbers and room names
-                    {
-                        if (($.inArray(computers[i].roomid, roomIDs)) == -1)
+                        for (var i = 0; i < computers.length; i++) // retrieve all room numbers and room names
                         {
-                            roomIDs.push(computers[i].roomid);
-                            roomNames.push(computers[i].name);
+                            if (($.inArray(computers[i].roomid, roomIDs)) == -1)
+                            {
+                                roomIDs.push(computers[i].roomid);
+                                roomNames.push(computers[i].name);
+                            }
                         }
-                    }
 
-                    /*
-                     * IF : OPTION 0
-                     *   MAKE <tr> dedicated for room number first before proceeding
-                     *
-                     * MAKE <tr> for each PC
-                     * APPEND <td>'s
-                     *   - FIRST <td> having the PC NUMBER
-                     *   - THE REST OF THE <td> having the SLOTS
-                     * APPEND all <td>'s to <tr> made earlier
-                     * APPEND <tr> to <table> with ID = slotTable
-                     */
+                        /*
+                         * IF : OPTION 0
+                         *   MAKE <tr> dedicated for room number first before proceeding
+                         *
+                         * MAKE <tr> for each PC
+                         * APPEND <td>'s
+                         *   - FIRST <td> having the PC NUMBER
+                         *   - THE REST OF THE <td> having the SLOTS
+                         * APPEND all <td>'s to <tr> made earlier
+                         * APPEND <tr> to <table> with ID = slotTable
+                         */
 
 
-                    for (var i = 0; i < roomIDs.length; i++) {
-                        var roomTitleRow = document.createElement("tr");
-                        var roomTitleCell = document.createElement("td");
+                        for (var i = 0; i < roomIDs.length; i++) {
+                            var roomTitleRow = document.createElement("tr");
+                            var roomTitleCell = document.createElement("th");
 
-                        roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
-                        roomTitleCell.setAttribute("colspan", times30.length+1);
+                            roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
+                            roomTitleCell.setAttribute("colspan", times_today.length + 1);
 
-                        roomTitleRow.appendChild(roomTitleCell);
+                            roomTitleRow.appendChild(roomTitleCell);
 
-                        $('#tableBody').append(roomTitleRow);
+                            $('#tableBody').append(roomTitleRow);
 
-                        for (var k = 0; k < computers.length; k++) {
+                            var $table = $('#slotTable');
+                            $table.floatThead({
+                                scrollContainer: function ($table) {
+                                    return $table.closest('#slots');
+                                }
+                            });
 
-                            if (computers[k].roomid == roomIDs[i]) {
+                            for (var k = 0; k < computers.length; k++) {
 
-                                var newTableRow = document.createElement("tr");
-                                var newPCNoCell = document.createElement("td");
+                                if (computers[k].roomid == roomIDs[i]) {
 
-                                newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
+                                    var newTableRow = document.createElement("tr");
+                                    var newPCNoCell = document.createElement("th");
 
-                                newTableRow.appendChild(newPCNoCell);
+                                    newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
 
-                                var n = 0; // counter for chosenDateTimes
-                                var chosenDateTimes;
+                                    newTableRow.appendChild(newPCNoCell);
 
-                                if (dateSelected == "<?php echo date("Y-m-d") ?>") {
-                                    chosenDateTimes = times15_today;
-                                } else {
-                                    chosenDateTimes = times15_tomorrow;
+                                    var n = 0; // counter for traversing through chosenDateTimes
+                                    var chosenDateTimes;
+
+                                    if (dateSelected == "<?php echo date("Y-m-d") ?>") {
+                                        chosenDateTimes = times_today;
+                                    } else {
+                                        chosenDateTimes = times_tomorrow;
+                                    }
+
+                                    for (var m = 0; m < chosenDateTimes.length - 1; m++) { // generate time slot cells
+                                        var slotCell = document.createElement("td");
+                                        var clickableSlot1 = document.createElement("div");
+                                        var clickableSlot2 = document.createElement("div");
+                                        var leftSpacer = document.createElement("div");
+                                        var rightSpacer = document.createElement("div");
+
+                                        slotCell.className = "nopadding";
+
+                                        var taken = false;
+                                        for (var p = 0; p < reservations.length; p++) {
+                                            if ((reservations[p].start_restime == chosenDateTimes[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
+                                                taken = true;
+                                        }
+
+                                        var chosenTime1 = chosenDateTimes[n++];
+                                        var chosenTime2 = chosenDateTimes[n];
+
+                                        if (!taken) {
+                                            var computerID = computers[k].computerid;
+
+                                            var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
+
+                                            /*var selected = false;
+
+                                             for(var s=0;s<slotsPicked.length;s++)
+                                             {
+                                             if(strID==slotsPicked[s])
+                                             selected = true;
+                                             }*/
+                                            clickableSlot1.setAttribute("id", strID);
+
+                                            if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)
+                                                clickableSlot1.className = "slotCell pull-left selected";
+                                            else
+                                                clickableSlot1.className = "slotCell pull-left free";
+                                        } else {
+                                            clickableSlot1.className = "slotCell pull-left taken";
+                                            n++;
+                                        }
+
+                                        for (var x in slotsPicked) {
+                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
+                                                disableSlot(clickableSlot1);
+                                        }
+
+                                        slotCell.appendChild(clickableSlot1);
+
+                                        newTableRow.appendChild(slotCell);
+                                    }
+
+                                    $('#tableBody').append(newTableRow);
                                 }
 
-                                for (var m = 0; m < times30.length-1; m++) { // generate time slot cells
-                                    var slotCell = document.createElement("td");
-                                    var clickableSlot1 = document.createElement("div");
-                                    var clickableSlot2 = document.createElement("div");
-                                    var leftSpacer = document.createElement("div");
-                                    var rightSpacer = document.createElement("div");
-
-                                    slotCell.className = "nopadding";
-
-                                    var taken = false;
-                                    for (var p = 0; p < reservations.length; p++) {
-                                        if ( (reservations[p].start_restime == chosenDateTimes[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid) )
-                                            taken = true;
-                                    }
-
-                                    if (!taken) {
-                                        var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
-
-                                        /*var selected = false;
-
-                                        for(var s=0;s<slotsPicked.length;s++)
-                                        {
-                                            if(strID==slotsPicked[s])
-                                                selected = true;
-                                        }*/
-                                        clickableSlot1.setAttribute("id", strID);
-
-                                        if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)
-                                            clickableSlot1.className = "slotCell pull-left selected";
-                                        else
-                                            clickableSlot1.className = "slotCell pull-left free";
-                                    } else {
-                                        clickableSlot1.className = "slotCell pull-left taken";
-                                        n++;
-                                    }
-
-                                    taken = false;
-                                    for (var p = 0; p < reservations.length; p++) {
-                                        if ( (reservations[p].start_restime == chosenDateTimes[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid) )
-                                            taken = true;
-                                    }
-
-                                    if (!taken) {
-                                        var strID = computers[k].computerid + "_" + dateSelected + "_" + chosenDateTimes[n++] + "_" + chosenDateTimes[n];
-
-                                        /*var selected = false;
-
-                                        for(var s=0;s<slotsPicked.length;s++)
-                                        {
-                                            if(strID==slotsPicked[s])
-                                                selected = true;
-                                        }*/
-                                        clickableSlot2.setAttribute("id", strID);
-
-                                        if (($.inArray(clickableSlot2.getAttribute("id"), slotsPicked)) > -1)
-                                            clickableSlot2.className = "slotCell pull-left selected";
-                                        else
-                                            clickableSlot2.className = "slotCell pull-left free";
-                                    } else {
-                                        clickableSlot2.className = "slotCell pull-left taken";
-                                        n++;
-                                    }
-
-                                    leftSpacer.className = "slotDivider pull-left";
-                                    rightSpacer.className = "slotDivider pull-right";
-
-                                    slotCell.appendChild(leftSpacer);
-                                    leftSpacer.appendChild(clickableSlot1);
-                                    slotCell.appendChild(rightSpacer);
-                                    rightSpacer.appendChild(clickableSlot2);
-
-                                    newTableRow.appendChild(slotCell);
-                                }
-
-                                $('#tableBody').append(newTableRow);
                             }
 
                         }
                     }
 
+                    updateSelectedSlots();
+                }
+
+                function disableSlot (slot) {
+                    slot.className += ' disabled';
                 }
 
             </script>
@@ -530,11 +564,13 @@ $defaultTab = 1;
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div class = "col-md-5">
                         <div class = "panel panel-default">
                             <div class = "panel-body">
-                                Building:
-                                <div class = "form-group">
+                                <div class = "form-group col-md-7">
+                                    Building:
                                     <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
                                         <option value="" selected disabled>Choose a building...</option>
                                         <?php foreach($buildings as $row):?>
@@ -542,9 +578,9 @@ $defaultTab = 1;
                                         <?php endforeach;?>
                                     </select>
                                 </div>
-
-                                <div class = "form-group">
-                                    <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)">
+                                <div class = "form-group col-md-5">
+                                    Room:
+                                    <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)" disabled=true>
                                         <option value="" selected></option>
                                     </select>
                                 </div>
@@ -552,7 +588,11 @@ $defaultTab = 1;
                         </div>
                     </div>
 
-                    <div class = "col-md-7">
+
+                </div>
+
+                <div class = "row">
+                    <div class = "col-md-8 col-md-offset-1">
                         <div id = "slots" class = "panel panel-default">
                             <div class = "panel-body nopadding">
                                 <table id = "slotTable" class = "table table-bordered">
@@ -561,8 +601,8 @@ $defaultTab = 1;
                                             <th>PC Numbers</th>
                                             <?php
 
-                                            foreach ($times30 as $key => $time) {
-                                                if ($key != count($times30) - 1)
+                                            foreach ($times_today as $key => $time) {
+                                                if ($key != count($times_today) - 1)
                                                     echo "<th>" . date("h:i A", $time) . "</th>";
                                             }
 
@@ -576,16 +616,28 @@ $defaultTab = 1;
                             </div>
                         </div>
                     </div>
+
+                    <div class = "col-md-2">
+
+                        <div id = "slots_selected" class = "panel panel-default">
+
+                            <div  class = "panel-body">
+                                <p id="my_number_of_slots"></p>
+                                <div id = "my_slots"></div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class ="row">
 
-                    <div class = "col-md-3 col-md-offset-8">
+                    <div class = "col-md-10 col-md-offset-1">
                         <ul class="pager">
-                            <!--<li class="previous prevStep_</?php echo $stepNo ?>">
-                                <a href="#tab_1_</?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
-                            </li>-->
-                            <li class="nextStep_<?php echo $stepNo ?>">
+                            <li class="previous pull-left">
+                                LEGEND:
+                            </li>
+                            <li class="next nextStep_<?php echo $stepNo ?>">
                                 <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
@@ -619,6 +671,7 @@ $defaultTab = 1;
                         $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
                         $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
+                        $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
                         $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                     });
 
@@ -629,7 +682,73 @@ $defaultTab = 1;
                         $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
                         $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
+                        $("#tabs li.tab_<?php echo $stepNo-1 ?>").removeClass('disabled');
                         $("#tabs li.tab_<?php echo $stepNo-1 ?>").addClass('active');
+                    });
+
+                });
+
+                $(document).ready(function() {
+
+                    $("#finish").click(function() {
+                        $(this).attr("data-toggle", "");
+                        console.log($("#select-college").val());
+                        $.ajax({
+                            url: '<?php echo base_url('submitReservation') ?>',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                idnumber: $("#id-number").val(),
+                                collegeid: $("#select-college").val(),
+                                typeid: $("#select-type").val(),
+                                email: $("#email").val(),
+                                date: $("#text-date").val(),
+                                slots: slotsPicked
+                            }
+                        })
+                            .done(function(result) {
+                                console.log("done");
+                                if (result['status'] == "fail") {
+                                    errors = result['errors'];
+                                    toast = "You have an error in the following input ";
+
+                                    console.log ("NUMBER OF ERRORS: " + errors.length);
+
+                                    if (errors.length > 1) {
+                                        toast = toast + "s: ";
+                                    }
+                                    else {
+                                        toast = toast + ": ";
+                                    }
+
+                                    for (i = 0; i < errors.length; i++) {
+                                        toast = toast + errors[i] + ", ";
+                                    }
+                                    toast = toast + errors[errors.length - 1];
+                                    toastr.error(toast, "Submission failed");
+
+                                    if (result['email_status'] == "fail") {
+                                        toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
+                                    }
+                                    if (result['reserved_status'] == "fail") {
+                                        toast = "You've already selected " + result['reserved'] +
+                                            " slots! You can only select " + result['remaining'] + " more.";
+                                        toastr.error(toast, "Too many reservations");
+                                    }
+                                }
+                                else {
+                                    $(this).attr("data-toggle", "tab");
+                                }
+                            })
+                            .fail(function() {
+                                console.log("Submission: fail");
+                                toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
+                            })
+                            .always(function() {
+                                console.log("complete");
+                            });
+
+
                     });
 
                 });
@@ -640,7 +759,7 @@ $defaultTab = 1;
 
                 <div class = "row">
                     <div class = "panel-body">
-                        <div class = "col-md-3 col-md-offset-2">
+                        <div class = "col-md-4 col-md-offset-2">
                             <form>
                                 <div class="form-group">
                                     <label for="id-number">ID Number:</label>
@@ -674,19 +793,32 @@ $defaultTab = 1;
                                 </div>
 
                                 <b>Date:</b> <span id="text-date"></span>
-                                <br /><br />
+                                <br />
                                 <b>Time Slots:</b>
+                                <br/>
                                 <div class = "row">
-                                    <div class = "col-md-6">
+                                    <div class = "col-md-4">
                                         <div class="form-group">
-                                            <label for="starttime">Start:</label>
-                                            <input type="starttime" class="form-control" name="form-start-time" id="start-time" disabled>
+                                            <label>Room & PC#:</label>
+                                            <div id="computerColumn">
+
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class = "col-md-6">
+                                    <div class = "col-md-4">
                                         <div class="form-group">
-                                            <label for="endtime">End:</label>
-                                            <input type="endtime" class="form-control" name="form-end-time" id="end-time" disabled>
+                                            <label>Start:</label>
+                                            <div id="startColumn">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class = "col-md-4">
+                                        <div class="form-group">
+                                            <label>End:</label>
+                                            <div id="endColumn">
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -731,7 +863,9 @@ $defaultTab = 1;
 
                 $(document).ready(function(){
                     $("#ok-button").click(reset);
+
                 });
+                updateSelectedSlots();
             </script>
 
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
