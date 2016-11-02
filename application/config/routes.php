@@ -57,6 +57,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['getRooms'] = 'Controller/getRooms';
 $route['getComputers'] = 'Controller/getComputers';
 $route['submitReservation'] = 'Controller/submitReservation';
+<<<<<<< HEAD
 $route['verify/(:any)'] = 'Controller/verify/$1';
 
 /* ADMIN ROUTE */
@@ -65,3 +66,7 @@ $route['overview'] = 'AdminController';
 $route['area_management'] = 'AdminController/addView';
 $route['mod_management'] = 'AdminController/modView';
 $route['business_rules'] = 'AdminController/ruleView';
+=======
+$route['getMyReservations'] = 'Controller/getMyReservations';
+$route['verify/(:any)'] = 'Controller/verify/$1';
+>>>>>>> refs/remotes/origin/master

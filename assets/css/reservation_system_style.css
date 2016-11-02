@@ -7,6 +7,30 @@ body {
     margin: 0 !important;
 }
 
+/* FOR STEPS */
+
+.nav li:hover a { /* OVERRIDE BOOTSTRAP HOVER EFFECT */
+    border: none;
+    background: none;
+    color: black;
+}
+
+.nav li.active {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.nav li.disabled{
+    opacity: 0.4;
+    color: black;
+}
+
+.nav li.disabled a{
+    color: black;
+}
+
+/* END FOR STEPS */
+
 div.date-font {
     font-size: 11px;
 }
@@ -17,34 +41,91 @@ div.date-font {
     max-height: 400px;
 }
 
+#slots_selected {
+    height: 200px;
+    max-height: 200px;
+}
+
+#my_number_of_slots{
+    font-size: 90%;
+}
+
+#my_slots{
+    overflow-y: scroll;
+    height: 150px;
+}
+
 th {
     font-size: 12px;
     white-space: nowrap;
+    background-color: white;
+}
+th:first-child {
+    left: 5px
 }
 
 .slotCell {
     width: 100%;
     height: 35px;
+}
+
+
+.selectedSlot{
+    font-size: 75%;
+    background-color: mintcream;
+    position: relative;
+    padding: 2px;
+    margin: 2px;
+    transition: opacity 500ms;
+}
+
+.unSelectSlot {
+    background-color: whitesmoke;
+    color: firebrick;
+
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 100%;
+    width: 15%;
+    text-align: center;
+    vertical-align: middle;
+    transition: all 0.3s ease 0s;
+    font-size: 200%
+}
+
+.unSelectSlot:hover{
+    background-color: firebrick;
+    color: whitesmoke;
 
 }
 
 .slotCell.free{
     background-color: limegreen;
+
 }
 
 .slotCell.selected{
     background-color: darkgreen;
+
 }
 
 .slotCell.taken {
     background-color: lightgrey;
 }
 
-:not(.taken):not(selected).slotCell:hover {
+.slotCell.free.disabled,
+.slotCell.selected.disabled,
+.slotCell.taken.disabled{
+    opacity: 0.3;
+}
+
+:not(.taken):not(.selected):not(.disabled).slotCell:hover {
     background-color: greenyellow;
 }
 
-:not(.taken):not(.free).slotCell:hover {
+:not(.taken):not(.free):not(.disabled).slotCell:hover {
     background-color: green;
 }
 
@@ -56,4 +137,8 @@ th {
 
 #ok-button {
     margin-top: 30px;
+}
+
+.previous {
+    margin-left: 20px;
 }

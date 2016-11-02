@@ -211,6 +211,23 @@ class Controller extends CI_Controller {
         return $this->reservationsystem_model->isExistingVerificationCode($verificationCode);
     }
 
+    public function getMyReservations(){
+        $slots = $this->input->get('slots');
+        $data = [];
+
+
+        foreach ($slots as $slot) {
+            $arr = explode('_', $slot);
+            $roomName = $this->reservationsystem_model->queryRoomAndCompNoAtComputerID($arr[0]);
+            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $arr[1], 'start' => $arr[2], 'end' => $arr[3]);
+            array_push($data, $arr2);
+        }
+        /*$data = array(
+          'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
+        );*/
+        echo json_encode($data);
+    }
+
     public function verify($verificationCode = NULL) {
         $numResult = $this->reservationsystem_model->verifyReservation($verificationCode);
         if ($numResult > 0) {
