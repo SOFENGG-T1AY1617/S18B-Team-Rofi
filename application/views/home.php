@@ -479,9 +479,6 @@ $defaultTab = 1;
                                     for (var m = 0; m < chosenDateTimes.length - 1; m++) { // generate time slot cells
                                         var slotCell = document.createElement("td");
                                         var clickableSlot1 = document.createElement("div");
-                                        var clickableSlot2 = document.createElement("div");
-                                        var leftSpacer = document.createElement("div");
-                                        var rightSpacer = document.createElement("div");
 
                                         slotCell.className = "nopadding";
 
@@ -518,7 +515,7 @@ $defaultTab = 1;
                                         }
 
                                         for (var x in slotsPicked) {
-                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
+                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && slotsPicked[x].includes(dateSelected) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
                                                 disableSlot(clickableSlot1);
                                         }
 
