@@ -710,23 +710,24 @@ $defaultTab = 1;
                                 console.log("done");
                                 if (result['status'] == "fail") {
                                     errors = result['errors'];
-                                    toast = "You have an error in the following input ";
-
-                                    console.log ("NUMBER OF ERRORS: " + errors.length);
-
                                     if (errors.length > 1) {
-                                        toast = toast + "s: ";
-                                    }
-                                    else {
-                                        toast = toast + ": ";
-                                    }
+                                        toast = "You have an error in the following input ";
 
-                                    for (i = 0; i < errors.length; i++) {
-                                        toast = toast + errors[i] + ", ";
-                                    }
-                                    toast = toast + errors[errors.length - 1];
-                                    toastr.error(toast, "Submission failed");
+                                        console.log ("NUMBER OF ERRORS: " + errors.length);
 
+                                        if (errors.length > 1) {
+                                            toast = toast + "s: ";
+                                        }
+                                        else {
+                                            toast = toast + ": ";
+                                        }
+
+                                        for (i = 0; i < errors.length; i++) {
+                                            toast = toast + errors[i] + ", ";
+                                        }
+                                        toast = toast + errors[errors.length - 1];
+                                        toastr.error(toast, "Submission failed");
+                                    }
                                     if (result['email_status'] == "fail") {
                                         toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                                     }

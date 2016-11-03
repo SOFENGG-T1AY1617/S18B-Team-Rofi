@@ -105,6 +105,7 @@ class Controller extends CI_Controller {
                 'errors' => $errors,
             );
         }
+
         if (count($getData['slots']) +
             ($numReservations = $this->numReservations($getData['idnumber'])) > MAX_RESERVATIONS) {
             $data = array(
@@ -115,7 +116,7 @@ class Controller extends CI_Controller {
                 'remaining' => MAX_RESERVATIONS - $numReservations,
             );
         }
-        else { // Add to database
+        else if (count($errors) == 0){ // Add to database
             $slots = $this->parseSlots($getData['slots']);
             $getData['slots'] = $slots;
             $getData['verificationCode'] = $this->getVerificationCode();
