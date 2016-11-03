@@ -27,8 +27,8 @@ class Controller extends CI_Controller {
     {
         //$this->load->model('reservationsystem_model');
 
-        $minuteInterval = 15; // TODO get interval from Settings
-        $maxNumberOfSlots = 4; // TODO get interval from Settings
+        $minuteInterval = $this->reservationsystem_model->getMinuteInterval();
+        $maxNumberOfSlots = $this->reservationsystem_model->getMaxNumberOfSlots();
 
         $data['buildings'] = $this->reservationsystem_model->queryAllBuildings();
         $data['colleges'] = $this->reservationsystem_model->queryColleges();
