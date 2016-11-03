@@ -16,6 +16,14 @@ class ReservationSystem_Model extends CI_Model
         $this->load->database();
     }
 
+    public function getMinuteInterval() {
+        return 15; // TODO retrieve from Settings
+    }
+
+    public function getMaxNumberOfSlots() {
+        return 4; // TODO retrieve from Settings
+    }
+
     public function getTimes($first_hour, $minute_interval, $tomorrow) {
         $times = array();
 
