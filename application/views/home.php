@@ -665,11 +665,7 @@ $defaultTab = 1;
                         if ($(this).hasClass('active'))
                             $(this).toggleClass('active');
 
-                        $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
-                        $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
-                        $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
-                        $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                     });
 
                     $('.pager li.prevStep_<?php echo $stepNo ?>').on('click', function () { // for next step
@@ -736,6 +732,12 @@ $defaultTab = 1;
                                 }
                                 else {
                                     $(this).attr("data-toggle", "tab");
+
+                                    $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
+                                    $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
+
+                                    $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
+                                    $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                                 }
                             })
                             .fail(function() {
