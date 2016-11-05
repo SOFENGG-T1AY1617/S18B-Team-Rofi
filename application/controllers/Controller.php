@@ -223,8 +223,14 @@ class Controller extends CI_Controller {
 
         foreach ($slots as $slot) {
             $arr = explode('_', $slot);
+
             $roomName = $this->reservationsystem_model->queryRoomAndCompNoAtComputerID($arr[0]);
-            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $arr[1], 'start' => $arr[2], 'end' => $arr[3]);
+
+            $date = date('M', mktime(0, 0, 0, explode('-',$arr[1])[1], 10))." ".explode('-',$arr[1])[2].", ".explode('-',$arr[1])[0];
+            $timeStart = date('h:iA',mktime(explode(':',$arr[2])[0],explode(':',$arr[2])[1]));
+            $timeEnd =  date('h:iA',mktime(explode(':',$arr[3])[0],explode(':',$arr[3])[1]));//;
+
+            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $date, 'start' => $timeStart, 'end' => $timeEnd);
             array_push($data, $arr2);
         }
         /*$data = array(
