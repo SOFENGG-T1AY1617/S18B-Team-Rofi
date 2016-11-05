@@ -795,46 +795,45 @@ $defaultTab = 1;
                                     <label for="email">Email:</label>
                                     <input type="email" class="form-control" name="form-email" id="email">
                                 </div>
+                            </form>
+                        </div>
+                        <div class = "col-md-12 col-md-offset-2">
+                            <b>Time Slots:</b>
+                            <br/>
+                            <div class = "row">
+                                <div class = "col-md-2">
+                                    <div class="form-group">
+                                        <label>Room & PC#:</label>
+                                        <div id="computerColumn">
 
-
-                                <br />
-                                <b>Time Slots:</b>
-                                <br/>
-                                <div class = "row">
-                                    <div class = "col-md-4">
-                                        <div class="form-group">
-                                            <label>Room & PC#:</label>
-                                            <div id="computerColumn">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <div class="form-group">
-                                            <label>Date:</label>
-                                            <div id="dateColumn">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <div class="form-group">
-                                            <label>Start:</label>
-                                            <div id="startColumn">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <div class="form-group">
-                                            <label>End:</label>
-                                            <div id="endColumn">
-
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                                <div class = "col-md-2">
+                                    <div class="form-group">
+                                        <label>Date:</label>
+                                        <div id="dateColumn">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class = "col-md-1">
+                                    <div class="form-group">
+                                        <label>Start:</label>
+                                        <div id="startColumn">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class = "col-md-1">
+                                    <div class="form-group">
+                                        <label>End:</label>
+                                        <div id="endColumn">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
