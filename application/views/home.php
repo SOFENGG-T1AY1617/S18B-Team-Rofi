@@ -103,10 +103,7 @@ $defaultTab = 1;
 
                 $(document).ready(function() {
 
-                    if (dateSelected == dateToday)
-                        updateTimesHeader(true);
-                    else
-                        updateTimesHeader(false);
+                    updateTimesHeader(dateSelected == dateToday);
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").attr("data-toggle", "");
 
@@ -205,7 +202,7 @@ $defaultTab = 1;
                             var existIndex = slotsPicked.indexOf(slotID);
                             slotsPicked.splice(existIndex, 1);
 
-                           // this.setAttribute("class", "slotCell free");
+                           this.setAttribute("class", "slotCell free");
 
                         }
 
@@ -221,7 +218,7 @@ $defaultTab = 1;
                             slotsPicked.splice(existIndex, 1);
                         }
 
-                        ;
+
                         outputSlots();
 
                         //console.log("slotCell.selected"+" #"+slotID);
@@ -484,6 +481,8 @@ $defaultTab = 1;
                 function outputSlots() {
 
                     if(computers!=null){
+
+                        $("#tableBody").empty();
 
                         var roomIDs = [];
                         var roomNames = [];
