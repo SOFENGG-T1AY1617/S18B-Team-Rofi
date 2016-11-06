@@ -7,6 +7,11 @@
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <!-- ADD CONDITION FOR ADMIN VIEW HERE -->
+               
+                <span class="icon-bar"></span>
+               
+                <!-- ADD CONDITION FOR ADMIN VIEW HERE -->
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">DLSU B)</a>
@@ -17,6 +22,7 @@
             <ul class="nav navbar-nav">
                 <li id="overview_button"><a href="overview">Reports<span class="sr-only"></span></a></li>
                 <li><a href="mod_management">Moderator Management</a></li>
+                <li><a href="admin_management">Administrator Management</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Application Settings<span class="caret"></span></a>
