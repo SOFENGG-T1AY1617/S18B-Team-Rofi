@@ -55,6 +55,11 @@ div.date-font {
     height: 150px;
 }
 
+#slotTable{
+    table-layout: fixed;
+    width: auto;
+}
+
 th {
     font-size: 12px;
     white-space: nowrap;

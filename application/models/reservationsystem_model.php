@@ -24,13 +24,17 @@ class ReservationSystem_Model extends CI_Model
         return 4; // TODO retrieve from Settings
     }
 
-    public function getTimes($first_hour, $minute_interval, $tomorrow) {
+    public function getTimes($first_hour, $first_minute, $minute_interval, $tomorrow) {
         $times = array();
+        $startMinute = 0;
+
+        if (!$tomorrow)
+            $startMinute = intval($first_minute/$minute_interval) * $minute_interval;
 
         for ($hour = $first_hour; $hour < 20 ; $hour++) {
-            for ($minute = 0; $minute < 60; $minute += $minute_interval) {
+            for ($minute = $startMinute; $minute < 60; $minute += $minute_interval) {
 
-                if ($tomorrow == 1)
+                if ($tomorrow)
                     $time = mktime($hour, $minute, 0, date("m"), date("d") + 1, date("Y"));
                 else
                     $time = mktime($hour, $minute, 0, date("m"), date("d"), date("Y"));
@@ -38,9 +42,11 @@ class ReservationSystem_Model extends CI_Model
                 $times[] = $time;
 
             }
+
+            $startMinute = 0; // reset to 0 to suit the succeeding hours
         }
 
-        if ($tomorrow == 1)
+        if ($tomorrow)
             $times[] = mktime($hour, 0, 0, date("m"), date("d") + 1, date("Y"));
         else
             $times[] = mktime($hour, 0, 0, date("m"), date("d"), date("Y"));

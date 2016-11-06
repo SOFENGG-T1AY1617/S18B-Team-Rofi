@@ -25,19 +25,20 @@ class Controller extends CI_Controller {
 
 	public function home()
     {
-        //$this->load->model('reservationsystem_model');
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         $minuteInterval = $this->reservationsystem_model->getMinuteInterval();
         $maxNumberOfSlots = $this->reservationsystem_model->getMaxNumberOfSlots();
+        $currentHour = date("H");
+        $currentMinute = date("i");
 
         $data['buildings'] = $this->reservationsystem_model->queryAllBuildings();
         $data['colleges'] = $this->reservationsystem_model->queryColleges();
         $data['types'] = $this->reservationsystem_model->queryTypes();
-        $data['times_today'] = $this->reservationsystem_model->getTimes(6, $minuteInterval, 0);
-        $data['times_tomorrow'] = $this->reservationsystem_model->getTimes(6, $minuteInterval, 1);
-        //$data['times30'] = $this->reservationsystem_model->getTimes(6, 30, 0);
+        $data['times_today'] = $this->reservationsystem_model->getTimes($currentHour, $currentMinute, $minuteInterval, false);
+        $data['times_tomorrow'] = $this->reservationsystem_model->getTimes(6, $currentMinute, $minuteInterval, true);
 
-        $data['tab'] = 1;
+        $data['tab'] = 1; // set to first tab on open
         $data['maxNumberOfSlots'] = $maxNumberOfSlots;
 
         $this->load->view('template/header'); // include bootstrap 3 header
