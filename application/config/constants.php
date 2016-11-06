@@ -117,3 +117,18 @@ define("COLUMN_VERIFIED", "verified");
 define("COLUMN_VERFICATIONCODE", "verificationcode");
 
 define("MAX_RESERVATIONS", 4);
+
+
+define('TABLE_ADMINISTRATORS', "administrators");
+define("COLUMN_ADMINISTRATORID", "administratorid");
+define("COLUMN_LAST_NAME", "last_name");
+define("COLUMN_FIRST_NAME", "first_name");
+define("COLUMN_MIDDLE_NAME", "middle_name");
+define("COLUMN_ADMIN_DEPARTMENTID", "admin_departmentid");
+define("COLUMN_ADMIN_TYPE", "admin_type");
+define("COLUMN_password", "password");
+
+
+define("TABLE_MODERATORS", "moderators");
+define("COLUMN_MODERATORID", "moderatorid");
+define("COLUMN_MOD_DEPARTMENTID", "mod_departmentid");

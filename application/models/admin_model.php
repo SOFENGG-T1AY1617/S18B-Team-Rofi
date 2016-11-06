@@ -14,6 +14,14 @@ class Admin_Model extends CI_Model
         $this->load->database();
     }
 
+    function queryAllAdministators() {
+        return $this->db->get(TABLE_ADMINISTRATORS)->result();
+    }
+
+    function queryAllModerators() {
+        return $this->db->get(TABLE_MODERATORS)->result();
+    }
+
     function queryAllRooms() {
         //return $this->db->get(TABLE_ROOMS)->result();
         $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
@@ -136,27 +144,4 @@ class Admin_Model extends CI_Model
                   start_restime >= TIME(NOW())";
         return $this->db->query($sql, array($id))->result();
     }
-
-    function createReservation($data) {
-        $slots = $data['slots'];
-
-        foreach($slots as $slot) {
-            $insertData = array(
-                'computerid' => $slot['computerid'],
-                'useridno' => $data['idnumber'],
-                'email' => $data['email'],
-                'date' => $slot['date'],
-                'start_restime' => $slot['startTime'],
-                'end_restime' => $slot['endTime'],
-                'collegeid' => $data['collegeid'],
-                'typeid' => $data['typeid'],
-                'verificationcode' => $data['verificationCode'],
-            );
-
-            $this->db->insert(TABLE_RESERVATIONS, $insertData);
-        }
-
-    }
-
-
 }

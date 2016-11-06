@@ -152,20 +152,15 @@ include 'a_navbar.php';
                                 </thead>
                                 <tbody>
 
-                                <tr>
-                                    <td>Tirion Fordring</td>
-                                    <td>tirion_fordring@dlsu.edu.ph</td>
-                                    <td>tirior_fordring</td>
-                                    <td></td>
+                                <?php foreach($administrators as $admin):?>
+                                    <tr>
+                                        <td><?=$admin->first_name . " " . $admin->last_name?></td>
+                                        <td>Email</td>
+                                        <td>Username?</td>
+                                        <td></td>
 
-                                </tr>
-
-                                <tr>
-                                    <td>Fandral Menethil</td>
-                                    <td>fandral_menethil@dlsu.edu.ph</td>
-                                    <td>fandral_menethil</td>
-                                    <td></td>
-                                </tr>
+                                    </tr>
+                                <?php endforeach;?>
                                 </tbody>
                             </table>
 
