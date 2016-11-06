@@ -1,61 +1,25 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: kevin
- * Date: 10/9/2016
- * Time: 8:11 PM
+ * Date: 11/6/2016
+ * Time: 7:07 PM
  */
-
-class ReservationSystem_Model extends CI_Model
+class Admin_Model extends CI_Model
 {
-
-
     public function __construct()
     {
         parent::__construct();
         $this->load->database();
     }
 
-    public function getMinuteInterval() {
-        return 15; // TODO retrieve from Settings
-    }
-
-    public function getMaxNumberOfSlots() {
-        return 4; // TODO retrieve from Settings
-    }
-
-    public function getTimes($first_hour, $first_minute, $minute_interval, $tomorrow) {
-        $times = array();
-        $startMinute = 0;
-
-        if (!$tomorrow)
-            $startMinute = intval($first_minute/$minute_interval) * $minute_interval;
-
-        for ($hour = $first_hour; $hour < 20 ; $hour++) {
-            for ($minute = $startMinute; $minute < 60; $minute += $minute_interval) {
-
-                if ($tomorrow)
-                    $time = mktime($hour, $minute, 0, date("m"), date("d") + 1, date("Y"));
-                else
-                    $time = mktime($hour, $minute, 0, date("m"), date("d"), date("Y"));
-
-                $times[] = $time;
-
-            }
-
-            $startMinute = 0; // reset to 0 to suit the succeeding hours
-        }
-
-        if ($tomorrow)
-            $times[] = mktime($hour, 0, 0, date("m"), date("d") + 1, date("Y"));
-        else
-            $times[] = mktime($hour, 0, 0, date("m"), date("d"), date("Y"));
-
-        return $times;
-    }
-
-    function queryRooms() {
-        return $this->db->get(TABLE_ROOMS)->result();
+    function queryAllRooms() {
+        //return $this->db->get(TABLE_ROOMS)->result();
+        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
+             FROM rooms NATURAL JOIN computers
+             GROUP BY roomid";
+        return $this->db->query($sql)->result();
     }
 
     function queryAllComputers() {
@@ -194,39 +158,5 @@ class ReservationSystem_Model extends CI_Model
 
     }
 
-    function isExistingVerificationCode($verificationCode) {
-        $result = $this->db->get_where(TABLE_RESERVATIONS, $verificationCode)->result;
 
-        // Check if there is existing row
-        return $result->num_rows() > 0;
-    }
-
-
-    function queryReservationsAtSlotOnDate($slot, $date){
-
-    }
-
-    function queryRoomAndCompNoAtComputerID($id){
-        $sql = "SELECT name, computerno
-                FROM rooms NATURAL JOIN 
-                  (SELECT roomid, computerno
-                   FROM computers
-                   WHERE computerid = ?) b";
-        return $this->db->query($sql, array($id))->result();
-    }
-    function verifyReservation($verificationCode) {
-        $sql = "UPDATE reservations SET verified = 1 
-                  WHERE verificationcode = ?";
-        return $this->db->query($sql, array($verificationCode));
-    }
-
-    function querySameReservations($reservations) {
-        $this->db->select('*');
-        $this->db->from(TABLE_RESERVATIONS);
-        $this->db->where_in(COLUMN_DATE, $reservations['date']);
-        $this->db->where_in(COLUMN_STARTRESTIME, $reservations['startTime']);
-        $this->db->where_in(COLUMN_ENDRESTIME, $reservations['endTime']);
-        $query = $this->db->get();
-        return $query->result();
-    }
 }

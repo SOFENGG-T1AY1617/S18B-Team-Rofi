@@ -30,8 +30,15 @@ class AdminController extends CI_Controller
     }
 
     public function addView(){
+
+        $data['buildings'] = $this->admin->queryAllBuildings();
+
+        $data['rooms'] = $this->admin->queryAllRooms();
+
+
+
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_add'); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('admin/a_add', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
