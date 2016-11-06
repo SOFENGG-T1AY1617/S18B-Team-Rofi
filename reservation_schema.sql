@@ -91,6 +91,7 @@ CREATE TABLE `reservation_system`.`administrators` (
   `first_name` VARCHAR(45) NOT NULL,
   `middle_name` VARCHAR(45) NOT NULL,
   `admin_departmentid` INT NOT NULL,
+  `admin_type` INT NOT NULL,
   PRIMARY KEY (`administratorid`),
   INDEX `admin_departmentid_idx` (`admin_departmentid` ASC),
 	CONSTRAINT `admin_departmentid`
@@ -112,6 +113,22 @@ CREATE TABLE `reservation_system`.`moderators` (
 	REFERENCES `reservation_system`.`departments` (`departmentid`)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION);
+
+CREATE TABLE `reservation_system`.`business_rules` (
+  `business_rulesid` INT NOT NULL,
+  `departmentid` INT NOT NULL,
+  `interval` TIME NOT NULL,
+  `limit` INT NOT NULL,
+  `accessibility` INT NOT NULL,
+  `reservation_expiry` DATETIME NOT NULL,
+  `confirmation_expiry` DATETIME NOT NULL,
+  PRIMARY KEY (`business_rulesid`),
+  INDEX `department_id_idx` (`departmentid` ASC),
+  CONSTRAINT `business_departmentid`
+    FOREIGN KEY (`departmentid`)
+    REFERENCES `reservation_system`.`departments` (`departmentid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
 /*dummy data*/
 INSERT INTO `reservation_system`.`buildings` (`name`)
