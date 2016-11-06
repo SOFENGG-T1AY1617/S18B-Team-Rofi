@@ -87,11 +87,11 @@ $defaultTab = 1;
                         console.log(date_selected);
                         if (date_selected == "today") {
                             dateSelected = "<?=date("Y-m-d")?>";
-                            $("#text-date").text("<?=date("F d, Y")?>");
+                            //$("#text-date").text("<?=date("F d, Y")?>");
                         }
                         else {
                             dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
-                            $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
+                            //$("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
                         }
 
                         if(slotsPicked!=null){
@@ -107,17 +107,20 @@ $defaultTab = 1;
                                     console.log(result);
 
                                     var roomOut=[];
+                                    var dateOut=[];
                                     var startOut=[];
                                     var endOut=[];
 
                                     for(i=0;i<result.length;i++){
                                         roomOut[i]= result[i].roomName + " PC"+result[i].compNo +"<br>";
+                                        dateOut[i]= result[i].date+"<br>";
                                         startOut[i]= result[i].start+"<br>";
                                         endOut[i]= result[i].end+"<br>";
                                     };
 
                                     //$("#form_room").empty().append(out);
                                     $("#computerColumn").empty().append(roomOut);
+                                    $("#dateColumn").empty().append(dateOut);
                                     $("#startColumn").empty().append(startOut);
                                     $("#endColumn").empty().append(endOut);
                                     console.log(roomOut);
@@ -226,7 +229,8 @@ $defaultTab = 1;
                                 for(i=0;i<result.length;i++){
                                     out[i]= "<div class='selectedSlot'>";
                                     out[i]+= "<div><b>"+result[i].roomName + " PC"+result[i].compNo +"</b></div>";
-                                    out[i]+= "<div>" + result[i].start + " to "+result[i].end+"</div>";
+                                    out[i]+= "<div>" + result[i].date +"</div>";
+                                    out[i]+= "<div>" + result[i].start + " - "+result[i].end+"</div>";
                                     out[i]+="<div class='unSelectSlot' id='"+result[i].id+"'><span aria-hidden='true' >x</span></div>";
                                     out[i]+="</div>";
                                 };
@@ -665,11 +669,7 @@ $defaultTab = 1;
                         if ($(this).hasClass('active'))
                             $(this).toggleClass('active');
 
-                        $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
-                        $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
-                        $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
-                        $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                     });
 
                     $('.pager li.prevStep_<?php echo $stepNo ?>').on('click', function () { // for next step
@@ -736,6 +736,12 @@ $defaultTab = 1;
                                 }
                                 else {
                                     $(this).attr("data-toggle", "tab");
+
+                                    $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
+                                    $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
+
+                                    $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
+                                    $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
                                 }
                             })
                             .fail(function() {
@@ -790,7 +796,7 @@ $defaultTab = 1;
                                     <input type="email" class="form-control" name="form-email" id="email">
                                 </div>
 
-                                <b>Date:</b> <span id="text-date"></span>
+
                                 <br />
                                 <b>Time Slots:</b>
                                 <br/>
@@ -799,6 +805,14 @@ $defaultTab = 1;
                                         <div class="form-group">
                                             <label>Room & PC#:</label>
                                             <div id="computerColumn">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class = "col-md-4">
+                                        <div class="form-group">
+                                            <label>Date:</label>
+                                            <div id="dateColumn">
 
                                             </div>
                                         </div>
