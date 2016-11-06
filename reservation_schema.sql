@@ -85,29 +85,40 @@ CREATE TABLE `reservation_system`.`reservations` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+CREATE TABLE `reservation_system`.`admin_types` (
+  `admin_typeid` INT NOT NULL AUTO_INCREMENT,
+  `admin_type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`admin_typeid`));
+
 CREATE TABLE `reservation_system`.`administrators` (
-  `administratorid` INT NOT NULL,
+  `administratorid` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
   `first_name` VARCHAR(45) NOT NULL,
-  `middle_name` VARCHAR(45) NOT NULL,
   `admin_departmentid` INT NOT NULL,
-  `admin_type` INT NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `admin_typeid` INT NOT NULL,
   PRIMARY KEY (`administratorid`),
   INDEX `admin_departmentid_idx` (`admin_departmentid` ASC),
-	CONSTRAINT `admin_departmentid`
+  INDEX `admin_typeid_idx` (`admin_typeid` ASC),
+  CONSTRAINT `admin_departmentid`
 	FOREIGN KEY (`admin_departmentid`)
 	REFERENCES `reservation_system`.`departments` (`departmentid`)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
+  CONSTRAINT `admin_typeid`
+	FOREIGN KEY (`admin_typeid`)
+	REFERENCES `reservation_system`.`admin_types` (`admin_typeid`)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION);
 
 CREATE TABLE `reservation_system`.`moderators` (
-  `moderatorid` INT NOT NULL,
+  `moderatorid` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
   `first_name` VARCHAR(45) NOT NULL,
-  `middle_name` VARCHAR(45) NOT NULL,
   `mod_departmentid` INT NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`moderatorid`),
   INDEX `mod_departmentid_idx` (`mod_departmentid` ASC),
 	CONSTRAINT `mod_departmentid`
@@ -240,3 +251,19 @@ VALUES (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:00:00", "1
 	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j211"),
        (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j212"),
 	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j212");
+
+INSERT INTO `reservation_system`.`admin_types` (`admin_type`)
+VALUES ("Super Administrator"),
+	   ("Administrator");
+
+INSERT INTO `reservation_system`.`administrators` 
+	(`email`, `last_name`, `first_name`, `admin_departmentid`, `admin_typeid`, `password`)
+VALUES ("james.sy@dlsu.edu.ph","Sy", "James", 1, 1, "password"),
+	   ("bing.dancalan@dlsu.edu.ph", "Dancalan", "Bing", 2, 2, "password"),
+	   ("juan.delacruz@dlsu.edu.ph","Dela Cruz", "Juan", 1, 2, "password");
+
+INSERT INTO `reservation_system`.`moderators` 
+	(`email`, `last_name`, `first_name`, `mod_departmentid`, `password`)
+VALUES ("rofi_santos@dlsu.edu.ph","Santos", "Rofi", 1, "password"),
+	   ("patrich.tobias@dlsu.edu.ph", "Tobias", "Patrick", 1, "password"),
+	   ("benson.polican","Polican", "Benson", 2, "password");
