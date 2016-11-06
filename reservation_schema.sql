@@ -257,13 +257,13 @@ VALUES ("Super Administrator"),
 	   ("Administrator");
 
 INSERT INTO `reservation_system`.`administrators` 
-	(`email`, `last_name`, `first_name`, `admin_departmentid`, `admin_typeid`)
-VALUES ("james.sy@dlsu.edu.ph","Sy", "James", 1, 1),
-	   ("bing.dancalan@dlsu.edu.ph", "Dancalan", "Bing", 2, 2),
-	   ("juan.delacruz@dlsu.edu.ph","Dela Cruz", "Juan", 1, 2);
+	(`email`, `last_name`, `first_name`, `admin_departmentid`, `admin_typeid`, `password`)
+VALUES ("james.sy@dlsu.edu.ph","Sy", "James", 1, 1, "password"),
+	   ("bing.dancalan@dlsu.edu.ph", "Dancalan", "Bing", 2, 2, "password"),
+	   ("juan.delacruz@dlsu.edu.ph","Dela Cruz", "Juan", 1, 2, "password");
 
 INSERT INTO `reservation_system`.`moderators` 
-	(`email`, `last_name`, `first_name`, `mod_departmentid`)
-VALUES ("rofi_santos@dlsu.edu.ph","Santos", "Rofi", 1),
-	   ("patrich.tobias@dlsu.edu.ph", "Tobias", "Patrick", 1),
-	   ("benson.polican","Polican", "Benson", 2);
+	(`email`, `last_name`, `first_name`, `mod_departmentid`, `password`)
+VALUES ("rofi_santos@dlsu.edu.ph","Santos", "Rofi", 1, "password"),
+	   ("patrich.tobias@dlsu.edu.ph", "Tobias", "Patrick", 1, "password"),
+	   ("benson.polican","Polican", "Benson", 2, "password");
