@@ -92,6 +92,7 @@ CREATE TABLE `reservation_system`.`administrators` (
   `middle_name` VARCHAR(45) NOT NULL,
   `admin_departmentid` INT NOT NULL,
   `admin_type` INT NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`administratorid`),
   INDEX `admin_departmentid_idx` (`admin_departmentid` ASC),
 	CONSTRAINT `admin_departmentid`
@@ -106,6 +107,7 @@ CREATE TABLE `reservation_system`.`moderators` (
   `first_name` VARCHAR(45) NOT NULL,
   `middle_name` VARCHAR(45) NOT NULL,
   `mod_departmentid` INT NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`moderatorid`),
   INDEX `mod_departmentid_idx` (`mod_departmentid` ASC),
 	CONSTRAINT `mod_departmentid`
