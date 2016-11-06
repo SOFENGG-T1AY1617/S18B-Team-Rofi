@@ -1,3 +1,9 @@
+:root{
+    --selected: darkgreen;
+    --free: limegreen;
+    --taken: lightgrey;
+}
+
 body {
     padding-top: 50px;
 }
@@ -55,6 +61,11 @@ div.date-font {
     height: 150px;
 }
 
+#slotTable{
+    table-layout: fixed;
+    width: auto;
+}
+
 th {
     font-size: 12px;
     white-space: nowrap;
@@ -102,17 +113,17 @@ th:first-child {
 }
 
 .slotCell.free{
-    background-color: limegreen;
+    background-color: var(--free);
 
 }
 
 .slotCell.selected{
-    background-color: darkgreen;
+    background-color: var(--selected);
 
 }
 
 .slotCell.taken {
-    background-color: lightgrey;
+    background-color: var(--taken);
 }
 
 .slotCell.free.disabled,
@@ -141,4 +152,22 @@ th:first-child {
 
 .previous {
     margin-left: 20px;
+}
+
+div.legend{
+    height: 10px;
+    width: 10px;
+}
+
+div.legend.free{
+    background-color: var(--free);
+}
+
+div.legend.selected{
+    background-color: var(--selected);
+
+}
+
+div.legend.taken{
+    background-color: var(--taken);
 }
