@@ -25,19 +25,20 @@ class Controller extends CI_Controller {
 
 	public function home()
     {
-        //$this->load->model('reservationsystem_model');
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         $minuteInterval = $this->reservationsystem_model->getMinuteInterval();
         $maxNumberOfSlots = $this->reservationsystem_model->getMaxNumberOfSlots();
+        $currentHour = date("H");
+        $currentMinute = date("i");
 
         $data['buildings'] = $this->reservationsystem_model->queryAllBuildings();
         $data['colleges'] = $this->reservationsystem_model->queryColleges();
         $data['types'] = $this->reservationsystem_model->queryTypes();
-        $data['times_today'] = $this->reservationsystem_model->getTimes(6, $minuteInterval, 0);
-        $data['times_tomorrow'] = $this->reservationsystem_model->getTimes(6, $minuteInterval, 1);
-        //$data['times30'] = $this->reservationsystem_model->getTimes(6, 30, 0);
+        $data['times_today'] = $this->reservationsystem_model->getTimes($currentHour, $currentMinute, $minuteInterval, false);
+        $data['times_tomorrow'] = $this->reservationsystem_model->getTimes(6, $currentMinute, $minuteInterval, true);
 
-        $data['tab'] = 1;
+        $data['tab'] = 1; // set to first tab on open
         $data['maxNumberOfSlots'] = $maxNumberOfSlots;
 
         $this->load->view('template/header'); // include bootstrap 3 header
@@ -111,7 +112,7 @@ class Controller extends CI_Controller {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
-                'reserved_status' => 'fail',
+                'numReservations_status' => 'fail',
                 'reserved' => $numReservations,
                 'remaining' => MAX_RESERVATIONS - $numReservations,
             );
@@ -121,11 +122,32 @@ class Controller extends CI_Controller {
             $getData['slots'] = $slots;
             $getData['verificationCode'] = $this->getVerificationCode();
             if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
-                $this->reservationsystem_model->createReservation($getData);
-                $data = array(
-                    'status' => 'success',
-                    'data' => $getData,
-                );
+                $sameReservations = $this->reservationsystem_model->querySameReservations($slots);
+                $reservations = [];
+                while ($data = mysqli_fetch_array($sameReservations)) {
+                    $reservation = array(
+                        'date' => $data['date'],
+                        'startTime' => $data['startTime'],
+                        'endTime' => $data['endTime'],
+                    );
+                    $reservations[] = $reservation;
+                }
+                if ($sameReservations->num_rows > 0) {
+                    $data = array(
+                        'status' => 'fail',
+                        'errors' => $errors,
+                        'reservation_status' => 'fail',
+                        'sameReservations' => $reservations,
+                    );
+                }
+                else {
+                    $this->reservationsystem_model->createReservation($getData);
+                    $data = array(
+                        'status' => 'success',
+                        'data' => $getData,
+                    );
+                }
+
             }
             else {
                 $data = array(

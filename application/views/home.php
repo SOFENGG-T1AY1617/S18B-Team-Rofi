@@ -55,17 +55,58 @@ $defaultTab = 1;
                 var computers = [];
                 var reservations = [];
                 var request;
-                var dateSelected = "<?=date("Y-m-d")?>";
+                var dateToday = "<?=date("Y-m-d")?>";
+                var dateSelected = dateToday;
                 var maxNumberOfSlots = <?php echo $maxNumberOfSlots?>;//TODO select from Settings
+
+                var times_today = <?php
+
+                    $tm_today = [];
+
+                    foreach ($times_today as $key => $time)
+                        $tm_today[] = date("H:i:s", $time);
+
+                    echo json_encode($tm_today)
+
+                    ?>;
+
+                var times_tomorrow = <?php
+
+                    $tm_tomorrow = [];
+
+                    foreach ($times_tomorrow as $time)
+                        $tm_tomorrow[] = date("H:i:s", $time);
+
+                    echo json_encode($tm_tomorrow)
+                    ?>;
+
+                var times_today_DISPLAY = <?php
+
+                    $tm_today = [];
+
+                    foreach ($times_today as $key => $time)
+                        $tm_today[] = date("h:i A", $time);
+
+                    echo json_encode($tm_today)
+
+                    ?>;
+
+                var times_tomorrow_DISPLAY = <?php
+
+                    $tm_tomorrow = [];
+
+                    foreach ($times_tomorrow as $time)
+                        $tm_tomorrow[] = date("h:i A", $time);
+
+                    echo json_encode($tm_tomorrow)
+                    ?>;;
 
                 $(document).ready(function() {
 
-                    var $table = $('#slotTable');
-                    $table.floatThead({
-                        scrollContainer: function($table){
-                            return $table.closest('#slots');
-                        }
-                    });
+                    if (dateSelected == dateToday)
+                        updateTimesHeader(true);
+                    else
+                        updateTimesHeader(false);
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").attr("data-toggle", "");
 
@@ -189,27 +230,74 @@ $defaultTab = 1;
                     });
 
                     $("input[name=optradio]:radio").change(function () {
+
+                        var date_selected = $("input[name=optradio]:checked").val();
+                        console.log(date_selected);
+
+                        if (date_selected == "today") {
+                            dateSelected = "<?=date("Y-m-d")?>";
+                            $("#text-date").text("<?=date("F d, Y")?>");
+                            updateTimesHeader(true);
+                        }
+                        else {
+                            dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
+                            $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
+                            updateTimesHeader(false);
+                        }
+
                         if($("#form_building").val()!=null){
-
-                            var date_selected = $("input[name=optradio]:checked").val();
-                            console.log(date_selected);
-                            if (date_selected == "today") {
-                                dateSelected = "<?=date("Y-m-d")?>";
-                                $("#text-date").text("<?=date("F d, Y")?>");
-                            }
-                            else {
-                                dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
-                                $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
-                            }
-
                             selectRoom($("#form_room").val());
+                        }
 
+                    });
 
+                });
+
+                function updateTimesHeader(isToday) {
+
+                    var slotTable = $('#slotTable');
+
+                    slotTable.floatThead('destroy');
+
+                    var currentTimeArray = (isToday ? times_today_DISPLAY : times_tomorrow_DISPLAY);
+
+                    var timesRow = document.createElement("tr");
+                    var PCNumbersTH = document.createElement("th");
+
+                    PCNumbersTH.appendChild(document.createTextNode("PC Numbers"));
+
+                    timesRow.appendChild(PCNumbersTH);
+
+                    for (var i = 0; i < currentTimeArray.length - 1; i++) {
+                        var th = document.createElement("th");
+
+                        th.appendChild(document.createTextNode(currentTimeArray[i]));
+
+                        timesRow.appendChild(th);
+                    }
+
+                    slotTable.empty();
+
+                    slotTable.append(timesRow);
+
+                    var tableHead = document.createElement("thead");
+                    tableHead.id = "tableHead";
+
+                    slotTable.prepend(tableHead);
+                    slotTable.find('thead').append(slotTable.find("tr:eq(0)"));
+
+                    var tableBody = document.createElement("tbody");
+                    tableBody.id = "tableBody";
+
+                    slotTable.append(tableBody);
+
+                    slotTable.floatThead({
+                        scrollContainer: function(slotTable){
+                            return slotTable.closest('#slots');
                         }
                     });
 
-
-                });
+                }
 
                 function updateSelectedSlots(){
 
@@ -397,24 +485,6 @@ $defaultTab = 1;
 
                     if(computers!=null){
 
-                        $("#slotTable").find("tr:gt(0)").remove(); // remove all cells except first row
-
-                        <?php
-                        $tm_today = [];
-
-                        foreach ($times_today as $key => $time)
-                            $tm_today[] = date("H:i:s", $time);
-
-                        echo "var times_today = " . json_encode($tm_today) . ";";
-
-                        $tm_tomorrow = [];
-
-                        foreach ($times_tomorrow as $time)
-                            $tm_tomorrow[] = date("H:i:s", $time);
-
-                        echo "var times_tomorrow = " . json_encode($tm_tomorrow) . ";";
-                        ?>
-
                         var roomIDs = [];
                         var roomNames = [];
 
@@ -441,24 +511,25 @@ $defaultTab = 1;
                          * APPEND <tr> to <table> with ID = slotTable
                          */
 
+                        var currentTimeArray = (dateSelected == dateToday ? times_today : times_tomorrow);
 
                         for (var i = 0; i < roomIDs.length; i++) {
                             var roomTitleRow = document.createElement("tr");
                             var roomTitleCell = document.createElement("th");
 
                             roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
-                            roomTitleCell.setAttribute("colspan", times_today.length + 1);
+                            roomTitleCell.setAttribute("colspan", currentTimeArray.length + 1);
 
                             roomTitleRow.appendChild(roomTitleCell);
 
                             $('#tableBody').append(roomTitleRow);
 
-                            var $table = $('#slotTable');
+                            /*var $table = $('#slotTable');
                             $table.floatThead({
                                 scrollContainer: function ($table) {
                                     return $table.closest('#slots');
                                 }
-                            });
+                            });*/
 
                             for (var k = 0; k < computers.length; k++) {
 
@@ -471,16 +542,9 @@ $defaultTab = 1;
 
                                     newTableRow.appendChild(newPCNoCell);
 
-                                    var n = 0; // counter for traversing through chosenDateTimes
-                                    var chosenDateTimes;
+                                    var n = 0; // counter for traversing through currentTimeArray
 
-                                    if (dateSelected == "<?php echo date("Y-m-d") ?>") {
-                                        chosenDateTimes = times_today;
-                                    } else {
-                                        chosenDateTimes = times_tomorrow;
-                                    }
-
-                                    for (var m = 0; m < chosenDateTimes.length - 1; m++) { // generate time slot cells
+                                    for (var m = 0; m < currentTimeArray.length - 1; m++) { // generate time slot cells
                                         var slotCell = document.createElement("td");
                                         var clickableSlot1 = document.createElement("div");
 
@@ -488,12 +552,12 @@ $defaultTab = 1;
 
                                         var taken = false;
                                         for (var p = 0; p < reservations.length; p++) {
-                                            if ((reservations[p].start_restime == chosenDateTimes[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
+                                            if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
                                                 taken = true;
                                         }
 
-                                        var chosenTime1 = chosenDateTimes[n++];
-                                        var chosenTime2 = chosenDateTimes[n];
+                                        var chosenTime1 = currentTimeArray[n++];
+                                        var chosenTime2 = currentTimeArray[n];
 
                                         if (!taken) {
                                             var computerID = computers[k].computerid;
@@ -597,22 +661,7 @@ $defaultTab = 1;
                         <div id = "slots" class = "panel panel-default">
                             <div class = "panel-body nopadding">
                                 <table id = "slotTable" class = "table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>PC Numbers</th>
-                                            <?php
 
-                                            foreach ($times_today as $key => $time) {
-                                                if ($key != count($times_today) - 1)
-                                                    echo "<th>" . date("h:i A", $time) . "</th>";
-                                            }
-
-                                            ?>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableBody">
-
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -638,6 +687,18 @@ $defaultTab = 1;
                             <li class="previous pull-left">
                                 LEGEND:
                             </li>
+                            <li class="previous pull-left">
+
+                                <div class="legend free pull-left"></div>Free
+                            </li>
+                            <li class="previous pull-left">
+                                <div class="legend selected pull-left"></div>Selected
+                            </li>
+                            <li class="previous pull-left">
+                                <div class="legend taken pull-left"></div>Taken
+                            </li>
+
+
                             <li class="next nextStep_<?php echo $stepNo ?>">
                                 <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
@@ -719,7 +780,7 @@ $defaultTab = 1;
                                             toast = toast + ": ";
                                         }
 
-                                        for (i = 0; i < errors.length; i++) {
+                                        for (i = 0; i < errors.length - 1; i++) {
                                             toast = toast + errors[i] + ", ";
                                         }
                                         toast = toast + errors[errors.length - 1];
@@ -728,10 +789,25 @@ $defaultTab = 1;
                                     if (result['email_status'] == "fail") {
                                         toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                                     }
-                                    if (result['reserved_status'] == "fail") {
-                                        toast = "You've already selected " + result['reserved'] +
-                                            " slots! You can only select " + result['remaining'] + " more.";
-                                        toastr.error(toast, "Too many reservations");
+                                    if (result['numReservations_status'] == "fail") {
+                                        toast = "Sorry, but a slot you picked was already selected: ";
+                                        var reservations = result['sameReservations'];
+                                        for (var i = 0; i < reservations.length - 1; i++) {
+                                            var message = "[" + reservations[i]['date'] + " " +
+                                                    reservations[i]['startTime'] + " - " +
+                                                    reservations[i]['endTime'] + "], ";
+                                            toast = toast + message;
+                                        }
+
+                                        var message = "[" + reservations[reservations.length - 1]['date'] + " " +
+                                            reservations[reservations.length - 1]['startTime'] + " - " +
+                                            reservations[reservations.length - 1]['endTime'] + "]";
+                                        toast = toast + message;
+
+                                        toastr.error(toast, "Oops!");
+                                    }
+                                    if (result['sameReservations_status'] == 'fail') {
+
                                     }
                                 }
                                 else {
@@ -795,46 +871,45 @@ $defaultTab = 1;
                                     <label for="email">Email:</label>
                                     <input type="email" class="form-control" name="form-email" id="email">
                                 </div>
+                            </form>
+                        </div>
+                        <div class = "col-md-12 col-md-offset-2">
+                            <b>Time Slots:</b>
+                            <br/>
+                            <div class = "row">
+                                <div class = "col-md-2">
+                                    <div class="form-group">
+                                        <label>Room & PC#:</label>
+                                        <div id="computerColumn">
 
-
-                                <br />
-                                <b>Time Slots:</b>
-                                <br/>
-                                <div class = "row">
-                                    <div class = "col-md-4">
-                                        <div class="form-group">
-                                            <label>Room & PC#:</label>
-                                            <div id="computerColumn">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <div class="form-group">
-                                            <label>Date:</label>
-                                            <div id="dateColumn">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <div class="form-group">
-                                            <label>Start:</label>
-                                            <div id="startColumn">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class = "col-md-4">
-                                        <div class="form-group">
-                                            <label>End:</label>
-                                            <div id="endColumn">
-
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                                <div class = "col-md-2">
+                                    <div class="form-group">
+                                        <label>Date:</label>
+                                        <div id="dateColumn">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class = "col-md-1">
+                                    <div class="form-group">
+                                        <label>Start:</label>
+                                        <div id="startColumn">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class = "col-md-1">
+                                    <div class="form-group">
+                                        <label>End:</label>
+                                        <div id="endColumn">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
