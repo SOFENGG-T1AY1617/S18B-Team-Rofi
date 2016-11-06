@@ -146,7 +146,7 @@ include 'a_navbar.php';
                                 <tr>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Username</th>
+                                    <th>Department</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -155,10 +155,8 @@ include 'a_navbar.php';
                                 <?php foreach($administrators as $admin):?>
                                     <tr>
                                         <td><?=$admin->first_name . " " . $admin->last_name?></td>
-                                        <td>Email</td>
-                                        <td>Username?</td>
-                                        <td></td>
-
+                                        <td><?=$admin->email?></td>
+                                        <td><?=$admin->name?></td>
                                     </tr>
                                 <?php endforeach;?>
                                 </tbody>

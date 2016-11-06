@@ -15,11 +15,21 @@ class Admin_Model extends CI_Model
     }
 
     function queryAllAdministators() {
-        return $this->db->get(TABLE_ADMINISTRATORS)->result();
+        $this->db->select('*');
+        $this->db->from(TABLE_ADMINISTRATORS);
+        $this->db->join(TABLE_DEPARTMENTS, 'admin_departmentid = departmentid');
+        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
+        $query = $this->db->get();
+        return $query->result();
     }
 
     function queryAllModerators() {
-        return $this->db->get(TABLE_MODERATORS)->result();
+        $this->db->select('*');
+        $this->db->from(TABLE_MODERATORS);
+        $this->db->join(TABLE_DEPARTMENTS, 'mod_departmentid = departmentid');
+        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
+        $query = $this->db->get();
+        return $query->result();
     }
 
     function queryAllRooms() {
