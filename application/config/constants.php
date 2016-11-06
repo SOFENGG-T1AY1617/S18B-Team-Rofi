@@ -88,6 +88,9 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 define("TABLE_BUILDINGS", "buildings");
 define("COLUMN_BUILDINGID", "buildingid");
 
+define("TABLE_DEPARTMENTS", "departments");
+define("COLUMN_DEPARTMENTID", "departmentid");
+
 define("TABLE_ROOMS", "rooms");
 define("COLUMN_ROOMID", "roomid");
 define("COLUMN_NAME", "name");
@@ -106,7 +109,10 @@ define("COLUMN_TYPE", "type");
 define("TABLE_RESERVATIONS", "reservations");
 define("COLUMN_RESERVATIONID", "reservationid");
 define("COLUMN_USERIDNO", "useridno");
-define("COLUMN_RESERVEDATETIME", "reservedatetime");
+define("COLUMN_EMAIL", "email");
+define("COLUMN_DATE", "date");
+define("COLUMN_STARTRESTIME", "startrestime");
+define("COLUMN_ENDRESTIME", "endrestime");
 define("COLUMN_VERIFIED", "verified");
 define("COLUMN_VERFICATIONCODE", "verificationcode");
 

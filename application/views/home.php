@@ -719,7 +719,7 @@ $defaultTab = 1;
                                             toast = toast + ": ";
                                         }
 
-                                        for (i = 0; i < errors.length; i++) {
+                                        for (i = 0; i < errors.length - 1; i++) {
                                             toast = toast + errors[i] + ", ";
                                         }
                                         toast = toast + errors[errors.length - 1];
@@ -728,10 +728,25 @@ $defaultTab = 1;
                                     if (result['email_status'] == "fail") {
                                         toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                                     }
-                                    if (result['reserved_status'] == "fail") {
-                                        toast = "You've already selected " + result['reserved'] +
-                                            " slots! You can only select " + result['remaining'] + " more.";
-                                        toastr.error(toast, "Too many reservations");
+                                    if (result['numReservations_status'] == "fail") {
+                                        toast = "Sorry, but a slot you picked was already selected: ";
+                                        var reservations = result['sameReservations'];
+                                        for (var i = 0; i < reservations.length - 1; i++) {
+                                            var message = "[" + reservations[i]['date'] + " " +
+                                                    reservations[i]['startTime'] + " - " +
+                                                    reservations[i]['endTime'] + "], ";
+                                            toast = toast + message;
+                                        }
+
+                                        var message = "[" + reservations[reservations.length - 1]['date'] + " " +
+                                            reservations[reservations.length - 1]['startTime'] + " - " +
+                                            reservations[reservations.length - 1]['endTime'] + "]";
+                                        toast = toast + message;
+
+                                        toastr.error(toast, "Oops!");
+                                    }
+                                    if (result['sameReservations_status'] == 'fail') {
+
                                     }
                                 }
                                 else {

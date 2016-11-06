@@ -213,4 +213,14 @@ class ReservationSystem_Model extends CI_Model
                   WHERE verificationcode = ?";
         return $this->db->query($sql, array($verificationCode));
     }
+
+    function querySameReservations($reservations) {
+        $this->db->select('*');
+        $this->db->from(TABLE_RESERVATIONS);
+        $this->db->where_in(COLUMN_DATE, $reservations['date']);
+        $this->db->where_in(COLUMN_STARTRESTIME, $reservations['startTime']);
+        $this->db->where_in(COLUMN_ENDRESTIME, $reservations['endTime']);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

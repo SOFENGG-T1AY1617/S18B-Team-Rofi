@@ -111,7 +111,7 @@ class Controller extends CI_Controller {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
-                'reserved_status' => 'fail',
+                'numReservations_status' => 'fail',
                 'reserved' => $numReservations,
                 'remaining' => MAX_RESERVATIONS - $numReservations,
             );
@@ -121,11 +121,32 @@ class Controller extends CI_Controller {
             $getData['slots'] = $slots;
             $getData['verificationCode'] = $this->getVerificationCode();
             if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
-                $this->reservationsystem_model->createReservation($getData);
-                $data = array(
-                    'status' => 'success',
-                    'data' => $getData,
-                );
+                $sameReservations = $this->reservationsystem_model->querySameReservations($slots);
+                $reservations = [];
+                while ($data = mysqli_fetch_array($sameReservations)) {
+                    $reservation = array(
+                        'date' => $data['date'],
+                        'startTime' => $data['startTime'],
+                        'endTime' => $data['endTime'],
+                    );
+                    $reservations[] = $reservation;
+                }
+                if ($sameReservations->num_rows > 0) {
+                    $data = array(
+                        'status' => 'fail',
+                        'errors' => $errors,
+                        'reservation_status' => 'fail',
+                        'sameReservations' => $reservations,
+                    );
+                }
+                else {
+                    $this->reservationsystem_model->createReservation($getData);
+                    $data = array(
+                        'status' => 'success',
+                        'data' => $getData,
+                    );
+                }
+
             }
             else {
                 $data = array(
