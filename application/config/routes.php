@@ -53,8 +53,16 @@ $route['default_controller'] = 'Controller';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+/* USER ROUTES  */
 $route['getRooms'] = 'Controller/getRooms';
 $route['getComputers'] = 'Controller/getComputers';
 $route['submitReservation'] = 'Controller/submitReservation';
-$route['getMyReservations'] = 'Controller/getMyReservations';
 $route['verify/(:any)'] = 'Controller/verify/$1';
+
+/* ADMIN ROUTE */
+$route['admin'] = 'AdminController';
+$route['overview'] = 'AdminController';
+$route['area_management'] = 'AdminController/addView';
+$route['mod_management'] = 'AdminController/modView';
+$route['admin_management'] = 'AdminController/adminView';
+$route['business_rules'] = 'AdminController/ruleView';
