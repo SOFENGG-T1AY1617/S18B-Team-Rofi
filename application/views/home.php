@@ -638,6 +638,18 @@ $defaultTab = 1;
                             <li class="previous pull-left">
                                 LEGEND:
                             </li>
+                            <li class="previous pull-left">
+
+                                <div class="legend free pull-left"></div>Free
+                            </li>
+                            <li class="previous pull-left">
+                                <div class="legend selected pull-left"></div>Selected
+                            </li>
+                            <li class="previous pull-left">
+                                <div class="legend taken pull-left"></div>Taken
+                            </li>
+
+
                             <li class="next nextStep_<?php echo $stepNo ?>">
                                 <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
