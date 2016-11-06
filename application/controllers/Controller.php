@@ -122,12 +122,21 @@ class Controller extends CI_Controller {
             $getData['verificationCode'] = $this->getVerificationCode();
             if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
                 $sameReservations = $this->reservationsystem_model->querySameReservations($slots);
+                $reservations = [];
+                while ($data = mysqli_fetch_array($sameReservations)) {
+                    $reservation = array(
+                        'date' => $data['date'],
+                        'startTime' => $data['startTime'],
+                        'endTime' => $data['endTime'],
+                    );
+                    $reservations[] = $reservation;
+                }
                 if ($sameReservations->num_rows > 0) {
                     $data = array(
                         'status' => 'fail',
                         'errors' => $errors,
                         'reservation_status' => 'fail',
-                        'sameReservations' => $sameReservations,
+                        'sameReservations' => $reservations,
                     );
                 }
                 else {
