@@ -1,6 +1,6 @@
 <script xmlns="http://www.w3.org/1999/html">
 
-    function addModerator(table){
+    function addAdministrator(table){
         console.log(table);
         var tableA = table;
         var tID = table.id;
@@ -12,13 +12,13 @@
         var clearbtn = row.insertCell(3);
 
         cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name\">";
-        cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email of moderator\">";
+        cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email of Administrator\">";
         cellUsername.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter assigned username\">";
-        clearbtn.innerHTML = "<button type =\"button\" onclick=\"clearModerator("+tID+", "+(table.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+        clearbtn.innerHTML = "<button type =\"button\" onclick=\"clearAdministrator("+tID+", "+(table.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
 
     }
 
-    function clearModerator(table, rowNum){
+    function clearAdministrator(table, rowNum){
         console.log(table);
         var tableA = table;
         tableA.deleteRow(rowNum);
@@ -43,7 +43,7 @@
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\""+curName+"\">"
             cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail\" value=\""+curEmail+"\">"
             cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputUsername\" value=\""+curUsername+"\">"
-            cells[3].innerHTML = "<button type =\"button\" onclick=\"clearModerator("+tID+", "+i+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+            cells[3].innerHTML = "<button type =\"button\" onclick=\"clearAdministrator("+tID+", "+i+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
 
         }
         var addID = ""+tID+"_addbtn";
@@ -51,7 +51,7 @@
         var add = document.getElementById(addID.toString());
 
         add.innerHTML =
-        " <button type =\"button\" onclick=\"addModerator("+tID+")\" class=\"btn btn-default addmod-btn\"><i class=\"material-icons\">add</i></button>";
+        " <button type =\"button\" onclick=\"addAdministrator("+tID+")\" class=\"btn btn-default addmod-btn\"><i class=\"material-icons\">add</i></button>";
 
         footer.innerHTML =
         "<button class=\"btn btn-default col-md-2\" type=\"button\" onclick=\"changeViewToView("+tID+","+fID+")\">Cancel</button>"+

@@ -63,6 +63,7 @@ $route['getMyReservations'] = 'Controller/getMyReservations';
 /* ADMIN ROUTE */
 $route['admin'] = 'AdminController';
 $route['overview'] = 'AdminController';
+$route['scheduling'] = 'AdminController/schedulingView';
 $route['area_management'] = 'AdminController/addView';
 $route['mod_management'] = 'AdminController/modView';
 $route['admin_management'] = 'AdminController/adminView';
