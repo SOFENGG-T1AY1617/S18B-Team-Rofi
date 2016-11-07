@@ -19,15 +19,15 @@ $defaultTab = 1;
                 <ul class="nav nav-pills nav-justified">
 
                    <li role="presentation" class="tab_1 active">
-                       <a href="#">Step 1 : Choose a time slot</a>
+                       <a href="#tab_1_1" data-toggle = "tab">Step 1 : Choose a time slot</a>
                    </li>
 
                    <li role="presentation" class="tab_2 disabled">
-                       <a href="#">Step 2 : Provide your personal information</a>
+                       <a href="#tab_1_2" data-toggle = "tab">Step 2 : Provide your personal information</a>
                    </li>
 
                     <li role="presentation" class="tab_3 disabled">
-                        <a href="#">Final Step : Email Confirmation</a>
+                        <a href="#tab_1_3" data-toggle = "tab">Final Step : Email Confirmation</a>
                     </li>
 
                 </ul>
@@ -563,13 +563,6 @@ $defaultTab = 1;
 
                                             var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
 
-                                            /*var selected = false;
-
-                                             for(var s=0;s<slotsPicked.length;s++)
-                                             {
-                                             if(strID==slotsPicked[s])
-                                             selected = true;
-                                             }*/
                                             clickableSlot1.setAttribute("id", strID);
 
                                             if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)
@@ -578,7 +571,6 @@ $defaultTab = 1;
                                                 clickableSlot1.className = "slotCell pull-left free";
                                         } else {
                                             clickableSlot1.className = "slotCell pull-left taken";
-                                            n++;
                                         }
 
                                         for (var x in slotsPicked) {
@@ -724,14 +716,6 @@ $defaultTab = 1;
             <script type = "text/javascript">
                 // js functions for step no 2
                 $(function () { // put functions in respective buttons
-
-                    $('.pager li.nextStep_<?php echo $stepNo ?>').on('click', function () { // for next step
-                        if ($(this).hasClass('active'))
-                            $(this).toggleClass('active');
-
-
-                    });
-
                     $('.pager li.prevStep_<?php echo $stepNo ?>').on('click', function () { // for next step
                         if ($(this).hasClass('active'))
                             $(this).toggleClass('active');
@@ -747,7 +731,10 @@ $defaultTab = 1;
 
                 $(document).ready(function() {
 
-                    $("#finish").click(function() {
+                    $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function () {
+
+                        //event.stopPropagation();
+
                         console.log($("#select-college").val());
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
@@ -790,7 +777,7 @@ $defaultTab = 1;
                                     }
                                     if (result['numReservations_status'] == "fail") {
                                         toast = "You've already selected " + result['reserved'] +
-                                                " slots! You can only select " + result['remaining'] + " more.";
+                                            " slots! You can only select " + result['remaining'] + " more.";
                                         toastr.error(toast, "Too many reservations");
                                     }
                                     if (result['sameReservations_status'] == 'fail') {
@@ -816,8 +803,9 @@ $defaultTab = 1;
                                     $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
                                     $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
 
-                                    $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
-                                    $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
+                                    $("#tabs li.tab_<?php echo $stepNo ?>").next("li").removeClass('disabled');
+                                    $("#tabs li.tab_<?php echo $stepNo ?>").next("li").find("a").trigger('click');
+
                                 }
                             })
                             .fail(function() {
@@ -827,8 +815,6 @@ $defaultTab = 1;
                             .always(function() {
                                 console.log("complete");
                             });
-
-
                     });
 
                 });
@@ -922,7 +908,7 @@ $defaultTab = 1;
                                 <a href="#tab_1_<?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>
                             <li class="next nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab" id="finish">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                                <a href="#tab_1_<?php echo $stepNo+1 ?>">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
                     </div>

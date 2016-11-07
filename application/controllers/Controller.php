@@ -119,42 +119,40 @@ class Controller extends CI_Controller {
         else if (count($errors) == 0){ // Add to database
             $slots = $this->parseSlots($getData['slots']);
             $getData['slots'] = $slots;
-            $getData['verificationCode'] = $this->getVerificationCode();
-            if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
-                $sameReservations = $this->student->querySameReservations($slots);
-                $reservations = [];
-                while ($data = mysqli_fetch_array($sameReservations)) {
-                    $reservation = array(
-                        'date' => $data['date'],
-                        'startTime' => $data['startTime'],
-                        'endTime' => $data['endTime'],
-                    );
-                    $reservations[] = $reservation;
-                }
-                if ($sameReservations->num_rows > 0) {
-                    $data = array(
-                        'status' => 'fail',
-                        'errors' => $errors,
-                        'reservation_status' => 'fail',
-                        'sameReservations' => $reservations,
-                    );
-                }
-                else {
+
+            $reservations = $this->getSameReservations($slots);
+
+            if (count($reservations) > 0) {
+                $data = array(
+                    'status' => 'fail',
+                    'errors' => $errors,
+                    'reservation_status' => 'fail',
+                    'sameReservations' => $reservations,
+                );
+            }
+            else {
+                $getData['verificationCode'] = $this->getVerificationCode();
+                if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
                     $this->student->createReservation($getData);
                     $data = array(
                         'status' => 'success',
                         'data' => $getData,
                     );
                 }
+                else {
+                    $data = array(
+                        'status' => 'fail',
+                        'errors' => $errors,
+                        'email_status' => 'fail',
+                    );
+                }
+            }
 
-            }
-            else {
-                $data = array(
-                    'status' => 'fail',
-                    'errors' => $errors,
-                    'email_status' => 'fail',
-                );
-            }
+
+            /*$data = array(
+                'status' => 'success',
+                'data' => $getData,
+            );*/
         }
 
         echo json_encode($data);
@@ -320,5 +318,19 @@ class Controller extends CI_Controller {
             show_error($this->email->print_debugger());
             return false;
         }
+    }
+
+    private function getSameReservations($slots) {
+        $sameReservations = $this->student->querySameReservations($slots);
+        $reservations = [];
+        while ($data = mysqli_fetch_array($sameReservations)) {
+            $reservation = array(
+                'date' => $data['date'],
+                'startTime' => $data['startTime'],
+                'endTime' => $data['endTime'],
+            );
+            $reservations[] = $reservation;
+        }
+        return $reservations;
     }
 }
