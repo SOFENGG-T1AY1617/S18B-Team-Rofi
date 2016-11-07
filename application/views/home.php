@@ -748,7 +748,6 @@ $defaultTab = 1;
                 $(document).ready(function() {
 
                     $("#finish").click(function() {
-                        $(this).attr("data-toggle", "");
                         console.log($("#select-college").val());
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
@@ -767,6 +766,7 @@ $defaultTab = 1;
                                 console.log("done");
                                 if (result['status'] == "fail") {
                                     errors = result['errors'];
+                                    console.log(errors);
                                     if (errors.length > 1) {
                                         toast = "You have an error in the following input ";
 
@@ -789,12 +789,17 @@ $defaultTab = 1;
                                         toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                                     }
                                     if (result['numReservations_status'] == "fail") {
+                                        toast = "You've already selected " + result['reserved'] +
+                                                " slots! You can only select " + result['remaining'] + " more.";
+                                        toastr.error(toast, "Too many reservations");
+                                    }
+                                    if (result['sameReservations_status'] == 'fail') {
                                         toast = "Sorry, but a slot you picked was already selected: ";
                                         var reservations = result['sameReservations'];
                                         for (var i = 0; i < reservations.length - 1; i++) {
                                             var message = "[" + reservations[i]['date'] + " " +
-                                                    reservations[i]['startTime'] + " - " +
-                                                    reservations[i]['endTime'] + "], ";
+                                                reservations[i]['startTime'] + " - " +
+                                                reservations[i]['endTime'] + "], ";
                                             toast = toast + message;
                                         }
 
@@ -805,12 +810,8 @@ $defaultTab = 1;
 
                                         toastr.error(toast, "Oops!");
                                     }
-                                    if (result['sameReservations_status'] == 'fail') {
-
-                                    }
                                 }
                                 else {
-                                    $(this).attr("data-toggle", "tab");
 
                                     $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
                                     $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
@@ -849,7 +850,7 @@ $defaultTab = 1;
                                 <div class="form-group">
                                     <label for="college">College:</label>
                                     <select class="form-control" name="form-college" id="select-college">
-                                        <option selected disabled>Choose your college...</option>
+                                        <option value="0" selected disabled>Choose your college...</option>
                                         <?php foreach($colleges as $row):?>
                                             <option value="<?=$row->collegeid?>"><?=$row->name?></option>
                                         <?php endforeach;?>
@@ -859,7 +860,7 @@ $defaultTab = 1;
                                 <div class="form-group">
                                     <label for="type">Type:</label>
                                     <select class="form-control" name="form-type" id="select-type">
-                                        <option selected disabled>Choose your type...</option>
+                                        <option value="0" selected disabled>Choose your type...</option>
                                         <?php foreach($types as $row):?>
                                             <option value="<?=$row->typeid?>"><?=$row->type?></option>
                                         <?php endforeach;?>

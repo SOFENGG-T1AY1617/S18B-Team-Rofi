@@ -106,8 +106,7 @@ class Controller extends CI_Controller {
                 'errors' => $errors,
             );
         }
-
-        if (count($getData['slots']) +
+        else if (count($getData['slots']) +
             ($numReservations = $this->numReservations($getData['idnumber'])) > MAX_RESERVATIONS) {
             $data = array(
                 'status' => 'fail',
@@ -184,7 +183,7 @@ class Controller extends CI_Controller {
             }
         }
 
-        if ($getData['collegeid'] == "0") {
+        if ($getData['collegeid'] == 0) {
             $errors[] = "College";
         }
         if ($getData['typeid'] == 0) {
