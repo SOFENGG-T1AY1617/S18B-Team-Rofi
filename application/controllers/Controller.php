@@ -25,16 +25,21 @@ class Controller extends CI_Controller {
 
 	public function home()
     {
-        //$this->load->model('reservationsystem_model');
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
-        $data['buildings'] = $this->reservationsystem_model->queryAllBuildings();
-        $data['colleges'] = $this->reservationsystem_model->queryColleges();
-        $data['types'] = $this->reservationsystem_model->queryTypes();
-        $data['times15_today'] = $this->reservationsystem_model->getTimes(6, 15, 0);
-        $data['times15_tomorrow'] = $this->reservationsystem_model->getTimes(6, 15, 1);
-        $data['times30'] = $this->reservationsystem_model->getTimes(6, 30, 0);
+        $minuteInterval = $this->student->getMinuteInterval();
+        $maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
+        $currentHour = date("H");
+        $currentMinute = date("i");
 
-        $data['tab'] = 1;
+        $data['buildings'] = $this->student->queryAllBuildings();
+        $data['colleges'] = $this->student->queryColleges();
+        $data['types'] = $this->student->queryTypes();
+        $data['times_today'] = $this->student->getTimes($currentHour, $currentMinute, $minuteInterval, false);
+        $data['times_tomorrow'] = $this->student->getTimes(6, $currentMinute, $minuteInterval, true);
+
+        $data['tab'] = 1; // set to first tab on open
+        $data['maxNumberOfSlots'] = $maxNumberOfSlots;
 
         $this->load->view('template/header'); // include bootstrap 3 header
         $this->load->view('home', $data); // $this->load->view('home', $data); set to this if data is set
@@ -46,9 +51,9 @@ class Controller extends CI_Controller {
             'buildingid' => $this->input->get('buildingid'),
         );
 
-        $data = $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']);
+        $data = $this->student->queryAllRoomsAtBuildingID($getData['buildingid']);
         /*$data = array(
-          'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
+          'result' => $this->student->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/
         echo json_encode($data);
     }
@@ -67,18 +72,18 @@ class Controller extends CI_Controller {
 
         if($getData['roomid']==0)
             $data = array(
-                'computers' => $this->reservationsystem_model->queryAllComputersAtBuildingID($getData['buildingid']),
-                'reservations' => $this->reservationsystem_model->queryReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
+                'computers' => $this->student->queryAllComputersAtBuildingID($getData['buildingid']),
+                'reservations' => $this->student->queryReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
                 'date' => $date,
             );
         else
             $data = array(
-                'computers' => $this->reservationsystem_model->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']),
-                'reservations' => $this->reservationsystem_model->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
+                'computers' => $this->student->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']),
+                'reservations' => $this->student->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
                 'date' => $date,
             );
         /*$data = array(
-          'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
+          'result' => $this->student->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/
         echo json_encode($data);
     }
@@ -101,22 +106,23 @@ class Controller extends CI_Controller {
                 'errors' => $errors,
             );
         }
-        if (count($getData['slots']) +
+        else if (count($getData['slots']) +
             ($numReservations = $this->numReservations($getData['idnumber'])) > MAX_RESERVATIONS) {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
-                'reserved_status' => 'fail',
+                'numReservations_status' => 'fail',
                 'reserved' => $numReservations,
                 'remaining' => MAX_RESERVATIONS - $numReservations,
             );
         }
-        else { // Add to database
+        else if (count($errors) == 0){ // Add to database
             $slots = $this->parseSlots($getData['slots']);
             $getData['slots'] = $slots;
+
             $getData['verificationCode'] = $this->getVerificationCode();
             if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
-                $this->reservationsystem_model->createReservation($getData);
+                $this->student->createReservation($getData);
                 $data = array(
                     'status' => 'success',
                     'data' => $getData,
@@ -129,13 +135,47 @@ class Controller extends CI_Controller {
                     'email_status' => 'fail',
                 );
             }
+
+            /*$reservations = $this->getSameReservations($slots);
+
+            if (count($reservations) > 0) {
+                $data = array(
+                    'status' => 'fail',
+                    'errors' => $errors,
+                    'reservation_status' => 'fail',
+                    'sameReservations' => $reservations,
+                );
+            }
+            else {
+                $getData['verificationCode'] = $this->getVerificationCode();
+                if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
+                    $this->student->createReservation($getData);
+                    $data = array(
+                        'status' => 'success',
+                        'data' => $getData,
+                    );
+                }
+                else {
+                    $data = array(
+                        'status' => 'fail',
+                        'errors' => $errors,
+                        'email_status' => 'fail',
+                    );
+                }
+            }*/
+
+
+            /*$data = array(
+                'status' => 'success',
+                'data' => $getData,
+            );*/
         }
 
         echo json_encode($data);
     }
 
     private function numReservations($id) {
-        $reservations = $this->reservationsystem_model->queryOngoingReservationsByStudentID($id);
+        $reservations = $this->student->queryOngoingReservationsByStudentID($id);
 
         return count($reservations);
     }
@@ -157,7 +197,7 @@ class Controller extends CI_Controller {
             }
         }
 
-        if ($getData['collegeid'] == "0") {
+        if ($getData['collegeid'] == 0) {
             $errors[] = "College";
         }
         if ($getData['typeid'] == 0) {
@@ -208,7 +248,7 @@ class Controller extends CI_Controller {
     }
 
     public function isExistingVerificationCode($verificationCode) {
-        return $this->reservationsystem_model->isExistingVerificationCode($verificationCode);
+        return $this->student->isExistingVerificationCode($verificationCode);
     }
 
     public function getMyReservations(){
@@ -218,18 +258,24 @@ class Controller extends CI_Controller {
 
         foreach ($slots as $slot) {
             $arr = explode('_', $slot);
-            $roomName = $this->reservationsystem_model->queryRoomAndCompNoAtComputerID($arr[0]);
-            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $arr[1], 'start' => $arr[2], 'end' => $arr[3]);
+
+            $roomName = $this->student->queryRoomAndCompNoAtComputerID($arr[0]);
+
+            $date = date('M', mktime(0, 0, 0, explode('-',$arr[1])[1], 10))." ".explode('-',$arr[1])[2].", ".explode('-',$arr[1])[0];
+            $timeStart = date('h:iA',mktime(explode(':',$arr[2])[0],explode(':',$arr[2])[1]));
+            $timeEnd =  date('h:iA',mktime(explode(':',$arr[3])[0],explode(':',$arr[3])[1]));//;
+
+            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $date, 'start' => $timeStart, 'end' => $timeEnd);
             array_push($data, $arr2);
         }
         /*$data = array(
-          'result' => $this->reservationsystem_model->queryAllRoomsAtBuildingID($getData['buildingid']),
+          'result' => $this->student->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/
         echo json_encode($data);
     }
 
     public function verify($verificationCode = NULL) {
-        $numResult = $this->reservationsystem_model->verifyReservation($verificationCode);
+        $numResult = $this->student->verifyReservation($verificationCode);
         if ($numResult > 0) {
             $data = array(
                 'result' => "success",
@@ -288,5 +334,19 @@ class Controller extends CI_Controller {
             show_error($this->email->print_debugger());
             return false;
         }
+    }
+
+    private function getSameReservations($slots) {
+        $sameReservations = $this->student->querySameReservations($slots);
+        $reservations = [];
+        while ($data = mysqli_fetch_array($sameReservations)) {
+            $reservation = array(
+                'date' => $data['date'],
+                'startTime' => $data['startTime'],
+                'endTime' => $data['endTime'],
+            );
+            $reservations[] = $reservation;
+        }
+        return $reservations;
     }
 }

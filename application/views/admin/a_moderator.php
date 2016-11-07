@@ -146,26 +146,19 @@ include 'a_navbar.php';
                                 <tr>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Username</th>
+                                    <th>Department</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                <tr>
-                                    <td>Juan Dela Cruz</td>
-                                    <td>juan_delacruz@dlsu.edu.ph</td>
-                                    <td>juan_delacruz</td>
-                                    <td></td>
-
-                                </tr>
-
-                                <tr>
-                                    <td>John Doe</td>
-                                    <td>john_doe@dlsu.edu.ph</td>
-                                    <td>john_doe</td>
-                                    <td></td>
-                                </tr>
+                                <?php foreach($moderators as $mod):?>
+                                    <tr>
+                                        <td><?=$mod->first_name . " " . $mod->last_name?></td>
+                                        <td><?=$mod->email?></td>
+                                        <td><?=$mod->name?></td>
+                                    </tr>
+                                <?php endforeach;?>
                                 </tbody>
                             </table>
 

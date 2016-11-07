@@ -1,47 +1,43 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: kevin
- * Date: 10/9/2016
- * Time: 8:11 PM
+ * Date: 11/6/2016
+ * Time: 7:07 PM
  */
-
-class ReservationSystem_Model extends CI_Model
+class Admin_Model extends CI_Model
 {
-
-
     public function __construct()
     {
         parent::__construct();
         $this->load->database();
     }
 
-    public function getTimes($first_hour, $minute_interval, $tomorrow) {
-        $times = array();
-
-        for ($hour = $first_hour; $hour < 20 ; $hour++) {
-            for ($minute = 0; $minute < 60; $minute += $minute_interval) {
-
-                if ($tomorrow == 1)
-                    $time = mktime($hour, $minute, 0, date("m"), date("d") + 1, date("Y"));
-                else
-                    $time = mktime($hour, $minute, 0, date("m"), date("d"), date("Y"));
-
-                $times[] = $time;
-
-            }
-        }
-
-        if ($tomorrow == 1)
-            $times[] = mktime($hour, 0, 0, date("m"), date("d") + 1, date("Y"));
-        else
-            $times[] = mktime($hour, 0, 0, date("m"), date("d"), date("Y"));
-
-        return $times;
+    function queryAllAdministators() {
+        $this->db->select('*');
+        $this->db->from(TABLE_ADMINISTRATORS);
+        $this->db->join(TABLE_DEPARTMENTS, 'admin_departmentid = departmentid');
+        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
+        $query = $this->db->get();
+        return $query->result();
     }
 
-    function queryRooms() {
-        return $this->db->get(TABLE_ROOMS)->result();
+    function queryAllModerators() {
+        $this->db->select('*');
+        $this->db->from(TABLE_MODERATORS);
+        $this->db->join(TABLE_DEPARTMENTS, 'mod_departmentid = departmentid');
+        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    function queryAllRooms() {
+        //return $this->db->get(TABLE_ROOMS)->result();
+        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
+             FROM rooms NATURAL JOIN computers
+             GROUP BY roomid";
+        return $this->db->query($sql)->result();
     }
 
     function queryAllComputers() {
@@ -154,55 +150,8 @@ class ReservationSystem_Model extends CI_Model
         $sql = "SELECT *
                 FROM reservations
                 WHERE useridno = ? AND
-                  date >= NOW() AND
-                  start_restime >= NOW()";
+                  date >= DATE(NOW()) AND
+                  start_restime >= TIME(NOW())";
         return $this->db->query($sql, array($id))->result();
-    }
-
-    function createReservation($data) {
-        $slots = $data['slots'];
-
-        foreach($slots as $slot) {
-            $insertData = array(
-                'computerid' => $slot['computerid'],
-                'useridno' => $data['idnumber'],
-                'email' => $data['email'],
-                'date' => $slot['date'],
-                'start_restime' => $slot['startTime'],
-                'end_restime' => $slot['endTime'],
-                'collegeid' => $data['collegeid'],
-                'typeid' => $data['typeid'],
-                'verificationcode' => $data['verificationCode'],
-            );
-
-            $this->db->insert(TABLE_RESERVATIONS, $insertData);
-        }
-
-    }
-
-    function isExistingVerificationCode($verificationCode) {
-        $result = $this->db->get_where(TABLE_RESERVATIONS, $verificationCode)->result;
-
-        // Check if there is existing row
-        return $result->num_rows() > 0;
-    }
-
-
-    function queryReservationsAtSlotOnDate($slot, $date){
-
-    }
-
-    function queryRoomAndCompNoAtComputerID($id){
-        $sql = "SELECT name, computerno
-                FROM rooms NATURAL JOIN 
-                  (SELECT roomid, computerno
-                   FROM computers
-                   WHERE computerid = ?) b";
-        return $this->db->query($sql, array($id))->result();
-    }
-    function verifyReservation($verificationCode) {
-        $sql = "UPDATE reservations SET verified = 1 
-                  WHERE verificationcode = ?";
-        return $this->db->query($sql, array($verificationCode));
     }
 }

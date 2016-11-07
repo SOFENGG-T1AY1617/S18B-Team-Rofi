@@ -132,4 +132,6 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('reservationsystem_model');
+$autoload['model'] = array(
+    'student_model' => 'student',
+    'admin_model' => 'admin');

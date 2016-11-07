@@ -88,6 +88,9 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 define("TABLE_BUILDINGS", "buildings");
 define("COLUMN_BUILDINGID", "buildingid");
 
+define("TABLE_DEPARTMENTS", "departments");
+define("COLUMN_DEPARTMENTID", "departmentid");
+
 define("TABLE_ROOMS", "rooms");
 define("COLUMN_ROOMID", "roomid");
 define("COLUMN_NAME", "name");
@@ -106,8 +109,26 @@ define("COLUMN_TYPE", "type");
 define("TABLE_RESERVATIONS", "reservations");
 define("COLUMN_RESERVATIONID", "reservationid");
 define("COLUMN_USERIDNO", "useridno");
-define("COLUMN_RESERVEDATETIME", "reservedatetime");
+define("COLUMN_EMAIL", "email");
+define("COLUMN_DATE", "date");
+define("COLUMN_STARTRESTIME", "startrestime");
+define("COLUMN_ENDRESTIME", "endrestime");
 define("COLUMN_VERIFIED", "verified");
 define("COLUMN_VERFICATIONCODE", "verificationcode");
 
 define("MAX_RESERVATIONS", 4);
+
+
+define('TABLE_ADMINISTRATORS', "administrators");
+define("COLUMN_ADMINISTRATORID", "administratorid");
+define("COLUMN_LAST_NAME", "last_name");
+define("COLUMN_FIRST_NAME", "first_name");
+define("COLUMN_MIDDLE_NAME", "middle_name");
+define("COLUMN_ADMIN_DEPARTMENTID", "admin_departmentid");
+define("COLUMN_ADMIN_TYPE", "admin_type");
+define("COLUMN_password", "password");
+
+
+define("TABLE_MODERATORS", "moderators");
+define("COLUMN_MODERATORID", "moderatorid");
+define("COLUMN_MOD_DEPARTMENTID", "mod_departmentid");
