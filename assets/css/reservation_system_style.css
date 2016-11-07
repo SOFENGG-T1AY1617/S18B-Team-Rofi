@@ -48,8 +48,7 @@ div.date-font {
 }
 
 #slots_selected {
-    height: 200px;
-    max-height: 200px;
+    height: auto;
 }
 
 #my_number_of_slots{
