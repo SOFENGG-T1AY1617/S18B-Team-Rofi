@@ -730,10 +730,10 @@ $defaultTab = 1;
                 });
 
                 $(document).ready(function() {
-
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function () {
 
                         //event.stopPropagation();
+                        $("#email_message").css("visibility", "visible");
 
                         console.log($("#select-college").val());
                         $.ajax({
@@ -808,7 +808,9 @@ $defaultTab = 1;
                                     $("#tabs li.tab_<?php echo $stepNo ?>").next("li").removeClass('disabled');
                                     $("#tabs li.tab_<?php echo $stepNo ?>").next("li").find("a").trigger('click');
 
+
                                 }
+
                             })
                             .fail(function(result) {
                                 console.log("Submission: fail");
@@ -820,10 +822,13 @@ $defaultTab = 1;
                             })
                             .always(function() {
                                 console.log("complete");
+                                $("#email_message").css("visibility", "hidden");
                             });
                     });
 
                 });
+
+
 
             </script>
 
@@ -992,6 +997,9 @@ $defaultTab = 1;
 
                 </div>
 
+            </div>
+            <div class = "message" id = "email_message">
+                Processing...
             </div>
 
         </div> <!-- EOF -->
