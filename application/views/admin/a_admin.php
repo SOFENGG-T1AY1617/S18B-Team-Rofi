@@ -11,9 +11,9 @@
         var cellUsername = row.insertCell(2);
         var clearbtn = row.insertCell(3);
 
-        cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name\">";
-        cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email of Administrator\">";
-        cellUsername.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter assigned username\">";
+        cellName.innerHTML = "<input type=\"text\" class=\"form-control input-sm\" id=\"exampleInputEmail1\" placeholder=\"Enter name\">";
+        cellEmail.innerHTML = "<input type=\"text\" class=\"form-control input-sm\" id=\"exampleInputEmail1\" placeholder =\"Enter email of Administrator\">";
+        cellUsername.innerHTML = "<input type=\"text\" class=\"form-control input-sm\" id=\"exampleInputEmail1\" placeholder =\"Enter assigned username\">";
         clearbtn.innerHTML = "<button type =\"button\" onclick=\"clearAdministrator("+tID+", "+(table.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
 
     }
@@ -40,9 +40,9 @@
             var curEmail = cells[1].innerHTML;
             var curUsername = cells[2].innerHTML;
 
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\""+curName+"\">"
-            cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail\" value=\""+curEmail+"\">"
-            cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputUsername\" value=\""+curUsername+"\">"
+            cells[0].innerHTML = "<input type=\"text\" class=\"form-control input-sm\" id=\"exampleInputName\" value=\""+curName+"\">"
+            cells[1].innerHTML = "<input type=\"text\" class=\"form-control input-sm\" id=\"exampleInputEmail\" value=\""+curEmail+"\">"
+            cells[2].innerHTML = "<input type=\"text\" class=\"form-control input-sm\" id=\"exampleInputUsername\" value=\""+curUsername+"\">"
             cells[3].innerHTML = "<button type =\"button\" onclick=\"clearAdministrator("+tID+", "+i+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
 
         }
@@ -60,40 +60,6 @@
     }
 
     function changeViewToView(table, footer){
-
-        /* Change that the html reapplies the original data in the database */
-        /*
-        console.log(table);
-        var tableA = table;
-        var rows = tableA.rows;
-        var deleteRows=[];
-        var lengthofdel=0;
-        for(var i = 1; i < rows.length; i++){
-            var cells = rows[i].cells;
-
-            var curName = cells[0].getElementsByTagName("input")[0].value;
-            var curEmail = cells[1].getElementsByTagName("input")[0].value;
-            var curUsername = cells[2].getElementsByTagName("input")[0].value;
-;
-
-            if(curName != "" && curEmail != "" && curUsername != ""){
-                cells[0].innerHTML = curName;
-                cells[1].innerHTML = curEmail;
-                cells[2].innerHTML = curUsername;
-                cells[3].innerHTML = "";
-            }
-            else{
-                console.log(i);
-                deleteRows[lengthofdel] = i;
-                lengthofdel ++;
-            }
-
-        }
-
-        for(var i=lengthofdel-1; i >= 0 ; i--){
-            table.deleteRow(deleteRows[i]);
-        }
-        */
 
         var addID = ""+table.id+"_addbtn";
         var add = document.getElementById(addID.toString());
