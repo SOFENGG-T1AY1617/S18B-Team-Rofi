@@ -120,7 +120,23 @@ class Controller extends CI_Controller {
             $slots = $this->parseSlots($getData['slots']);
             $getData['slots'] = $slots;
 
-            $reservations = $this->getSameReservations($slots);
+            $getData['verificationCode'] = $this->getVerificationCode();
+            if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
+                $this->student->createReservation($getData);
+                $data = array(
+                    'status' => 'success',
+                    'data' => $getData,
+                );
+            }
+            else {
+                $data = array(
+                    'status' => 'fail',
+                    'errors' => $errors,
+                    'email_status' => 'fail',
+                );
+            }
+
+            /*$reservations = $this->getSameReservations($slots);
 
             if (count($reservations) > 0) {
                 $data = array(
@@ -146,7 +162,7 @@ class Controller extends CI_Controller {
                         'email_status' => 'fail',
                     );
                 }
-            }
+            }*/
 
 
             /*$data = array(
