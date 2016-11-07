@@ -61,6 +61,7 @@ $route['verify/(:any)'] = 'Controller/verify/$1';
 $route['getMyReservations'] = 'Controller/getMyReservations';
 
 /* ADMIN ROUTE */
+$route['login'] = 'AdminController/loginView';
 $route['admin'] = 'AdminController';
 $route['overview'] = 'AdminController';
 $route['scheduling'] = 'AdminController/schedulingView';

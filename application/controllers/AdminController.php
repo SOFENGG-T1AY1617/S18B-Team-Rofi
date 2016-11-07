@@ -41,6 +41,13 @@ class AdminController extends CI_Controller
         $this->load->view('admin/a_add', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
+    public function loginView(){
+        $data['login'] = $this->admin->queryAllModerators();
+
+
+        $this->load->view('admin/login', $data); // $this->load->view('admin', $data); set to this if data is set
+        //$this->load->view('template/footer'); // include bootstrap 3 footer
+    }
 
 
     public function modView(){

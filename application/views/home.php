@@ -752,9 +752,11 @@ $defaultTab = 1;
                             .done(function(result) {
                                 console.log("done");
                                 if (result['status'] == "fail") {
+                                    console.log("Count: " + result['count']);
+                                    console.log("Num Reservations: " + result['num']);
                                     errors = result['errors'];
                                     console.log(errors);
-                                    if (errors.length > 1) {
+                                    if (errors.length > 0) {
                                         toast = "You have an error in the following input ";
 
                                         console.log ("NUMBER OF ERRORS: " + errors.length);
@@ -776,11 +778,11 @@ $defaultTab = 1;
                                         toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                                     }
                                     if (result['numReservations_status'] == "fail") {
-                                        toast = "You've already selected " + result['reserved'] +
-                                            " slots! You can only select " + result['remaining'] + " more.";
+                                        toast = "You've already reserved " + result['reserved'] +
+                                            " slots! You can only have a maximum of " + maxNumberOfSlots + ".";
                                         toastr.error(toast, "Too many reservations");
                                     }
-                                    if (result['sameReservations_status'] == 'fail') {
+                                    if (result['reservation_status'] == 'fail') {
                                         toast = "Sorry, but a slot you picked was already selected: ";
                                         var reservations = result['sameReservations'];
                                         for (var i = 0; i < reservations.length - 1; i++) {
@@ -808,8 +810,12 @@ $defaultTab = 1;
 
                                 }
                             })
-                            .fail(function() {
+                            .fail(function(result) {
                                 console.log("Submission: fail");
+                                //console.log(result);
+                                console.log("Reservations: " + result['reservations']);
+                                console.log("Count: " + result['count']);
+                                console.log("Num Reservations: " + result['num']);
                                 toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                             })
                             .always(function() {
@@ -855,7 +861,7 @@ $defaultTab = 1;
 
                                 <div class="form-group">
                                     <label for="email">Email:</label>
-                                    <input type="email" class="form-control" name="form-email" id="email">
+                                    <input type="email" class="form-control" name="form-email" id="email" required>
                                 </div>
                             </form>
                         </div>

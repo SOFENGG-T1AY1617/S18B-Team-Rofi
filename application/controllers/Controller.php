@@ -99,7 +99,6 @@ class Controller extends CI_Controller {
         );
 
         $errors = $this->validateInput($getData);
-
         if (count($errors) > 0) {
             $data = array(
                 'status' => 'fail',
@@ -113,7 +112,6 @@ class Controller extends CI_Controller {
                 'errors' => $errors,
                 'numReservations_status' => 'fail',
                 'reserved' => $numReservations,
-                'remaining' => MAX_RESERVATIONS - $numReservations,
             );
         }
         else if (count($errors) == 0){ // Add to database
@@ -137,13 +135,13 @@ class Controller extends CI_Controller {
             }
 
             /*$reservations = $this->getSameReservations($slots);
-
+            //$reservations = 5;
             if (count($reservations) > 0) {
                 $data = array(
                     'status' => 'fail',
                     'errors' => $errors,
                     'reservation_status' => 'fail',
-                    'sameReservations' => $reservations,
+                    'sameReservations_status' => $reservations,
                 );
             }
             else {
@@ -155,6 +153,7 @@ class Controller extends CI_Controller {
                         'data' => $getData,
                     );
                 }
+
                 else {
                     $data = array(
                         'status' => 'fail',
@@ -162,13 +161,11 @@ class Controller extends CI_Controller {
                         'email_status' => 'fail',
                     );
                 }
+                $data = array(
+                    'status' => 'success',
+                    'data' => $getData,
+                );
             }*/
-
-
-            /*$data = array(
-                'status' => 'success',
-                'data' => $getData,
-            );*/
         }
 
         echo json_encode($data);
@@ -176,7 +173,7 @@ class Controller extends CI_Controller {
 
     private function numReservations($id) {
         $reservations = $this->student->queryOngoingReservationsByStudentID($id);
-
+        //return 1;
         return count($reservations);
     }
 
@@ -206,9 +203,12 @@ class Controller extends CI_Controller {
         if (strlen($getData['email']) < 4) {
             $errors[] = "Email Address";
         }
+        else if (strpos($getData['email'], '@') == false) {
+            $errors[] = "Email Address";
+        }
         else { // Check if valid email address
             $emailArray = explode("@", $getData['email']);
-            if ($emailArray[1] != "dlsu.edu.ph") {
+            if (strcmp($emailArray[1],"dlsu.edu.ph") != 0) {
                 $errors[] = "Email Address";
             }
         }
@@ -347,6 +347,7 @@ class Controller extends CI_Controller {
             );
             $reservations[] = $reservation;
         }
+
         return $reservations;
     }
 }
