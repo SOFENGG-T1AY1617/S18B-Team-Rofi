@@ -249,8 +249,8 @@ VALUES (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:00:00", "1
 	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j210"),
        (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j211"),
 	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j211"),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j212"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-21", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j212");
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-11-21", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j212"),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-11-21", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j212");
 
 INSERT INTO `reservation_system`.`admin_types` (`admin_type`)
 VALUES ("Super Administrator"),

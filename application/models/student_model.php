@@ -165,11 +165,10 @@ class Student_Model extends CI_Model
     }
 
     function queryOngoingReservationsByStudentID($id) {
-        $sql = "SELECT *
-                FROM reservations
-                WHERE useridno = ? AND
-                  date >= DATE(NOW()) AND
-                  start_restime >= TIME(NOW())";
+        $sql = "SELECT * 
+                FROM reservations 
+                WHERE useridno = ? AND 
+                concat_ws(' ', date, start_restime) >= NOW()";
         return $this->db->query($sql, array($id))->result();
     }
 
