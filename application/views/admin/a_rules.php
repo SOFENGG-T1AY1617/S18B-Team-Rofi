@@ -10,41 +10,41 @@
         var cells1 = rows[0].cells;
         var curSettingTI = cells1[1].getAttribute("name");
         cells1[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control\" id=\"exampleInputAmount\" value=\""+curSettingTI+ "\">" +
+            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingTI+ "\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
 
         var cells2 = rows[1].cells;
         var curSettingTL = cells2[1].getAttribute("name");
         cells2[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control\" id=\"exampleInputAmount\" value=\""+curSettingTL+"\">" +
+            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingTL+"\">" +
             "<div class=\"input-group-addon \">timeslots</div>" +
             "</div>";
 
         var cells3 = rows[2].cells;
         var curSettingRA = cells3[1].getAttribute("name");
         cells3[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control\" id=\"exampleInputAmount\" value=\""+curSettingRA+ "\">" +
+            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingRA+ "\">" +
             "<div class=\"input-group-addon \">days</div>" +
             "</div>";
 
         var cells4 = rows[3].cells;
         var curSettingRE = cells4[1].getAttribute("name");
         cells4[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control\" id=\"exampleInputAmount\" value=\""+curSettingRE+"\">" +
+            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingRE+"\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
 
         var cells5 = rows[4].cells;
         var curSettingCE = cells5[1].getAttribute("name");
         cells5[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control\" id=\"exampleInputAmount\" value=\""+curSettingCE+"\">" +
+            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingCE+"\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
 
         footer.innerHTML =
-            "<button class=\"btn btn-default col-md-2\" type=\"button\" onclick=\"changeViewToView("+tID+","+fID+")\">Cancel</button>"+
-            "<input class=\"btn btn-default  col-md-offset-8 col-md-2\" type=\"submit\" value=\"Save Changes\"></div>";
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView("+tID+","+fID+")\">Cancel</button>"+
+            "<input class=\"btn btn-default  col-md-offset-0 col-md-2\" type=\"submit\" value=\"Save Changes\"></div>";
 
     }
 
