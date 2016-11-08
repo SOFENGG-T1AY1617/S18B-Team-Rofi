@@ -746,6 +746,7 @@ $defaultTab = 1;
                             }
                             else {
                                 $("#div-college").hide();
+                                $("#select-college").val("0");
                             }
 
                         })
@@ -788,7 +789,7 @@ $defaultTab = 1;
                                     errors = result['errors'];
                                     console.log(errors);
                                     if (errors.length > 0) {
-                                        toast = "You have an error in the following input ";
+                                        toast = "You have an error in the following input";
 
                                         console.log ("NUMBER OF ERRORS: " + errors.length);
 
@@ -806,7 +807,7 @@ $defaultTab = 1;
                                         toastr.error(toast, "Submission failed");
                                     }
                                     if (result['email_status'] == "fail") {
-                                        toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
+                                        toastr.error("An error occurred while trying to reserve. Please try again.", "Submission failed");
                                     }
                                     if (result['numReservations_status'] == "fail") {
                                         toast = "You've already reserved " + result['reserved'] +
@@ -843,12 +844,8 @@ $defaultTab = 1;
                                 }
 
                             })
-                            .fail(function(result) {
+                            .fail(function() {
                                 console.log("Submission: fail");
-                                //console.log(result);
-                                console.log("Reservations: " + result['reservations']);
-                                console.log("Count: " + result['count']);
-                                console.log("Num Reservations: " + result['num']);
                                 toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
                             })
                             .always(function() {

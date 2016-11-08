@@ -201,13 +201,17 @@ class Controller extends CI_Controller {
                 $errors[] = "ID Number";
             }
         }
-
-        if ($getData['collegeid'] == 0) {
-            $errors[] = "College";
-        }
         if ($getData['typeid'] == 0) {
             $errors[] = "Type";
         }
+        else {
+            $type = $this->student->queryTypeAtTypeID($getData['typeid']);
+
+            if (strpos(strtolower($type['type']), 'graduate') !== false && $getData['collegeid'] == 0) {
+                $errors[] = "College";
+            }
+        }
+
         if (strlen($getData['email']) < 4) {
             $errors[] = "Email Address";
         }

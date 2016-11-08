@@ -183,18 +183,37 @@ class Student_Model extends CI_Model
     function createReservation($data) {
         $slots = $data['slots'];
 
-        foreach($slots as $slot) {
+        if ($data['collegeid'] != 0) {
             $insertData = array(
-                'computerid' => $slot['computerid'],
+                'computerid' => '',
                 'useridno' => $data['idnumber'],
                 'email' => $data['email'],
-                'date' => $slot['date'],
-                'start_restime' => $slot['startTime'],
-                'end_restime' => $slot['endTime'],
+                'date' => '',
+                'start_restime' => '',
+                'end_restime' => '',
                 'collegeid' => $data['collegeid'],
                 'typeid' => $data['typeid'],
                 'verificationcode' => $data['verificationCode'],
             );
+        }
+        else {
+            $insertData = array(
+                'computerid' => '',
+                'useridno' => $data['idnumber'],
+                'email' => $data['email'],
+                'date' => '',
+                'start_restime' => '',
+                'end_restime' => '',
+                'typeid' => $data['typeid'],
+                'verificationcode' => $data['verificationCode'],
+            );
+        }
+
+        foreach($slots as $slot) {
+            $insertData['computerid'] = $slot['computerid'];
+            $insertData['date'] = $slot['date'];
+            $insertData['start_restime'] = $slot['startTime'];
+            $insertData['end_restime'] = $slot['endTime'];
 
             $this->db->insert(TABLE_RESERVATIONS, $insertData);
         }

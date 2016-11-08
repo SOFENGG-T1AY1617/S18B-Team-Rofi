@@ -61,7 +61,7 @@ CREATE TABLE `reservation_system`.`reservations` (
   `date` DATE NOT NULL,
   `start_restime` TIME NOT NULL,
   `end_restime` TIME NOT NULL,
-  `collegeid` INT NOT NULL,
+  `collegeid` INT,
   `typeid` INT NOT NULL,
   `verified` BIT NOT NULL DEFAULT 0,
   `verificationcode` VARCHAR(40) NOT NULL,
