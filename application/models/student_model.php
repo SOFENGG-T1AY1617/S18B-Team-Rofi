@@ -71,6 +71,14 @@ class Student_Model extends CI_Model
         return $this->db->query($sql, array($name))->result();
     }
 
+    function queryTypeAtTypeID($id) {
+        $this->db->select('*');
+        $this->db->from(TABLE_TYPES);
+        $this->db->where(COLUMN_TYPEID, $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
     function queryComputersAtRoomID($id) {
         $sql = "SELECT * 
              FROM computers NATURAL JOIN 

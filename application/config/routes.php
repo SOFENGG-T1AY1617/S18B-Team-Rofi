@@ -59,6 +59,7 @@ $route['getComputers'] = 'Controller/getComputers';
 $route['submitReservation'] = 'Controller/submitReservation';
 $route['verify/(:any)'] = 'Controller/verify/$1';
 $route['getMyReservations'] = 'Controller/getMyReservations';
+$route['checkType'] = 'Controller/checkType';
 
 /* ADMIN ROUTE */
 $route['login'] = 'AdminController/loginView';

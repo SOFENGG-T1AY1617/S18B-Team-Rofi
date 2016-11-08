@@ -729,21 +729,52 @@ $defaultTab = 1;
 
                 });
 
+                function checkType(typeid) {
+                    $.ajax({
+                        url: '<?php echo base_url('checkType') ?>',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            typeid: typeid,
+                        }
+                    })
+                        .done(function(result) {
+                            console.log("done");
+                            console.log(result);
+                            if (result.toLowerCase().indexOf("graduate") >= 0) {
+                                $("#div-college").show();
+                            }
+                            else {
+                                $("#div-college").hide();
+                            }
+
+                        })
+                        .fail(function() {
+                            console.log("fail");
+                        })
+                        .always(function() {
+                            console.log("complete");
+                        });
+
+                }
+
                 $(document).ready(function() {
+
+                    $("#div-college").hide();
+
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function () {
 
                         //event.stopPropagation();
                         $("#email_message").css("visibility", "visible");
 
-                        console.log($("#select-college").val());
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
                             type: 'GET',
                             dataType: 'json',
                             data: {
                                 idnumber: $("#id-number").val(),
-                                collegeid: $("#select-college").val(),
                                 typeid: $("#select-type").val(),
+                                collegeid: $("#select-college").val(),
                                 email: $("#email").val(),
                                 date: $("#text-date").val(),
                                 slots: slotsPicked
@@ -845,21 +876,21 @@ $defaultTab = 1;
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="type">Type:</label>
+                                    <select class="form-control" name="form-type" id="select-type" onchange="checkType(this.value)">
+                                        <option value="0" selected disabled>Choose your type...</option>
+                                        <?php foreach($types as $row):?>
+                                            <option value="<?=$row->typeid?>"><?=$row->type?></option>
+                                        <?php endforeach;?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" id="div-college">
                                     <label for="college">College:</label>
                                     <select class="form-control" name="form-college" id="select-college">
                                         <option value="0" selected disabled>Choose your college...</option>
                                         <?php foreach($colleges as $row):?>
                                             <option value="<?=$row->collegeid?>"><?=$row->name?></option>
-                                        <?php endforeach;?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="type">Type:</label>
-                                    <select class="form-control" name="form-type" id="select-type">
-                                        <option value="0" selected disabled>Choose your type...</option>
-                                        <?php foreach($types as $row):?>
-                                            <option value="<?=$row->typeid?>"><?=$row->type?></option>
                                         <?php endforeach;?>
                                     </select>
                                 </div>

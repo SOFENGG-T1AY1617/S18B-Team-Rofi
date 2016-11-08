@@ -88,6 +88,14 @@ class Controller extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function checkType() {
+        $typeid = $this->input->get('typeid');
+
+        $type = $this->student->queryTypeAtTypeID($typeid);
+
+        echo json_encode($type['type']);
+    }
+
     public function submitReservation() {
         $getData = array(
             'idnumber' => $this->input->get('idnumber'),
