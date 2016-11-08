@@ -35,8 +35,8 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->student->queryAllBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
-        $data['times_today'] = $this->student->getTimes($currentHour, $currentMinute, $minuteInterval, false);
-        $data['times_tomorrow'] = $this->student->getTimes(6, $currentMinute, $minuteInterval, true);
+        $data['times_today'] = $this->student->getTimes($currentHour, $currentMinute, $minuteInterval, $this->student->getMinimumHour(), $this->student->getMaximumHour(), false);
+        $data['times_tomorrow'] = $this->student->getTimes(null, $currentMinute, $minuteInterval, $this->student->getMinimumHour(), $this->student->getMaximumHour(), true);
 
         $data['tab'] = 1; // set to first tab on open
         $data['maxNumberOfSlots'] = $maxNumberOfSlots;
