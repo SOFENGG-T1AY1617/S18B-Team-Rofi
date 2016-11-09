@@ -18,7 +18,12 @@ class AdminController extends CI_Controller
      */
     public function index()
     {
-        $this->initAdmin();
+        if(isset($_SESSION['email'])) {
+            $this->initAdmin();
+        }
+        else {
+          $this->loginView();
+        }
     }
 
     private function initAdmin(){
@@ -42,10 +47,10 @@ class AdminController extends CI_Controller
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
     public function loginView(){
-        $data['login'] = $this->admin->queryAllModerators();
+        //$data['login'] = $this->admin->queryAllModerators();
 
-
-        $this->load->view('admin/login', $data); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
+        $this->load->view('admin/login'); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
@@ -74,6 +79,24 @@ class AdminController extends CI_Controller
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_rules'); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
+    }
+
+    public function signIn() {
+        $email = $this->input->post('email');
+        $password = $this->input->post('password');
+
+        $admin = $this->admin->queryAdminAccount($email, $password);
+
+        if ($admin != null && count($admin) > 0) {
+            // TODO SET SESSIONS
+            $this->initAdmin();
+            /*$_SESSION['email'] = $email;
+            $this->index();*/
+        }
+        else {
+            // TODO ADD ERROR MESSAGE
+            $this->loginView();
+        }
     }
 
 }

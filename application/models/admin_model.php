@@ -146,12 +146,13 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
-    function queryOngoingReservationsByStudentID($id) {
-        $sql = "SELECT *
-                FROM reservations
-                WHERE useridno = ? AND
-                  date >= DATE(NOW()) AND
-                  start_restime >= TIME(NOW())";
-        return $this->db->query($sql, array($id))->result();
+    function queryAdminAccount($email, $password) {
+        $this->db->select("*");
+        $this->db->from(TABLE_ADMINISTRATORS);
+        $this->db->where(COLUMN_EMAIL, $email);
+        $this->db->where(COLUMN_PASSWORD, $password);
+        $query = $this->db->get();
+
+        return $query->row_array();
     }
 }
