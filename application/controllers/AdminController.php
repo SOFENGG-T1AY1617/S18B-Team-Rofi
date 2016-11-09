@@ -25,12 +25,13 @@ class AdminController extends CI_Controller
 
     public function index()
     {
-        if(isset($_SESSION['email'])) {
+        /*if(isset($_SESSION['email'])) {
             $this->initAdmin();
         }
         else {
           $this->loginView();
-        }
+        }*/
+        $this->initAdmin();
     }
 
     private function initAdmin(){
