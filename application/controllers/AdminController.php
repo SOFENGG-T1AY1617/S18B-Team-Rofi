@@ -16,6 +16,13 @@ class AdminController extends CI_Controller
      * Index Page for this controller.
      * @see https://codeigniter.com/user_guide/general/urls.html
      */
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->library('session');
+    }
+
     public function index()
     {
         if(isset($_SESSION['email'])) {
@@ -82,13 +89,18 @@ class AdminController extends CI_Controller
     }
 
     public function signIn() {
-        $email = $this->input->post('email');
-        $password = $this->input->post('password');
+        $signInData = array(
+            'email' => $this->input->post('email'),
+            'password' => $this->input->post('password'),
+        );
 
-        $admin = $this->admin->queryAdminAccount($email, $password);
 
-        if ($admin != null && count($admin) > 0) {
+        if ($this->admin->isValidUser($signInData)) {
             // TODO SET SESSIONS
+            //$this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
+            //$this->load->view('admin/home');
+//            $_SESSION['email'] = $email;
+//            redirect(site_url("admin"));
             $this->initAdmin();
             /*$_SESSION['email'] = $email;
             $this->index();*/

@@ -1,8 +1,8 @@
 </head>
 <body>
-    <form class="col-md-4 col-md-offset-4">
+    <form class="col-md-4 col-md-offset-4" method="post" action="<?=base_url("admin/signIn")?>">
 
-        <img src="http://tinypic.com/evb0ut.jpg" method="post" action="<?=base_url("admin/signIn")?>">
+        <img src="http://tinypic.com/evb0ut.jpg">
         <div class="form-group">
             <label for="adminEmail">Email:</label>
             <input type="email" class="form-control" id="adminEmail" placeholder="Ex. 123@dlsu.edu.ph" required>
