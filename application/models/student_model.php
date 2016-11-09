@@ -24,20 +24,31 @@ class Student_Model extends CI_Model
         return 4; // TODO retrieve from Settings
     }
 
-    public function getTimes($first_hour, $first_minute, $minute_interval, $tomorrow) {
+    public function getMinimumHour() { // TODO parameter must be department ID
+        return 6; // TODO retrieve value depending on department
+    }
+
+    public function getMaximumHour() { // TODO parameter must be department ID
+        return 20; // TODO retrieve value depending on department
+    }
+
+    public function getTimes($first_hour, $first_minute, $minute_interval, $minimum_hour, $maximum_hour, $tomorrow) {
         $times = array();
         $startMinute = 0;
+        $daysForward = 0;
 
         if (!$tomorrow)
-            $startMinute = intval($first_minute/$minute_interval) * $minute_interval;
+            $startMinute = intval($first_minute / $minute_interval) * $minute_interval; // calculate first_minute to suit current time
+        else
+            $daysForward++; // plus 1 to day if tomorrow is true
 
-        for ($hour = $first_hour; $hour < 20 ; $hour++) {
+        if ($first_hour < $minimum_hour || $first_hour == null) // set to minimum_hour if first_hour is below the minimum_hour or if first_hour is null
+            $first_hour = $minimum_hour;
+
+        for ($hour = $first_hour; $hour < $maximum_hour ; $hour++) {
             for ($minute = $startMinute; $minute < 60; $minute += $minute_interval) {
 
-                if ($tomorrow)
-                    $time = mktime($hour, $minute, 0, date("m"), date("d") + 1, date("Y"));
-                else
-                    $time = mktime($hour, $minute, 0, date("m"), date("d"), date("Y"));
+                $time = mktime($hour, $minute, 0, date("m"), date("d") + $daysForward, date("Y"));
 
                 $times[] = $time;
 
@@ -46,10 +57,7 @@ class Student_Model extends CI_Model
             $startMinute = 0; // reset to 0 to suit the succeeding hours
         }
 
-        if ($tomorrow)
-            $times[] = mktime($hour, 0, 0, date("m"), date("d") + 1, date("Y"));
-        else
-            $times[] = mktime($hour, 0, 0, date("m"), date("d"), date("Y"));
+        $times[] = mktime($hour, 0, 0, date("m"), date("d") + $daysForward, date("Y"));
 
         return $times;
     }

@@ -11,6 +11,38 @@ $defaultTab = 1;
 
 ?>
 
+<script>
+
+    function nextStep(currentStepNo) {
+
+        var currentStepTabID = "#tabs li.tab_" + currentStepNo;
+
+        $(currentStepTabID).removeClass('active');
+        $(currentStepTabID).addClass('disabled');
+
+        $(currentStepTabID).next("li").removeClass('disabled');
+        $(currentStepTabID).next("li").find("a").attr('data-toggle', 'tab');
+        $(currentStepTabID).next("li").find("a").trigger('click');
+        $(currentStepTabID).next("li").find("a").attr('data-toggle', '');
+
+    }
+
+    function prevStep(currentStepNo) {
+
+        var currentStepTabID = "#tabs li.tab_" + currentStepNo;
+
+        $(currentStepTabID).removeClass('active');
+        $(currentStepTabID).addClass('disabled');
+
+        $(currentStepTabID).prev("li").removeClass('disabled');
+        $(currentStepTabID).prev("li").find("a").attr('data-toggle', 'tab');
+        $(currentStepTabID).prev("li").find("a").trigger('click');
+        $(currentStepTabID).prev("li").find("a").attr('data-toggle', '');
+
+    }
+
+</script>
+
 <div class="container">
 
     <div id = "steps" class="panel panel-default">
@@ -19,15 +51,15 @@ $defaultTab = 1;
                 <ul class="nav nav-pills nav-justified">
 
                    <li role="presentation" class="tab_1 active">
-                       <a href="#tab_1_1" data-toggle = "tab">Step 1 : Choose a time slot</a>
+                       <a href="#tab_1_1">Step 1 : Choose a time slot</a>
                    </li>
 
                    <li role="presentation" class="tab_2 disabled">
-                       <a href="#tab_1_2" data-toggle = "tab">Step 2 : Provide your personal information</a>
+                       <a href="#tab_1_2">Step 2 : Provide your personal information</a>
                    </li>
 
                     <li role="presentation" class="tab_3 disabled">
-                        <a href="#tab_1_3" data-toggle = "tab">Final Step : Email Confirmation</a>
+                        <a href="#tab_1_3">Final Step : Email Confirmation</a>
                     </li>
 
                 </ul>
@@ -105,20 +137,11 @@ $defaultTab = 1;
 
                     updateTimesHeader(dateSelected == dateToday);
 
-                    $(".pager li.nextStep_<?php echo $stepNo ?> a").attr("data-toggle", "");
-
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
                         if (slotsPicked == 0) {
                             toastr.info("You must choose up to "+maxNumberOfSlots+" slots before proceeding.", "Info");
-                            $(this).attr("data-toggle", "");
                         } else {
-                            $(this).attr("data-toggle", "tab");
-
-                            $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
-                            $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
-
-                            $("#tabs li.tab_<?php echo $stepNo+1 ?>").removeClass('disabled');
-                            $("#tabs li.tab_<?php echo $stepNo+1 ?>").addClass('active');
+                            nextStep(<?php echo $stepNo ?>);
                         }
 
                         var date_selected = $("input[name=optradio]:checked").val();
@@ -691,7 +714,7 @@ $defaultTab = 1;
 
 
                             <li class="next nextStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo+1 ?>" data-toggle="tab">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
+                                <a href="#">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
                             </li>
                         </ul>
                     </div>
@@ -717,16 +740,8 @@ $defaultTab = 1;
                 // js functions for step no 2
                 $(function () { // put functions in respective buttons
                     $('.pager li.prevStep_<?php echo $stepNo ?>').on('click', function () { // for next step
-                        if ($(this).hasClass('active'))
-                            $(this).toggleClass('active');
-
-                        $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
-                        $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
-
-                        $("#tabs li.tab_<?php echo $stepNo-1 ?>").removeClass('disabled');
-                        $("#tabs li.tab_<?php echo $stepNo-1 ?>").addClass('active');
+                        prevStep(<?php echo $stepNo ?>);
                     });
-
                 });
 
                 function checkType(typeid) {
@@ -765,7 +780,6 @@ $defaultTab = 1;
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function () {
 
-                        //event.stopPropagation();
                         $("#email_message").css("visibility", "visible");
 
                         $.ajax({
@@ -833,14 +847,7 @@ $defaultTab = 1;
                                     }
                                 }
                                 else {
-
-                                    $("#tabs li.tab_<?php echo $stepNo ?>").removeClass('active');
-                                    $("#tabs li.tab_<?php echo $stepNo ?>").addClass('disabled');
-
-                                    $("#tabs li.tab_<?php echo $stepNo ?>").next("li").removeClass('disabled');
-                                    $("#tabs li.tab_<?php echo $stepNo ?>").next("li").find("a").trigger('click');
-
-
+                                    nextStep(<?php echo $stepNo ?>);
                                 }
 
                             })
@@ -944,7 +951,7 @@ $defaultTab = 1;
                     <div class = "col-md-10 col-md-offset-1">
                         <ul class="pager">
                             <li class="previous prevStep_<?php echo $stepNo ?>">
-                                <a href="#tab_1_<?php echo $stepNo-1 ?>" data-toggle="tab"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
+                                <a href="#tab_1_<?php echo $stepNo-1 ?>"><span aria-hidden="true">&larr;</span> Go back to previous step</a>
                             </li>
                             <li class="next nextStep_<?php echo $stepNo ?>">
                                 <a href="#tab_1_<?php echo $stepNo+1 ?>">Proceed to next step <span aria-hidden="true">&rarr;</span></a>
