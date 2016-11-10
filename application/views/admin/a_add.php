@@ -134,16 +134,17 @@
     function getTableData(tableID) {
         var table = document.getElementById(tableID);
         //var tr = table.getElementsByTagName('tr');
-        var jObject = {};
+        var jObject = [];
         for (var i = 1; i < table.rows.length; i++)
         {
+            var row = i - 1;
             // create array within the array - 2nd dimension
-            jObject[i] = [];
+            jObject[row] = [];
 
             // columns within the row
             for (var j = 0; j < table.rows[i].cells.length; j++)
             {
-                jObject[i][j] = table.rows[i].cells[j].childNodes[0].value;
+                jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
             }
         }
         return jObject;
@@ -151,8 +152,26 @@
 
     function submitRoom() {
         var tableID = $("#add_table").attr("id");
-        console.log(tableID);
-        console.log(getTableData(tableID));
+        var tableData = getTableData(tableID);
+        console.log(tableData);
+
+        $.ajax({
+            url: '<?php echo base_url('') ?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                rooms: tableData,
+            }
+        })
+            .done(function(result) {
+
+            })
+            .fail(function() {
+
+            })
+            .always(function() {
+
+            });
     }
 
 </script>
