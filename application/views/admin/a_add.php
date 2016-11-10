@@ -153,24 +153,31 @@
     function submitRoom() {
         var tableID = $("#add_table").attr("id");
         var tableData = getTableData(tableID);
-        console.log(tableData);
+        //console.log(tableData);
 
         $.ajax({
-            url: '<?php echo base_url('') ?>',
+            url: '<?=base_url('admin/addRoom')?>',
             type: 'GET',
             dataType: 'json',
             data: {
                 rooms: tableData,
+                buildingid: $("#add_table").attr("name"),
             }
         })
             .done(function(result) {
-
+                console.log("done");
+                //location.reload(true);
+                <?php
+                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+                echo 'window.location = "'. site_url("admin/area_management") .'"';
+                ?>
             })
-            .fail(function() {
-
+            .fail(function(result) {
+                console.log("fail");
+                console.log(result);
             })
             .always(function() {
-
+                console.log("complete");
             });
     }
 

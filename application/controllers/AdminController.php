@@ -113,5 +113,18 @@ class AdminController extends CI_Controller
         $this->index();
     }
 
+    public function addRoom() {
+
+        $roomData = array(
+            'rooms' => $this->input->get("rooms"),
+            'buildingid' => $this->input->get("buildingid"),
+            'departmentid' => $_SESSION['admin_departmentid'],
+        );
+
+        $this->admin->insertRoomsAndComputers($roomData);
+
+        echo json_encode("success");
+    }
+
 }
 

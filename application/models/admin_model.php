@@ -35,8 +35,9 @@ class Admin_Model extends CI_Model
     function queryAllRooms() {
         //return $this->db->get(TABLE_ROOMS)->result();
         $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
-             FROM rooms NATURAL JOIN computers
-             GROUP BY roomid";
+                FROM rooms NATURAL JOIN computers
+                GROUP BY roomid
+                ORDER BY name";
         return $this->db->query($sql)->result();
     }
 
@@ -168,7 +169,50 @@ class Admin_Model extends CI_Model
         $query = $this->db->get();
 
         return $query->row_array();
+    }
 
+    function queryLatestRoomID() {
+        return $this->db->insert_id();
+    }
 
+    function insertRoomsAndComputers($data) {
+        $rooms = $data['rooms'];
+
+        foreach($rooms as $room) {
+            $insertRoomData = array(
+                'name' => $room[0],
+                'buildingid' => $data['buildingid'],
+                'departmentid' => $data['departmentid']
+            );
+
+            $this->insertRoom($insertRoomData);
+
+            $insertComputersData = array(
+                'computerCount' => $room[1],
+                'roomid' => $this->queryLatestRoomID(),
+            );
+
+            $this->insertComputersAtRoom($insertComputersData);
+        }
+    }
+
+    function insertRoom($room) {
+        $this->db->insert(TABLE_ROOMS, $room);
+    }
+
+    function insertComputersAtRoom($data) {
+        $computerCount = $data['computerCount'];
+
+        for ($i = 1; $i <= $computerCount; $i++) {
+            $insertComputerData = array(
+                'computerno' => $i,
+                'roomid' => $data['roomid'],
+            );
+            $this->insertComputer($insertComputerData);
+        }
+    }
+
+    function insertComputer($computer) {
+        $this->db->insert(TABLE_COMPUTERS, $computer);
     }
 }

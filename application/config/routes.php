@@ -70,3 +70,4 @@ $route['admin/mod_management'] = 'AdminController/modView';
 $route['admin/admin_management'] = 'AdminController/adminView';
 $route['admin/business_rules'] = 'AdminController/ruleView';
 $route['admin/signOut'] = 'AdminController/signOut';
+$route['admin/addRoom'] = 'AdminController/addRoom';
