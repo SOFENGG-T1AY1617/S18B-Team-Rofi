@@ -1,6 +1,6 @@
 <script xmlns="http://www.w3.org/1999/html">
 
-    function addModerator(table){
+    function addAccount(table){
         console.log(table);
         var tableA =document.getElementById(table);
         var tID = table.id;
@@ -23,7 +23,7 @@
 
     }
 
-    function cancelAddModerator(tableID){
+    function cancelAddAccount(tableID){
         var table = document.getElementById(tableID);
         var rows = table.rows;
         var i;
@@ -35,7 +35,7 @@
     }
 
 
-    function changeViewToEdit(table, footer){
+    function changeViewToEdit(table, footer, modal){
         console.log(table);
         var tableA = document.getElementById(table);
         var rows = tableA.rows;
@@ -57,12 +57,12 @@
         }
 
         document.getElementById(footer).innerHTML =
-            "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
+            "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
             "<input class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"submit\" value=\"Save Changes\"></div>";
 
     }
 
-    function changeViewToView(table, footer){
+    function changeViewToView(table, footer, modal){
         console.log(table);
 
         var tableA = document.getElementById(table);
@@ -97,12 +97,17 @@
         for(var i=lengthofdel-1; i >= 0 ; i--){
             tableA.deleteRow(deleteRows[i]);
         }
-
-
+        console.log(modal);
+        var s;
+        if(modal == 'AddNewModeratorModal'){
+            s ='Add Moderators';
+        } else
+            s = 'Add Admins';
 
         footerA.innerHTML =
-            "<button type =\"button\"data-toggle=\"modal\" data-target=\"#AddNewModeratorModal\" class=\"btn btn-default col-md-2 col-md-offset-8\">Add Moderators</button>" +
-            " <button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"changeViewToEdit('"+tableA.id+"', '"+footerA.id+"')\">Edit Accounts</button>";
+
+                "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default col-md-2 col-md-offset-8\"> "+s+" </button>" +
+                " <button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"changeViewToEdit('"+tableA.id+"', '"+footerA.id+"','" +modal+"' )\">Edit Accounts</button>";
 
     }
 
@@ -163,7 +168,7 @@ include 'a_navbar.php';
                         </li>
                         <div class = "panel-footer clearfix" id = "modtable_footer">
                             <button type ="button"data-toggle="modal" data-target="#AddNewModeratorModal" class="btn btn-default col-md-2 col-md-offset-8">Add Moderators</button>
-                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('modtable','modtable_footer')">Edit Accounts</button>
+                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('modtable','modtable_footer', 'AddNewModeratorModal')">Edit Accounts</button>
                         </div>
                     </form>
                 </ul>
@@ -171,10 +176,8 @@ include 'a_navbar.php';
         </div>
     </div>
 </div>
-<div class = "col-md-2"></div>
 
-<div class = "col-md-2"></div>
-<div id="panels" class = "col-md-8">
+<div id="panels" class = "col-md-offset-2 col-md-8">
 
     <div class="panel-group" role="tablist">
         <div class="panel panel-default">
@@ -209,7 +212,7 @@ include 'a_navbar.php';
                         </li>
                         <div class = "panel-footer clearfix" id = "admintable_footer">
                             <button type ="button"data-toggle="modal" data-target="#AddNewAdminModal" class="btn btn-default col-md-2 col-md-offset-8">Add Admins</button>
-                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('admintable','admintable_footer')">Edit Accounts</button>
+                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('admintable','admintable_footer', 'AddNewAdminModal')">Edit Accounts</button>
                         </div>
                     </form>
                 </ul>
@@ -233,7 +236,7 @@ include 'a_navbar.php';
             <form>
                 <div class="modal-body clearfix">
 
-                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addModerator('add_table')">Add Another Moderator</button>
+                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addAccount('add_table')">Add Another Moderator</button>
                     <table class="table table-hover" id="add_table" name="">  <!-- TODO: somehow insert table id in name for add ? -->
                         <thead>
                         <tr>
@@ -255,7 +258,7 @@ include 'a_navbar.php';
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddModerator('add_table')">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAccount('add_table')">Cancel</button>
                     <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
                 </div>
             </form>
@@ -277,8 +280,8 @@ include 'a_navbar.php';
             <form>
                 <div class="modal-body clearfix">
 
-                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addAdmin('add_table')">Add Another Admin</button>
-                    <table class="table table-hover" id="add_table" name="">  <!-- TODO: somehow insert table id in name for add ? -->
+                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addAccount('add_tableA')">Add Another Admin</button>
+                    <table class="table table-hover" id="add_tableA" name="">  <!-- TODO: somehow insert table id in name for add ? -->
                         <thead>
                         <tr>
                             <th>Name</th>
@@ -299,7 +302,7 @@ include 'a_navbar.php';
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAdmin('add_table')">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAccount('add_table')">Cancel</button>
                     <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
                 </div>
             </form>

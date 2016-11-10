@@ -20,14 +20,13 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-<<<<<<< HEAD
                 <li id="overview_button"><a href="overview">Reports<span class="sr-only"></span></a></li>
-                <li><a href="acc_management">Account Management</a></li>
-=======
-                <li id="overview_button"><a href="<?=site_url("admin")?>">Reports<span class="sr-only"></span></a></li>
+                <li><a href="<?=site_url("acc_management")?>">Account Management</a></li>
+
+                <!--<li id="overview_button"><a href="<?=site_url("admin")?>">Reports<span class="sr-only"></span></a></li>
                 <li><a href="<?=site_url("admin/" . ADMIN_MODERATOR_MANAGEMENT)?>">Moderator Management</a></li>
-                <li><a href="<?=site_url("admin/". ADMIN_ADMINISTRATOR_MANAGEMENT)?>">Administrator Management</a></li>
->>>>>>> origin/master
+                <li><a href="<?=site_url("admin/". ADMIN_ADMINISTRATOR_MANAGEMENT)?>">Administrator Management</a></li>-->
+
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Application Settings<span class="caret"></span></a>
