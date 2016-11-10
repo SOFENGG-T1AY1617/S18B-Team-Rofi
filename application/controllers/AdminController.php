@@ -25,12 +25,13 @@ class AdminController extends CI_Controller
 
     public function index()
     {
-        if(isset($_SESSION['email'])) {
+        /*if(isset($_SESSION['email'])) {
             $this->initAdmin();
         }
         else {
           $this->signInView("");
-        }
+        }*/
+        $this->loadView("");
     }
 
     private function initAdmin(){
@@ -39,6 +40,33 @@ class AdminController extends CI_Controller
         $this->load->view('admin/home'); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
 
+    }
+
+    public function loadView($viewName) {
+        if(!isset($_SESSION['email'])) {
+            $this->signInView("");
+        }
+        else {
+            switch ($viewName) {
+                case ADMIN_SCHEDULING:
+                    $this->schedulingView();
+                    break;
+                case ADMIN_AREA_MANAGEMENT:
+                    $this->addView();
+                    break;
+                case ADMIN_MODERATOR_MANAGEMENT:
+                    $this->modView();
+                    break;
+                case ADMIN_ADMINISTRATOR_MANAGEMENT:
+                    $this->adminView();
+                    break;
+                case ADMIN_BUSINESS_RULES:
+                    $this->ruleView();
+                    break;
+                default:
+                    $this->initAdmin();
+            }
+        }
     }
 
     public function addView(){

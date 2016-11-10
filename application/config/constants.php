@@ -118,7 +118,6 @@ define("COLUMN_VERFICATIONCODE", "verificationcode");
 
 define("MAX_RESERVATIONS", 4);
 
-
 define('TABLE_ADMINISTRATORS', "administrators");
 define("COLUMN_ADMINISTRATORID", "administratorid");
 define("COLUMN_LAST_NAME", "last_name");
@@ -132,3 +131,11 @@ define("COLUMN_PASSWORD", "password");
 define("TABLE_MODERATORS", "moderators");
 define("COLUMN_MODERATORID", "moderatorid");
 define("COLUMN_MOD_DEPARTMENTID", "mod_departmentid");
+
+
+/* ADMIN PAGES */
+define("ADMIN_SCHEDULING", "scheduling");
+define("ADMIN_AREA_MANAGEMENT", "area_management");
+define("ADMIN_MODERATOR_MANAGEMENT", "mod_management");
+define("ADMIN_ADMINISTRATOR_MANAGEMENT", "admin_management");
+define("ADMIN_BUSINESS_RULES", "business_rules");
