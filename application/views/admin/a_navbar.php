@@ -40,7 +40,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="#">Modify Account</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Sign Out</a></li>
+                        <li><a href="<?=site_url('admin/signOut')?>">Sign Out</a></li>
                     </ul>
                 </li>
             </ul>

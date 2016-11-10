@@ -25,13 +25,12 @@ class AdminController extends CI_Controller
 
     public function index()
     {
-        /*if(isset($_SESSION['email'])) {
+        if(isset($_SESSION['email'])) {
             $this->initAdmin();
         }
         else {
-          $this->loginView();
-        }*/
-        $this->initAdmin();
+          $this->signInView("");
+        }
     }
 
     private function initAdmin(){
@@ -54,14 +53,15 @@ class AdminController extends CI_Controller
         $this->load->view('admin/a_add', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
-    public function loginView(){
+    public function signInView($errorMessage){
         //$data['login'] = $this->admin->queryAllModerators();
 
+        $data['errorMessage'] = $errorMessage;
+
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/login'); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('admin/signIn', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
-
 
     public function modView(){
         $data['moderators'] = $this->admin->queryAllModerators();
@@ -97,19 +97,20 @@ class AdminController extends CI_Controller
 
 
         if ($this->admin->isValidUser($e,$p)) {
-            // TODO SET SESSIONS
-            //$this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-            //$this->load->view('admin/home');
-//            $_SESSION['email'] = $email;
-//            redirect(site_url("admin"));
-            $this->initAdmin();
-            /*$_SESSION['email'] = $email;
-            $this->index();*/
+            $admin = $this->admin->queryAdminAccount($e);
+            $this->session->set_userdata($admin);
+            $this->index();
         }
         else {
-            // TODO ADD ERROR MESSAGE
-            $this->loginView();
+            $errorMessage = "Invalid email or password.";
+            $this->signInView($errorMessage);
         }
+    }
+
+    public function signOut() {
+        $this->session->sess_destroy();
+        $this->session->unset_userdata('email');
+        $this->index();
     }
 
 }
