@@ -142,12 +142,24 @@
         {
             var row = i - 1;
             // create array within the array - 2nd dimension
-            jObject[row] = [];
+            //jObject[row] = [];
 
+            var valid = true;
+            var columns = [];
             // columns within the row
             for (var j = 0; j < table.rows[i].cells.length; j++)
             {
-                jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
+                //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
+                columns[j] = table.rows[i].cells[j].childNodes[0].value;
+
+                if (columns[j] == "") {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (valid) {
+                jObject[row] = columns;
             }
         }
         return jObject;
