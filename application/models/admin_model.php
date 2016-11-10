@@ -146,11 +146,19 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
-    function isValidUser($signInData) {
-        $result = $this->db->get_where(TABLE_ADMINISTRATORS, $signInData);
+    function isValidUser($email, $pass) {
 
+
+
+        $sql = "SELECT *
+                      FROM administrators
+                      WHERE email = ? AND password = ?";
+
+        $result = $this->db->query($sql, array($email, $pass))->result();
         // If credentials is found.
-        return $result->num_rows() >= 1;
+
+
+        return count($result)>=1;
     }
 
     function queryAdminAccount($email) {

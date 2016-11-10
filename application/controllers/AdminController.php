@@ -90,13 +90,13 @@ class AdminController extends CI_Controller
     }
 
     public function signIn() {
-        $signInData = array(
-            'email' => $this->input->post('email'),
-            'password' => $this->input->post('password'),
-        );
+        $e = $_POST["adminEmail"];
+        $p = $_POST["adminPassword"];
+        // = $this->input->post('#adminPassword');
 
 
-        if ($this->admin->isValidUser($signInData)) {
+
+        if ($this->admin->isValidUser($e,$p)) {
             // TODO SET SESSIONS
             //$this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
             //$this->load->view('admin/home');
