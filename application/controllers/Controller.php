@@ -35,8 +35,8 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->student->queryAllBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
-        $data['times_today'] = $this->student->getTimes($currentHour, $currentMinute, $minuteInterval, false);
-        $data['times_tomorrow'] = $this->student->getTimes(6, $currentMinute, $minuteInterval, true);
+        $data['times_today'] = $this->student->getTimes($currentHour, $currentMinute, $minuteInterval, $this->student->getMinimumHour(), $this->student->getMaximumHour(), false);
+        $data['times_tomorrow'] = $this->student->getTimes(null, $currentMinute, $minuteInterval, $this->student->getMinimumHour(), $this->student->getMaximumHour(), true);
 
         $data['tab'] = 1; // set to first tab on open
         $data['maxNumberOfSlots'] = $maxNumberOfSlots;
@@ -86,6 +86,14 @@ class Controller extends CI_Controller {
           'result' => $this->student->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/
         echo json_encode($data);
+    }
+
+    public function checkType() {
+        $typeid = $this->input->get('typeid');
+
+        $type = $this->student->queryTypeAtTypeID($typeid);
+
+        echo json_encode($type['type']);
     }
 
     public function submitReservation() {
@@ -193,13 +201,17 @@ class Controller extends CI_Controller {
                 $errors[] = "ID Number";
             }
         }
-
-        if ($getData['collegeid'] == 0) {
-            $errors[] = "College";
-        }
         if ($getData['typeid'] == 0) {
             $errors[] = "Type";
         }
+        else {
+            $type = $this->student->queryTypeAtTypeID($getData['typeid']);
+
+            if (strpos(strtolower($type['type']), 'graduate') !== false && $getData['collegeid'] == 0) {
+                $errors[] = "College";
+            }
+        }
+
         if (strlen($getData['email']) < 4) {
             $errors[] = "Email Address";
         }

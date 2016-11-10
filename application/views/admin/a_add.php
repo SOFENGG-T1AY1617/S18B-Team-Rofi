@@ -1,8 +1,14 @@
 <script xmlns="http://www.w3.org/1999/html">
-    $(document).ready()
-    {
+    $(document).ready(function() {
+       $(".add-room-btn").click(function() {
+           var buildingid = $(this).attr("id");
+           buildingid = buildingid.split("-")[1];
+           //console.log("Building id: " + buildingid);
+           $("#add_table").attr("name", buildingid);
 
-    }
+
+       })
+    });
 
     function addRoom(table){
         console.log(table);
@@ -128,6 +134,56 @@
 
     }
 
+    function getTableData(tableID) {
+        var table = document.getElementById(tableID);
+        //var tr = table.getElementsByTagName('tr');
+        var jObject = [];
+        for (var i = 1; i < table.rows.length; i++)
+        {
+            var row = i - 1;
+            // create array within the array - 2nd dimension
+            jObject[row] = [];
+
+            // columns within the row
+            for (var j = 0; j < table.rows[i].cells.length; j++)
+            {
+                jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
+            }
+        }
+        return jObject;
+    }
+
+    function submitRoom() {
+        var tableID = $("#add_table").attr("id");
+        var tableData = getTableData(tableID);
+        //console.log(tableData);
+
+        $.ajax({
+            url: '<?=base_url('admin/addRoom')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                rooms: tableData,
+                buildingid: $("#add_table").attr("name"),
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                //location.reload(true);
+                <?php
+                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+                echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
+                ?>
+            })
+            .fail(function(result) {
+                console.log("fail");
+                console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+
 </script>
 
 
@@ -194,7 +250,7 @@ include 'a_navbar.php';
                                 </div>
                             </li>
                             <div class = "panel-footer clearfix" id = "<?=$row->buildingid?>footer">
-                                <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default col-md-2 col-md-offset-8">Add Rooms</button>
+                                <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default col-md-2 col-md-offset-8 add-room-btn" id="add-<?=$row->buildingid?>">Add Rooms</button>
                                 <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>footer')">Edit Rooms</button>
                             </div>
                         </form>
@@ -221,7 +277,7 @@ include 'a_navbar.php';
             <div class="modal-body clearfix">
 
                         <button type = "button" class = "btn btn-default btn-block  " onclick = "addRoom('add_table')">Add Another Room</button>
-                        <table class="table table-hover" id="add_table" name="">  <!-- TODO: somehow insert table id in name for add ? -->
+                        <table class="table table-hover" id="add_table" name="">
                             <thead>
                             <tr>
                                 <th>Room Name</th>
@@ -240,7 +296,7 @@ include 'a_navbar.php';
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddRoom('add_table')">Cancel</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitRoom()">Confirm</button>
             </div>
             </form>
         </div>
