@@ -64,9 +64,9 @@ $route['checkType'] = 'Controller/checkType';
 /* ADMIN ROUTE */
 $route['admin'] = 'AdminController';
 $route['admin/signIn'] = 'AdminController/signIn';
-$route['overview'] = 'AdminController';
-$route['scheduling'] = 'AdminController/schedulingView';
-$route['area_management'] = 'AdminController/addView';
-$route['mod_management'] = 'AdminController/modView';
-$route['admin_management'] = 'AdminController/adminView';
-$route['business_rules'] = 'AdminController/ruleView';
+$route['admin/scheduling'] = 'AdminController/schedulingView';
+$route['admin/area_management'] = 'AdminController/addView';
+$route['admin/mod_management'] = 'AdminController/modView';
+$route['admin/admin_management'] = 'AdminController/adminView';
+$route['admin/business_rules'] = 'AdminController/ruleView';
+$route['admin/signOut'] = 'AdminController/signOut';
