@@ -179,6 +179,9 @@ class Admin_Model extends CI_Model
         $rooms = $data['rooms'];
 
         foreach($rooms as $room) {
+            if ($this->isExistingRoom($room[0]))
+                continue;
+
             $insertRoomData = array(
                 'name' => $room[0],
                 'buildingid' => $data['buildingid'],
@@ -214,5 +217,15 @@ class Admin_Model extends CI_Model
 
     function insertComputer($computer) {
         $this->db->insert(TABLE_COMPUTERS, $computer);
+    }
+
+    function isExistingRoom($roomName) {
+        $this->db->select('*');
+        $this->db->from(TABLE_ROOMS);
+        $this->db->where(COLUMN_NAME, $roomName);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
     }
 }
