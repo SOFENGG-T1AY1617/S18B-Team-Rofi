@@ -64,12 +64,21 @@ $route['checkType'] = 'Controller/checkType';
 /* ADMIN ROUTE */
 $route['admin'] = 'AdminController';
 $route['admin/signIn'] = 'AdminController/signIn';
-$route['admin/scheduling'] = 'AdminController/schedulingView';
-$route['admin/area_management'] = 'AdminController/addView';
-$route['admin/mod_management'] = 'AdminController/modView';
-$route['admin/admin_management'] = 'AdminController/adminView';
-$route['admin/business_rules'] = 'AdminController/ruleView';
 $route['admin/signOut'] = 'AdminController/signOut';
 $route['admin/addRoom'] = 'AdminController/addRoom';
 
 $route['admin/(:any)'] = 'AdminController/loadView/$1';
+
+/*
+ * NOTE
+ * You no longer need to add routes for new views.
+ * Just create a new constant in the constants.php file and add
+ * case in loadView() to redirect to appropriate method.
+ */
+
+/*$route['admin/scheduling'] = 'AdminController/schedulingView';
+$route['admin/area_management'] = 'AdminController/addView';
+$route['admin/mod_management'] = 'AdminController/modView';
+$route['admin/admin_management'] = 'AdminController/adminView';
+$route['admin/business_rules'] = 'AdminController/ruleView';*/
+
