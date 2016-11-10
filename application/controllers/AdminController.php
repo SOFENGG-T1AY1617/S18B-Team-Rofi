@@ -114,8 +114,23 @@ class AdminController extends CI_Controller
 
 
     public function schedulingView(){
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+
+        $minuteInterval = $this->admin->getMinuteInterval();
+        $maxNumberOfSlots = $this->admin->getMaxNumberOfSlots();
+        $currentHour = date("H");
+        $currentMinute = date("i");
+
+        $data['buildings'] = $this->admin->queryAllBuildings();
+        $data['colleges'] = $this->admin->queryColleges();
+        $data['types'] = $this->admin->queryTypes();
+        $data['times_today'] = $this->admin->getTimes($currentHour, $currentMinute, $minuteInterval, $this->student->getMinimumHour(), $this->student->getMaximumHour(), false);
+        $data['times_tomorrow'] = $this->admin->getTimes(null, $currentMinute, $minuteInterval, $this->student->getMinimumHour(), $this->student->getMaximumHour(), true);
+
+        $data['maxNumberOfSlots'] = $maxNumberOfSlots;
+
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_scheduling'); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('admin/a_scheduling', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 

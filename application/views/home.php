@@ -218,7 +218,7 @@ $defaultTab = 1;
 
                     });
 
-                    $(document).on( "click", ".slotCell.selected",function() {
+                    $(document).on( "click", ".slotCell.selected, .unSelectSlot",function() {
                         var slotID = $(this).attr('id');
 
                         if (($.inArray(slotID, slotsPicked)) > -1) {
@@ -233,21 +233,6 @@ $defaultTab = 1;
                         outputSlots();
                     });
 
-                    $(document).on( "click", ".unSelectSlot",function() {
-                        var slotID = $(this).attr('id');
-
-                        if (($.inArray(slotID, slotsPicked)) > -1) {
-                            var existIndex = slotsPicked.indexOf(slotID);
-                            slotsPicked.splice(existIndex, 1);
-                        }
-
-
-                        outputSlots();
-
-                        //console.log("slotCell.selected"+" #"+slotID);
-                        console.log(slotsPicked);
-
-                    });
 
                     $("input[name=optradio]:radio").change(function () {
 
