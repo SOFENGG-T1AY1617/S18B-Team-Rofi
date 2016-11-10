@@ -139,3 +139,4 @@ define("ADMIN_AREA_MANAGEMENT", "area_management");
 define("ADMIN_MODERATOR_MANAGEMENT", "mod_management");
 define("ADMIN_ADMINISTRATOR_MANAGEMENT", "admin_management");
 define("ADMIN_BUSINESS_RULES", "business_rules");
+define("ADMIN_ACCOUNT_MANAGEMENT", "acc_management");

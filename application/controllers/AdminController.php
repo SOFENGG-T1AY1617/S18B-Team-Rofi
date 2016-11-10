@@ -54,11 +54,8 @@ class AdminController extends CI_Controller
                 case ADMIN_AREA_MANAGEMENT:
                     $this->addView();
                     break;
-                case ADMIN_MODERATOR_MANAGEMENT:
-                    $this->modView();
-                    break;
-                case ADMIN_ADMINISTRATOR_MANAGEMENT:
-                    $this->adminView();
+                case ADMIN_ACCOUNT_MANAGEMENT:
+                    $this->accView();
                     break;
                 case ADMIN_BUSINESS_RULES:
                     $this->ruleView();
@@ -91,7 +88,7 @@ class AdminController extends CI_Controller
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
-    public function modView(){
+    /*public function modView(){
         $data['moderators'] = $this->admin->queryAllModerators();
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
@@ -104,7 +101,7 @@ class AdminController extends CI_Controller
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_admin', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
-    }
+    }*/
 
     public function accView(){
         $data['administrators'] = $this->admin->queryAllAdministators();
