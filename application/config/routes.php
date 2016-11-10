@@ -67,5 +67,6 @@ $route['overview'] = 'AdminController';
 $route['scheduling'] = 'AdminController/schedulingView';
 $route['area_management'] = 'AdminController/addView';
 $route['mod_management'] = 'AdminController/modView';
+$route['acc_management'] = 'AdminController/accView';
 $route['admin_management'] = 'AdminController/adminView';
 $route['business_rules'] = 'AdminController/ruleView';

@@ -21,8 +21,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li id="overview_button"><a href="overview">Reports<span class="sr-only"></span></a></li>
-                <li><a href="mod_management">Moderator Management</a></li>
-                <li><a href="admin_management">Administrator Management</a></li>
+                <li><a href="acc_management">Account Management</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Application Settings<span class="caret"></span></a>

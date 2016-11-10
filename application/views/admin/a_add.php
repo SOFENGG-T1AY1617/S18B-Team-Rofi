@@ -49,6 +49,7 @@
 
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" value=\""+curName+"\">"
             cells[1].innerHTML = "<input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" value=\""+curNum+"\">"
+            cells[2].innerHTML = "<button type =\"button\" onclick=\"delete("+tID+", "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
         }
         var tID = table;
@@ -62,8 +63,8 @@
 
         footerA.innerHTML =
 
-            "<button class=\"btn btn-default col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
-            "<input class=\"btn btn-default  col-md-offset-8 col-md-2\" type=\"submit\" value=\"Save Changes\"></div>";
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
+            "<input class=\"btn btn-default col-md-2\" type=\"submit\" value=\"Save Changes\"></div>";
 
     }
 
@@ -81,6 +82,7 @@
             var curName = cells[0].getElementsByTagName("input")[0].value;
             var curNum = cells[1].getElementsByTagName("input")[0].value;
 
+            cells[2].innerHTML = "";
 
             if(curName != "" && curNum != ""){
                 cells[0].innerHTML = curName;
@@ -91,6 +93,7 @@
                 deleteRows[lengthofdel] = i;
                 lengthofdel ++;
             }
+
 
         }
 
@@ -175,12 +178,12 @@ include 'a_navbar.php';
                                     </tr>
                                     </thead>
                                     <tbody>
-
                                     <?php foreach($rooms as $room):?>
                                         <?php if($room->buildingid == $row->buildingid): ?>
                                             <tr>
                                                 <td><?=$room->name?></td>
                                                 <td><?=$room->capacity?></td>
+                                                <td></td>
                                             </tr>
                                         <?php endif; ?>
                                     <?php endforeach;?>
