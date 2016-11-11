@@ -128,7 +128,7 @@ CREATE TABLE `reservation_system`.`moderators` (
 	ON UPDATE NO ACTION);
 
 CREATE TABLE `reservation_system`.`business_rules` (
-  `business_rulesid` INT NOT NULL,
+  `business_rulesid` INT NOT NULL AUTO_INCREMENT,
   `departmentid` INT NOT NULL,
   `interval` INT NOT NULL,
   `limit` INT NOT NULL,
