@@ -135,8 +135,6 @@ $defaultTab = 1;
 
                 $(document).ready(function() {
 
-                    updateTimesHeader(dateSelected == dateToday);
-
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
                         if (slotsPicked == 0) {
                             toastr.info("You must choose up to "+maxNumberOfSlots+" slots before proceeding.", "Info");
@@ -242,12 +240,10 @@ $defaultTab = 1;
                         if (date_selected == "today") {
                             dateSelected = "<?=date("Y-m-d")?>";
                             $("#text-date").text("<?=date("F d, Y")?>");
-                            updateTimesHeader(true);
                         }
                         else {
                             dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
                             $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
-                            updateTimesHeader(false);
                         }
 
                         if($("#form_building").val()!=null){
@@ -414,6 +410,8 @@ $defaultTab = 1;
                 }
 
                 function selectRoom(roomid) {
+                    
+                    updateTimesHeader(dateSelected == dateToday);
 
                     var buildingid = $("#form_building").val();
 
