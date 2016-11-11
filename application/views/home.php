@@ -765,8 +765,9 @@ $defaultTab = 1;
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function () {
 
-                        $("#email_message").css("visibility", "visible");
 
+
+                        $("#email_message").css("visibility", "visible");
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
                             type: 'GET',
@@ -783,6 +784,7 @@ $defaultTab = 1;
                             .done(function(result) {
                                 console.log("done");
                                 if (result['status'] == "fail") {
+                                    $("#email_message").css("visibility", "hidden");
                                     console.log("Count: " + result['count']);
                                     console.log("Num Reservations: " + result['num']);
                                     errors = result['errors'];
@@ -832,6 +834,7 @@ $defaultTab = 1;
                                     }
                                 }
                                 else {
+
                                     nextStep(<?php echo $stepNo ?>);
                                 }
 
@@ -1018,8 +1021,8 @@ $defaultTab = 1;
                 </div>
 
             </div>
-            <div class = "message" id = "email_message">
-                Processing...
+            <div class = "message parent" id = "email_message">
+                <div class="message child">Processing...</div>
             </div>
 
         </div> <!-- EOF -->
