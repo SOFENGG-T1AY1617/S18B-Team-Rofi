@@ -284,8 +284,53 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($id))->row_array();
     }
 
+    function getLastComputerIDAtRoomID($id) {
+        $this->db->select_max(COLUMN_COMPUTERID);
+        $this->db->from(TABLE_COMPUTERS);
+        $this->db->where(COLUMN_ROOMID, $id);
+        $result = $this->db->get()->row();
+        return $result->computerid;
+    }
+
+    function getLastComputerNoAtRoomID($id) {
+        $this->db->select_max(COLUMN_COMPUTERNO);
+        $this->db->from(TABLE_COMPUTERS);
+        $this->db->where(COLUMN_ROOMID, $id);
+        $result = $this->db->get()->row();
+        return $result->computerno;
+    }
+
     function updateRoomName($room) {
         $this->db->where(COLUMN_ROOMID, $room['roomid']);
         $this->db->update(TABLE_ROOMS, array('name' => $room['name']));
+    }
+
+    function removeComputersFromRoom($data) {
+        $roomid = $data['roomid'];
+        $numToRemove = $data['count'];
+
+        for ($i = 0; $i < $numToRemove; $i++) {
+            // Find last computer in roomid
+            $computerid = $this->getLastComputerIDAtRoomID($roomid);
+            $this->db->delete(TABLE_COMPUTERS, array('computerid' => $computerid));
+        }
+    }
+
+    function addComputersToRoom($data) {
+        $roomid = $data['roomid'];
+        $numToAdd = $data['count'];
+
+        for ($i = 0; $i < $numToAdd; $i++) {
+            // Get last computer number
+
+            $computerno = $this->getLastComputerNoAtRoomID($roomid);
+
+            $insertComputerData = array(
+                'computerno' => $computerno,
+                'roomid' => $roomid,
+            );
+
+            $this->insertComputer($insertComputerData);
+        }
     }
 }

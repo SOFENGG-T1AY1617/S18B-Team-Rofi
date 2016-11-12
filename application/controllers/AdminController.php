@@ -204,11 +204,31 @@ class AdminController extends CI_Controller
 
             // Check if room capacity was changed
             if ($data[2] > $room['capacity']) {
-                // Add rooms
+                // Add computers
+
+                $updateData = array(
+                    'roomid' => $data[0],
+                    'count' => $data[2] - $room['capacity'],
+                );
+
+                $this->admin->addComputersToRoom($updateData);
+
+                $result = array(
+                    'result' => "success",
+                );
             }
             else if ($data[2] < $room['capacity']) {
-                // Remove rooms
+                // Remove computers
+                $updateData = array(
+                    'roomid' => $data[0],
+                    'count' => $room['capacity'] - $data[2],
+                );
 
+                $this->admin->removeComputersFromRoom($updateData);
+
+                $result = array(
+                    'result' => "success",
+                );
             }
         }
 
