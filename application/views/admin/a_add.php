@@ -182,10 +182,12 @@
             .done(function(result) {
                 console.log("done");
                 //location.reload(true);
+                console.log(result);
                 <?php
                 // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
                 echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
                 ?>
+
             })
             .fail(function(result) {
                 console.log("fail");
@@ -194,6 +196,46 @@
             .always(function() {
                 console.log("complete");
             });
+    }
+
+    function submitBuilding() {
+        var buildingName = $('#bldgName').val();
+       // console.log("Adding"+buildingName);
+
+        if(buildingName!=null&&buildingName!="")
+        $.ajax({
+            url: '<?=base_url('admin/addBuilding')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                buildingName: buildingName
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                //location.reload(true);
+                if(result=="success"){
+                    <?php
+                    // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+                    echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
+                    ?>
+                }
+                else{
+                    toastr.error("Building already exists.", "Oops!");
+                }
+
+
+            })
+            .fail(function(result) {
+                console.log("fail");
+                console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+        else
+            console.log("no input");
+            //TODO Handle Errors TOAST MAYBE
     }
 
 </script>
@@ -343,7 +385,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitBuilding()">Confirm</button>
                 </div>
             </form>
         </div>

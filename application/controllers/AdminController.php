@@ -177,5 +177,21 @@ class AdminController extends CI_Controller
         echo json_encode("success");
     }
 
+    public function addBuilding() {
+
+
+        $buildingData = array(
+            'name' => $this->input->get("buildingName")
+        );
+
+        $out =
+            $this->admin->insertBuilding($buildingData);
+
+        if($out)
+            echo json_encode("success");
+        else
+          echo json_encode("fail");
+    }
+
 }
 
