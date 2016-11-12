@@ -58,8 +58,12 @@
             cells[2].innerHTML = "<button type =\"button\" onclick=\"delete("+tID+", "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
         }
+
         var tID = table;
         var fID = footer;
+
+        var initialTableData = getTableData(tID);
+        console.log(initialTableData);
 
         var footerA  = document.getElementById(footer);
 
@@ -70,7 +74,7 @@
         footerA.innerHTML =
 
             "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
-            "<input class=\"btn btn-default col-md-2\" type=\"submit\" value=\"Save Changes\"></div>";
+            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"','"+initialTableData+"')\" type=\"button\" value=\"Save Changes\"></div>";
 
     }
 
@@ -136,7 +140,6 @@
 
     function getTableData(tableID) {
         var table = document.getElementById(tableID);
-        //var tr = table.getElementsByTagName('tr');
         var jObject = [];
         for (var i = 1; i < table.rows.length; i++)
         {
@@ -147,7 +150,8 @@
             var valid = true;
             var columns = [];
             // columns within the row
-            for (var j = 0; j < table.rows[i].cells.length; j++)
+            //for (var j = 0; j < table.rows[i].cells.length; j++)
+            for (var j = 0; j < 2; j++)
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
@@ -194,6 +198,19 @@
             .always(function() {
                 console.log("complete");
             });
+    }
+
+    function submitChanges(tableID, initialTableData) {
+        var changedData = getChangedData(initialTableData, getTableData(tableID));
+    }
+
+    function getChangedData(initialTableData, newTableData) {
+        var newTable = [];
+        for (var i = 0; i < initialTableData.length; i++) {
+            for (var j = 0; j < initialTableData[i].length; j++) {
+
+            }
+        }
     }
 
 </script>
