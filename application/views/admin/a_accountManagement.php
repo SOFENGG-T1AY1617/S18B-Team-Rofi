@@ -6,13 +6,15 @@
         var tID = table.id;
         var row = tableA.insertRow(-1);
 
-        var cellName = row.insertCell(0);
-        var cellEmail = row.insertCell(1);
-        var cellUsername = row.insertCell(2);
+        var cellFName = row.insertCell(0);
+        var cellLName = row.insertCell(1);
+        var cellEmail = row.insertCell(2);
+        var cellDept = row.insertCell(3);
 
-        cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name\">";
+        cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
+        cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
-        cellUsername.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter department\">";
+        cellDept.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
 
     }
 
@@ -45,14 +47,16 @@
         for(var i = 1; i < rows.length; i++){
             var cells = rows[i].cells;
 
-            var curName = cells[0].innerHTML;
-            var curEmail = cells[1].innerHTML;
-            var curDept = cells[2].innerHTML;
+            var curFName = cells[0].innerHTML;
+            var curLName = cells[1].innerHTML;
+            var curEmail = cells[2].innerHTML;
+            var curDept = cells[3].innerHTML;
 
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\""+curName+"\">"
-            cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail\" value=\""+curEmail+"\">"
-            cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" value=\""+curDept+"\">"
-            cells[3].innerHTML = "<button type =\"button\" onclick=\"clearAccount("+tID+", "+i+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\""+curFName+"\">"
+            cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\""+curLName+"\">"
+            cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail\" value=\""+curEmail+"\">"
+            cells[3].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" value=\""+curDept+"\">"
+            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount("+tID+", "+i+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
 
         }
 
@@ -73,17 +77,19 @@
         for(var i = 1; i < rows.length; i++){
             var cells = rows[i].cells;
 
-            var curName = cells[0].getElementsByTagName("input")[0].value;
-            var curEmail = cells[1].getElementsByTagName("input")[0].value;
-            var curDept = cells[2].getElementsByTagName("input")[0].value;
+            var curFName = cells[0].getElementsByTagName("input")[0].value;
+            var curLName = cells[1].getElementsByTagName("input")[0].value;
+            var curEmail = cells[2].getElementsByTagName("input")[0].value;
+            var curDept = cells[3].getElementsByTagName("input")[0].value;
 
 
-            cells[3].innerHTML = "";
+            cells[4].innerHTML = "";
 
-            if(curName != "" && curEmail != "" && curDept !=""){
-                cells[0].innerHTML = curName;
-                cells[1].innerHTML = curEmail;
-                cells[2].innerHTML = curDept;
+            if(curLName != "" && curFName != "" && curEmail != "" && curDept !=""){
+                cells[0].innerHTML = curFName;
+                cells[1].innerHTML = curLName;
+                cells[2].innerHTML = curEmail;
+                cells[3].innerHTML = curDept;
             }
             else{
                 console.log(i);
@@ -134,20 +140,23 @@ include 'a_navbar.php';
 <div class = "col-md-2"></div>
 <div id="panels" class = "col-md-8">
 
-    <div class="panel-group" role="tablist">
+    <div class="panel-group" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="collapseListGroupHeading1">
+            <div class="panel-heading" role="tab" id="collapseListGroupHeadingMod">
                 <h4 class="panel-title">
-                    List of Moderators</h4>
+                    <a role="button" data-toggle="collapse" href="#collapseListGroupMod" aria-expanded="true" aria-controls="collapseListGroupMod">
+                        List of Moderators
+                    </a></h4>
             </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroup1" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
+            <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupMod" aria-labelledby="collapseListGroupHeadingMod" aria-expanded="false">
                 <ul class="list-group">
                     <form>
                         <li class="list-group-item">
                             <table class="table table-hover" id="modtable">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
                                     <th>Email</th>
                                     <th>Department</th>
                                     <th></th>
@@ -157,7 +166,8 @@ include 'a_navbar.php';
 
                                 <?php foreach($moderators as $mod):?>
                                     <tr>
-                                        <td><?=$mod->first_name . " " . $mod->last_name?></td>
+                                        <td><?=$mod->first_name?></td>
+                                        <td><?=$mod->last_name?></td>
                                         <td><?=$mod->email?></td>
                                         <td><?=$mod->name?></td>
                                         <td></td>
@@ -179,20 +189,24 @@ include 'a_navbar.php';
 
 <div id="panels" class = "col-md-offset-2 col-md-8">
 
-    <div class="panel-group" role="tablist">
+    <div class="panel-group" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="collapseListGroupHeading1">
+            <div class="panel-heading" role="tab" id="collapseListGroupHeadingAdmin">
                 <h4 class="panel-title">
-                    List of Admins</h4>
+                    <a role="button" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
+                        List of Admins
+                    </a>
+                </h4>
             </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroup1" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
+            <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupAdmin" aria-labelledby="collapseListGroupHeadingAdmin" aria-expanded="false">
                 <ul class="list-group">
                     <form>
                         <li class="list-group-item">
                             <table class="table table-hover" id="admintable">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
                                     <th>Email</th>
                                     <th>Department</th>
                                     <th></th>
@@ -201,7 +215,8 @@ include 'a_navbar.php';
                                 <tbody>
                                 <?php foreach($administrators as $admin):?>
                                     <tr>
-                                        <td><?=$admin->first_name . " " . $admin->last_name?></td>
+                                        <td><?=$admin->first_name?></td>
+                                        <td><?=$admin->last_name?></td>
                                         <td><?=$admin->email?></td>
                                         <td><?=$admin->name?></td>
                                         <td></td>
@@ -225,7 +240,7 @@ include 'a_navbar.php';
 
 <!-- Moderator Modal -->
 <div id="AddNewModeratorModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
         <div class="modal-content">
@@ -240,7 +255,8 @@ include 'a_navbar.php';
                     <table class="table table-hover" id="add_table" name="">  <!-- TODO: somehow insert table id in name for add ? -->
                         <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Email</th>
                             <th>Department</th>
                         </tr>
@@ -249,7 +265,8 @@ include 'a_navbar.php';
                         <tbody>
 
                         <tr>
-                            <td><input type="text" class="form-control" placeholder="Enter name"></td>
+                            <td><input type="text" class="form-control" placeholder="Enter first name"></td>
+                            <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
                             <td><input type="text" class="form-control" placeholder="Enter department"></td>
                         </tr>
@@ -269,7 +286,7 @@ include 'a_navbar.php';
 
 <!-- Admin Modal -->
 <div id="AddNewAdminModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
         <div class="modal-content">
@@ -284,7 +301,8 @@ include 'a_navbar.php';
                     <table class="table table-hover" id="add_tableA" name="">  <!-- TODO: somehow insert table id in name for add ? -->
                         <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Email</th>
                             <th>Department</th>
                         </tr>
@@ -293,7 +311,8 @@ include 'a_navbar.php';
                         <tbody>
 
                         <tr>
-                            <td><input type="text" class="form-control" placeholder="Enter name"></td>
+                            <td><input type="text" class="form-control" placeholder="Enter first name"></td>
+                            <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
                             <td><input type="text" class="form-control" placeholder="Enter department"></td>
                         </tr>

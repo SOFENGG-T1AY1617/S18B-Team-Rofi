@@ -1,6 +1,6 @@
 :root{
-    --selected: darkgreen;
-    --free: limegreen;
+    --disabled: darkred;
+    --enabled: limegreen;
     --taken: lightgrey;
 }
 
@@ -12,6 +12,8 @@ body {
     padding: 0 !important;
     margin: 0 !important;
 }
+
+
 
 /* FOR STEPS */
 
@@ -111,24 +113,19 @@ th:first-child {
 
 }
 
-.slotCell.free{
-    background-color: var(--free);
-
+.slotCell.enabled {
+    background-color: var(--enabled);
 }
 
-.slotCell.selected{
-    background-color: var(--selected);
-
+.slotCell.disabled {
+    background-color: var(--disabled);
 }
 
-.slotCell.taken {
-    background-color: var(--taken);
-}
-
-.slotCell.free.disabled,
-.slotCell.selected.disabled,
-.slotCell.taken.disabled{
-    opacity: 0.3;
+.slotCell.enabled.selected,
+.slotCell.disabled.selected {
+    -moz-box-shadow:    inset 0 0 0 2px #000000;
+    -webkit-box-shadow: inset 0 0 0 2px #000000;
+    box-shadow:         inset 0 0 0 2px #000000;
 }
 
 :not(.taken):not(.selected):not(.disabled).slotCell:hover {
@@ -154,8 +151,8 @@ th:first-child {
 }
 
 div.legend{
-    height: 20px;
-    width: 20px;
+    height: 10px;
+    width: 10px;
 }
 
 div.legend.free{
@@ -171,28 +168,24 @@ div.legend.taken{
     background-color: var(--taken);
 }
 
-.message.parent{
+.message{
     position: fixed;
-    top: 0%;
-    left: 0%;
-    height: 100%;
-    width: 100%;
+    top: 40%;
+    left: 40%;
+    height: 90px;
+    width: 160px;
     background-color: whitesmoke;
     visibility: hidden;
-
-
-
-
-}
-
-.message.child{
-    position: fixed;
-    top: 45%;
-    hieght: 5%;
-    width: 100%;
-
-    font-size: 300%;
+    font-size: 150%;
 
     text-align: center;
     vertical-align: middle;
+    line-height: 90px;
+
+}
+
+/* CONTROLS */
+
+.row .clsSlotsBtn-container {
+    margin-top: 10px;
 }

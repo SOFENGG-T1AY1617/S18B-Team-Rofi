@@ -128,13 +128,13 @@ CREATE TABLE `reservation_system`.`moderators` (
 	ON UPDATE NO ACTION);
 
 CREATE TABLE `reservation_system`.`business_rules` (
-  `business_rulesid` INT NOT NULL,
+  `business_rulesid` INT NOT NULL AUTO_INCREMENT,
   `departmentid` INT NOT NULL,
-  `interval` TIME NOT NULL,
+  `interval` INT NOT NULL,
   `limit` INT NOT NULL,
   `accessibility` INT NOT NULL,
-  `reservation_expiry` DATETIME NOT NULL,
-  `confirmation_expiry` DATETIME NOT NULL,
+  `reservation_expiry` INT NOT NULL,
+  `confirmation_expiry` INT NOT NULL,
   PRIMARY KEY (`business_rulesid`),
   INDEX `department_id_idx` (`departmentid` ASC),
   CONSTRAINT `business_departmentid`
@@ -267,3 +267,8 @@ INSERT INTO `reservation_system`.`moderators`
 VALUES ("rofi_santos@dlsu.edu.ph","Santos", "Rofi", 1, "password"),
 	   ("patrich.tobias@dlsu.edu.ph", "Tobias", "Patrick", 1, "password"),
 	   ("benson.polican","Polican", "Benson", 2, "password");
+
+INSERT INTO `reservation_system`.`business_rules` 
+	(`departmentid`, `interval`, `limit`, `accessibility`, `reservation_expiry`, `confirmation_expiry`)
+VALUES (1, 15, 4, 1, 15, 60),
+	   (2, 20, 5, 1, 20, 90);
