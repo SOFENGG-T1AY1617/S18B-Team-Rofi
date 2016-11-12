@@ -69,8 +69,6 @@
 
         var addID = ""+tID+"_addbtn";
         console.log(addID);
-        var add = document.getElementById(addID.toString());
-
         footerA.innerHTML =
 
             "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+

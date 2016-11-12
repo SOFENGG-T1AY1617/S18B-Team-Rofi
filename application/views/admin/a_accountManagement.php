@@ -3,19 +3,19 @@
     function addAccount(table){
         console.log(table);
         var tableA =document.getElementById(table);
-        var tID = table.id;
         var row = tableA.insertRow(-1);
 
-        var cellFName = row.insertCell(0);
-        var cellLName = row.insertCell(1);
-        var cellEmail = row.insertCell(2);
-        var cellDept = row.insertCell(3);
+        var cellFName   = row.insertCell(0);
+        var cellLName   = row.insertCell(1);
+        var cellEmail   = row.insertCell(2);
+        var cellDept    = row.insertCell(3);
+        var del         = row.insertCell(4);
 
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
-        cellDept.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
-
+        cellDept.innerHTML  = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
+        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
     }
 
     function clearAccount(table, rowNum){
@@ -115,6 +115,11 @@
                 "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default col-md-2 col-md-offset-8\"> "+s+" </button>" +
                 " <button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"changeViewToEdit('"+tableA.id+"', '"+footerA.id+"','" +modal+"' )\">Edit Accounts</button>";
 
+    }
+
+    function deleteRow(table, index){
+        var tableA = document.getElementById(table);
+        tableA.deleteRow(index);
     }
 
 </script>
@@ -259,6 +264,7 @@ include 'a_navbar.php';
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Department</th>
+                            <th>Delete Row</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -269,6 +275,7 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
                             <td><input type="text" class="form-control" placeholder="Enter department"></td>
+                            <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default clearmod-btn"><i class="material-icons">clear</i></button></td>
                         </tr>
                         </tbody>
                     </table>
@@ -305,6 +312,7 @@ include 'a_navbar.php';
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Department</th>
+                            <th>Delete Row</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -315,6 +323,7 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
                             <td><input type="text" class="form-control" placeholder="Enter department"></td>
+                            <td><button type ="button" onclick="deleteRow('add_tableA', 1)" class="btn btn-default clearmod-btn"><i class="material-icons">clear</i></button></td>
                         </tr>
                         </tbody>
                     </table>
