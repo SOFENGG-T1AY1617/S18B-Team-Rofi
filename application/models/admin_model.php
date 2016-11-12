@@ -323,7 +323,7 @@ class Admin_Model extends CI_Model
         for ($i = 0; $i < $numToAdd; $i++) {
             // Get last computer number
 
-            $computerno = $this->getLastComputerNoAtRoomID($roomid);
+            $computerno = $this->getLastComputerNoAtRoomID($roomid) + 1;
 
             $insertComputerData = array(
                 'computerno' => $computerno,
