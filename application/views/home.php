@@ -91,47 +91,10 @@ $defaultTab = 1;
                 var dateSelected = dateToday;
                 var maxNumberOfSlots = <?php echo $maxNumberOfSlots?>;//TODO select from Settings
 
-                var times_today = <?php
-
-                    $tm_today = [];
-
-                    foreach ($times_today as $key => $time)
-                        $tm_today[] = date("H:i:s", $time);
-
-                    echo json_encode($tm_today)
-
-                    ?>;
-
-                var times_tomorrow = <?php
-
-                    $tm_tomorrow = [];
-
-                    foreach ($times_tomorrow as $time)
-                        $tm_tomorrow[] = date("H:i:s", $time);
-
-                    echo json_encode($tm_tomorrow)
-                    ?>;
-
-                var times_today_DISPLAY = <?php
-
-                    $tm_today = [];
-
-                    foreach ($times_today as $key => $time)
-                        $tm_today[] = date("h:i A", $time);
-
-                    echo json_encode($tm_today)
-
-                    ?>;
-
-                var times_tomorrow_DISPLAY = <?php
-
-                    $tm_tomorrow = [];
-
-                    foreach ($times_tomorrow as $time)
-                        $tm_tomorrow[] = date("h:i A", $time);
-
-                    echo json_encode($tm_tomorrow)
-                    ?>;;
+                var times_today;
+                var times_tomorrow;
+                var times_today_DISPLAY;
+                var times_tomorrow_DISPLAY;
 
                 $(document).ready(function() {
 
@@ -382,15 +345,17 @@ $defaultTab = 1;
 
                             var out=[];
 
-                            out[0]= '<option value="0" selected >All Rooms</option>';
+                            //out[0]= '<option value="0" selected >All Rooms</option>';
 
-                            for(i=1;i<=result.length;i++){
-                                out[i]= '<option value="'+result[i-1].roomid+'" >'+result[i-1].name+'</option>';
+                            var firstRoomID = result[0].roomid;
+
+                            for(var i=0;i<result.length;i++){
+                                out[i] = '<option value="'+result[i].roomid+'" >'+result[i].name+'</option>';
                             };
 
                             $("#form_room").empty().append(out);
 
-                            selectRoom("0");
+                            selectRoom(firstRoomID);
 
                             numOfRooms = result.length;
 
@@ -411,7 +376,7 @@ $defaultTab = 1;
 
                 function selectRoom(roomid) {
                     
-                    updateTimesHeader(dateSelected == dateToday);
+                    //updateTimesHeader(dateSelected == dateToday);
 
                     var buildingid = $("#form_building").val();
 
@@ -439,18 +404,67 @@ $defaultTab = 1;
                     $("#form_room").attr('disabled', false);
 
                     if (buildingid!=""&&roomid != "") {
+                        var interval;
+
                         console.log(buildingid+"-"+roomid);
 
                         $.ajax({
-                            url: '<?php echo base_url('getComputers') ?>',
+                            url: '<?php echo base_url('getBusinessRules') ?>',
                             type: 'GET',
                             dataType: 'json',
                             data: {
-                                buildingid: buildingid,
-                                roomid:roomid,
-                                currdate: dateSelected,
+                                roomid: roomid
                             }
                         })
+                            .done(function(result) {
+                                interval = result[0].interval;
+                            })
+                            .fail(function() {
+                                console.log("fail");
+                            })
+                            .always(function() {
+                                console.log("complete");
+                            })
+                            .then(function () {
+                            console.log("PROMISE FULFILL");
+
+                            return $.ajax({ // PROCEED TO PROMISE
+                                url: '<?php echo base_url('getTimes') ?>',
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {
+                                    interval: interval
+                                }
+                            })
+                        })
+
+                        // FOR PROMISE
+                        .done (function (result) {
+                            times_today = result['times_today'];
+                            times_tomorrow = result['times_tomorrow'];
+                            times_today_DISPLAY = result['times_today_DISPLAY'];
+                            times_tomorrow_DISPLAY = result['times_tomorrow_DISPLAY'];
+
+                            updateTimesHeader(dateSelected == dateToday);
+                        })
+                        .fail (function () {
+
+                        })
+                        .then (function () {
+                            // get computers
+
+                            return $.ajax({
+                                url: '<?php echo base_url('getComputers') ?>',
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {
+                                    buildingid: buildingid,
+                                    roomid:roomid,
+                                    currdate: dateSelected,
+                                }
+                            })
+                        })
+
                             .done(function(result) {
                                 console.log(result['date']);
                                 console.log(result);
@@ -475,6 +489,7 @@ $defaultTab = 1;
                             .always(function() {
                                 console.log("complete");
                             });
+
 
                         /*$.post('application/controllers/ajax/foo', function(data) {
                          console.log(data)

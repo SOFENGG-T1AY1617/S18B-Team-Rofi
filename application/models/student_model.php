@@ -9,7 +9,6 @@
 class Student_Model extends CI_Model
 {
 
-
     public function __construct()
     {
         parent::__construct();
@@ -262,5 +261,14 @@ class Student_Model extends CI_Model
         $this->db->where_in(COLUMN_ENDRESTIME, $reservations['endTime']);
         $query = $this->db->get();
         return $query->result();
+    }
+
+    function queryBusinessRulesAtRoomID($id) {
+        $sql = "SELECT *
+                FROM business_rules NATURAL JOIN (SELECT DISTINCT departmentid
+                                                  FROM rooms
+                                                  WHERE roomid = ?) d";
+
+        return $this->db->query($sql, array($id))->result();
     }
 }
