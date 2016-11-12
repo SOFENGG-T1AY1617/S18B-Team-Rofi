@@ -17,9 +17,12 @@
 
         var cellName = row.insertCell(0);
         var cellNumber = row.insertCell(1);
+        var deleteCol =  row.insertCell(2);
+        var i = tableA.rows.length-1;
 
         cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name of the room\">";
         cellNumber.innerHTML = "<input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter number of PCs in the room\">";
+        deleteCol.innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>"
 
     }
 
@@ -49,13 +52,14 @@
         for(var i = 1; i < rows.length; i++){
             var cells = rows[i].cells;
 
+
             var curName = cells[0].innerHTML;
             var curNum = cells[1].innerHTML;
 
 
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" value=\""+curName+"\">"
             cells[1].innerHTML = "<input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" value=\""+curNum+"\">"
-            cells[2].innerHTML = "<button type =\"button\" onclick=\"delete("+tID+", "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
+            cells[2].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
         }
         var tID = table;
@@ -132,6 +136,11 @@
             table.deleteRow(i);
         }
 
+    }
+
+    function deleteRow(table, index){
+        var tableA = document.getElementById(table);
+        tableA.deleteRow(index);
     }
 
     function getTableData(tableID) {
@@ -336,6 +345,7 @@ include 'a_navbar.php';
                             <tr>
                                 <th>Room Name</th>
                                 <th>Number of PCs</th>
+                                <th>Delete Row</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -343,6 +353,7 @@ include 'a_navbar.php';
                             <tr>
                                 <td><input type="text" class="form-control" placeholder="Enter name of room"></td>
                                 <td><input type="number" class="form-control" placeholder="Enter number of PCs in the room"></td>
+                                <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default"><i class="material-icons">clear</i></button></td>
                             </tr>
                             </tbody>
                         </table>
