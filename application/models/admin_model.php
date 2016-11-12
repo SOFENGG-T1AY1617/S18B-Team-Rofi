@@ -284,10 +284,12 @@ class Admin_Model extends CI_Model
     }
     function insertBuilding($data) {
 
-            if(!$this->isExistingBuilding($data['name']))
-            $this->db->insert(TABLE_BUILDINGS, $data);
-
-        return $this->queryBuildingIDFromBuildingName($data['name'])[0]->buildingid;
+            if(!$this->isExistingBuilding($data['name'])) {
+                $this->db->insert(TABLE_BUILDINGS, $data);
+                return true;
+            }
+            else
+                return false;
     }
 
     function isExistingBuilding($name) {

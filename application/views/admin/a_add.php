@@ -182,10 +182,12 @@
             .done(function(result) {
                 console.log("done");
                 //location.reload(true);
+                console.log(result);
                 <?php
                 // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
                 echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
                 ?>
+
             })
             .fail(function(result) {
                 console.log("fail");
@@ -212,11 +214,16 @@
             .done(function(result) {
                 console.log("done");
                 //location.reload(true);
-                console.log(result);
-                <?php
-                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
-                echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
-                ?>
+                if(result=="success"){
+                    <?php
+                    // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+                    echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
+                    ?>
+                }
+                else{
+                    toastr.error("Building already exists.", "Oops!");
+                }
+
 
             })
             .fail(function(result) {
