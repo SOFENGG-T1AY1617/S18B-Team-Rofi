@@ -106,6 +106,7 @@ class AdminController extends CI_Controller
     public function accView(){
         $data['administrators'] = $this->admin->queryAllAdministators();
         $data['moderators'] = $this->admin->queryAllModerators();
+        $data['departments'] = $this->admin->queryAllDepartments();
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_accountManagement', $data); // $this->load->view('admin', $data); set to this if data is set
@@ -173,6 +174,18 @@ class AdminController extends CI_Controller
         );
 
         $this->admin->insertRoomsAndComputers($roomData);
+
+        echo json_encode("success");
+    }
+
+    public function addModerators() {
+
+        $modData = array(
+            'moderators' => $this->input->get("moderators"),
+            'departmentid' => $_SESSION['admin_departmentid']
+        );
+
+        $this->admin->insertModerators($modData);
 
         echo json_encode("success");
     }

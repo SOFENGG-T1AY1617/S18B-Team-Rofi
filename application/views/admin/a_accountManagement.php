@@ -9,12 +9,12 @@
         var cellFName = row.insertCell(0);
         var cellLName = row.insertCell(1);
         var cellEmail = row.insertCell(2);
-        var cellDept = row.insertCell(3);
+        //var cellDept = row.insertCell(3);
 
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
-        cellDept.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
+        //cellDept.innerHTML = "<select type='text' class='form-control' placeholder='Enter department'> <option value='0' disabled selected>Choose a Department</option><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
 
     }
 
@@ -116,6 +116,68 @@
                 " <button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"changeViewToEdit('"+tableA.id+"', '"+footerA.id+"','" +modal+"' )\">Edit Accounts</button>";
 
     }
+
+    function getTableData(tableID) {
+        var table = document.getElementById(tableID);
+        //var tr = table.getElementsByTagName('tr');
+        var jObject = [];
+        for (var i = 1; i < table.rows.length; i++)
+        {
+            var row = i - 1;
+            // create array within the array - 2nd dimension
+            //jObject[row] = [];
+
+            var valid = true;
+            var columns = [];
+            // columns within the row
+            for (var j = 0; j < table.rows[i].cells.length; j++)
+            {
+                //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
+                columns[j] = table.rows[i].cells[j].childNodes[0].value;
+
+                if (columns[j] == "") {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (valid) {
+                jObject[row] = columns;
+            }
+        }
+        return jObject;
+    }
+
+    function submitModerator() {
+        var tableID = $("#add_table").attr("id");
+        var tableData = getTableData(tableID);
+        console.log(tableData);
+
+
+        $.ajax({
+            url: '<?=base_url('admin/addModerators')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                moderators: tableData
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                //location.reload(true);
+                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+
+            })
+            .fail(function(result) {
+                console.log("fail");
+                console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+
+
 
 </script>
 
@@ -258,7 +320,6 @@ include 'a_navbar.php';
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
-                            <th>Department</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -268,7 +329,6 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
-                            <td><input type="text" class="form-control" placeholder="Enter department"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -276,7 +336,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAccount('add_table')">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitModerator('add_table')">Confirm</button>
                 </div>
             </form>
         </div>
@@ -314,14 +374,19 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
-                            <td><input type="text" class="form-control" placeholder="Enter department"></td>
+                            <td><select type='text' class='form-control' placeholder='Enter Department'>
+                                    <option value='0' disabled selected>Choose a Department</option>
+                                    <?php foreach($departments as $dep):?>
+                                        <option value=<?=$dep->departmentid?>><?=$dep->name?></option>
+                                    <?php endforeach;?>
+                                </select></td>
                         </tr>
                         </tbody>
                     </table>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAccount('add_table')">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAccount('add_tableA')">Cancel</button>
                     <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
                 </div>
             </form>
