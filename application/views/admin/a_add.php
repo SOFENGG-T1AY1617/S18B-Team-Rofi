@@ -5,10 +5,22 @@
            buildingid = buildingid.split("-")[1];
            //console.log("Building id: " + buildingid);
            $("#add_table").attr("name", buildingid);
-
-
        })
     });
+
+    function setInputRules() {
+        $(".number-input").keypress(function(event) {
+            if ( event.which == 45 || event.which == 189 ) {
+                event.preventDefault();
+            }
+        });
+
+        $(".number-input").bind('paste', function(e) {
+            var pasteData = e.clipboardData.getData('text/plain');
+            if (pasteData.match(/[^0-9]/))
+                e.preventDefault();
+        }, false);
+    }
 
     function addRoom(table){
         console.log(table);
@@ -41,6 +53,8 @@
 
     }
 
+    var initialTableData;
+
     function changeViewToEdit(table, footer){
         console.log(table);
         var tableA = document.getElementById(table);
@@ -49,21 +63,24 @@
         for(var i = 1; i < rows.length; i++){
             var cells = rows[i].cells;
 
+            var curID = $(cells[0]).attr("id");
+
             var curName = cells[0].innerHTML;
             var curNum = cells[1].innerHTML;
 
 
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" value=\""+curName+"\">"
-            cells[1].innerHTML = "<input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" value=\""+curNum+"\">"
+            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curID+"\" value=\""+curName+"\">"
+            cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" value=\""+curNum+"\">"
             cells[2].innerHTML = "<button type =\"button\" onclick=\"delete("+tID+", "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
         }
 
+        setInputRules();
+
         var tID = table;
         var fID = footer;
 
-        var initialTableData = getTableData(tID);
-        console.log(initialTableData);
+        initialTableData = getTableDataWithID(tID);
 
         var footerA  = document.getElementById(footer);
 
@@ -74,7 +91,7 @@
         footerA.innerHTML =
 
             "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
-            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"','"+initialTableData+"')\" type=\"button\" value=\"Save Changes\"></div>";
+            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"')\" type=\"button\" value=\"Save Changes\"></div>";
 
     }
 
@@ -169,6 +186,42 @@
         return jObject;
     }
 
+    function getTableDataWithID(tableID) {
+        var table = document.getElementById(tableID);
+        var jObject = [];
+        for (var i = 1; i < table.rows.length; i++)
+        {
+            var row = i - 1;
+            // create array within the array - 2nd dimension
+            //jObject[row] = [];
+
+            var valid = true;
+            var columns = [];
+            // columns within the row
+            //for (var j = 0; j < table.rows[i].cells.length; j++)
+
+            columns[0] = table.rows[i].cells[0].childNodes[0].id.split("_")[1];
+            for (var j = 0; j < 2; j++)
+            {
+                //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
+                columns[j + 1] = table.rows[i].cells[j].childNodes[0].value;
+
+                if (columns[j + 1] == "") {
+                    valid = false;
+                    break;
+                }
+            }
+
+            /*columns[1] = table.rows[i].cells[0].childNodes[0].value;
+            columns[2] = table.rows[i].cells[1].childNodes[0].value;*/
+
+            if (valid) {
+                jObject[row] = columns;
+            }
+        }
+        return jObject;
+    }
+
     function submitRoom() {
         var tableID = $("#add_table").attr("id");
         var tableData = getTableData(tableID);
@@ -200,17 +253,49 @@
             });
     }
 
-    function submitChanges(tableID, initialTableData) {
-        var changedData = getChangedData(initialTableData, getTableData(tableID));
+    function submitChanges(tableID) {
+        var changedData = getChangedData(getTableDataWithID(tableID));
+        //console.log(changedData);
+
+        $.ajax({
+            url: '<?=base_url('admin/updateRooms')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                changedData: changedData,
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                console.log(result);
+                <?php
+                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+                //echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
+                ?>
+            })
+            .fail(function() {
+                console.log("fail");
+                //console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
     }
 
-    function getChangedData(initialTableData, newTableData) {
-        var newTable = [];
+    function getChangedData(newTableData) {
+//        console.log(initialTableData);
+        //console.log(newTableData);
+        var changedData = [];
+        var changedDataIndex = 0;
         for (var i = 0; i < initialTableData.length; i++) {
-            for (var j = 0; j < initialTableData[i].length; j++) {
-
+            if (initialTableData[i][1] != newTableData[i][1] ||
+                initialTableData[i][2] != newTableData[i][2]) {
+                changedData[changedDataIndex] = newTableData[i];
+                changedDataIndex++;
             }
         }
+
+        return changedData;
     }
 
 </script>
@@ -266,7 +351,7 @@ include 'a_navbar.php';
                                     <?php foreach($rooms as $room):?>
                                         <?php if($room->buildingid == $row->buildingid): ?>
                                             <tr>
-                                                <td><?=$room->name?></td>
+                                                <td id="room_<?=$room->roomid?>"><?=$room->name?></td>
                                                 <td><?=$room->capacity?></td>
                                                 <td></td>
                                             </tr>

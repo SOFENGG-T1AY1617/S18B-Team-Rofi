@@ -274,4 +274,18 @@ class Admin_Model extends CI_Model
 
         return count($result)>=1;
     }
+
+    function queryRoomAtID($id) {
+        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
+                FROM (SELECT * 
+                      FROM rooms
+                      WHERE roomid = ?) r NATURAL JOIN computers
+                GROUP BY roomid";
+        return $this->db->query($sql, array($id))->row_array();
+    }
+
+    function updateRoomName($room) {
+        $this->db->where(COLUMN_ROOMID, $room['roomid']);
+        $this->db->update(TABLE_ROOMS, array('name' => $room['name']));
+    }
 }

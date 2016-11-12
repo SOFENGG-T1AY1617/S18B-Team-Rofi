@@ -177,5 +177,43 @@ class AdminController extends CI_Controller
         echo json_encode("success");
     }
 
+    public function updateRooms() {
+        $changedData = $this->input->get("changedData");
+
+        foreach ($changedData as $data) {
+            // Query room data
+            $room = $this->admin->queryRoomAtID($data[0]);
+
+            // Check if room name was changed
+            if ($data[1] != $room['name']) {
+                if($this->admin->isExistingRoom($data[1])) {
+                    // If room name already exists, cannot change
+                    $result = array(
+                        'result' => "name_invalid",
+                    );
+                }
+                else {
+                    // Update room name
+                    $updateData = array(
+                        'roomid' => $data[0],
+                        'name' => $data[1],
+                    );
+                    $this->admin->updateRoomName($updateData);
+                }
+            }
+
+            // Check if room capacity was changed
+            if ($data[2] > $room['capacity']) {
+                // Add rooms
+            }
+            else if ($data[2] < $room['capacity']) {
+                // Remove rooms
+
+            }
+        }
+
+        echo json_encode($result);
+    }
+
 }
 
