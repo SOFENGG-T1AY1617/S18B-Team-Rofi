@@ -14,6 +14,52 @@ class Admin_Model extends CI_Model
         $this->load->database();
     }
 
+    public function getMinuteInterval() {
+        return 15; // TODO retrieve from Settings
+    }
+
+    public function getMaxNumberOfSlots() {
+        return 4; // TODO retrieve from Settings
+    }
+
+    public function getMinimumHour() { // TODO parameter must be department ID
+        return 6; // TODO retrieve value depending on department
+    }
+
+    public function getMaximumHour() { // TODO parameter must be department ID
+        return 20; // TODO retrieve value depending on department
+    }
+
+    public function getTimes($first_hour, $first_minute, $minute_interval, $minimum_hour, $maximum_hour, $tomorrow) {
+        $times = array();
+        $startMinute = 0;
+        $daysForward = 0;
+
+        if (!$tomorrow)
+            $startMinute = intval($first_minute / $minute_interval) * $minute_interval; // calculate first_minute to suit current time
+        else
+            $daysForward++; // plus 1 to day if tomorrow is true
+
+        if ($first_hour < $minimum_hour || $first_hour == null) // set to minimum_hour if first_hour is below the minimum_hour or if first_hour is null
+            $first_hour = $minimum_hour;
+
+        for ($hour = $first_hour; $hour < $maximum_hour ; $hour++) {
+            for ($minute = $startMinute; $minute < 60; $minute += $minute_interval) {
+
+                $time = mktime($hour, $minute, 0, date("m"), date("d") + $daysForward, date("Y"));
+
+                $times[] = $time;
+
+            }
+
+            $startMinute = 0; // reset to 0 to suit the succeeding hours
+        }
+
+        $times[] = mktime($hour, 0, 0, date("m"), date("d") + $daysForward, date("Y"));
+
+        return $times;
+    }
+
     function queryAllAdministators() {
         $this->db->select('*');
         $this->db->from(TABLE_ADMINISTRATORS);
@@ -35,8 +81,9 @@ class Admin_Model extends CI_Model
     function queryAllRooms() {
         //return $this->db->get(TABLE_ROOMS)->result();
         $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
-             FROM rooms NATURAL JOIN computers
-             GROUP BY roomid";
+                FROM rooms NATURAL JOIN computers
+                GROUP BY roomid
+                ORDER BY name";
         return $this->db->query($sql)->result();
     }
 
@@ -83,6 +130,14 @@ class Admin_Model extends CI_Model
     function queryAllBuildings() {
         return $this->db->get(TABLE_BUILDINGS)->result();
     }
+    function queryBuildingIDFromBuildingName($name) {
+        $sql = "SELECT buildingid
+                   FROM buildings
+                   WHERE name = ?";
+        return $this->db->query($sql, $name)->result();
+
+    }
+
 
     function queryAllRoomsAtBuildingID($id) {
         $sql = "SELECT * 
@@ -146,12 +201,107 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
-    function queryOngoingReservationsByStudentID($id) {
+    function isValidUser($email, $pass) {
+
+
+
         $sql = "SELECT *
-                FROM reservations
-                WHERE useridno = ? AND
-                  date >= DATE(NOW()) AND
-                  start_restime >= TIME(NOW())";
-        return $this->db->query($sql, array($id))->result();
+                      FROM administrators
+                      WHERE email = ? AND password = ?";
+
+        $result = $this->db->query($sql, array($email, $pass))->result();
+        // If credentials is found.
+
+
+        return count($result)>=1;
     }
+
+    function queryAdminAccount($email) {
+        $this->db->select("*");
+        $this->db->from(TABLE_ADMINISTRATORS);
+        $this->db->where(COLUMN_EMAIL, $email);
+        $query = $this->db->get();
+
+        return $query->row_array();
+    }
+
+    function queryLatestRoomID() {
+        return $this->db->insert_id();
+    }
+
+    function insertRoomsAndComputers($data) {
+        $rooms = $data['rooms'];
+
+        foreach($rooms as $room) {
+            if ($this->isExistingRoom($room[0]))
+                continue;
+
+            $insertRoomData = array(
+                'name' => $room[0],
+                'buildingid' => $data['buildingid'],
+                'departmentid' => $data['departmentid']
+            );
+
+            $this->insertRoom($insertRoomData);
+
+            $insertComputersData = array(
+                'computerCount' => $room[1],
+                'roomid' => $this->queryLatestRoomID(),
+            );
+
+            $this->insertComputersAtRoom($insertComputersData);
+        }
+    }
+
+    function insertRoom($room) {
+        $this->db->insert(TABLE_ROOMS, $room);
+    }
+
+    function insertComputersAtRoom($data) {
+        $computerCount = $data['computerCount'];
+
+        for ($i = 1; $i <= $computerCount; $i++) {
+            $insertComputerData = array(
+                'computerno' => $i,
+                'roomid' => $data['roomid'],
+            );
+            $this->insertComputer($insertComputerData);
+        }
+    }
+
+    function insertComputer($computer) {
+        $this->db->insert(TABLE_COMPUTERS, $computer);
+    }
+
+    function isExistingRoom($roomName) {
+        $this->db->select('*');
+        $this->db->from(TABLE_ROOMS);
+        $this->db->where(COLUMN_NAME, $roomName);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+    function insertBuilding($data) {
+
+            if(!$this->isExistingBuilding($data['name'])) {
+                $this->db->insert(TABLE_BUILDINGS, $data);
+                return true;
+            }
+            else
+                return false;
+    }
+
+    function isExistingBuilding($name) {
+        $this->db->select('*');
+        $this->db->from(TABLE_BUILDINGS);
+        $this->db->where(COLUMN_NAME, $name);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+
+
+
 }
