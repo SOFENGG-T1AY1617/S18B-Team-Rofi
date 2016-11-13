@@ -301,8 +301,10 @@ $defaultTab = 1;
                                 $("#my_slots").html(null);
                             })
                             .always(function() {
-                                if (maxNumberOfSlots == 0)
-                                    $("#my_number_of_slots").html("Selected Slots :");
+                                if (maxNumberOfSlots != 0)
+                                    $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/"+maxNumberOfSlots+"):");
+                                else
+                                    $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/X):");
 
                                 console.log("complete");
                             });
