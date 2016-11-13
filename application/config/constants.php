@@ -124,9 +124,11 @@ define("COLUMN_LAST_NAME", "last_name");
 define("COLUMN_FIRST_NAME", "first_name");
 define("COLUMN_MIDDLE_NAME", "middle_name");
 define("COLUMN_ADMIN_DEPARTMENTID", "admin_departmentid");
-define("COLUMN_ADMIN_TYPE", "admin_type");
 define("COLUMN_PASSWORD", "password");
 
+define("TABLE_ADMIN_TYPES", "admin_types");
+define("COLUMN_ADMIN_TYPEID", "admin_typeid");
+define("COLUMN_ADMIN_TYPE", "admin_type");
 
 define("TABLE_MODERATORS", "moderators");
 define("COLUMN_MODERATORID", "moderatorid");

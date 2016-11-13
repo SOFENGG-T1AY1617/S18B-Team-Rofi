@@ -60,6 +60,8 @@ $route['submitReservation'] = 'Controller/submitReservation';
 $route['verify/(:any)'] = 'Controller/verify/$1';
 $route['getMyReservations'] = 'Controller/getMyReservations';
 $route['checkType'] = 'Controller/checkType';
+$route['getBusinessRules'] = 'Controller/getBusinessRules';
+$route['getTimes'] = 'Controller/getTimes';
 
 /* ADMIN ROUTE */
 $route['admin'] = 'AdminController';
@@ -68,6 +70,9 @@ $route['admin/signIn'] = 'AdminController/signIn';
 $route['admin/signOut'] = 'AdminController/signOut';
 $route['admin/addRoom'] = 'AdminController/addRoom';
 $route['admin/addModerators'] = 'AdminController/addModerators';
+$route['admin/updateRooms'] = 'AdminController/updateRooms';
+$route['admin/addBuilding'] = 'AdminController/addBuilding';
+
 
 $route['admin/(:any)'] = 'AdminController/loadView/$1';
 

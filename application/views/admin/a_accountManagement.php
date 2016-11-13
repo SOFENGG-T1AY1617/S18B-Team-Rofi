@@ -3,18 +3,22 @@
     function addAccount(table){
         console.log(table);
         var tableA =document.getElementById(table);
-        var tID = table.id;
         var row = tableA.insertRow(-1);
+
 
         var cellFName = row.insertCell(0);
         var cellLName = row.insertCell(1);
         var cellEmail = row.insertCell(2);
         //var cellDept = row.insertCell(3);
+        var del         = row.insertCell(3);
 
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
         //cellDept.innerHTML = "<select type='text' class='form-control' placeholder='Enter department'> <option value='0' disabled selected>Choose a Department</option><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
+        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+
+        //cellDept.innerHTML  = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
 
     }
 
@@ -117,9 +121,11 @@
 
     }
 
+
     function getTableData(tableID) {
         var table = document.getElementById(tableID);
         //var tr = table.getElementsByTagName('tr');
+
         var jObject = [];
         for (var i = 1; i < table.rows.length; i++)
         {
@@ -130,7 +136,7 @@
             var valid = true;
             var columns = [];
             // columns within the row
-            for (var j = 0; j < table.rows[i].cells.length; j++)
+            for (var j = 0; j < table.rows[i].cells.length-1; j++)
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
@@ -176,8 +182,10 @@
                 console.log("complete");
             });
     }
-
-
+    function deleteRow(table, index){
+        var tableA = document.getElementById(table);
+        tableA.deleteRow(index);
+    }
 
 </script>
 
@@ -249,56 +257,58 @@ include 'a_navbar.php';
     </div>
 </div>
 
-<div id="panels" class = "col-md-offset-2 col-md-8">
+<?php if($_SESSION['admin_typeid'] == 1): ?>
+    <!-- Only show admin panel if user is a superuser -->
+    <div id="panels" class = "col-md-offset-2 col-md-8">
 
-    <div class="panel-group" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="collapseListGroupHeadingAdmin">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
-                        List of Admins
-                    </a>
-                </h4>
-            </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupAdmin" aria-labelledby="collapseListGroupHeadingAdmin" aria-expanded="false">
-                <ul class="list-group">
-                    <form>
-                        <li class="list-group-item">
-                            <table class="table table-hover" id="admintable">
-                                <thead>
-                                <tr>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>Department</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach($administrators as $admin):?>
+        <div class="panel-group" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="collapseListGroupHeadingAdmin">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
+                            List of Admins
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupAdmin" aria-labelledby="collapseListGroupHeadingAdmin" aria-expanded="false">
+                    <ul class="list-group">
+                        <form>
+                            <li class="list-group-item">
+                                <table class="table table-hover" id="admintable">
+                                    <thead>
                                     <tr>
-                                        <td><?=$admin->first_name?></td>
-                                        <td><?=$admin->last_name?></td>
-                                        <td><?=$admin->email?></td>
-                                        <td><?=$admin->name?></td>
-                                        <td></td>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th></th>
                                     </tr>
-                                <?php endforeach;?>
-                                </tbody>
-                            </table>
-                        </li>
-                        <div class = "panel-footer clearfix" id = "admintable_footer">
-                            <button type ="button"data-toggle="modal" data-target="#AddNewAdminModal" class="btn btn-default col-md-2 col-md-offset-8">Add Admins</button>
-                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('admintable','admintable_footer', 'AddNewAdminModal')">Edit Accounts</button>
-                        </div>
-                    </form>
-                </ul>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach($administrators as $admin):?>
+                                        <tr>
+                                            <td><?=$admin->first_name?></td>
+                                            <td><?=$admin->last_name?></td>
+                                            <td><?=$admin->email?></td>
+                                            <td><?=$admin->name?></td>
+                                            <td></td>
+                                        </tr>
+                                    <?php endforeach;?>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <div class = "panel-footer clearfix" id = "admintable_footer">
+                                <button type ="button"data-toggle="modal" data-target="#AddNewAdminModal" class="btn btn-default col-md-2 col-md-offset-8">Add Admins</button>
+                                <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('admintable','admintable_footer', 'AddNewAdminModal')">Edit Accounts</button>
+                            </div>
+                        </form>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class = "col-md-2"></div>
-
+    <div class = "col-md-2"></div>
+<?php endif;?>
 
 <!-- Moderator Modal -->
 <div id="AddNewModeratorModal" class="modal fade" role="dialog">
@@ -320,6 +330,8 @@ include 'a_navbar.php';
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
+                            <th>Delete Row</th>
+
                         </tr>
                         </thead>
                         <tbody>
@@ -329,6 +341,9 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
+
+                            <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default clearmod-btn"><i class="material-icons">clear</i></button></td>
+
                         </tr>
                         </tbody>
                     </table>
@@ -365,6 +380,7 @@ include 'a_navbar.php';
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Department</th>
+                            <th>Delete Row</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -374,12 +390,16 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
+
                             <td><select type='text' class='form-control' placeholder='Enter Department'>
                                     <option value='0' disabled selected>Choose a Department</option>
                                     <?php foreach($departments as $dep):?>
                                         <option value=<?=$dep->departmentid?>><?=$dep->name?></option>
                                     <?php endforeach;?>
                                 </select></td>
+
+                            <td><button type ="button" onclick="deleteRow('add_tableA', 1)" class="btn btn-default clearmod-btn"><i class="material-icons">clear</i></button></td>
+
                         </tr>
                         </tbody>
                     </table>

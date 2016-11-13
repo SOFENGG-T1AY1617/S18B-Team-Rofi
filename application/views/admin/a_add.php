@@ -5,10 +5,22 @@
            buildingid = buildingid.split("-")[1];
            //console.log("Building id: " + buildingid);
            $("#add_table").attr("name", buildingid);
-
-
        })
     });
+
+    function setInputRules() {
+        $(".number-input").keypress(function(event) {
+            if ( event.which == 45 || event.which == 189 ) {
+                event.preventDefault();
+            }
+        });
+
+        $(".number-input").bind('paste', function(e) {
+            var pasteData = e.clipboardData.getData('text/plain');
+            if (pasteData.match(/[^0-9]/))
+                e.preventDefault();
+        }, false);
+    }
 
     function addRoom(table){
         console.log(table);
@@ -17,9 +29,12 @@
 
         var cellName = row.insertCell(0);
         var cellNumber = row.insertCell(1);
+        var deleteCol =  row.insertCell(2);
+        var i = tableA.rows.length-1;
 
         cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name of the room\">";
         cellNumber.innerHTML = "<input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter number of PCs in the room\">";
+        deleteCol.innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>"
 
     }
 
@@ -41,6 +56,8 @@
 
     }
 
+    var initialTableData;
+
     function changeViewToEdit(table, footer){
         console.log(table);
         var tableA = document.getElementById(table);
@@ -49,28 +66,34 @@
         for(var i = 1; i < rows.length; i++){
             var cells = rows[i].cells;
 
+
+            var curRoomID = $(cells[0]).attr("id");
+            var curCapID = $(cells[1]).attr("id");
             var curName = cells[0].innerHTML;
             var curNum = cells[1].innerHTML;
 
+            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curRoomID+"\" value=\""+curName+"\">";
+            cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\""+curCapID+"\" value=\""+curNum+"\">";
+            cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow("+curCapID+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" value=\""+curName+"\">"
-            cells[1].innerHTML = "<input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" value=\""+curNum+"\">"
-            cells[2].innerHTML = "<button type =\"button\" onclick=\"delete("+tID+", "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
         }
+
+        setInputRules();
+
         var tID = table;
         var fID = footer;
+
+        initialTableData = getTableDataWithID(tID);
 
         var footerA  = document.getElementById(footer);
 
         var addID = ""+tID+"_addbtn";
         console.log(addID);
-        var add = document.getElementById(addID.toString());
-
         footerA.innerHTML =
 
             "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
-            "<input class=\"btn btn-default col-md-2\" type=\"submit\" value=\"Save Changes\"></div>";
+            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"')\" type=\"button\" value=\"Save Changes\"></div>";
 
     }
 
@@ -134,9 +157,21 @@
 
     }
 
+    function deleteRow(table, index){
+        var tableA = document.getElementById(table);
+        tableA.deleteRow(index);
+    }
+
+    function hideRow(capacityID){
+        //var tableA = document.getElementById(table);
+        //tableA.deleteRow(index);
+        $(capacityID).parents('tr').hide();
+        $(capacityID).val("-1");
+        console.log($(capacityID).val());
+    }
+
     function getTableData(tableID) {
         var table = document.getElementById(tableID);
-        //var tr = table.getElementsByTagName('tr');
         var jObject = [];
         for (var i = 1; i < table.rows.length; i++)
         {
@@ -147,7 +182,8 @@
             var valid = true;
             var columns = [];
             // columns within the row
-            for (var j = 0; j < table.rows[i].cells.length; j++)
+            //for (var j = 0; j < table.rows[i].cells.length; j++)
+            for (var j = 0; j < 2; j++)
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
@@ -157,6 +193,42 @@
                     break;
                 }
             }
+
+            if (valid) {
+                jObject[row] = columns;
+            }
+        }
+        return jObject;
+    }
+
+    function getTableDataWithID(tableID) {
+        var table = document.getElementById(tableID);
+        var jObject = [];
+        for (var i = 1; i < table.rows.length; i++)
+        {
+            var row = i - 1;
+            // create array within the array - 2nd dimension
+            //jObject[row] = [];
+
+            var valid = true;
+            var columns = [];
+            // columns within the row
+            //for (var j = 0; j < table.rows[i].cells.length; j++)
+
+            columns[0] = table.rows[i].cells[0].childNodes[0].id.split("_")[1];
+            for (var j = 0; j < 2; j++)
+            {
+                //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
+                columns[j + 1] = table.rows[i].cells[j].childNodes[0].value;
+
+                if (columns[j + 1] == "") {
+                    valid = false;
+                    break;
+                }
+            }
+
+            /*columns[1] = table.rows[i].cells[0].childNodes[0].value;
+            columns[2] = table.rows[i].cells[1].childNodes[0].value;*/
 
             if (valid) {
                 jObject[row] = columns;
@@ -181,11 +253,30 @@
         })
             .done(function(result) {
                 console.log("done");
-                //location.reload(true);
-                <?php
-                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
-                echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
-                ?>
+                if (result['result'] == "success") {
+                    console.log(result['numAdded']);
+                    var toast = "";
+                    if (result['numAdded'] == 0) {
+                        toast = "No rooms were added.";
+                    }
+                    else if (result['numAdded'] == 1) {
+                        toast = "1 room was added successfully.";
+                    }
+                    else if (result['numAdded'] > 1 ) {
+                        toast = result['numAdded'] + " rooms were added successfully.";
+                    }
+                    toastr.success(toast, "Success");
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
+                }
+
             })
             .fail(function(result) {
                 console.log("fail");
@@ -194,6 +285,106 @@
             .always(function() {
                 console.log("complete");
             });
+    }
+
+    function submitBuilding() {
+        var buildingName = $('#bldgName').val();
+       // console.log("Adding"+buildingName);
+
+        if(buildingName!=null&&buildingName!="")
+        $.ajax({
+            url: '<?=base_url('admin/addBuilding')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                buildingName: buildingName
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                //location.reload(true);
+                if(result=="success"){
+                    reloadPage();
+                }
+                else{
+                    toastr.error("Building already exists.", "Oops!");
+                }
+
+
+            })
+            .fail(function(result) {
+                console.log("fail");
+                console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+        else
+            console.log("no input");
+            //TODO Handle Errors TOAST MAYBE
+    }
+
+    function submitChanges(tableID) {
+        var changedData = getChangedData(getTableDataWithID(tableID));
+
+        $.ajax({
+            url: '<?=base_url('admin/updateRooms')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                changedData: changedData,
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                console.log(result);
+
+                if (result['result'] == "success") {
+
+                    /*$(window).load(function(){
+                        toastr.success("Changes were made successfully.", "Success");
+                    });*/
+                    toastr.success("Changes were made successfully.", "Success");
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
+                }
+            })
+            .fail(function() {
+                console.log("fail");
+                //console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+
+    function getChangedData(newTableData) {
+        var changedData = [];
+        var changedDataIndex = 0;
+
+        for (var i = 0; i < initialTableData.length; i++) {
+            if (initialTableData[i][1] != newTableData[i][1] ||
+                initialTableData[i][2] != newTableData[i][2]) {
+                changedData[changedDataIndex] = newTableData[i];
+                changedDataIndex++;
+            }
+        }
+
+        return changedData;
+    }
+
+    function reloadPage() {
+        <?php
+        // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+        echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'";';
+        ?>
     }
 
 </script>
@@ -249,8 +440,8 @@ include 'a_navbar.php';
                                     <?php foreach($rooms as $room):?>
                                         <?php if($room->buildingid == $row->buildingid): ?>
                                             <tr>
-                                                <td><?=$room->name?></td>
-                                                <td><?=$room->capacity?></td>
+                                                <td id="room_<?=$room->roomid?>"><?=$room->name?></td>
+                                                <td id="capacity_<?=$room->roomid?>"><?=$room->capacity?></td>
                                                 <td></td>
                                             </tr>
                                         <?php endif; ?>
@@ -294,6 +485,7 @@ include 'a_navbar.php';
                             <tr>
                                 <th>Room Name</th>
                                 <th>Number of PCs</th>
+                                <th>Delete Row</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -301,6 +493,7 @@ include 'a_navbar.php';
                             <tr>
                                 <td><input type="text" class="form-control" placeholder="Enter name of room"></td>
                                 <td><input type="number" class="form-control" placeholder="Enter number of PCs in the room"></td>
+                                <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default"><i class="material-icons">clear</i></button></td>
                             </tr>
                             </tbody>
                         </table>
@@ -343,7 +536,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitBuilding()">Confirm</button>
                 </div>
             </form>
         </div>

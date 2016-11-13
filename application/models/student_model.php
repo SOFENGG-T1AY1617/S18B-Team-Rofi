@@ -9,19 +9,10 @@
 class Student_Model extends CI_Model
 {
 
-
     public function __construct()
     {
         parent::__construct();
         $this->load->database();
-    }
-
-    public function getMinuteInterval() {
-        return 15; // TODO retrieve from Settings
-    }
-
-    public function getMaxNumberOfSlots() {
-        return 4; // TODO retrieve from Settings
     }
 
     public function getMinimumHour() { // TODO parameter must be department ID
@@ -37,13 +28,13 @@ class Student_Model extends CI_Model
         $startMinute = 0;
         $daysForward = 0;
 
-        if (!$tomorrow)
+        if ($first_hour < $minimum_hour || $first_hour == null) // set to minimum_hour if first_hour is below the minimum_hour or if first_hour is null
+            $first_hour = $minimum_hour;
+
+        if (!$tomorrow && $first_hour != $minimum_hour)
             $startMinute = intval($first_minute / $minute_interval) * $minute_interval; // calculate first_minute to suit current time
         else
             $daysForward++; // plus 1 to day if tomorrow is true
-
-        if ($first_hour < $minimum_hour || $first_hour == null) // set to minimum_hour if first_hour is below the minimum_hour or if first_hour is null
-            $first_hour = $minimum_hour;
 
         for ($hour = $first_hour; $hour < $maximum_hour ; $hour++) {
             for ($minute = $startMinute; $minute < 60; $minute += $minute_interval) {
@@ -262,5 +253,27 @@ class Student_Model extends CI_Model
         $this->db->where_in(COLUMN_ENDRESTIME, $reservations['endTime']);
         $query = $this->db->get();
         return $query->result();
+    }
+
+    function queryBusinessRulesAtRoomID($id) {
+        $sql = "SELECT *
+                FROM business_rules NATURAL JOIN (SELECT DISTINCT departmentid
+                                                  FROM rooms
+                                                  WHERE roomid = ?) d";
+
+        return $this->db->query($sql, array($id))->result();
+    }
+
+    function getSlotLimitOfCurrentStudentID($id) {
+        $sql = "SELECT MIN(b.limit) as 'minLimit'
+                FROM (SELECT br.limit
+                      FROM business_rules br NATURAL JOIN (SELECT DISTINCT departmentid
+                                                        FROM departments NATURAL JOIN (SELECT DISTINCT departmentid
+                                                                                 FROM rooms NATURAL JOIN (SELECT DISTINCT roomid 
+                                                                                             FROM computers NATURAL JOIN (SELECT DISTINCT computerid
+                                                                                                                          FROM reservations
+                                                                                                                          WHERE useridno = ?) res ) c ) ro ) d) b";
+
+        return $this->db->query($sql, array($id))->result();
     }
 }

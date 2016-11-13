@@ -89,53 +89,15 @@ $defaultTab = 1;
                 var request;
                 var dateToday = "<?=date("Y-m-d")?>";
                 var dateSelected = dateToday;
-                var maxNumberOfSlots = <?php echo $maxNumberOfSlots?>;//TODO select from Settings
+                var maxNumberOfSlots = 0;
+                var previousDeptID = 0;
 
-                var times_today = <?php
-
-                    $tm_today = [];
-
-                    foreach ($times_today as $key => $time)
-                        $tm_today[] = date("H:i:s", $time);
-
-                    echo json_encode($tm_today)
-
-                    ?>;
-
-                var times_tomorrow = <?php
-
-                    $tm_tomorrow = [];
-
-                    foreach ($times_tomorrow as $time)
-                        $tm_tomorrow[] = date("H:i:s", $time);
-
-                    echo json_encode($tm_tomorrow)
-                    ?>;
-
-                var times_today_DISPLAY = <?php
-
-                    $tm_today = [];
-
-                    foreach ($times_today as $key => $time)
-                        $tm_today[] = date("h:i A", $time);
-
-                    echo json_encode($tm_today)
-
-                    ?>;
-
-                var times_tomorrow_DISPLAY = <?php
-
-                    $tm_tomorrow = [];
-
-                    foreach ($times_tomorrow as $time)
-                        $tm_tomorrow[] = date("h:i A", $time);
-
-                    echo json_encode($tm_tomorrow)
-                    ?>;;
+                var times_today;
+                var times_tomorrow;
+                var times_today_DISPLAY;
+                var times_tomorrow_DISPLAY;
 
                 $(document).ready(function() {
-
-                    updateTimesHeader(dateSelected == dateToday);
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
                         if (slotsPicked == 0) {
@@ -242,12 +204,10 @@ $defaultTab = 1;
                         if (date_selected == "today") {
                             dateSelected = "<?=date("Y-m-d")?>";
                             $("#text-date").text("<?=date("F d, Y")?>");
-                            updateTimesHeader(true);
                         }
                         else {
                             dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
                             $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
-                            updateTimesHeader(false);
                         }
 
                         if($("#form_building").val()!=null){
@@ -341,10 +301,24 @@ $defaultTab = 1;
                                 $("#my_slots").html(null);
                             })
                             .always(function() {
-                                $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/"+maxNumberOfSlots+"):");
+                                if (maxNumberOfSlots != 0)
+                                    $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/"+maxNumberOfSlots+"):");
+                                else
+                                    $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/X):");
+
                                 console.log("complete");
                             });
 
+                }
+
+                function clearSelectedSlots() {
+                    slotsPicked = [];
+                    $("#my_slots").html("");
+                }
+
+                function setSlotLimit(limit) {
+                    maxNumberOfSlots = limit;
+                    $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/"+maxNumberOfSlots+"):");
                 }
 
                 function selectBuilding(buildingid) {
@@ -384,17 +358,27 @@ $defaultTab = 1;
                             console.log(result);
                             console.log("done");
 
+                            $("#form_room").empty();
+
                             var out=[];
 
-                            out[0]= '<option value="0" selected >All Rooms</option>';
+                            //out[0]= '<option value="0" selected >All Rooms</option>';
 
-                            for(i=1;i<=result.length;i++){
-                                out[i]= '<option value="'+result[i-1].roomid+'" >'+result[i-1].name+'</option>';
-                            };
+                            var firstRoomID;
 
-                            $("#form_room").empty().append(out);
+                            if (result[0] != null)
+                                firstRoomID = result[0].roomid;
+                            else
+                                firstRoomID = "";
 
-                            selectRoom("0");
+                            for(var i=0;i<result.length;i++){
+                                out[i] = '<option value="'+result[i].roomid+'" >'+result[i].name+'</option>';
+                            }
+
+                            if (out.length > 0)
+                                $("#form_room").append(out);
+
+                            selectRoom(firstRoomID);
 
                             numOfRooms = result.length;
 
@@ -414,6 +398,8 @@ $defaultTab = 1;
                 }
 
                 function selectRoom(roomid) {
+                    
+                    //updateTimesHeader(dateSelected == dateToday);
 
                     var buildingid = $("#form_building").val();
 
@@ -441,18 +427,76 @@ $defaultTab = 1;
                     $("#form_room").attr('disabled', false);
 
                     if (buildingid!=""&&roomid != "") {
+                        var interval;
+
                         console.log(buildingid+"-"+roomid);
 
                         $.ajax({
-                            url: '<?php echo base_url('getComputers') ?>',
+                            url: '<?php echo base_url('getBusinessRules') ?>',
                             type: 'GET',
                             dataType: 'json',
                             data: {
-                                buildingid: buildingid,
-                                roomid:roomid,
-                                currdate: dateSelected,
+                                roomid: roomid
                             }
                         })
+                            .done(function(result) {
+                                interval = result[0].interval;
+
+                                if (previousDeptID != result[0].departmentid) {
+                                    clearSelectedSlots();
+                                    setSlotLimit(result[0].limit);
+                                    if (previousDeptID !=0)
+                                        toastr.info("The slots have been cleared and limit has been changed.", "Department has changed!");
+                                }
+
+                                previousDeptID = result[0].departmentid;
+                            })
+                            .fail(function() {
+                                console.log("fail");
+                            })
+                            .always(function() {
+                                console.log("complete");
+                            })
+                            .then(function () {
+                            console.log("PROMISE FULFILL");
+
+                            return $.ajax({ // PROCEED TO PROMISE
+                                url: '<?php echo base_url('getTimes') ?>',
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {
+                                    interval: interval
+                                }
+                            })
+                        })
+
+                        // FOR PROMISE
+                        .done (function (result) {
+                            times_today = result['times_today'];
+                            times_tomorrow = result['times_tomorrow'];
+                            times_today_DISPLAY = result['times_today_DISPLAY'];
+                            times_tomorrow_DISPLAY = result['times_tomorrow_DISPLAY'];
+
+                            updateTimesHeader(dateSelected == dateToday);
+                        })
+                        .fail (function () {
+
+                        })
+                        .then (function () {
+                            // get computers
+
+                            return $.ajax({
+                                url: '<?php echo base_url('getComputers') ?>',
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {
+                                    buildingid: buildingid,
+                                    roomid:roomid,
+                                    currdate: dateSelected,
+                                }
+                            })
+                        })
+
                             .done(function(result) {
                                 console.log(result['date']);
                                 console.log(result);
@@ -478,10 +522,13 @@ $defaultTab = 1;
                                 console.log("complete");
                             });
 
+
                         /*$.post('application/controllers/ajax/foo', function(data) {
                          console.log(data)
                          }, 'json');*/
 
+                    } else {
+                        outputSlots();
                     }
 
                 }
@@ -582,7 +629,7 @@ $defaultTab = 1;
                                         }
 
                                         for (var x in slotsPicked) {
-                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && slotsPicked[x].includes(dateSelected) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
+                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
                                                 disableSlot(clickableSlot1);
                                         }
 

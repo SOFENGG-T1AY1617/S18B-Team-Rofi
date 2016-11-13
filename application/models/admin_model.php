@@ -64,6 +64,7 @@ class Admin_Model extends CI_Model
         $this->db->select('*');
         $this->db->from(TABLE_ADMINISTRATORS);
         $this->db->join(TABLE_DEPARTMENTS, 'admin_departmentid = departmentid');
+        $this->db->where(COLUMN_ADMIN_TYPEID . " != ", '1');
         $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
         $query = $this->db->get();
         return $query->result();
@@ -85,6 +86,16 @@ class Admin_Model extends CI_Model
         return $query->result();
     }
 
+    function queryModeratorsWithDepartmentID($id) {
+        $this->db->select('*');
+        $this->db->from(TABLE_MODERATORS);
+        $this->db->join(TABLE_DEPARTMENTS, 'mod_departmentid = departmentid');
+        $this->db->where(COLUMN_MOD_DEPARTMENTID, $id);
+        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     function queryAllRooms() {
         //return $this->db->get(TABLE_ROOMS)->result();
         $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
@@ -92,6 +103,17 @@ class Admin_Model extends CI_Model
                 GROUP BY roomid
                 ORDER BY name";
         return $this->db->query($sql)->result();
+    }
+
+    function queryRoomsWithDepartmentID($id) {
+        //return $this->db->get(TABLE_ROOMS)->result();
+        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
+                FROM (SELECT * 
+                      FROM rooms
+                      WHERE departmentid = ?) r NATURAL JOIN computers
+                GROUP BY roomid
+                ORDER BY name";
+        return $this->db->query($sql, array($id))->result();
     }
 
     function queryAllComputers() {
@@ -137,6 +159,14 @@ class Admin_Model extends CI_Model
     function queryAllBuildings() {
         return $this->db->get(TABLE_BUILDINGS)->result();
     }
+    function queryBuildingIDFromBuildingName($name) {
+        $sql = "SELECT buildingid
+                   FROM buildings
+                   WHERE name = ?";
+        return $this->db->query($sql, $name)->result();
+
+    }
+
 
     function queryAllRoomsAtBuildingID($id) {
         $sql = "SELECT * 
@@ -230,7 +260,7 @@ class Admin_Model extends CI_Model
 
     function insertRoomsAndComputers($data) {
         $rooms = $data['rooms'];
-
+        $numAdded = 0;
         foreach($rooms as $room) {
             if ($this->isExistingRoom($room[0]))
                 continue;
@@ -249,7 +279,10 @@ class Admin_Model extends CI_Model
             );
 
             $this->insertComputersAtRoom($insertComputersData);
+            $numAdded++;
         }
+
+        return $numAdded;
     }
 
     function insertModerators($data) {
@@ -314,4 +347,96 @@ class Admin_Model extends CI_Model
 
         return count($result)>=1;
     }
+
+    function queryRoomAtID($id) {
+        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
+                FROM (SELECT * 
+                      FROM rooms
+                      WHERE roomid = ?) r NATURAL JOIN computers
+                GROUP BY roomid";
+        return $this->db->query($sql, array($id))->row_array();
+    }
+
+    function getLastComputerIDAtRoomID($id) {
+        $this->db->select_max(COLUMN_COMPUTERID);
+        $this->db->from(TABLE_COMPUTERS);
+        $this->db->where(COLUMN_ROOMID, $id);
+        $result = $this->db->get()->row();
+        return $result->computerid;
+    }
+
+    function getLastComputerNoAtRoomID($id) {
+        $this->db->select_max(COLUMN_COMPUTERNO);
+        $this->db->from(TABLE_COMPUTERS);
+        $this->db->where(COLUMN_ROOMID, $id);
+        $result = $this->db->get()->row();
+        return $result->computerno;
+    }
+
+    function updateRoomName($room) {
+        $this->db->where(COLUMN_ROOMID, $room['roomid']);
+        $this->db->update(TABLE_ROOMS, array('name' => $room['name']));
+    }
+
+    function removeComputersFromRoom($data) {
+        $roomid = $data['roomid'];
+        $numToRemove = $data['count'];
+
+        for ($i = 0; $i < $numToRemove; $i++) {
+            // Find last computer in roomid
+            $computerid = $this->getLastComputerIDAtRoomID($roomid);
+            $this->db->delete(TABLE_COMPUTERS, array('computerid' => $computerid));
+        }
+    }
+
+    function addComputersToRoom($data) {
+        $roomid = $data['roomid'];
+        $numToAdd = $data['count'];
+
+        for ($i = 0; $i < $numToAdd; $i++) {
+            // Get last computer number
+
+            $computerno = $this->getLastComputerNoAtRoomID($roomid) + 1;
+
+            $insertComputerData = array(
+                'computerno' => $computerno,
+                'roomid' => $roomid,
+            );
+
+            $this->insertComputer($insertComputerData);
+        }
+    }
+
+    function deleteRoom($roomid) {
+        // Delete all computers in room
+        $this->removeAllComputersFromRoom($roomid);
+
+        // Delete room
+        $this->db->delete(TABLE_ROOMS, array('roomid' => $roomid));
+    }
+
+    function removeAllComputersFromRoom($roomid) {
+        $this->db->delete(TABLE_COMPUTERS, array('roomid' => $roomid));
+    }
+
+    function insertBuilding($data) {
+
+            if(!$this->isExistingBuilding($data['name'])) {
+                $this->db->insert(TABLE_BUILDINGS, $data);
+                return true;
+            }
+            else
+                return false;
+    }
+
+    function isExistingBuilding($name) {
+        $this->db->select('*');
+        $this->db->from(TABLE_BUILDINGS);
+        $this->db->where(COLUMN_NAME, $name);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+
 }

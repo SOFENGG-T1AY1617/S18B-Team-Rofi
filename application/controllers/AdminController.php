@@ -70,7 +70,10 @@ class AdminController extends CI_Controller
 
         $data['buildings'] = $this->admin->queryAllBuildings();
 
-        $data['rooms'] = $this->admin->queryAllRooms();
+        if($_SESSION['admin_typeid'] == 1)
+            $data['rooms'] = $this->admin->queryAllRooms();
+        else
+            $data['rooms'] = $this->admin->queryRoomsWithDepartmentID($_SESSION['admin_departmentid']);
 
 
 
@@ -88,25 +91,17 @@ class AdminController extends CI_Controller
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
-    /*public function modView(){
-        $data['moderators'] = $this->admin->queryAllModerators();
-
-        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_moderator', $data); // $this->load->view('admin', $data); set to this if data is set
-        //$this->load->view('template/footer'); // include bootstrap 3 footer
-    }
-    public function adminView(){
-        $data['administrators'] = $this->admin->queryAllAdministators();
-
-        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_admin', $data); // $this->load->view('admin', $data); set to this if data is set
-        //$this->load->view('template/footer'); // include bootstrap 3 footer
-    }*/
-
     public function accView(){
         $data['administrators'] = $this->admin->queryAllAdministators();
-        $data['moderators'] = $this->admin->queryAllModerators();
-        $data['departments'] = $this->admin->queryAllDepartments();
+
+
+        if($_SESSION['admin_typeid'] == 1)
+            $data['moderators'] = $this->admin->queryAllModerators();
+        else
+            $data['moderators'] = $this->admin->queryModeratorsWithDepartmentID($_SESSION['admin_departmentid']);
+
+            $data['departments'] = $this->admin->queryAllDepartments();
+
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_accountManagement', $data); // $this->load->view('admin', $data); set to this if data is set
@@ -173,9 +168,97 @@ class AdminController extends CI_Controller
             'departmentid' => $_SESSION['admin_departmentid'],
         );
 
-        $this->admin->insertRoomsAndComputers($roomData);
+        $numAdded = $this->admin->insertRoomsAndComputers($roomData);
 
-        echo json_encode("success");
+        $result = array(
+            'result' => "success",
+            'numAdded' => $numAdded,
+        );
+
+        echo json_encode($result);
+    }
+
+    public function updateRooms()
+    {
+        $changedData = $this->input->get("changedData");
+
+        foreach ($changedData as $data) {
+            // Query room data
+            $room = $this->admin->queryRoomAtID($data[0]);
+
+
+            // Check if deleted
+            if ($data[2] == -1) {
+                $this->admin->deleteRoom($data[0]);
+
+                $result = array(
+                    'result' => "success",
+                );
+
+                continue;
+            }
+
+            // Check if room name was changed
+            if ($data[1] != $room['name']) {
+                if ($this->admin->isExistingRoom($data[1])) {
+                    // If room name already exists, cannot change
+                    $result = array(
+                        'result' => "name_invalid",
+                    );
+                } else {
+                    // Update room name
+                    $updateData = array(
+                        'roomid' => $data[0],
+                        'name' => $data[1],
+                    );
+                    $this->admin->updateRoomName($updateData);
+                }
+            }
+
+            // Check if room capacity was changed
+            if ($data[2] > $room['capacity']) {
+                // Add computers
+
+                $updateData = array(
+                    'roomid' => $data[0],
+                    'count' => $data[2] - $room['capacity'],
+                );
+
+                $this->admin->addComputersToRoom($updateData);
+
+                $result = array(
+                    'result' => "success",
+                );
+            } else if ($data[2] < $room['capacity']) {
+                // Remove computers
+                $updateData = array(
+                    'roomid' => $data[0],
+                    'count' => $room['capacity'] - $data[2],
+                );
+
+                $this->admin->removeComputersFromRoom($updateData);
+
+                $result = array(
+                    'result' => "success",
+                );
+            }
+        }
+
+        echo json_encode($result);
+    }
+
+    public function addBuilding() {
+        $buildingData = array(
+            'name' => $this->input->get("buildingName")
+        );
+
+        $out =
+            $this->admin->insertBuilding($buildingData);
+
+        if($out)
+            echo json_encode("success");
+        else
+          echo json_encode("fail");
     }
 
     public function addModerators() {
