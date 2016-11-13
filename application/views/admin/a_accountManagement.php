@@ -192,56 +192,58 @@ include 'a_navbar.php';
     </div>
 </div>
 
-<div id="panels" class = "col-md-offset-2 col-md-8">
+<?php if($_SESSION['admin_typeid'] == 1): ?>
+    <!-- Only show admin panel if user is a superuser -->
+    <div id="panels" class = "col-md-offset-2 col-md-8">
 
-    <div class="panel-group" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="collapseListGroupHeadingAdmin">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
-                        List of Admins
-                    </a>
-                </h4>
-            </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupAdmin" aria-labelledby="collapseListGroupHeadingAdmin" aria-expanded="false">
-                <ul class="list-group">
-                    <form>
-                        <li class="list-group-item">
-                            <table class="table table-hover" id="admintable">
-                                <thead>
-                                <tr>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>Department</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach($administrators as $admin):?>
+        <div class="panel-group" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="collapseListGroupHeadingAdmin">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
+                            List of Admins
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupAdmin" aria-labelledby="collapseListGroupHeadingAdmin" aria-expanded="false">
+                    <ul class="list-group">
+                        <form>
+                            <li class="list-group-item">
+                                <table class="table table-hover" id="admintable">
+                                    <thead>
                                     <tr>
-                                        <td><?=$admin->first_name?></td>
-                                        <td><?=$admin->last_name?></td>
-                                        <td><?=$admin->email?></td>
-                                        <td><?=$admin->name?></td>
-                                        <td></td>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th></th>
                                     </tr>
-                                <?php endforeach;?>
-                                </tbody>
-                            </table>
-                        </li>
-                        <div class = "panel-footer clearfix" id = "admintable_footer">
-                            <button type ="button"data-toggle="modal" data-target="#AddNewAdminModal" class="btn btn-default col-md-2 col-md-offset-8">Add Admins</button>
-                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('admintable','admintable_footer', 'AddNewAdminModal')">Edit Accounts</button>
-                        </div>
-                    </form>
-                </ul>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach($administrators as $admin):?>
+                                        <tr>
+                                            <td><?=$admin->first_name?></td>
+                                            <td><?=$admin->last_name?></td>
+                                            <td><?=$admin->email?></td>
+                                            <td><?=$admin->name?></td>
+                                            <td></td>
+                                        </tr>
+                                    <?php endforeach;?>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <div class = "panel-footer clearfix" id = "admintable_footer">
+                                <button type ="button"data-toggle="modal" data-target="#AddNewAdminModal" class="btn btn-default col-md-2 col-md-offset-8">Add Admins</button>
+                                <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('admintable','admintable_footer', 'AddNewAdminModal')">Edit Accounts</button>
+                            </div>
+                        </form>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class = "col-md-2"></div>
-
+    <div class = "col-md-2"></div>
+<?php endif;?>
 
 <!-- Moderator Modal -->
 <div id="AddNewModeratorModal" class="modal fade" role="dialog">
