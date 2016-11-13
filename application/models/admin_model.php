@@ -79,6 +79,16 @@ class Admin_Model extends CI_Model
         return $query->result();
     }
 
+    function queryModeratorsWithDepartmentID($id) {
+        $this->db->select('*');
+        $this->db->from(TABLE_MODERATORS);
+        $this->db->join(TABLE_DEPARTMENTS, 'mod_departmentid = departmentid');
+        $this->db->where(COLUMN_MOD_DEPARTMENTID, $id);
+        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     function queryAllRooms() {
         //return $this->db->get(TABLE_ROOMS)->result();
         $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
@@ -86,6 +96,17 @@ class Admin_Model extends CI_Model
                 GROUP BY roomid
                 ORDER BY name";
         return $this->db->query($sql)->result();
+    }
+
+    function queryRoomsWithDepartmentID($id) {
+        //return $this->db->get(TABLE_ROOMS)->result();
+        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
+                FROM (SELECT * 
+                      FROM rooms
+                      WHERE departmentid = ?) r NATURAL JOIN computers
+                GROUP BY roomid
+                ORDER BY name";
+        return $this->db->query($sql, array($id))->result();
     }
 
     function queryAllComputers() {

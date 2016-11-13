@@ -70,7 +70,10 @@ class AdminController extends CI_Controller
 
         $data['buildings'] = $this->admin->queryAllBuildings();
 
-        $data['rooms'] = $this->admin->queryAllRooms();
+        if($_SESSION['admin_typeid'] == 1)
+            $data['rooms'] = $this->admin->queryAllRooms();
+        else
+            $data['rooms'] = $this->admin->queryRoomsWithDepartmentID($_SESSION['admin_departmentid']);
 
 
 
@@ -88,24 +91,13 @@ class AdminController extends CI_Controller
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
-    /*public function modView(){
-        $data['moderators'] = $this->admin->queryAllModerators();
-
-        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_moderator', $data); // $this->load->view('admin', $data); set to this if data is set
-        //$this->load->view('template/footer'); // include bootstrap 3 footer
-    }
-    public function adminView(){
-        $data['administrators'] = $this->admin->queryAllAdministators();
-
-        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_admin', $data); // $this->load->view('admin', $data); set to this if data is set
-        //$this->load->view('template/footer'); // include bootstrap 3 footer
-    }*/
-
     public function accView(){
         $data['administrators'] = $this->admin->queryAllAdministators();
-        $data['moderators'] = $this->admin->queryAllModerators();
+
+        if($_SESSION['admin_typeid'] == 1)
+            $data['moderators'] = $this->admin->queryAllModerators();
+        else
+            $data['moderators'] = $this->admin->queryModeratorsWithDepartmentID($_SESSION['admin_departmentid']);
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_accountManagement', $data); // $this->load->view('admin', $data); set to this if data is set
