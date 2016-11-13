@@ -177,7 +177,8 @@ class AdminController extends CI_Controller
         echo json_encode("success");
     }
 
-    public function updateRooms() {
+    public function updateRooms()
+    {
         $changedData = $this->input->get("changedData");
 
         foreach ($changedData as $data) {
@@ -186,13 +187,12 @@ class AdminController extends CI_Controller
 
             // Check if room name was changed
             if ($data[1] != $room['name']) {
-                if($this->admin->isExistingRoom($data[1])) {
+                if ($this->admin->isExistingRoom($data[1])) {
                     // If room name already exists, cannot change
                     $result = array(
                         'result' => "name_invalid",
                     );
-                }
-                else {
+                } else {
                     // Update room name
                     $updateData = array(
                         'roomid' => $data[0],
@@ -216,8 +216,7 @@ class AdminController extends CI_Controller
                 $result = array(
                     'result' => "success",
                 );
-            }
-            else if ($data[2] < $room['capacity']) {
+            } else if ($data[2] < $room['capacity']) {
                 // Remove computers
                 $updateData = array(
                     'roomid' => $data[0],
@@ -233,6 +232,20 @@ class AdminController extends CI_Controller
         }
 
         echo json_encode($result);
+    }
+
+    public function addBuilding() {
+        $buildingData = array(
+            'name' => $this->input->get("buildingName")
+        );
+
+        $out =
+            $this->admin->insertBuilding($buildingData);
+
+        if($out)
+            echo json_encode("success");
+        else
+          echo json_encode("fail");
     }
 
 }

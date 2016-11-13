@@ -68,6 +68,7 @@ $route['admin/signIn'] = 'AdminController/signIn';
 $route['admin/signOut'] = 'AdminController/signOut';
 $route['admin/addRoom'] = 'AdminController/addRoom';
 $route['admin/updateRooms'] = 'AdminController/updateRooms';
+$route['admin/addBuilding'] = 'AdminController/addBuilding';
 
 $route['admin/(:any)'] = 'AdminController/loadView/$1';
 

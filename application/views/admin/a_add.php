@@ -29,9 +29,12 @@
 
         var cellName = row.insertCell(0);
         var cellNumber = row.insertCell(1);
+        var deleteCol =  row.insertCell(2);
+        var i = tableA.rows.length-1;
 
         cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name of the room\">";
         cellNumber.innerHTML = "<input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter number of PCs in the room\">";
+        deleteCol.innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>"
 
     }
 
@@ -63,15 +66,15 @@
         for(var i = 1; i < rows.length; i++){
             var cells = rows[i].cells;
 
-            var curID = $(cells[0]).attr("id");
 
+            var curID = $(cells[0]).attr("id");
             var curName = cells[0].innerHTML;
             var curNum = cells[1].innerHTML;
 
+            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curID+"\" value=\""+curName+"\">";
+            cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" value=\""+curNum+"\">";
+            cells[2].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curID+"\" value=\""+curName+"\">"
-            cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" value=\""+curNum+"\">"
-            cells[2].innerHTML = "<button type =\"button\" onclick=\"delete("+tID+", "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
         }
 
@@ -86,8 +89,6 @@
 
         var addID = ""+tID+"_addbtn";
         console.log(addID);
-        var add = document.getElementById(addID.toString());
-
         footerA.innerHTML =
 
             "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
@@ -153,6 +154,11 @@
             table.deleteRow(i);
         }
 
+    }
+
+    function deleteRow(table, index){
+        var tableA = document.getElementById(table);
+        tableA.deleteRow(index);
     }
 
     function getTableData(tableID) {
@@ -239,10 +245,12 @@
             .done(function(result) {
                 console.log("done");
                 //location.reload(true);
+                console.log(result);
                 <?php
                 // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
                 echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
                 ?>
+
             })
             .fail(function(result) {
                 console.log("fail");
@@ -251,6 +259,46 @@
             .always(function() {
                 console.log("complete");
             });
+    }
+
+    function submitBuilding() {
+        var buildingName = $('#bldgName').val();
+       // console.log("Adding"+buildingName);
+
+        if(buildingName!=null&&buildingName!="")
+        $.ajax({
+            url: '<?=base_url('admin/addBuilding')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                buildingName: buildingName
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                //location.reload(true);
+                if(result=="success"){
+                    <?php
+                    // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+                    echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
+                    ?>
+                }
+                else{
+                    toastr.error("Building already exists.", "Oops!");
+                }
+
+
+            })
+            .fail(function(result) {
+                console.log("fail");
+                console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+        else
+            console.log("no input");
+            //TODO Handle Errors TOAST MAYBE
     }
 
     function submitChanges(tableID) {
@@ -396,6 +444,7 @@ include 'a_navbar.php';
                             <tr>
                                 <th>Room Name</th>
                                 <th>Number of PCs</th>
+                                <th>Delete Row</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -403,6 +452,7 @@ include 'a_navbar.php';
                             <tr>
                                 <td><input type="text" class="form-control" placeholder="Enter name of room"></td>
                                 <td><input type="number" class="form-control" placeholder="Enter number of PCs in the room"></td>
+                                <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default"><i class="material-icons">clear</i></button></td>
                             </tr>
                             </tbody>
                         </table>
@@ -445,7 +495,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitBuilding()">Confirm</button>
                 </div>
             </form>
         </div>

@@ -130,6 +130,14 @@ class Admin_Model extends CI_Model
     function queryAllBuildings() {
         return $this->db->get(TABLE_BUILDINGS)->result();
     }
+    function queryBuildingIDFromBuildingName($name) {
+        $sql = "SELECT buildingid
+                   FROM buildings
+                   WHERE name = ?";
+        return $this->db->query($sql, $name)->result();
+
+    }
+
 
     function queryAllRoomsAtBuildingID($id) {
         $sql = "SELECT * 
@@ -333,4 +341,26 @@ class Admin_Model extends CI_Model
             $this->insertComputer($insertComputerData);
         }
     }
+
+    function insertBuilding($data) {
+
+            if(!$this->isExistingBuilding($data['name'])) {
+                $this->db->insert(TABLE_BUILDINGS, $data);
+                return true;
+            }
+            else
+                return false;
+    }
+
+    function isExistingBuilding($name) {
+        $this->db->select('*');
+        $this->db->from(TABLE_BUILDINGS);
+        $this->db->where(COLUMN_NAME, $name);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+
+
 }
