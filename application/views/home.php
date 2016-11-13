@@ -89,7 +89,8 @@ $defaultTab = 1;
                 var request;
                 var dateToday = "<?=date("Y-m-d")?>";
                 var dateSelected = dateToday;
-                var maxNumberOfSlots = <?php echo $maxNumberOfSlots?>;//TODO select from Settings
+                var maxNumberOfSlots = 0;
+                var previousDeptID = 0;
 
                 var times_today;
                 var times_tomorrow;
@@ -300,10 +301,22 @@ $defaultTab = 1;
                                 $("#my_slots").html(null);
                             })
                             .always(function() {
-                                $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/"+maxNumberOfSlots+"):");
+                                if (maxNumberOfSlots == 0)
+                                    $("#my_number_of_slots").html("Selected Slots :");
+
                                 console.log("complete");
                             });
 
+                }
+
+                function clearSelectedSlots() {
+                    slotsPicked = [];
+                    $("#my_slots").html("");
+                }
+
+                function setSlotLimit(limit) {
+                    maxNumberOfSlots = limit;
+                    $("#my_number_of_slots").html("Selected Slots ("+slotsPicked.length+"/"+maxNumberOfSlots+"):");
                 }
 
                 function selectBuilding(buildingid) {
@@ -418,6 +431,15 @@ $defaultTab = 1;
                         })
                             .done(function(result) {
                                 interval = result[0].interval;
+
+                                if (previousDeptID != result[0].departmentid) {
+                                    clearSelectedSlots();
+                                    setSlotLimit(result[0].limit);
+                                    if (previousDeptID !=0)
+                                        toastr.info("The slots have been cleared and limit has been changed.", "Department has changed!");
+                                }
+
+                                previousDeptID = result[0].departmentid;
                             })
                             .fail(function() {
                                 console.log("fail");
