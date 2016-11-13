@@ -60,6 +60,8 @@ $route['submitReservation'] = 'Controller/submitReservation';
 $route['verify/(:any)'] = 'Controller/verify/$1';
 $route['getMyReservations'] = 'Controller/getMyReservations';
 $route['checkType'] = 'Controller/checkType';
+$route['getBusinessRules'] = 'Controller/getBusinessRules';
+$route['getTimes'] = 'Controller/getTimes';
 
 /* ADMIN ROUTE */
 $route['admin'] = 'AdminController';

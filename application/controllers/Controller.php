@@ -25,25 +25,62 @@ class Controller extends CI_Controller {
 
 	public function home()
     {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
-        $minuteInterval = $this->student->getMinuteInterval();
-        $maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
-        $currentHour = date("H");
-        $currentMinute = date("i");
-
+        //$maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
         $data['buildings'] = $this->student->queryAllBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
-        $data['times_today'] = $this->student->getTimes($currentHour, $currentMinute, $minuteInterval, $this->student->getMinimumHour(), $this->student->getMaximumHour(), false);
-        $data['times_tomorrow'] = $this->student->getTimes(null, $currentMinute, $minuteInterval, $this->student->getMinimumHour(), $this->student->getMaximumHour(), true);
 
         $data['tab'] = 1; // set to first tab on open
-        $data['maxNumberOfSlots'] = $maxNumberOfSlots;
 
         $this->load->view('template/header'); // include bootstrap 3 header
         $this->load->view('home', $data); // $this->load->view('home', $data); set to this if data is set
         $this->load->view('template/footer'); // include bootstrap 3 footer
+    }
+
+    public function getBusinessRules() {
+        $getData = array(
+            'roomid' => $this->input->get('roomid'),
+        );
+
+        $data = $this->student->queryBusinessRulesAtRoomID($getData['roomid']);
+
+        echo json_encode($data);
+    }
+
+    public function getTimes() {
+
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+
+        $getData = array(
+            'interval' => $this->input->get('interval'),
+        );
+
+        $currentHour = date("H");
+        $currentMinute = date("i");
+
+        $times_today = $this->student->getTimes($currentHour, $currentMinute, $getData['interval'], $this->student->getMinimumHour(), $this->student->getMaximumHour(), false);
+        $times_tomorrow = $this->student->getTimes(null, $currentMinute, $getData['interval'], $this->student->getMinimumHour(), $this->student->getMaximumHour(), true);
+
+        $data['times_today'] = null;
+        $data['times_tomorrow'] = null;
+        $data['times_today_DISPLAY'] = null;
+        $data['times_tomorrow_DISPLAY'] = null;
+
+        foreach ($times_today as $time)
+            $data['times_today'][] = date("H:i:s", $time);
+
+        foreach ($times_tomorrow as $time)
+            $data['times_tomorrow'][] = date("H:i:s", $time);
+
+        foreach ($times_today as $time)
+            $data['times_today_DISPLAY'][] = date("h:i A", $time);
+
+        foreach ($times_tomorrow as $time)
+            $data['times_tomorrow_DISPLAY'][] = date("h:i A", $time);
+
+        echo json_encode($data);
+
     }
 
     public function getRooms() {
