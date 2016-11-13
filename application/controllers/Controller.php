@@ -26,13 +26,12 @@ class Controller extends CI_Controller {
 	public function home()
     {
 
-        $maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
+        //$maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
         $data['buildings'] = $this->student->queryAllBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
 
         $data['tab'] = 1; // set to first tab on open
-        $data['maxNumberOfSlots'] = $maxNumberOfSlots;
 
         $this->load->view('template/header'); // include bootstrap 3 header
         $this->load->view('home', $data); // $this->load->view('home', $data); set to this if data is set
