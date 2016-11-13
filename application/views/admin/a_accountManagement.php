@@ -184,6 +184,11 @@
     }
     function deleteRow(table, index){
         var tableA = document.getElementById(table);
+        for(var x=index+1;x<tableA.rows.length;x++)
+        	{
+        		tableA.rows[x].cells[3].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+        		console.log(x-1);
+        	}
         tableA.deleteRow(index);
     }
 
