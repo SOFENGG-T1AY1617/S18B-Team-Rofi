@@ -64,6 +64,7 @@ class Admin_Model extends CI_Model
         $this->db->select('*');
         $this->db->from(TABLE_ADMINISTRATORS);
         $this->db->join(TABLE_DEPARTMENTS, 'admin_departmentid = departmentid');
+        $this->db->where(COLUMN_ADMIN_TYPEID . " != ", '1');
         $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
         $query = $this->db->get();
         return $query->result();
