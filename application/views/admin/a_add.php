@@ -253,12 +253,29 @@
         })
             .done(function(result) {
                 console.log("done");
-                //location.reload(true);
-                console.log(result);
-                <?php
-                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
-                echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
-                ?>
+                if (result['result'] == "success") {
+                    console.log(result['numAdded']);
+                    var toast = "";
+                    if (result['numAdded'] == 0) {
+                        toast = "No rooms were added.";
+                    }
+                    else if (result['numAdded'] == 1) {
+                        toast = "1 room was added successfully.";
+                    }
+                    else if (result['numAdded'] > 1 ) {
+                        toast = result['numAdded'] + " rooms were added successfully.";
+                    }
+                    toastr.success(toast, "Success");
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
+                }
 
             })
             .fail(function(result) {
@@ -287,10 +304,7 @@
                 console.log("done");
                 //location.reload(true);
                 if(result=="success"){
-                    <?php
-                    // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
-                    echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
-                    ?>
+                    reloadPage();
                 }
                 else{
                     toastr.error("Building already exists.", "Oops!");
@@ -326,10 +340,20 @@
                 console.log(result);
 
                 if (result['result'] == "success") {
-                    <?php
-                    // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
-                    echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
-                    ?>
+
+                    /*$(window).load(function(){
+                        toastr.success("Changes were made successfully.", "Success");
+                    });*/
+                    toastr.success("Changes were made successfully.", "Success");
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
                 }
             })
             .fail(function() {
@@ -354,6 +378,13 @@
         }
 
         return changedData;
+    }
+
+    function reloadPage() {
+        <?php
+        // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+        echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'";';
+        ?>
     }
 
 </script>

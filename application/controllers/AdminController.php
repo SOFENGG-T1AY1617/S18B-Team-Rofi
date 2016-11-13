@@ -172,9 +172,14 @@ class AdminController extends CI_Controller
             'departmentid' => $_SESSION['admin_departmentid'],
         );
 
-        $this->admin->insertRoomsAndComputers($roomData);
+        $numAdded = $this->admin->insertRoomsAndComputers($roomData);
 
-        echo json_encode("success");
+        $result = array(
+            'result' => "success",
+            'numAdded' => $numAdded,
+        );
+
+        echo json_encode($result);
     }
 
     public function updateRooms()

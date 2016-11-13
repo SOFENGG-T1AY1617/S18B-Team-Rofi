@@ -231,7 +231,7 @@ class Admin_Model extends CI_Model
 
     function insertRoomsAndComputers($data) {
         $rooms = $data['rooms'];
-
+        $numAdded = 0;
         foreach($rooms as $room) {
             if ($this->isExistingRoom($room[0]))
                 continue;
@@ -250,7 +250,10 @@ class Admin_Model extends CI_Model
             );
 
             $this->insertComputersAtRoom($insertComputersData);
+            $numAdded++;
         }
+
+        return $numAdded;
     }
 
     function insertRoom($room) {
