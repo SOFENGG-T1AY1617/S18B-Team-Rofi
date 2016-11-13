@@ -15,14 +15,6 @@ class Student_Model extends CI_Model
         $this->load->database();
     }
 
-    public function getMinuteInterval() {
-        return 15; // TODO retrieve from Settings
-    }
-
-    public function getMaxNumberOfSlots() {
-        return 4; // TODO retrieve from Settings
-    }
-
     public function getMinimumHour() { // TODO parameter must be department ID
         return 6; // TODO retrieve value depending on department
     }
