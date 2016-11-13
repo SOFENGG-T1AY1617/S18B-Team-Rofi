@@ -342,6 +342,18 @@ class Admin_Model extends CI_Model
         }
     }
 
+    function deleteRoom($roomid) {
+        // Delete all computers in room
+        $this->removeAllComputersFromRoom($roomid);
+
+        // Delete room
+        $this->db->delete(TABLE_ROOMS, array('roomid' => $roomid));
+    }
+
+    function removeAllComputersFromRoom($roomid) {
+        $this->db->delete(TABLE_COMPUTERS, array('roomid' => $roomid));
+    }
+
     function insertBuilding($data) {
 
             if(!$this->isExistingBuilding($data['name'])) {

@@ -185,6 +185,18 @@ class AdminController extends CI_Controller
             // Query room data
             $room = $this->admin->queryRoomAtID($data[0]);
 
+
+            // Check if deleted
+            if ($data[2] == -1) {
+                $this->admin->deleteRoom($data[0]);
+
+                $result = array(
+                    'result' => "success",
+                );
+
+                continue;
+            }
+
             // Check if room name was changed
             if ($data[1] != $room['name']) {
                 if ($this->admin->isExistingRoom($data[1])) {

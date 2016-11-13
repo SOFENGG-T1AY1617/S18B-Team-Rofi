@@ -67,13 +67,14 @@
             var cells = rows[i].cells;
 
 
-            var curID = $(cells[0]).attr("id");
+            var curRoomID = $(cells[0]).attr("id");
+            var curCapID = $(cells[1]).attr("id");
             var curName = cells[0].innerHTML;
             var curNum = cells[1].innerHTML;
 
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curID+"\" value=\""+curName+"\">";
-            cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" value=\""+curNum+"\">";
-            cells[2].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
+            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curRoomID+"\" value=\""+curName+"\">";
+            cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\""+curCapID+"\" value=\""+curNum+"\">";
+            cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow("+curCapID+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
 
         }
@@ -159,6 +160,14 @@
     function deleteRow(table, index){
         var tableA = document.getElementById(table);
         tableA.deleteRow(index);
+    }
+
+    function hideRow(capacityID){
+        //var tableA = document.getElementById(table);
+        //tableA.deleteRow(index);
+        $(capacityID).parents('tr').hide();
+        $(capacityID).val("-1");
+        console.log($(capacityID).val());
     }
 
     function getTableData(tableID) {
@@ -303,7 +312,6 @@
 
     function submitChanges(tableID) {
         var changedData = getChangedData(getTableDataWithID(tableID));
-        //console.log(changedData);
 
         $.ajax({
             url: '<?=base_url('admin/updateRooms')?>',
@@ -316,10 +324,13 @@
             .done(function(result) {
                 console.log("done");
                 console.log(result);
-                <?php
-                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
-                //echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
-                ?>
+
+                if (result['result'] == "success") {
+                    <?php
+                    // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+                    echo 'window.location = "'. site_url("admin/".ADMIN_AREA_MANAGEMENT) .'"';
+                    ?>
+                }
             })
             .fail(function() {
                 console.log("fail");
@@ -331,10 +342,9 @@
     }
 
     function getChangedData(newTableData) {
-//        console.log(initialTableData);
-        //console.log(newTableData);
         var changedData = [];
         var changedDataIndex = 0;
+
         for (var i = 0; i < initialTableData.length; i++) {
             if (initialTableData[i][1] != newTableData[i][1] ||
                 initialTableData[i][2] != newTableData[i][2]) {
@@ -400,7 +410,7 @@ include 'a_navbar.php';
                                         <?php if($room->buildingid == $row->buildingid): ?>
                                             <tr>
                                                 <td id="room_<?=$room->roomid?>"><?=$room->name?></td>
-                                                <td><?=$room->capacity?></td>
+                                                <td id="capacity_<?=$room->roomid?>"><?=$room->capacity?></td>
                                                 <td></td>
                                             </tr>
                                         <?php endif; ?>
