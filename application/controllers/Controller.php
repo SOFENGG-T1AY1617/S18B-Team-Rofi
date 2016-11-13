@@ -25,7 +25,6 @@ class Controller extends CI_Controller {
 
 	public function home()
     {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         $maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
         $data['buildings'] = $this->student->queryAllBuildings();
@@ -51,6 +50,9 @@ class Controller extends CI_Controller {
     }
 
     public function getTimes() {
+
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+
         $getData = array(
             'interval' => $this->input->get('interval'),
         );
@@ -62,7 +64,7 @@ class Controller extends CI_Controller {
         $times_tomorrow = $this->student->getTimes(null, $currentMinute, $getData['interval'], $this->student->getMinimumHour(), $this->student->getMaximumHour(), true);
 
         $data['times_today'] = null;
-        $data['times_today'] = null;
+        $data['times_tomorrow'] = null;
         $data['times_today_DISPLAY'] = null;
         $data['times_tomorrow_DISPLAY'] = null;
 
@@ -70,7 +72,7 @@ class Controller extends CI_Controller {
             $data['times_today'][] = date("H:i:s", $time);
 
         foreach ($times_tomorrow as $time)
-            $data['times_today'][] = date("H:i:s", $time);
+            $data['times_tomorrow'][] = date("H:i:s", $time);
 
         foreach ($times_today as $time)
             $data['times_today_DISPLAY'][] = date("h:i A", $time);
