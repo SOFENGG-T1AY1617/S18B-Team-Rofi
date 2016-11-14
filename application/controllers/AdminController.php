@@ -281,5 +281,24 @@ class AdminController extends CI_Controller
         echo json_encode("success");
     }
 
+    public function updateBusinessRules() {
+        $id = $this->input->get("business_rulesid");
+
+        $updateData = array(
+            'interval' => $this->input->get("interval"),
+            'limit' => $this->input->get("limit"),
+            'accessibility' => $this->input->get("accessibility"),
+            'reservation_expiry' => $this->input->get("reservation_expiry"),
+            'confirmation_expiry' => $this->input->get("confirmation_expiry"),
+        );
+
+        $this->admin->updateBusinessRules($id, $updateData);
+
+        $result = array(
+            'result' => "success",
+        );
+
+        echo json_encode($result);
+    }
 }
 
