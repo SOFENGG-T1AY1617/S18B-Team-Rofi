@@ -15,14 +15,6 @@ class Student_Model extends CI_Model
         $this->load->database();
     }
 
-    public function getMinuteInterval() {
-        return 15; // TODO retrieve from Settings
-    }
-
-    public function getMaxNumberOfSlots() {
-        return 4; // TODO retrieve from Settings
-    }
-
     public function getMinimumHour() { // TODO parameter must be department ID
         return 6; // TODO retrieve value depending on department
     }
@@ -268,6 +260,19 @@ class Student_Model extends CI_Model
                 FROM business_rules NATURAL JOIN (SELECT DISTINCT departmentid
                                                   FROM rooms
                                                   WHERE roomid = ?) d";
+
+        return $this->db->query($sql, array($id))->result();
+    }
+
+    function getSlotLimitOfCurrentStudentID($id) {
+        $sql = "SELECT MIN(b.limit) as 'minLimit'
+                FROM (SELECT br.limit
+                      FROM business_rules br NATURAL JOIN (SELECT DISTINCT departmentid
+                                                        FROM departments NATURAL JOIN (SELECT DISTINCT departmentid
+                                                                                 FROM rooms NATURAL JOIN (SELECT DISTINCT roomid 
+                                                                                             FROM computers NATURAL JOIN (SELECT DISTINCT computerid
+                                                                                                                          FROM reservations
+                                                                                                                          WHERE useridno = ?) res ) c ) ro ) d) b";
 
         return $this->db->query($sql, array($id))->result();
     }

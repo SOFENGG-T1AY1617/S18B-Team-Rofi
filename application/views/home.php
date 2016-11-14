@@ -358,17 +358,25 @@ $defaultTab = 1;
                             console.log(result);
                             console.log("done");
 
+                            $("#form_room").empty();
+
                             var out=[];
 
                             //out[0]= '<option value="0" selected >All Rooms</option>';
 
-                            var firstRoomID = result[0].roomid;
+                            var firstRoomID;
+
+                            if (result[0] != null)
+                                firstRoomID = result[0].roomid;
+                            else
+                                firstRoomID = "";
 
                             for(var i=0;i<result.length;i++){
                                 out[i] = '<option value="'+result[i].roomid+'" >'+result[i].name+'</option>';
-                            };
+                            }
 
-                            $("#form_room").empty().append(out);
+                            if (out.length > 0)
+                                $("#form_room").append(out);
 
                             selectRoom(firstRoomID);
 
@@ -519,6 +527,8 @@ $defaultTab = 1;
                          console.log(data)
                          }, 'json');*/
 
+                    } else {
+                        outputSlots();
                     }
 
                 }
@@ -619,7 +629,7 @@ $defaultTab = 1;
                                         }
 
                                         for (var x in slotsPicked) {
-                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && slotsPicked[x].includes(dateSelected) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
+                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
                                                 disableSlot(clickableSlot1);
                                         }
 
