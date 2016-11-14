@@ -208,6 +208,9 @@ class AdminController extends CI_Controller
                         'name' => $data[1],
                     );
                     $this->admin->updateRoomName($updateData);
+                    $result = array(
+                        'result' => "success",
+                    );
                 }
             }
 
