@@ -151,8 +151,8 @@ class Controller extends CI_Controller {
                 'errors' => $errors,
             );
         }
-        else if (count($getData['slots']) +
-            ($numReservations = $this->numReservations($getData['idnumber'])) > $this->getMaxReservations($getData['idnumber'], $getData['departmentid'])) {
+        else if ((count($getData['slots']) +
+            ($numReservations = $this->numReservations($getData['idnumber']))) > $this->getMaxReservations($getData['idnumber'], $getData['departmentid'])) {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
@@ -402,17 +402,16 @@ class Controller extends CI_Controller {
     }
 
     private function getMaxReservations($studentid, $departmentid) {
-        $max_reservations = $this->student->getSlotLimitofStudentID ($studentid);
-        $limit = 0;
+        $max_reservations = $this->student->getSlotLimitofStudentID($studentid);
+        $slotLimit = $max_reservations[0]->slotLimit;
 
-        if (!empty($max_reservations))
-            $limit = $max_reservations[0]->slotLimit;
+        if ($slotLimit > 0)
+            return intval($slotLimit);
         else {
-            $max_reservations = $this->student->getSlotLimitOfDepartment($departmentid);
-            if (!empty($max_reservations))
-                $limit = $max_reservations[0]->slotLimit;
-        }
+            $defaultLimit = $this->student->getSlotLimitOfDepartment($departmentid);
+            $slotLimit = $defaultLimit[0]->slotLimit;
 
-        return intval($limit);
+            return intval($slotLimit);
+        }
     }
 }
