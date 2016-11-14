@@ -94,10 +94,14 @@ class AdminController extends CI_Controller
     public function accView(){
         $data['administrators'] = $this->admin->queryAllAdministators();
 
+
         if($_SESSION['admin_typeid'] == 1)
             $data['moderators'] = $this->admin->queryAllModerators();
         else
             $data['moderators'] = $this->admin->queryModeratorsWithDepartmentID($_SESSION['admin_departmentid']);
+
+            $data['departments'] = $this->admin->queryAllDepartments();
+
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_accountManagement', $data); // $this->load->view('admin', $data); set to this if data is set
@@ -127,8 +131,13 @@ class AdminController extends CI_Controller
     }
 
     public function ruleView(){
+        if ($_SESSION['admin_typeid'] == 1)
+            $data['rules'] = $this->admin->queryAllBusinessRules();
+        else
+            $data['rules'] = $this->admin->queryBusinessRulesByDepartmentID($_SESSION['admin_departmentid']);
+
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_rules'); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('admin/a_rules', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
@@ -208,6 +217,9 @@ class AdminController extends CI_Controller
                         'name' => $data[1],
                     );
                     $this->admin->updateRoomName($updateData);
+                    $result = array(
+                        'result' => "success",
+                    );
                 }
             }
 
@@ -255,6 +267,18 @@ class AdminController extends CI_Controller
             echo json_encode("success");
         else
           echo json_encode("fail");
+    }
+
+    public function addModerators() {
+
+        $modData = array(
+            'moderators' => $this->input->get("moderators"),
+            'departmentid' => $_SESSION['admin_departmentid']
+        );
+
+        $this->admin->insertModerators($modData);
+
+        echo json_encode("success");
     }
 
 }

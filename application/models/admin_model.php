@@ -79,6 +79,13 @@ class Admin_Model extends CI_Model
         return $query->result();
     }
 
+    function queryAllDepartments() {
+        $this->db->select('*');
+        $this->db->from(TABLE_DEPARTMENTS);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     function queryModeratorsWithDepartmentID($id) {
         $this->db->select('*');
         $this->db->from(TABLE_MODERATORS);
@@ -187,6 +194,25 @@ class Admin_Model extends CI_Model
         return $this->db->get(TABLE_TYPES)->result();
     }
 
+    function queryAllBusinessRules() {
+        $this->db->select('*');
+        $this->db->from(TABLE_BUSINESS_RULES);
+        $this->db->join(TABLE_DEPARTMENTS, 'business_rules.departmentid = departments.departmentid');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    function queryBusinessRulesByDepartmentID($id) {
+        $sql = "SELECT *
+                FROM business_rules NATURAL JOIN
+                  (SELECT *
+                   FROM departments
+                   WHERE departmentid = ?) d";
+        return $this->db->query($sql, array($id))->result();
+    }
+
+
+
     function queryReservationsAtBuildingIDOnDate($id, $date) {
         $sql = "SELECT *
                 FROM rooms r NATURAL JOIN 
@@ -224,9 +250,6 @@ class Admin_Model extends CI_Model
     }
 
     function isValidUser($email, $pass) {
-
-
-
         $sql = "SELECT *
                       FROM administrators
                       WHERE email = ? AND password = ?";
@@ -278,6 +301,29 @@ class Admin_Model extends CI_Model
         return $numAdded;
     }
 
+    function insertModerators($data) {
+        $moderators = $data['moderators'];
+
+
+
+        foreach($moderators as $mod) {
+
+            if(!$this->isExistingModerator($mod[2])) {
+                $insertModData = array(
+                    'first_name' => $mod[0],
+                    'last_name' => $mod[1],
+                    'password' => "password",
+                    'email' => $mod[2],
+                    'mod_departmentid' => $data['departmentid']
+                );
+
+                $this->db->insert(TABLE_MODERATORS,$insertModData);
+            }
+        }
+    }
+
+
+
     function insertRoom($room) {
         $this->db->insert(TABLE_ROOMS, $room);
     }
@@ -302,6 +348,16 @@ class Admin_Model extends CI_Model
         $this->db->select('*');
         $this->db->from(TABLE_ROOMS);
         $this->db->where(COLUMN_NAME, $roomName);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+
+    function isExistingModerator($email) {
+        $this->db->select('*');
+        $this->db->from(TABLE_MODERATORS);
+        $this->db->where(COLUMN_EMAIL, $email);
         $query = $this->db->get();
         $result = $query->result();
 
@@ -442,6 +498,5 @@ class Admin_Model extends CI_Model
 
         return count($result)>=1;
     }
-
 
 }

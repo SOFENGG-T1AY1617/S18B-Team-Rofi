@@ -135,8 +135,12 @@ define("COLUMN_MODERATORID", "moderatorid");
 define("COLUMN_MOD_DEPARTMENTID", "mod_departmentid");
 
 define("TABLE_BUSINESS_RULES", "business_rules");
+define("COLUMN_BUSINESS_RULESID", "business_rulesid");
 define("COLUMN_INTERVAL", "interval");
 define("COLUMN_LIMIT", "limit");
+define("COLUMN_ACCESSIBILITY", "accessibility");
+define("COLUMN_RESERVATION_EXPIRY", "reservation_expiry");
+define("COLUMN_CONFIRMATION_EXPIRY", "confirmation_expiry");
 
 
 /* ADMIN PAGES */
