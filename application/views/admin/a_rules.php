@@ -1,50 +1,72 @@
 <script xmlns="http://www.w3.org/1999/html">
 
+    function setInputRules() {
+        $(".number-input").keypress(function(event) {
+            if ( event.which == 45 || event.which == 189 ) {
+                event.preventDefault();
+            }
+        });
+
+        $(".number-input").bind('paste', function(e) {
+            var pasteData = e.clipboardData.getData('text/plain');
+            if (pasteData.match(/[^0-9]/))
+                e.preventDefault();
+        }, false);
+    }
+
     function changeViewToEdit(table, footer){
-        console.log(table);
+        console.log(footer);
         var tableA = document.getElementById(table);
         var rows = tableA.rows;
-        var tID = table.id;
-        var fID = footer.id;
+        //var tID = table.id;
+        //var fID = footer.id;
 
         var cells1 = rows[0].cells;
-        var curSettingTI = cells1[1].getAttribute("name");
+        var curIDTI = $(cells1[1]).attr("id");
+        var curSettingTI = $(cells1[1]).data("value");
         cells1[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingTI+ "\">" +
+            "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDTI+ "\" value=\""+curSettingTI+ "\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
 
         var cells2 = rows[1].cells;
-        var curSettingTL = cells2[1].getAttribute("name");
+        var curIDTL = $(cells2[1]).attr("id");
+        var curSettingTL = $(cells2[1]).data("value");
         cells2[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingTL+"\">" +
+            "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDTL+ "\" value=\""+curSettingTL+"\">" +
             "<div class=\"input-group-addon \">timeslots</div>" +
             "</div>";
 
         var cells3 = rows[2].cells;
-        var curSettingRA = cells3[1].getAttribute("name");
+        var curIDRA = $(cells3[1]).attr("id");
+        var curSettingRA = $(cells3[1]).data("value");
         cells3[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingRA+ "\">" +
+            "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDRA+ "\" value=\""+curSettingRA+ "\">" +
             "<div class=\"input-group-addon \">days</div>" +
             "</div>";
 
         var cells4 = rows[3].cells;
-        var curSettingRE = cells4[1].getAttribute("name");
+        var curIDRE = $(cells4[1]).attr("id");
+        var curSettingRE = $(cells4[1]).data("value");
         cells4[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingRE+"\">" +
+            "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDRE+ "\" value=\""+curSettingRE+"\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
 
         var cells5 = rows[4].cells;
-        var curSettingCE = cells5[1].getAttribute("name");
+        var curIDCE = $(cells5[1]).attr("id");
+        var curSettingCE = $(cells5[1]).data("value");
         cells5[1].innerHTML = "<div class= \"input-group\">" +
-            "<input type=\"number\" class=\"form-control input-sm\" id=\"exampleInputAmount\" value=\""+curSettingCE+"\">" +
+            "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDCE+ "\" value=\""+curSettingCE+"\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
 
-        footer.innerHTML =
-            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView("+tID+","+fID+")\">Cancel</button>"+
-            "<input class=\"btn btn-default  col-md-offset-0 col-md-2\" type=\"submit\" value=\"Save Changes\"></div>";
+        setInputRules();
+
+
+        document.getElementById(footer).innerHTML =
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView('"+table+"','"+footer+"')\">Cancel</button>"+
+            "<input class=\"btn btn-default  col-md-offset-0 col-md-2\" type=\"button\" onclick=\"submitChanges('"+table+"')\" value=\"Save Changes\"></div>";
 
     }
 
@@ -74,9 +96,90 @@
         var curSettingCE = " The confirmation email will expire after 60 minutes.";
         cells5[1].innerHTML = curSettingCE;
 
-        footer.innerHTML =
+        document.getElementById(footer).innerHTML =
             " <button class=\"btn btn-default col-md-3 col-md-offset-9\" type=\"button\" onclick=\"changeViewToEdit("+table.id+", "+footer.id+")\">Edit Information</button>";
 
+    }
+
+    function submitChanges(tableID) {
+        var newTableData = getTableData(tableID);
+
+        if (newTableData == null) {
+            toastr.error("Input is lacking, please try again.", "Error");
+            return;
+        }
+
+        var business_rulesid = tableID.split("_")[0];
+        console.log(business_rulesid);
+
+        $.ajax({
+            url: '<?=base_url('admin/updateBusinessRules')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                business_rulesid: business_rulesid,
+                interval: newTableData[0],
+                limit: newTableData[1],
+                accessibility: newTableData[2],
+                reservation_expiry: newTableData[3],
+                confirmation_expiry: newTableData[4],
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                console.log(result);
+
+                if (result['result'] == "success") {
+
+                    /*$(window).load(function(){
+                     toastr.success("Changes were made successfully.", "Success");
+                     });*/
+                    toastr.success("Changes were made successfully.", "Success");
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
+                }
+            })
+            .fail(function() {
+                console.log("fail");
+                //console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+
+    function reloadPage() {
+        <?php
+        // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+        echo 'window.location = "'. site_url("admin/".ADMIN_BUSINESS_RULES) .'";';
+        ?>
+    }
+
+    function getTableData(tableID) {
+        var table = document.getElementById(tableID);
+        var jObject = [];
+        for (var i = 0; i < table.rows.length; i++)
+        {
+
+            // Get data from the cell
+            var value = table.rows[i].cells[1].childNodes[0].childNodes[0].value;
+
+            if (value == "") {
+                jObject = null;
+                break;
+            }
+
+            jObject[i] = value;
+
+        }
+        return jObject;
     }
 
 </script>
@@ -108,27 +211,27 @@ include 'a_navbar.php';
 
                                     <tr>
                                         <th scope="row"> Timeslot Interval </th>
-                                        <td id="timeslot_interval_<?=$rule->business_rulesid?>" name="15">A timeslot is equal to <strong><u><?=$rule->interval?></u></strong> minutes.</td>
+                                        <td id="timeslot_interval_<?=$rule->business_rulesid?>" data-value="<?=$rule->interval?>">A timeslot is equal to <strong><u><?=$rule->interval?></u></strong> minutes.</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> Timeslot Limit </th>
-                                        <td id="timeslot_limit_<?=$rule->business_rulesid?>" name="4">The user can choose up to <strong><u><?=$rule->limit?></u></strong> timeslots.</td>
+                                        <td id="timeslot_limit_<?=$rule->business_rulesid?>" data-value="<?=$rule->limit?>">The user can choose up to <strong><u><?=$rule->limit?></u></strong> timeslots.</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> Reservation Access </th>
-                                        <td id="reservation_access_<?=$rule->business_rulesid?>" name="1">The user can reserve <strong><u><?=$rule->accessibility?></u></strong> day/s before the actual reservation date.</td>
+                                        <td id="reservation_access_<?=$rule->business_rulesid?>" data-value="<?=$rule->accessibility?>">The user can reserve <strong><u><?=$rule->accessibility?></u></strong> day/s before the actual reservation date.</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> Reservation Expiry </th>
-                                        <td id="reservation_expiry_<?=$rule->business_rulesid?>" name="15">The reservation will expire if the user fails to show up after <strong><u><?=$rule->reservation_expiry?></u></strong> minutes.</td>
+                                        <td id="reservation_expiry_<?=$rule->business_rulesid?>" data-value="<?=$rule->reservation_expiry?>">The reservation will expire if the user fails to show up after <strong><u><?=$rule->reservation_expiry?></u></strong> minutes.</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> Confirmation Expiry </th>
-                                        <td id="confirmation_expiry_<?=$rule->business_rulesid?>" name="60">The confirmation email will expire after <strong><u><?=$rule->confirmation_expiry?></u></strong> minutes if not confirmed.</td>
+                                        <td id="confirmation_expiry_<?=$rule->business_rulesid?>" data-value="<?=$rule->confirmation_expiry?>">The confirmation email will expire after <strong><u><?=$rule->confirmation_expiry?></u></strong> minutes if not confirmed.</td>
                                     </tr>
 
 

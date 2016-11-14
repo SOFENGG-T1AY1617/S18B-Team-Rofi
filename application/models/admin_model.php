@@ -498,4 +498,9 @@ class Admin_Model extends CI_Model
         return count($result)>=1;
     }
 
+    function updateBusinessRules($id, $updateData) {
+        $this->db->where(COLUMN_BUSINESS_RULESID, $id);
+        $this->db->update(TABLE_BUSINESS_RULES, $updateData);
+    }
+
 }
