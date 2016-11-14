@@ -2,7 +2,7 @@
 
     function changeViewToEdit(table, footer){
         console.log(table);
-        var tableA = table;
+        var tableA = document.getElementById(table);
         var rows = tableA.rows;
         var tID = table.id;
         var fID = footer.id;
@@ -103,32 +103,32 @@ include 'a_navbar.php';
                     <ul class="list-group">
                         <form>
                             <li class="list-group-item">
-                                <table class="table table-hover" id="rulestable">
+                                <table class="table table-hover" id="<?=$rule->business_rulesid?>_rulestable">
                                     <tbody>
 
                                     <tr>
                                         <th scope="row"> Timeslot Interval </th>
-                                        <td id="timeslot_interval_<?=$rule->business_rulesid?>" name="15">A timeslot is equal to <?=$rule->interval?> minutes.</td>
+                                        <td id="timeslot_interval_<?=$rule->business_rulesid?>" name="15">A timeslot is equal to <strong><u><?=$rule->interval?></u></strong> minutes.</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> Timeslot Limit </th>
-                                        <td id="timeslot_limit_<?=$rule->business_rulesid?>" name="4">The user can choose up to <?=$rule->limit?> timeslots.</td>
+                                        <td id="timeslot_limit_<?=$rule->business_rulesid?>" name="4">The user can choose up to <strong><u><?=$rule->limit?></u></strong> timeslots.</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> Reservation Access </th>
-                                        <td id="reservation_access_<?=$rule->business_rulesid?>" name="1">The user can reserve <?=$rule->accessibility?> day/s before the actual reservation date.</td>
+                                        <td id="reservation_access_<?=$rule->business_rulesid?>" name="1">The user can reserve <strong><u><?=$rule->accessibility?></u></strong> day/s before the actual reservation date.</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> Reservation Expiry </th>
-                                        <td id="reservation_expiry_<?=$rule->business_rulesid?>" name="15">The reservation will expire if the user fails to show up after <?=$rule->reservation_expiry?> minutes.</td>
+                                        <td id="reservation_expiry_<?=$rule->business_rulesid?>" name="15">The reservation will expire if the user fails to show up after <strong><u><?=$rule->reservation_expiry?></u></strong> minutes.</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> Confirmation Expiry </th>
-                                        <td id="confirmation_expiry_<?=$rule->business_rulesid?>" name="60">The confirmation email will expire after <?=$rule->confirmation_expiry?> minutes if not confirmed.</td>
+                                        <td id="confirmation_expiry_<?=$rule->business_rulesid?>" name="60">The confirmation email will expire after <strong><u><?=$rule->confirmation_expiry?></u></strong> minutes if not confirmed.</td>
                                     </tr>
 
 
@@ -136,8 +136,8 @@ include 'a_navbar.php';
                                 </table>
 
                             </li>
-                            <div class = "panel-footer clearfix" id = "rulestable_footer">
-                                <button class="btn btn-default col-md-3 col-md-offset-9" type="button" onclick="changeViewToEdit(rulestable, rulestable_footer)">Edit Information</button>
+                            <div class = "panel-footer clearfix" id = "<?=$rule->business_rulesid?>_rulestable_footer">
+                                <button class="btn btn-default col-md-3 col-md-offset-9" type="button" onclick="changeViewToEdit('<?=$rule->business_rulesid?>_rulestable', '<?=$rule->business_rulesid?>_rulestable_footer')">Edit Information</button>
                             </div>
                         </form>
                 </div>
