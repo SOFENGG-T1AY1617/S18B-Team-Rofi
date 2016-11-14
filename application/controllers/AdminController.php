@@ -300,5 +300,16 @@ class AdminController extends CI_Controller
 
         echo json_encode($result);
     }
+    
+    public function addAdmins() {
+
+        $adminData = array(
+            'admins' => $this->input->get("admins")
+        );
+
+        $this->admin->insertAdmins($adminData);
+
+        echo json_encode("success");
+    }
 }
 

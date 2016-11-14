@@ -394,6 +394,49 @@ class Admin_Model extends CI_Model
         $this->db->update(TABLE_ROOMS, array('name' => $room['name']));
     }
 
+    function insertAdmin($data) {
+        $this->db->insert(TABLE_ADMINISTRATORS, $data);
+    }
+
+    function insertAdmins($data) {
+        $admins = $data['admins'];
+        $numAdded = 0;
+
+        foreach($admins as $admin) {
+            $insertAdminData = array(
+                COLUMN_EMAIL => $admin[2],
+                COLUMN_PASSWORD => 'default', // to be set by the admin on email confirmation
+                COLUMN_FIRST_NAME => $admin[0],
+                COLUMN_LAST_NAME => $admin[1],
+                COLUMN_ADMIN_DEPARTMENTID => $admin[3],
+                COLUMN_ADMIN_TYPEID => 2
+            );
+
+            $this->insertAdmin($insertAdminData);
+            $numAdded++;
+        }
+
+        return $numAdded;
+    }
+
+    function isExistingDepartment($departmentName) {
+        $this->db->select('*');
+        $this->db->from(TABLE_DEPARTMENTS);
+        $this->db->where(COLUMN_NAME, $departmentName);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+
+    function insertDepartment($data) {
+
+    }
+
+    function insertDepartments($data) {
+
+    }
+
     function removeComputersFromRoom($data) {
         $roomid = $data['roomid'];
         $numToRemove = $data['count'];

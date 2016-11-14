@@ -182,6 +182,35 @@
                 console.log("complete");
             });
     }
+
+    function submitAdmins() {
+        var tableID = $("#add_tableA").attr("id");
+        var tableData = getTableData(tableID);
+        console.log(tableData);
+
+        $.ajax({
+            url: '<?=base_url('admin/addAdmins')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                admins: tableData
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                //location.reload(true);
+                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+
+            })
+            .fail(function(result) {
+                console.log("fail");
+                console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+
     function deleteRow(table, index){
         var tableA = document.getElementById(table);
         for(var x=index+1;x<tableA.rows.length;x++)
@@ -412,7 +441,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAccount('add_tableA')">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitAdmins('add_tableA')" >Confirm</button>
                 </div>
             </form>
         </div>

@@ -73,6 +73,7 @@ $route['admin/addModerators'] = 'AdminController/addModerators';
 $route['admin/updateRooms'] = 'AdminController/updateRooms';
 $route['admin/addBuilding'] = 'AdminController/addBuilding';
 $route['admin/updateBusinessRules'] = 'AdminController/updateBusinessRules';
+$route['admin/addAdmins'] = 'AdminController/addAdmins';
 
 
 $route['admin/(:any)'] = 'AdminController/loadView/$1';
