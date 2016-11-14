@@ -403,15 +403,13 @@ class Controller extends CI_Controller {
 
     private function getMaxReservations($studentid, $departmentid) {
         $max_reservations = $this->student->getSlotLimitofStudentID($studentid);
-        $slotLimit = $max_reservations[0]->slotLimit;
 
-        if ($slotLimit > 0)
-            return intval($slotLimit);
+        if ($max_reservations > 0)
+            return intval($max_reservations);
         else {
             $defaultLimit = $this->student->getSlotLimitOfDepartment($departmentid);
-            $slotLimit = $defaultLimit[0]->slotLimit;
 
-            return intval($slotLimit);
+            return intval($defaultLimit);
         }
     }
 }

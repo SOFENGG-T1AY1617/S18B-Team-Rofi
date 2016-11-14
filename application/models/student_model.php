@@ -275,7 +275,9 @@ class Student_Model extends CI_Model
                                                                                                                                              WHERE useridno = ? AND 
                                                                                                                                              date >= CURRENT_DATE) res ) c ) ro ) d) b";
 
-        return $this->db->query($sql, array($id))->result();
+        $slotLimit = $this->db->query($sql, array($id))->result();
+
+        return $slotLimit[0]->slotLimit;
     }
 
     function getSlotLimitOfDepartment($id) {
@@ -283,6 +285,8 @@ class Student_Model extends CI_Model
                 FROM business_rules br 
                 WHERE departmentid = ?";
 
-        return $this->db->query($sql, array($id))->result();
+        $slotLimit = $this->db->query($sql, array($id))->result();
+
+        return $slotLimit[0]->slotLimit;
     }
 }
