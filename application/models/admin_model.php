@@ -338,6 +338,25 @@ class Admin_Model extends CI_Model
         $this->db->update(TABLE_ROOMS, array('name' => $room['name']));
     }
 
+    function addAdmin($data) {
+        $insertData = 0;
+
+        $sql =
+
+    }
+
+    function insertAdmin($admin) {
+        $this->db->insert(TABLE_ADMINISTRATORS, $admin);
+    }
+
+    function addDepartment($data) {
+
+    }
+
+    function insertDepartment($dept) {
+
+    }
+
     function removeComputersFromRoom($data) {
         $roomid = $data['roomid'];
         $numToRemove = $data['count'];

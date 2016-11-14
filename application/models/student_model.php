@@ -276,4 +276,11 @@ class Student_Model extends CI_Model
 
         return $this->db->query($sql, array($id))->result();
     }
+
+    function getMaxLimit() {
+        $sql = "SELECT MAX(br.limit) as 'maxLimit'
+                FROM business_rules br";
+
+        return $this->db->query($sql)->result();
+    }
 }

@@ -151,7 +151,7 @@ class Controller extends CI_Controller {
             );
         }
         else if (count($getData['slots']) +
-            ($numReservations = $this->numReservations($getData['idnumber'])) > MAX_RESERVATIONS) {
+            ($numReservations = $this->numReservations($getData['idnumber'])) > $this->getMaxReservations($getData['idnumber'])) {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
@@ -398,5 +398,20 @@ class Controller extends CI_Controller {
         }
 
         return $reservations;
+    }
+
+    private function getMaxReservations($id) {
+        $max_reservations = $this->student->getSlotLimitOfCurrentStudentID ($id);
+        $limit = 0;
+
+        if ($data = mysqli_fetch_array($max_reservations))
+            $limit = $data['minLimit'];
+        else {
+            $max_reservations = $this->student->getMaxLimit();
+            if ($data = mysqli_fetch_array($max_reservations))
+                $limit = $data['maxLimit'];
+        }
+
+        return $limit;
     }
 }
