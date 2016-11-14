@@ -131,8 +131,13 @@ class AdminController extends CI_Controller
     }
 
     public function ruleView(){
+        if ($_SESSION['admin_typeid'] == 1)
+            $data['rules'] = $this->admin->queryAllBusinessRules();
+        else
+            $data['rules'] = $this->admin->queryBusinessRulesByDepartmentID($_SESSION['admin_departmentid']);
+
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_rules'); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('admin/a_rules', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
