@@ -398,7 +398,7 @@ class Admin_Model extends CI_Model
         $this->db->insert(TABLE_ADMINISTRATORS, $data);
     }
 
-    function insertAdminsToDepartment($data) {
+    function insertAdmins($data) {
         $admins = $data['admins'];
         $numAdded = 0;
 
@@ -409,7 +409,7 @@ class Admin_Model extends CI_Model
                 COLUMN_FIRST_NAME => $admin[0],
                 COLUMN_LAST_NAME => $admin[1],
                 COLUMN_ADMIN_DEPARTMENTID => $admin[3],
-                COLUMN_ADMIN_TYPEID => $data[COLUMN_ADMIN_TYPEID]
+                COLUMN_ADMIN_TYPEID => 2
             );
 
             $this->insertAdmin($insertAdminData);
@@ -417,7 +417,6 @@ class Admin_Model extends CI_Model
         }
 
         return $numAdded;
-
     }
 
     function isExistingDepartment($departmentName) {
