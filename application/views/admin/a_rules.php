@@ -1,6 +1,7 @@
 <script xmlns="http://www.w3.org/1999/html">
 
     function setInputRules() {
+        $('input[type=number]').numeric();
         $(".number-input").keypress(function(event) {
             if ( event.which == 45 || event.which == 189 ) {
                 event.preventDefault();

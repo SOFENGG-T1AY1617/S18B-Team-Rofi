@@ -23,6 +23,7 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="<?=base_url()?>/assets/js/bootstrap.min.js"></script>
     <script src="<?=base_url()?>/assets/js/toastr.min.js"></script>
+    <script src="<?=base_url()?>/assets/js/jquery.numeric.min.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 

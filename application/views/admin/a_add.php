@@ -1,6 +1,3 @@
-<script src="<?=base_url()?>/assets/js/jquery.numeric.min.js"></script>
-
-
 <script xmlns="http://www.w3.org/1999/html">
     $(document).ready(function() {
        $(".add-room-btn").click(function() {
@@ -12,10 +9,11 @@
        });
 
         setInputRules();
-        $('input[type=number]').numeric();
+
     });
 
     function setInputRules() {
+        $('input[type=number]').numeric();
         $(".number-input").keypress(function(event) {
             if ( event.which == 45 || event.which == 189) {
                 event.preventDefault();
@@ -40,9 +38,10 @@
         var i = tableA.rows.length-1;
 
         cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name of the room\">";
-        cellNumber.innerHTML = "<input type=\"number\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter number of PCs in the room\">";
+        cellNumber.innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" placeholder=\"Enter number of PCs in the room\">";
         deleteCol.innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>"
 
+        setInputRules();
     }
 
     function cancelAddBldg(building){
