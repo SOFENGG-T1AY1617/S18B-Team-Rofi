@@ -1,3 +1,6 @@
+<script src="<?=base_url()?>/assets/js/jquery.numeric.min.js"></script>
+
+
 <script xmlns="http://www.w3.org/1999/html">
     $(document).ready(function() {
        $(".add-room-btn").click(function() {
@@ -5,12 +8,16 @@
            buildingid = buildingid.split("-")[1];
            //console.log("Building id: " + buildingid);
            $("#add_table").attr("name", buildingid);
-       })
+           $("#modal-building-name").text($(this).data("buildingname"));
+       });
+
+        setInputRules();
+        $('input[type=number]').numeric();
     });
 
     function setInputRules() {
         $(".number-input").keypress(function(event) {
-            if ( event.which == 45 || event.which == 189 ) {
+            if ( event.which == 45 || event.which == 189) {
                 event.preventDefault();
             }
         });
@@ -459,7 +466,7 @@ include 'a_navbar.php';
                                 </div>
                             </li>
                             <div class = "panel-footer clearfix" id = "<?=$row->buildingid?>footer">
-                                <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default col-md-2 col-md-offset-8 add-room-btn" id="add-<?=$row->buildingid?>">Add Rooms</button>
+                                <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default col-md-2 col-md-offset-8 add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">Add Rooms</button>
                                 <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>footer')">Edit Rooms</button>
                             </div>
                         </form>
@@ -480,7 +487,7 @@ include 'a_navbar.php';
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">[BLDG NAME HERE] - Add New Rooms</h4>
+                <h4 class="modal-title" id="modal-building-name"></h4>
             </div>
             <form>
             <div class="modal-body clearfix">
@@ -498,7 +505,7 @@ include 'a_navbar.php';
 
                             <tr>
                                 <td><input type="text" class="form-control" placeholder="Enter name of room"></td>
-                                <td><input type="number" class="form-control" placeholder="Enter number of PCs in the room"></td>
+                                <td><input type="number" min="0" class="form-control number-input" placeholder="Enter number of PCs in the room"></td>
                                 <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default"><i class="material-icons">clear</i></button></td>
                             </tr>
                             </tbody>
@@ -534,10 +541,10 @@ include 'a_navbar.php';
                         <label for="bldgName">Building Name:</label>
                         <input type="text" class="form-control" id="bldgName" placeholder="Enter the name of the building...">
                     </div>
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label for="bldgPrefix">Prefix:</label>
                         <input type="text" class="form-control" id="bldgPrefix" placeholder="Enter the prefix to be used. (ie. G for Gokongwei, SJ for St. Joseph Hall etc...)">
-                    </div>
+                    </div>-->
 
                 </div>
                 <div class="modal-footer">
