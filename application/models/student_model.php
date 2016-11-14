@@ -273,7 +273,7 @@ class Student_Model extends CI_Model
                                                                                                                 FROM computers NATURAL JOIN (SELECT DISTINCT computerid
                                                                                                                                              FROM reservations
                                                                                                                                              WHERE useridno = ? AND 
-                                                                                                                                             date >= NOW()) res ) c ) ro ) d) b";
+                                                                                                                                             date >= CURRENT_DATE) res ) c ) ro ) d) b";
 
         return $this->db->query($sql, array($id))->result();
     }

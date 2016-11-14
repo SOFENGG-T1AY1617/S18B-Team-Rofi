@@ -30,7 +30,6 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->student->queryAllBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
-        $data['wow'] = $this->getMaxReservations(11425520, 1);
 
         $data['tab'] = 1; // set to first tab on open
 
