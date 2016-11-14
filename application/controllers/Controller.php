@@ -30,6 +30,7 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->student->queryAllBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
+        $data['wow'] = $this->getMaxReservations(11425520, 1);
 
         $data['tab'] = 1; // set to first tab on open
 
@@ -406,13 +407,13 @@ class Controller extends CI_Controller {
         $limit = 0;
 
         if (!empty($max_reservations))
-            $limit = $max_reservations[0];
+            $limit = $max_reservations[0]->slotLimit;
         else {
             $max_reservations = $this->student->getSlotLimitOfDepartment($departmentid);
             if (!empty($max_reservations))
-                $limit = $max_reservations[0];
+                $limit = $max_reservations[0]->slotLimit;
         }
 
-        return $limit;
+        return intval($limit);
     }
 }

@@ -268,11 +268,12 @@ class Student_Model extends CI_Model
         $sql = "SELECT MIN(b.limit) as 'slotLimit'
                 FROM (SELECT br.limit
                       FROM business_rules br NATURAL JOIN (SELECT DISTINCT departmentid
-                                                        FROM departments NATURAL JOIN (SELECT DISTINCT departmentid
-                                                                                 FROM rooms NATURAL JOIN (SELECT DISTINCT roomid 
-                                                                                             FROM computers NATURAL JOIN (SELECT DISTINCT computerid
-                                                                                                                          FROM reservations
-                                                                                                                          WHERE useridno = ?) res ) c ) ro ) d) b";
+                                                           FROM departments NATURAL JOIN (SELECT DISTINCT departmentid
+                                                                                       FROM rooms NATURAL JOIN (SELECT DISTINCT roomid 
+                                                                                                                FROM computers NATURAL JOIN (SELECT DISTINCT computerid
+                                                                                                                                             FROM reservations
+                                                                                                                                             WHERE useridno = ? AND 
+                                                                                                                                             date >= NOW()) res ) c ) ro ) d) b";
 
         return $this->db->query($sql, array($id))->result();
     }
