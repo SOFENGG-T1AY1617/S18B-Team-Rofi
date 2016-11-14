@@ -90,7 +90,7 @@ $defaultTab = 1;
                 var dateToday = "<?=date("Y-m-d")?>";
                 var dateSelected = dateToday;
                 var maxNumberOfSlots = 0;
-                var previousDeptID = 0;
+                var currentDeptID = 0;
 
                 var times_today;
                 var times_tomorrow;
@@ -442,14 +442,14 @@ $defaultTab = 1;
                             .done(function(result) {
                                 interval = result[0].interval;
 
-                                if (previousDeptID != result[0].departmentid) {
+                                if (currentDeptID != result[0].departmentid) {
                                     clearSelectedSlots();
                                     setSlotLimit(result[0].limit);
-                                    if (previousDeptID !=0)
+                                    if (currentDeptID !=0)
                                         toastr.info("The slots have been cleared and limit has been changed.", "Department has changed!");
                                 }
 
-                                previousDeptID = result[0].departmentid;
+                                currentDeptID = result[0].departmentid;
                             })
                             .fail(function() {
                                 console.log("fail");
@@ -825,7 +825,8 @@ $defaultTab = 1;
                                 collegeid: $("#select-college").val(),
                                 email: $("#email").val(),
                                 date: $("#text-date").val(),
-                                slots: slotsPicked
+                                slots: slotsPicked,
+                                departmentid: currentDeptID
                             }
                         })
                             .done(function(result) {

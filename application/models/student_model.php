@@ -264,8 +264,8 @@ class Student_Model extends CI_Model
         return $this->db->query($sql, array($id))->result();
     }
 
-    function getSlotLimitOfCurrentStudentID($id) {
-        $sql = "SELECT MIN(b.limit) as 'minLimit'
+    function getSlotLimitofStudentID($id) {
+        $sql = "SELECT MIN(b.limit) as 'slotLimit'
                 FROM (SELECT br.limit
                       FROM business_rules br NATURAL JOIN (SELECT DISTINCT departmentid
                                                         FROM departments NATURAL JOIN (SELECT DISTINCT departmentid
@@ -277,10 +277,11 @@ class Student_Model extends CI_Model
         return $this->db->query($sql, array($id))->result();
     }
 
-    function getMaxLimit() {
-        $sql = "SELECT MAX(br.limit) as 'maxLimit'
-                FROM " + TABLE_BUSINESS_RULES + " br";
+    function getSlotLimitOfDepartment($id) {
+        $sql = "SELECT br.limit as 'slotLimit'
+                FROM business_rules br 
+                WHERE departmentid = ?";
 
-        return $this->db->query($sql)->result();
+        return $this->db->query($sql, array($id))->result();
     }
 }
