@@ -279,7 +279,7 @@ class Student_Model extends CI_Model
 
     function getMaxLimit() {
         $sql = "SELECT MAX(br.limit) as 'maxLimit'
-                FROM business_rules br";
+                FROM " + TABLE_BUSINESS_RULES + " br";
 
         return $this->db->query($sql)->result();
     }

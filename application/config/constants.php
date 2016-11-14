@@ -134,6 +134,10 @@ define("TABLE_MODERATORS", "moderators");
 define("COLUMN_MODERATORID", "moderatorid");
 define("COLUMN_MOD_DEPARTMENTID", "mod_departmentid");
 
+define("TABLE_BUSINESS_RULES", "business_rules");
+define("COLUMN_INTERVAL", "interval");
+define("COLUMN_LIMIT", "limit");
+
 
 /* ADMIN PAGES */
 define("ADMIN_SCHEDULING", "scheduling");
