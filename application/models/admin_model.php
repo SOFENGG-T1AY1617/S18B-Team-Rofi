@@ -503,4 +503,14 @@ class Admin_Model extends CI_Model
         $this->db->update(TABLE_BUSINESS_RULES, $updateData);
     }
 
+    function queryModDeptIDAtEmail($email){
+        $sql = "SELECT mod_departmentid 
+                      FROM moderators
+                      WHERE email = ?";
+
+        $deptid = $this->db->query($sql, array($email))->result();
+
+        return $deptid[0]->mod_departmentid;
+    }
+
 }

@@ -311,5 +311,13 @@ class AdminController extends CI_Controller
 
         echo json_encode("success");
     }
+
+    public function getModDeptIDFromEmail(){
+        $email = $this->input->get("email");
+
+        $result = $this->admin->queryModDeptIDAtEmail($email);
+
+        echo intval($result);
+    }
 }
 

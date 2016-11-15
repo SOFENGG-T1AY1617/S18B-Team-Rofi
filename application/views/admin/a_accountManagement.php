@@ -110,7 +110,11 @@
         var tID = table;
         var fID = footer;
 
-        for(var i = 1; i < rows.length; i++){
+        document.getElementById(footer).innerHTML =
+            "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
+            "<input class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"submit\" value=\"Save Changes\"></div>";
+
+        for(var i = 1; i < rows.length; i++) {
             var cells = rows[i].cells;
 
             var curFName = cells[0].innerHTML;
@@ -118,17 +122,64 @@
             var curEmail = cells[2].innerHTML;
             var curDept = cells[3].innerHTML;
 
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\""+curFName+"\">"
-            cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\""+curLName+"\">"
-            cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail\" value=\""+curEmail+"\">"
-            cells[3].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" value=\""+curDept+"\">"
-            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount("+tID+", "+i+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+            var dept;
+
+            console.log(curDept);
+            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\"" + curFName + "\">";
+            cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\"" + curLName + "\">";
+            cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail\" value=\"" + curEmail + "\">";
+            cells[3].innerHTML = "<select type='text' id='modDept" + i + "' class='form-control' placeholder='Enter department'><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
+            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount(" + tID + ", " + i + ")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+
+
+
 
         }
+        for(var i = 1; i < rows.length; i++){
 
-        document.getElementById(footer).innerHTML =
-            "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
-            "<input class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"submit\" value=\"Save Changes\"></div>";
+            var cells = rows[i].cells;
+
+            var curDept = cells[3].innerHTML;
+
+            var dept;
+
+            $.ajax({
+            url: '<?=base_url('admin/getModDeptIDFromEmail')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                email: curEmail
+            }
+        })
+               .done(function (result) {
+                   //console.log("done");
+                   //location.reload(true);
+                   // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+
+                   dept = result;
+                   if (<?php print_r($_SESSION["admin_typeid"]);?> !=1)
+                   $("#modDept"+i).prop("disabled", true);
+
+
+                   $("#modDept"+i).val(dept);
+
+
+               })
+               .fail(function (result) {
+                   //console.log("fail");
+                   //console.log(result);
+               })
+               .always(function () {
+                   //console.log("complete");
+               })
+               .then (function () {
+
+
+
+               })
+        }
+
+
 
     }
 
