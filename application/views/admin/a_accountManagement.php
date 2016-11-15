@@ -5,6 +5,8 @@
 
 <script xmlns="http://www.w3.org/1999/html">
 
+
+
     function addAccountModerator(table){
         console.log(table);
         var tableA =document.getElementById(table);
@@ -163,9 +165,35 @@
 
     }
 
+    function emptyTable(table){
+        var tableA=document.getElementById(table);
+
+        for(var x=tableA.rows.length-1;x>0;x--)
+        {
+            tableA.deleteRow(x);
+        }                           
+
+    }
+    function repopulateTable(table){
+        /*Insert DB extraction Codes Here*/
+        var tableA=document.getElementById(table);
+        var x=tableA.rows.length;
+        var row = tableA.insertRow(x);
+        var fName = row.insertCell(0);
+        var lName = row.insertCell(1);
+        var email = row.insertCell(2);
+        var name = row.insertCell(3);
+        fName.innerHTML= "Test";                                       
+        lName.innerHTML= "Test";  
+        email.innerHTML= "Test";  
+        name.innerHTML="Test";  
+ 
+
+
+    }
+
     function changeViewToView(table, footer, modal){
         console.log(table);
-
         var tableA = document.getElementById(table);
         var footerA = document.getElementById(footer);
         var rows = tableA.rows;
@@ -207,11 +235,14 @@
         } else
             s = 'Add Admins';
 
+
+        emptyTable(table);
+        repopulateTable(table);
         footerA.innerHTML =
 
                 "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default col-md-2 col-md-offset-8\"> "+s+" </button>" +
                 " <button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"changeViewToEdit('"+tableA.id+"', '"+footerA.id+"','" +modal+"' )\">Edit Accounts</button>";
-
+        
     }
 
 
