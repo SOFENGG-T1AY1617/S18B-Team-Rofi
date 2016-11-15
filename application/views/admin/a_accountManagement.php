@@ -1,6 +1,6 @@
 <script xmlns="http://www.w3.org/1999/html">
 
-    function addAccount(table){
+    function addAccountModerator(table){
         console.log(table);
         var tableA =document.getElementById(table);
         var row = tableA.insertRow(-1);
@@ -9,24 +9,74 @@
         var cellFName = row.insertCell(0);
         var cellLName = row.insertCell(1);
         var cellEmail = row.insertCell(2);
-        //var cellDept = row.insertCell(3);
+       // var cellDept = row.insertCell(3);
         var del         = row.insertCell(3);
 
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
         //cellDept.innerHTML = "<select type='text' class='form-control' placeholder='Enter department'> <option value='0' disabled selected>Choose a Department</option><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
-        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
+
+        //cellDept.innerHTML  = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
+
+    }
+    function addAccountAdmin(table){
+        console.log(table);
+        var tableA =document.getElementById(table);
+        var row = tableA.insertRow(-1);
+
+
+        var cellFName = row.insertCell(0);
+        var cellLName = row.insertCell(1);
+        var cellEmail = row.insertCell(2);
+        var cellDept = row.insertCell(3);
+        var del         = row.insertCell(4);
+
+        cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
+        cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
+        cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
+        cellDept.innerHTML = "<select type='text' class='form-control' placeholder='Enter department'> <option value='0' disabled selected>Choose a Department</option><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
+        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
 
         //cellDept.innerHTML  = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
 
     }
 
     function clearAccount(table, rowNum){
-        console.log(table);
-        var tableA = table;
-        tableA.deleteRow(rowNum);
 
+        //updateIndexOfDeleteButtons2(table,rowNum);
+        table.deleteRow(rowNum);
+
+    }
+    function updateIndexOfDeleteButtons2(table,index)
+    {
+        var tableA = document.getElementById(table);
+        for(var x=index+1;x<tableA.rows.length;x++)
+        {
+            for(y=1;y<tableA.rows.length;y++)
+            {
+                console.log(document.getElementById(tableA.rows[x].cells[y].innerHTML.id));
+                if( document.getElementById(tableA.rows[x].cells[y])=="DELETECOLUMN")
+                {
+                    tableA.rows[x].cells[y].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+                    console.log(x-1);
+                }
+            }
+
+
+        }
+    }
+
+    function updateIndexOfDeleteButtons(table,index,row)
+    {
+        var tableA = document.getElementById(table);
+        for(var x=index+1;x<tableA.rows.length;x++)
+        {
+            tableA.rows[x].cells[row].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+            console.log(x-1);
+
+        }
     }
 
     function cancelAddAccount(tableID){
@@ -213,11 +263,8 @@
 
     function deleteRow(table, index){
         var tableA = document.getElementById(table);
-        for(var x=index+1;x<tableA.rows.length;x++)
-        	{
-        		tableA.rows[x].cells[3].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
-        		console.log(x-1);
-        	}
+        //updateIndexOfDeleteButtons2(table,index);
+        updateIndexOfDeleteButtons(table,index,3);
         tableA.deleteRow(index);
     }
 
@@ -357,7 +404,7 @@ include 'a_navbar.php';
             <form>
                 <div class="modal-body clearfix">
 
-                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addAccount('add_table')">Add Another Moderator</button>
+                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addAccountModerator('add_table')">Add Another Moderator</button>
                     <table class="table table-hover" id="add_table" name="">  <!-- TODO: somehow insert table id in name for add ? -->
                         <thead>
                         <tr>
@@ -406,7 +453,7 @@ include 'a_navbar.php';
             <form>
                 <div class="modal-body clearfix">
 
-                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addAccount('add_tableA')">Add Another Admin</button>
+                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addAccountAdmin('add_tableA')">Add Another Admin</button>
                     <table class="table table-hover" id="add_tableA" name="">  <!-- TODO: somehow insert table id in name for add ? -->
                         <thead>
                         <tr>
