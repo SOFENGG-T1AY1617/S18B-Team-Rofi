@@ -156,8 +156,6 @@
             var curDept = cells[3].innerHTML;
 
 
-
-
             console.log(curDeptID);
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curFNameID+"\"value=\"" + curFName + "\">";
             cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curLNameID+"\" value=\"" + curLName + "\">";
@@ -176,8 +174,6 @@
                 }
                 drop+=">"+deps[j].name+"</option>"
             }
-
-
             drop+="</select>";
             cells[3].innerHTML = drop;
             cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+i+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
@@ -212,7 +208,7 @@
         var tableA=document.getElementById(table);
 
         if(table=="admintable")
-        tableA.innerHTML = "<?php foreach($administrators as $admin):?><tr><td><?=$admin->first_name?></td><td><?=$admin->last_name?></td><td><?=$admin->email?></td><td><?=$admin->name?></td><td></td></tr><?php endforeach;?>";
+        tableA.innerHTML = " <?php foreach($administrators as $admin):?><tr><td><?=$admin->first_name?></td><td><?=$admin->last_name?></td><td><?=$admin->email?></td><td><?=$admin->name?></td><td></td></tr><?php endforeach;?>";
         else
             tableA.innerHTML = "<?php foreach($moderators as $mod):?><tr><td><?=$mod->first_name?></td><td><?=$mod->last_name?></td><td><?=$mod->email?></td><td><?=$mod->name?></td><td></td></tr><?php endforeach;?>"
 
