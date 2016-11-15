@@ -49,6 +49,7 @@
         table.deleteRow(rowNum);
 
     }
+    /*
     function updateIndexOfDeleteButtons2(table,index)
     {
         var tableA = document.getElementById(table);
@@ -67,7 +68,7 @@
 
         }
     }
-
+*/
     function updateIndexOfDeleteButtons(table,index,row)
     {
         var tableA = document.getElementById(table);
@@ -77,8 +78,19 @@
             console.log(x-1);
 
         }
-    }
+    }    
+    /*
+    function updateIndexOfDeleteButtonsAdmin(table,index)
+    {
+        var tableA = document.getElementById(table);
+        for(var x=index+1;x<tableA.rows.length;x++)
+        {
+            tableA.rows[x].cells[4].innerHTML = "<button type =\"button\" onclick=\"deleteRowAdmin('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
+            console.log(x-1);
 
+        }
+    }
+    */
     function cancelAddAccount(tableID){
         var table = document.getElementById(tableID);
         var rows = table.rows;
@@ -264,9 +276,22 @@
     function deleteRow(table, index){
         var tableA = document.getElementById(table);
         //updateIndexOfDeleteButtons2(table,index);
-        updateIndexOfDeleteButtons(table,index,3);
+        var row;
+        if(table=="add_table")
+            row=3;
+        else if (table=="add_tableA")
+            row=4;
+
+
+        updateIndexOfDeleteButtons(table,index,row);
         tableA.deleteRow(index);
-    }
+    }/*
+    function deleteRowAdmin(table, index){
+        var tableA = document.getElementById(table);
+        //updateIndexOfDeleteButtons2(table,index);
+        updateIndexOfDeleteButtonsAdmin(table,index);
+        tableA.deleteRow(index);
+    }*/
 
 </script>
 
