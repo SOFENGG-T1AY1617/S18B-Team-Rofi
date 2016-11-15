@@ -183,10 +183,12 @@
         var lName = row.insertCell(1);
         var email = row.insertCell(2);
         var name = row.insertCell(3);
+        var deleteButton = row.insertCell(4);
         fName.innerHTML= "Test";                                       
         lName.innerHTML= "Test";  
         email.innerHTML= "Test";  
         name.innerHTML="Test";  
+        deleteButton.innerHTML="Test";  
  
 
 
