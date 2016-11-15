@@ -1,4 +1,11 @@
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="<?=base_url()?>assets/js/jquery-3.1.1.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+
 <script xmlns="http://www.w3.org/1999/html">
+
+
 
     function addAccountModerator(table){
         console.log(table);
@@ -9,16 +16,13 @@
         var cellFName = row.insertCell(0);
         var cellLName = row.insertCell(1);
         var cellEmail = row.insertCell(2);
-       // var cellDept = row.insertCell(3);
         var del         = row.insertCell(3);
 
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
-        //cellDept.innerHTML = "<select type='text' class='form-control' placeholder='Enter department'> <option value='0' disabled selected>Choose a Department</option><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
         del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
 
-        //cellDept.innerHTML  = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
 
     }
     function addAccountAdmin(table){
@@ -38,37 +42,52 @@
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
         cellDept.innerHTML = "<select type='text' class='form-control' placeholder='Enter department'> <option value='0' disabled selected>Choose a Department</option><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
         del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
-
         //cellDept.innerHTML  = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
 
     }
 
     function clearAccount(table, rowNum){
 
-        //updateIndexOfDeleteButtons2(table,rowNum);
-        table.deleteRow(rowNum);
+        var tableA = document.getElementById(table);
+        updateIndexOfDeleteButtons2(table,rowNum);
+        /*
+        var table_ID= $(table).attr("id");
+        //$('table.row['+rowNum+']').hide();
 
+        console.log(table_ID);
+        var tableID = $(table.rows[rowNum].cells[0]).attr("id");
+        console.log(table.rows[rowNum].cells[0]);
+        console.log($(tableID).parents('tr'));
+        $(tableID).parents('tr').hide();
+        $(tableID).val("-1");*/
+
+        tableA.deleteRow(rowNum);
     }
-    /*
+    
     function updateIndexOfDeleteButtons2(table,index)
     {
+        console.log(table);
+        var tableID= $(table).attr("id");
         var tableA = document.getElementById(table);
         for(var x=index+1;x<tableA.rows.length;x++)
         {
-            for(y=1;y<tableA.rows.length;y++)
+            for(y=0;y<tableA.rows[x].cells.length;y++)
             {
-                console.log(document.getElementById(tableA.rows[x].cells[y].innerHTML.id));
-                if( document.getElementById(tableA.rows[x].cells[y])=="DELETECOLUMN")
+                console.log(tableA.rows[x].cells[y].id);
+  
+                console.log(tableA.rows.length);
+                if( tableA.rows[x].cells[y].id=="DELETECOLUMN")
                 {
-                    tableA.rows[x].cells[y].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
-                    console.log(x-1);
+                    tableA.rows[x].cells[y].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
+                    console.log(tableA.rows[x].cells[y].id);
+
                 }
             }
 
 
         }
     }
-*/
+
     function updateIndexOfDeleteButtons(table,index,row)
     {
         var tableA = document.getElementById(table);
@@ -104,11 +123,13 @@
 
 
     function changeViewToEdit(table, footer, modal){
-        console.log(table);
+        //console.log(table);
         var tableA = document.getElementById(table);
         var rows = tableA.rows;
         var tID = table;
         var fID = footer;
+
+
 
         document.getElementById(footer).innerHTML =
             "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
@@ -117,75 +138,105 @@
         for(var i = 1; i < rows.length; i++) {
             var cells = rows[i].cells;
 
+
+            cells[0].id= "C0R"+i;
+            cells[1].id= "C1R"+i;
+            cells[2].id= "C2R"+i;
+            cells[3].id= "C3R"+i;
+
+            var curFNameID = $(cells[0]).attr("id");
+            var curLNameID = $(cells[1]).attr("id");
+            var curEmailID = $(cells[2]).attr("id");
+            var curDeptID = $(cells[3]).attr("id");
+
+
             var curFName = cells[0].innerHTML;
             var curLName = cells[1].innerHTML;
             var curEmail = cells[2].innerHTML;
             var curDept = cells[3].innerHTML;
 
-            var dept;
-
-            console.log(curDept);
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\"" + curFName + "\">";
-            cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputName\" value=\"" + curLName + "\">";
-            cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail\" value=\"" + curEmail + "\">";
-            cells[3].innerHTML = "<select type='text' id='modDept" + i + "' class='form-control' placeholder='Enter department'><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
-            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount(" + tID + ", " + i + ")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
 
 
 
+            console.log(curDeptID);
+            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curFNameID+"\"value=\"" + curFName + "\">";
+            cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curLNameID+"\" value=\"" + curLName + "\">";
+            cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curEmailID+"\" value=\"" + curEmail + "\">";
+            var drop = "<select type='text' id=\""+curDeptID+"\" class='form-control' placeholder='Enter department'>";
 
-        }
-        for(var i = 1; i < rows.length; i++){
+            var deps = <?php echo json_encode($departments); ?>;
 
-            var cells = rows[i].cells;
 
-            var curDept = cells[3].innerHTML;
+            for(var j = 0; j<deps.length; j++)
+            {
+                drop+="<option value='" +deps[j].departmentid +"' ";
+                if(deps[j].name==curDept) {
 
-            var dept;
-
-            $.ajax({
-            url: '<?=base_url('admin/getModDeptIDFromEmail')?>',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                email: curEmail
+                    drop+=" selected ";
+                }
+                drop+=">"+deps[j].name+"</option>"
             }
-        })
-               .done(function (result) {
-                   //console.log("done");
-                   //location.reload(true);
-                   // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
-
-                   dept = result;
-                   if (<?php print_r($_SESSION["admin_typeid"]);?> !=1)
-                   $("#modDept"+i).prop("disabled", true);
 
 
-                   $("#modDept"+i).val(dept);
+            drop+="</select>";
+            cells[3].innerHTML = drop;
+            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+i+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
 
+            console.log(tID);
 
-               })
-               .fail(function (result) {
-                   //console.log("fail");
-                   //console.log(result);
-               })
-               .always(function () {
-                   //console.log("complete");
-               })
-               .then (function () {
+           cells[4].id="DELETECOLUMN";
 
 
 
-               })
+//            document.getElementById("#" + curDeptID).value = 1;
+
+            if (<?php print_r($_SESSION["admin_typeid"]);?> !=1)
+            $("#"+curDeptID).prop("disabled", true);
+
         }
 
+
+    }
+
+    function emptyTable(table){
+        var tableA=document.getElementById(table);
+
+        for(var x=tableA.rows.length-1;x>0;x--)
+        {
+            tableA.deleteRow(x);
+        }                           
+
+    }
+    function repopulateTable(table){
+        /*Insert DB extraction Codes Here*/
+        var tableA=document.getElementById(table);
+
+        if(table=="admintable")
+        tableA.innerHTML = "<?php foreach($administrators as $admin):?><tr><td><?=$admin->first_name?></td><td><?=$admin->last_name?></td><td><?=$admin->email?></td><td><?=$admin->name?></td><td></td></tr><?php endforeach;?>";
+        else
+            tableA.innerHTML = "<?php foreach($moderators as $mod):?><tr><td><?=$mod->first_name?></td><td><?=$mod->last_name?></td><td><?=$mod->email?></td><td><?=$mod->name?></td><td></td></tr><?php endforeach;?>"
+
+            //TODO FIX THIS^^^^ VERY COWBOY
+        /*
+        var x=tableA.rows.length;
+        var row = tableA.insertRow(x);
+        var fName = row.insertCell(0);
+        var lName = row.insertCell(1);
+        var email = row.insertCell(2);
+        var name = row.insertCell(3);
+        var deleteButton = row.insertCell(4);
+        fName.innerHTML= "Test";                                       
+        lName.innerHTML= "Test";  
+        email.innerHTML= "Test";  
+        name.innerHTML="Test";  
+        deleteButton.innerHTML="Test";  
+        */
 
 
     }
 
     function changeViewToView(table, footer, modal){
         console.log(table);
-
         var tableA = document.getElementById(table);
         var footerA = document.getElementById(footer);
         var rows = tableA.rows;
@@ -197,7 +248,7 @@
             var curFName = cells[0].getElementsByTagName("input")[0].value;
             var curLName = cells[1].getElementsByTagName("input")[0].value;
             var curEmail = cells[2].getElementsByTagName("input")[0].value;
-            var curDept = cells[3].getElementsByTagName("input")[0].value;
+            var curDept = cells[3].getElementsByTagName("select")[0].value;
 
 
             cells[4].innerHTML = "";
@@ -227,11 +278,14 @@
         } else
             s = 'Add Admins';
 
+
+        emptyTable(table);
+        repopulateTable(table);
         footerA.innerHTML =
 
                 "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default col-md-2 col-md-offset-8\"> "+s+" </button>" +
                 " <button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"changeViewToEdit('"+tableA.id+"', '"+footerA.id+"','" +modal+"' )\">Edit Accounts</button>";
-
+        
     }
 
 
