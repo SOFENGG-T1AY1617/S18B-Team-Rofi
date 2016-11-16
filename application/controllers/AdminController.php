@@ -281,6 +281,80 @@ class AdminController extends CI_Controller
         echo json_encode("success");
     }
 
+    public function updateModerators()
+    {
+        $changedData = $this->input->get("changedData");
+
+        foreach ($changedData as $data) {
+            // Query room data
+            $mod = $this->admin->queryModeratorAtEmail($data[2]);
+
+
+            // Check if deleted
+            if ($data[4] == -1) {
+                $this->admin->deleteRoom($data[0]);
+
+                $result = array(
+                    'result' => "success",
+                );
+
+                continue;
+            }
+
+            // Check if room name was changed
+            if ($data[0] != $mod['name']) {
+                if ($this->admin->isExistingRoom($data[1])) {
+                    // If room name already exists, cannot change
+                    $result = array(
+                        'result' => "name_invalid",
+                    );
+                } else {
+                    // Update room name
+                    $updateData = array(
+                        'roomid' => $data[0],
+                        'name' => $data[1],
+                    );
+                    $this->admin->updateRoomName($updateData);
+                    $result = array(
+                        'result' => "success",
+                    );
+                }
+            }
+
+            // Check if room capacity was changed
+            if ($data[2] > $room['capacity']) {
+                // Add computers
+
+                $updateData = array(
+                    'roomid' => $data[0],
+                    'count' => $data[2] - $room['capacity'],
+                );
+
+                $this->admin->addComputersToRoom($updateData);
+
+                $result = array(
+                    'result' => "success",
+                );
+            } else if ($data[2] < $room['capacity']) {
+                // Remove computers
+                $updateData = array(
+                    'roomid' => $data[0],
+                    'count' => $room['capacity'] - $data[2],
+                );
+
+                $this->admin->removeComputersFromRoom($updateData);
+
+                $result = array(
+                    'result' => "success",
+                );
+            }
+        }
+
+        echo json_encode($result);
+    }
+
+
+
     public function updateBusinessRules() {
         $id = $this->input->get("business_rulesid");
 

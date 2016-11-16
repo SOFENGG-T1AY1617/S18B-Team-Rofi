@@ -513,4 +513,17 @@ class Admin_Model extends CI_Model
         return $deptid[0]->mod_departmentid;
     }
 
+    function queryModeratorAtEmail($email) {
+        $sql = "SELECT * 
+                      FROM Moderators
+                      WHERE email = ?";
+        return $this->db->query($sql, array($email))->row_array();
+    }
+
+    function deleteModerator($email) {
+        // Delete all computers in room
+        // Delete room
+        $this->db->delete(TABLE_MODERATORS, array('email' => $email));
+    }
+
 }

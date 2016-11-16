@@ -121,6 +121,7 @@
 
     }
 
+    var initialTableData;
 
     function changeViewToEdit(table, footer, modal){
         //console.log(table);
@@ -129,11 +130,13 @@
         var tID = table;
         var fID = footer;
 
-
+        console.log("TABLE ID = "+table);
+        initialTableData = getTableDataWithID(tID);
+        console.log(initialTableData);
 
         document.getElementById(footer).innerHTML =
             "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
-            "<input class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"submit\" value=\"Save Changes\"></div>";
+            "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitModeratorChanges('"+tID+"')\" value=\"Save Changes\"></div>";
 
         for(var i = 1; i < rows.length; i++) {
             var cells = rows[i].cells;
@@ -324,6 +327,124 @@
         return jObject;
     }
 
+    function getTableDataWithID(tableID) {
+        var table = document.getElementById(tableID);
+
+        console.log(table);
+        var jObject = [];
+        for (var i = 1; i < table.rows.length; i++)
+        {
+
+            var row = i - 1;
+            // create array within the array - 2nd dimension
+            //jObject[row] = [];
+
+            var valid = true;
+            var columns = [];
+            // columns within the row
+            //for (var j = 0; j < table.rows[i].cells.length; j++)
+
+            columns[0] = table.rows[i].cells[0].childNodes[0].data;
+            console.log(columns[0]);
+            for (var j = 0; j < 3; j++)
+            {
+                //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
+                columns[j + 1] = table.rows[i].cells[j+1].childNodes[0].data;
+
+                if (columns[j + 1] == "") {
+                    valid = false;
+                    break;
+                }
+            }
+            console.log(columns);
+            /*columns[1] = table.rows[i].cells[0].childNodes[0].value;
+             columns[2] = table.rows[i].cells[1].childNodes[0].value;*/
+
+            if (valid) {
+                jObject[row] = columns;
+            }
+        }
+        return jObject;
+    }
+
+    function getChangedData(newTableData) {
+        var changedData = [];
+        var changedDataIndex = 0;
+
+
+
+        var dept = <?php echo json_encode($departments); ?>;
+
+        for (var i = 0; i < initialTableData.length; i++) {
+
+
+            var inDeptID;
+            for(var j = 0; j<dept.length; j++)
+            {
+              //  console.log(dept[j].departmentid+" CHECK "+ initialTableData[i][3]);
+                if(dept[j].name == initialTableData[i][3]) {
+                    inDeptID=dept[j].departmentid;
+                  //  console.log(dept[j].departmentid+" CHECK "+ initialTableData[i][3]);
+                }
+            }
+
+            if (initialTableData[i][0] != newTableData[i][0] ||
+                initialTableData[i][1] != newTableData[i][1] ||
+                initialTableData[i][2] != newTableData[i][2] ||
+               // initialTableData[i][4] != newTableData[i][4]
+                inDeptID != newTableData[i][3]
+            ) {
+                changedData[changedDataIndex] = newTableData[i];
+                changedDataIndex++;
+
+                //console.log("aa "+ initialTableData[i]+" "+newTableData[i]);
+            }
+        }
+
+        return changedData;
+    }
+
+    function submitModeratorChanges(tableID) {
+        var changedData = getChangedData(getTableData(tableID));
+
+        $.ajax({
+            url: '<?=base_url('admin/updateModerators')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                changedData: changedData,
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                console.log(result);
+
+                if (result['result'] == "success") {
+
+                    /*$(window).load(function(){
+                     toastr.success("Changes were made successfully.", "Success");
+                     });*/
+                    toastr.success("Changes were made successfully.", "Success");
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
+                }
+            })
+            .fail(function() {
+                console.log("fail");
+                //console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+
     function submitModerator() {
         var tableID = $("#add_table").attr("id");
         var tableData = getTableData(tableID);
@@ -382,6 +503,7 @@
                 console.log("complete");
             });
     }
+
 
     function deleteRow(table, index){
         var tableA = document.getElementById(table);
