@@ -283,14 +283,16 @@ class AdminController extends CI_Controller
 
     public function updateModerators()
     {
+
         $changedData = $this->input->get("changedData");
 
         foreach ($changedData as $data) {
             // Query room data
-            $mod = $this->admin->queryModeratorAtEmail($data[2]);
+            $mod = $this->admin->queryModeratorAtID($data[4]);
 
 
-            // Check if deleted
+
+/*            // Check if deleted
             if ($data[4] == -1) {
                 $this->admin->deleteRoom($data[0]);
 
@@ -300,10 +302,52 @@ class AdminController extends CI_Controller
 
                 continue;
             }
+*/
 
-            // Check if room name was changed
-            if ($data[0] != $mod['name']) {
-                if ($this->admin->isExistingRoom($data[1])) {
+//TODO FIX DELETE PLEASE
+
+            // Check if first name was changed
+            if ($data[0] != $mod['first_name']) {
+                // Update firts name
+                    $updateData = array(
+                        'id' => $data[4],
+                        'fName' => $data[0],
+                    );
+                    $this->admin->updateModFirstName($updateData);
+                    $result = array(
+                        'result' => "success",
+                    );
+
+            }
+
+            if ($data[1] != $mod['last_name']) {
+                // Update last name
+                $updateData = array(
+                    'id' => $data[4],
+                    'lName' => $data[1],
+                );
+                $this->admin->updateModLastName($updateData);
+                $result = array(
+                    'result' => "success",
+                );
+
+            }
+
+            if ($data[3] != $mod['mod_departmentid']) {
+                // Update departmentid
+                $updateData = array(
+                    'id' => $data[4],
+                    'dept' => $data[3],
+                );
+                $this->admin->updateModDepartment($updateData);
+                $result = array(
+                    'result' => "success",
+                );
+
+            }
+
+            if ($data[2] != $mod['email']) {
+                if ($this->admin->isExistingModerator($data[2])) {
                     // If room name already exists, cannot change
                     $result = array(
                         'result' => "name_invalid",
@@ -311,43 +355,17 @@ class AdminController extends CI_Controller
                 } else {
                     // Update room name
                     $updateData = array(
-                        'roomid' => $data[0],
-                        'name' => $data[1],
+                        'id' => $data[4],
+                        'email' => $data[2],
                     );
-                    $this->admin->updateRoomName($updateData);
+                    $this->admin->updateModEmail($updateData);
                     $result = array(
                         'result' => "success",
                     );
                 }
             }
 
-            // Check if room capacity was changed
-            if ($data[2] > $room['capacity']) {
-                // Add computers
 
-                $updateData = array(
-                    'roomid' => $data[0],
-                    'count' => $data[2] - $room['capacity'],
-                );
-
-                $this->admin->addComputersToRoom($updateData);
-
-                $result = array(
-                    'result' => "success",
-                );
-            } else if ($data[2] < $room['capacity']) {
-                // Remove computers
-                $updateData = array(
-                    'roomid' => $data[0],
-                    'count' => $room['capacity'] - $data[2],
-                );
-
-                $this->admin->removeComputersFromRoom($updateData);
-
-                $result = array(
-                    'result' => "success",
-                );
-            }
         }
 
         echo json_encode($result);

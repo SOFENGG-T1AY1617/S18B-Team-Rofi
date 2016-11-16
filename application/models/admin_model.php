@@ -526,4 +526,32 @@ class Admin_Model extends CI_Model
         $this->db->delete(TABLE_MODERATORS, array('email' => $email));
     }
 
+    function updateModEmail($data) {
+        $this->db->where(COLUMN_MODERATORID, $data['id']);
+        $this->db->update(TABLE_MODERATORS, array('email' => $data['email']));
+    }
+
+    function updateModFirstName($data) {
+        $this->db->where(COLUMN_MODERATORID, $data['id']);
+        $this->db->update(TABLE_MODERATORS, array('first_name' => $data['fName']));
+    }
+
+    function updateModLastName($data) {
+        $this->db->where(COLUMN_MODERATORID, $data['id']);
+        $this->db->update(TABLE_MODERATORS, array('last_name' => $data['lName']));
+    }
+
+    function updateModDepartment($data) {
+        $this->db->where(COLUMN_MODERATORID, $data['id']);
+        $this->db->update(TABLE_MODERATORS, array('mod_departmentid' => $data['dept']));
+    }
+
+
+    function queryModeratorAtID($id) {
+        $sql = "SELECT * 
+                      FROM Moderators
+                      WHERE moderatorid = ?";
+        return $this->db->query($sql, array($id))->row_array();
+    }
+
 }

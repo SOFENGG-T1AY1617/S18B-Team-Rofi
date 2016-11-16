@@ -134,9 +134,14 @@
         initialTableData = getTableDataWithID(tID);
         console.log(initialTableData);
 
-        document.getElementById(footer).innerHTML =
-            "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
-            "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitModeratorChanges('"+tID+"')\" value=\"Save Changes\"></div>";
+        if(table=="modtable")
+            document.getElementById(footer).innerHTML =
+                "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
+                "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitModeratorChanges('"+tID+"')\" value=\"Save Changes\"></div>";
+        else
+            document.getElementById(footer).innerHTML =
+                "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
+                "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitAdminChanges('"+tID+"')\" value=\"Save Changes\"></div>";
 
         for(var i = 1; i < rows.length; i++) {
             var cells = rows[i].cells;
@@ -373,7 +378,11 @@
 
 
 
+
         var dept = <?php echo json_encode($departments); ?>;
+        var mods = <?php echo json_encode($moderators); ?>;
+
+        console.log(mods);
 
         for (var i = 0; i < initialTableData.length; i++) {
 
@@ -394,6 +403,13 @@
                // initialTableData[i][4] != newTableData[i][4]
                 inDeptID != newTableData[i][3]
             ) {
+                for(var k = 0; k<mods.length; k++){
+                    if(initialTableData[i][2]==mods[k]['email']){
+                        newTableData[i][4] = mods[k]['moderatorid'];
+                            console.log("HERE: " + mods[k]['moderatorid']);
+                    }
+                }
+
                 changedData[changedDataIndex] = newTableData[i];
                 changedDataIndex++;
 
@@ -412,7 +428,7 @@
             type: 'GET',
             dataType: 'json',
             data: {
-                changedData: changedData,
+                changedData: changedData
             }
         })
             .done(function(result) {
@@ -436,9 +452,9 @@
                     reloadPage();
                 }
             })
-            .fail(function() {
+            .fail(function(result) {
                 console.log("fail");
-                //console.log(result);
+                console.log(result);
             })
             .always(function() {
                 console.log("complete");
