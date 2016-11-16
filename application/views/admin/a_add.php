@@ -202,7 +202,7 @@
 
                 if (columns[j] == "") {
                     valid = false;
-                    break;
+                    return false;
                 }
             }
 
@@ -254,6 +254,11 @@
         var tableData = getTableData(tableID);
         //console.log(tableData);
 
+        if (tableData == false) {
+            toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
+            return;
+        }
+
         $.ajax({
             url: '<?=base_url('admin/addRoom')?>',
             type: 'GET',
@@ -297,6 +302,8 @@
             .always(function() {
                 console.log("complete");
             });
+
+        $("#AddNewRoomsModal").hide();
     }
 
     function submitBuilding() {
@@ -513,7 +520,7 @@ include 'a_navbar.php';
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddRoom('add_table')">Cancel</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitRoom()">Confirm</button>
+                <button type="button" class="btn btn-success" onclick="submitRoom()">Confirm</button>
             </div>
             </form>
         </div>
