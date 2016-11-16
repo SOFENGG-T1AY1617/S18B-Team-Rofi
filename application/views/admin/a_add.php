@@ -303,7 +303,8 @@
                 console.log("complete");
             });
 
-        $("#AddNewRoomsModal").hide();
+        //$("#AddNewRoomsModal").hide();
+        $('#AddNewRoomsModal').modal('toggle');
     }
 
     function submitBuilding() {
