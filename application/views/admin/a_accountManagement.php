@@ -207,12 +207,19 @@
         /*Insert DB extraction Codes Here*/
         var tableA=document.getElementById(table);
 
+        var out = "<thead> <tr> <th>First Name</th><th>Last Name</th><th>Email</th><th>Department</th><th></th></tr></thead><tbody>";
+
+
         if(table=="admintable")
-        tableA.innerHTML = " <?php foreach($administrators as $admin):?><tr><td><?=$admin->first_name?></td><td><?=$admin->last_name?></td><td><?=$admin->email?></td><td><?=$admin->name?></td><td></td></tr><?php endforeach;?>";
+         out += " <?php foreach($administrators as $admin):?><tr><td><?=$admin->first_name?></td><td><?=$admin->last_name?></td><td><?=$admin->email?></td><td><?=$admin->name?></td><td></td></tr><?php endforeach;?>";
         else
-            tableA.innerHTML = "<?php foreach($moderators as $mod):?><tr><td><?=$mod->first_name?></td><td><?=$mod->last_name?></td><td><?=$mod->email?></td><td><?=$mod->name?></td><td></td></tr><?php endforeach;?>"
+           out += "<?php foreach($moderators as $mod):?><tr><td><?=$mod->first_name?></td><td><?=$mod->last_name?></td><td><?=$mod->email?></td><td><?=$mod->name?></td><td></td></tr><?php endforeach;?>"
+
+
 
             //TODO FIX THIS^^^^ VERY COWBOY
+
+        tableA.innerHTML = out;
         /*
         var x=tableA.rows.length;
         var row = tableA.insertRow(x);
@@ -333,7 +340,8 @@
         })
             .done(function(result) {
                 console.log("done");
-                //location.reload(true);
+                //
+                reloadPage();
                 // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
 
             })
@@ -362,6 +370,7 @@
             .done(function(result) {
                 console.log("done");
                 //location.reload(true);
+                reloadPage();
                 // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
 
             })
@@ -393,6 +402,14 @@
         updateIndexOfDeleteButtonsAdmin(table,index);
         tableA.deleteRow(index);
     }*/
+
+
+    function reloadPage() {
+        <?php
+        // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+        echo 'window.location = "'. site_url("admin/".ADMIN_ACCOUNT_MANAGEMENT) .'";';
+        ?>
+    }
 
 </script>
 
