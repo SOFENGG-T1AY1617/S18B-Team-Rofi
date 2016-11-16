@@ -137,11 +137,11 @@
         if(table=="modtable")
             document.getElementById(footer).innerHTML =
                 "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
-                "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitModeratorChanges('"+tID+"')\" value=\"Save Changes\"></div>";
+                "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitModeratorChanges('"+tID+"')\" >Save Changes</div>";
         else
             document.getElementById(footer).innerHTML =
                 "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
-                "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitAdminChanges('"+tID+"')\" value=\"Save Changes\"></div>";
+                "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitAdminChanges('"+tID+"')\" >Save Changes</div>";
 
         for(var i = 1; i < rows.length; i++) {
             var cells = rows[i].cells;
