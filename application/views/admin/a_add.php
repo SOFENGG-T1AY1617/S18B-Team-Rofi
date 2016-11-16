@@ -420,11 +420,11 @@
 include 'a_navbar.php';
 ?>
 
-
-<div class="panel-group clearfix col-md-offset-2 col-md-8" role="tablist">
-                <button type ="button"data-toggle="modal" data-target="#AddNewBuildingModal" class="btn btn-default col-md-12">Add Building</button>
-</div>
-
+<?php if($_SESSION['admin_typeid'] == 1): ?>
+    <div class="panel-group clearfix col-md-offset-2 col-md-8" role="tablist">
+                    <button type ="button"data-toggle="modal" data-target="#AddNewBuildingModal" class="btn btn-default col-md-12">Add Building</button>
+    </div>
+<?php endif;?>
 <div id="panels" class = "col-md-offset-2 col-md-8">
 
 
