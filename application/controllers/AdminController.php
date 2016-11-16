@@ -371,6 +371,96 @@ class AdminController extends CI_Controller
         echo json_encode($result);
     }
 
+    public function updateAdmins()
+    {
+
+        $changedData = $this->input->get("changedData");
+
+        foreach ($changedData as $data) {
+            // Query room data
+            $admin= $this->admin->queryAdminAtID($data[4]);
+
+
+
+            /*            // Check if deleted
+                        if ($data[4] == -1) {
+                            $this->admin->deleteRoom($data[0]);
+
+                            $result = array(
+                                'result' => "success",
+                            );
+
+                            continue;
+                        }
+            */
+
+//TODO FIX DELETE PLEASE
+
+            // Check if first name was changed
+            if ($data[0] != $admin['first_name']) {
+                // Update firts name
+                $updateData = array(
+                    'id' => $data[4],
+                    'fName' => $data[0],
+                );
+                $this->admin->updateAdminFirstName($updateData);
+                $result = array(
+                    'result' => "success",
+                );
+
+            }
+
+            if ($data[1] != $admin['last_name']) {
+                // Update last name
+                $updateData = array(
+                    'id' => $data[4],
+                    'lName' => $data[1],
+                );
+                $this->admin->updateAdminLastName($updateData);
+                $result = array(
+                    'result' => "success",
+                );
+
+            }
+
+            if ($data[3] != $admin['Admin_departmentid']) {
+                // Update departmentid
+                $updateData = array(
+                    'id' => $data[4],
+                    'dept' => $data[3],
+                );
+                $this->admin->updateAdminDepartment($updateData);
+                $result = array(
+                    'result' => "success",
+                );
+
+            }
+
+            if ($data[2] != $admin['email']) {
+                if ($this->admin->isExistingAdmin($data[2])) {
+                    // If room name already exists, cannot change
+                    $result = array(
+                        'result' => "name_invalid",
+                    );
+                } else {
+                    // Update room name
+                    $updateData = array(
+                        'id' => $data[4],
+                        'email' => $data[2],
+                    );
+                    $this->admin->updateAdminEmail($updateData);
+                    $result = array(
+                        'result' => "success",
+                    );
+                }
+            }
+
+
+        }
+
+        echo json_encode($result);
+    }
+
 
 
     public function updateBusinessRules() {

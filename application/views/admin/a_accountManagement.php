@@ -121,7 +121,7 @@
 
     }
 
-    var initialTableData;
+    var initialModTableData;
 
     function changeViewToEdit(table, footer, modal){
         //console.log(table);
@@ -131,8 +131,12 @@
         var fID = footer;
 
         console.log("TABLE ID = "+table);
-        initialTableData = getTableDataWithID(tID);
-        console.log(initialTableData);
+
+        if(table=="modtable")
+        initialModTableData = getTableDataWithID(tID);
+        else
+            initialAdminTableData = getTableDataWithID(tID);
+        console.log(initialModTableData);
 
         if(table=="modtable")
             document.getElementById(footer).innerHTML =
@@ -372,7 +376,7 @@
         return jObject;
     }
 
-    function getChangedData(newTableData) {
+    function getModChangedData(newTableData) {
         var changedData = [];
         var changedDataIndex = 0;
 
@@ -384,27 +388,27 @@
 
         console.log(mods);
 
-        for (var i = 0; i < initialTableData.length; i++) {
+        for (var i = 0; i < initialModTableData.length; i++) {
 
 
             var inDeptID;
             for(var j = 0; j<dept.length; j++)
             {
-              //  console.log(dept[j].departmentid+" CHECK "+ initialTableData[i][3]);
-                if(dept[j].name == initialTableData[i][3]) {
+              //  console.log(dept[j].departmentid+" CHECK "+ initialModTableData[i][3]);
+                if(dept[j].name == initialModTableData[i][3]) {
                     inDeptID=dept[j].departmentid;
-                  //  console.log(dept[j].departmentid+" CHECK "+ initialTableData[i][3]);
+                  //  console.log(dept[j].departmentid+" CHECK "+ initialModTableData[i][3]);
                 }
             }
 
-            if (initialTableData[i][0] != newTableData[i][0] ||
-                initialTableData[i][1] != newTableData[i][1] ||
-                initialTableData[i][2] != newTableData[i][2] ||
-               // initialTableData[i][4] != newTableData[i][4]
+            if (initialModTableData[i][0] != newTableData[i][0] ||
+                initialModTableData[i][1] != newTableData[i][1] ||
+                initialModTableData[i][2] != newTableData[i][2] ||
+               // initialModTableData[i][4] != newTableData[i][4]
                 inDeptID != newTableData[i][3]
             ) {
                 for(var k = 0; k<mods.length; k++){
-                    if(initialTableData[i][2]==mods[k]['email']){
+                    if(initialModTableData[i][2]==mods[k]['email']){
                         newTableData[i][4] = mods[k]['moderatorid'];
                             console.log("HERE: " + mods[k]['moderatorid']);
                     }
@@ -413,7 +417,7 @@
                 changedData[changedDataIndex] = newTableData[i];
                 changedDataIndex++;
 
-                //console.log("aa "+ initialTableData[i]+" "+newTableData[i]);
+                //console.log("aa "+ initialModTableData[i]+" "+newTableData[i]);
             }
         }
 
@@ -421,7 +425,7 @@
     }
 
     function submitModeratorChanges(tableID) {
-        var changedData = getChangedData(getTableData(tableID));
+        var changedData = getModChangedData(getTableData(tableID));
 
         $.ajax({
             url: '<?=base_url('admin/updateModerators')?>',
@@ -481,6 +485,95 @@
                 reloadPage();
                 // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
 
+            })
+            .fail(function(result) {
+                console.log("fail");
+                console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+
+    function getAdminChangedData(newTableData) {
+        var changedData = [];
+        var changedDataIndex = 0;
+
+
+
+
+        var dept = <?php echo json_encode($departments); ?>;
+        var admins = <?php echo json_encode($administrators); ?>;
+
+        //console.log(mods);
+
+        for (var i = 0; i < initialAdminTableData.length; i++) {
+
+
+            var inDeptID;
+            for(var j = 0; j<dept.length; j++)
+            {
+                //  console.log(dept[j].departmentid+" CHECK "+ initialAdminTableData[i][3]);
+                if(dept[j].name == initialAdminTableData[i][3]) {
+                    inDeptID=dept[j].departmentid;
+                    //  console.log(dept[j].departmentid+" CHECK "+ initialAdminTableData[i][3]);
+                }
+            }
+
+            if (initialAdminTableData[i][0] != newTableData[i][0] ||
+                initialAdminTableData[i][1] != newTableData[i][1] ||
+                initialAdminTableData[i][2] != newTableData[i][2] ||
+                // initialAdminTableData[i][4] != newTableData[i][4]
+                inDeptID != newTableData[i][3]
+            ) {
+                for(var k = 0; k<admins.length; k++){
+                    if(initialAdminTableData[i][2]==admins[k]['email']){
+                        newTableData[i][4] = admins[k]['administratorid'];
+                        console.log("HERE: " + admins[k]['administratorid']);
+                    }
+                }
+
+                changedData[changedDataIndex] = newTableData[i];
+                changedDataIndex++;
+
+                //console.log("aa "+ initialAdminTableData[i]+" "+newTableData[i]);
+            }
+        }
+
+        return changedData;
+    }
+
+    function submitAdminChanges(tableID) {
+        var changedData = getAdminChangedData(getTableData(tableID));
+
+        $.ajax({
+            url: '<?=base_url('admin/updateAdmins')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                changedData: changedData
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                console.log(result);
+
+                if (result['result'] == "success") {
+
+                    /*$(window).load(function(){
+                     toastr.success("Changes were made successfully.", "Success");
+                     });*/
+                    toastr.success("Changes were made successfully.", "Success");
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
+                }
             })
             .fail(function(result) {
                 console.log("fail");

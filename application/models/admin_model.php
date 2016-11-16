@@ -554,4 +554,55 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($id))->row_array();
     }
 
+    function queryAdminsAtEmail($email) {
+        $sql = "SELECT * 
+                      FROM Administrators
+                      WHERE email = ?";
+        return $this->db->query($sql, array($email))->row_array();
+    }
+
+    function deleteAdmin($email) {
+        // Delete all computers in room
+        // Delete room
+        $this->db->delete(TABLE_ADMINISTRATORS, array('email' => $email));
+    }
+
+    function updateAdminEmail($data) {
+        $this->db->where(COLUMN_ADMINISTRATORID, $data['id']);
+        $this->db->update(TABLE_ADMINISTRATORS, array('email' => $data['email']));
+    }
+
+    function updateAdminFirstName($data) {
+        $this->db->where(COLUMN_ADMINISTRATORID, $data['id']);
+        $this->db->update(TABLE_ADMINISTRATORS, array('first_name' => $data['fName']));
+    }
+
+    function updateAdminLastName($data) {
+        $this->db->where(COLUMN_ADMINISTRATORID, $data['id']);
+        $this->db->update(TABLE_ADMINISTRATORS, array('last_name' => $data['lName']));
+    }
+
+    function updateAdminDepartment($data) {
+        $this->db->where(COLUMN_ADMINISTRATORID, $data['id']);
+        $this->db->update(TABLE_ADMINISTRATORS, array('admin_departmentid' => $data['dept']));
+    }
+
+
+    function queryAdminAtID($id) {
+        $sql = "SELECT * 
+                      FROM Administrators
+                      WHERE administratorid = ?";
+        return $this->db->query($sql, array($id))->row_array();
+    }
+
+    function isExistingAdmin($email) {
+        $this->db->select('*');
+        $this->db->from(TABLE_ADMINISTRATORS);
+        $this->db->where(COLUMN_EMAIL, $email);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+
 }
