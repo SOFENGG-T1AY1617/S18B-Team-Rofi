@@ -282,7 +282,11 @@
                     else if (result['numAdded'] > 1 ) {
                         toast = result['numAdded'] + " rooms were added successfully.";
                     }
-                    toastr.success(toast, "Success");
+
+                    if (result['numAdded'] > 0)
+                        toastr.success(toast, "Success");
+                    else
+                        toastr.info(toast, "Info");
 
                     var notAdded = result['notAdded'];
                     console.log(notAdded);
@@ -297,9 +301,10 @@
                         }
 
                         toast = toast + notAdded[notAdded.length - 1] + " were not added.";
-
-                        toastr.error(toast, "Oops!");
                     }
+
+                    if (notAdded.length > 0)
+                        toastr.error(toast, "Oops!");
 
                     var delay = 1000;
                     setTimeout(function() {
