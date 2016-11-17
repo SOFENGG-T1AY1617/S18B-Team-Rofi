@@ -10,13 +10,24 @@
     function addAccountModerator(table){
         console.log(table);
         var tableA =document.getElementById(table);
-        var row = tableA.insertRow(-1);
+        var row = tableA.insertRow(-1);            
+
+
 
 
         var cellFName = row.insertCell(0);
         var cellLName = row.insertCell(1);
         var cellEmail = row.insertCell(2);
         var del         = row.insertCell(3);
+
+
+        console.log(tableA.rows.length+"Doge");
+        cellFName.id= "C0R"
+        cellLName.id= "C1R"
+        cellEmail.id= "C2R"         
+        del.id="DELETECOLUMN";
+
+        console.log(cellFName.id);
 
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
@@ -37,6 +48,12 @@
         var cellDept = row.insertCell(3);
         var del         = row.insertCell(4);
 
+        cellFName.id= "C0R";
+        cellLName.id= "C1R";
+        cellEmail.id= "C2R";  
+        cellDept.id= "C3R";        
+        del.id="DELETECOLUMN";
+
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
@@ -49,7 +66,7 @@
     function clearAccount(table, rowNum){
 
         var tableA = document.getElementById(table);
-        updateIndexOfDeleteButtons2(table,rowNum);
+        updateIndexOfDeleteButtons(table,rowNum);
         /*
         var table_ID= $(table).attr("id");
         //$('table.row['+rowNum+']').hide();
@@ -64,7 +81,7 @@
         tableA.deleteRow(rowNum);
     }
     
-    function updateIndexOfDeleteButtons2(table,index)
+    function updateIndexOfDeleteButtons(table,index)
     {
         console.log(table);
         var tableID= $(table).attr("id");
@@ -88,16 +105,6 @@
         }
     }
 
-    function updateIndexOfDeleteButtons(table,index,row)
-    {
-        var tableA = document.getElementById(table);
-        for(var x=index+1;x<tableA.rows.length;x++)
-        {
-            tableA.rows[x].cells[row].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\"><i class=\"material-icons\">clear</i></button>";
-            console.log(x-1);
-
-        }
-    }    
     /*
     function updateIndexOfDeleteButtonsAdmin(table,index)
     {
@@ -719,15 +726,15 @@
 
     function deleteRow(table, index){
         var tableA = document.getElementById(table);
-        //updateIndexOfDeleteButtons2(table,index);
         var row;
         if(table=="add_table")
             row=3;
         else if (table=="add_tableA")
             row=4;
 
+        updateIndexOfDeleteButtons(table,index);
 
-        updateIndexOfDeleteButtons(table,index,row);
+        //updateIndexOfDeleteButtons(table,index,row);
         tableA.deleteRow(index);
     }/*
     function deleteRowAdmin(table, index){
