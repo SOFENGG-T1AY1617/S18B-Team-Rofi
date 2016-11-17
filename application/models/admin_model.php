@@ -411,6 +411,7 @@ class Admin_Model extends CI_Model
     function insertAdmins($data) {
         $admins = $data['admins'];
         $numAdded = 0;
+        $notAdded = [];
 
         foreach($admins as $admin) {
             $insertAdminData = array(
@@ -422,11 +423,20 @@ class Admin_Model extends CI_Model
                 COLUMN_ADMIN_TYPEID => 2
             );
 
-            $this->insertAdmin($insertAdminData);
-            $numAdded++;
+            if ( !($this->isExistingAdmin($insertAdminData[COLUMN_EMAIL])) ) {
+                $this->insertAdmin($insertAdminData);
+                $numAdded++;
+            } else {
+                $notAdded[] = $admin[0] . " " . $admin[1];
+            }
         }
 
-        return $numAdded;
+        $returnData = array(
+            'numAdded' => $numAdded,
+            'notAdded' => $notAdded
+        );
+
+        return $returnData;
     }
 
     function isExistingDepartment($departmentName) {

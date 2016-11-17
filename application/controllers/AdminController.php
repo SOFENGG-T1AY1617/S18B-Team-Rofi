@@ -490,9 +490,15 @@ class AdminController extends CI_Controller
             'admins' => $this->input->get("admins")
         );
 
-        $this->admin->insertAdmins($adminData);
+        $updateResult = $this->admin->insertAdmins($adminData);
 
-        echo json_encode("success");
+        $result = array(
+            'result' => "success",
+            'numAdded' => $updateResult['numAdded'],
+            'notAdded' => $updateResult['notAdded'],
+        );
+
+        echo json_encode($result);
     }
 
     public function getModDeptIDFromEmail(){

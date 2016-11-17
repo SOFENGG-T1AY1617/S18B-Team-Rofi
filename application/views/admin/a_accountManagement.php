@@ -323,9 +323,9 @@
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
 
-                if (columns[j] == "") {
+                if (columns[j]) {
                     valid = false;
-                    break;
+                    return false;
                 }
             }
 
@@ -589,6 +589,11 @@
         var tableData = getTableData(tableID);
         console.log(tableData);
 
+        if (tableData == false) {
+            toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
+            return;
+        }
+
         $.ajax({
             url: '<?=base_url('admin/addAdmins')?>',
             type: 'GET',
@@ -599,8 +604,50 @@
         })
             .done(function(result) {
                 console.log("done");
+
+                if (result['result'] == "success") {
+                    console.log(result['numAdded']);
+                    var toast = "";
+                    if (result['numAdded'] == 0) {
+                        toast = "No admins were added.";
+                    }
+                    else if (result['numAdded'] == 1) {
+                        toast = "1 admin was added successfully.";
+                    }
+                    else if (result['numAdded'] > 1 ) {
+                        toast = result['numAdded'] + " admins were added successfully.";
+                    }
+                    toastr.success(toast, "Success");
+
+                    var notAdded = result['notAdded'];
+                    console.log(notAdded);
+
+                    toast = ""
+                    if (notAdded.length == 1) {
+                        toast = notAdded + " was not added.";
+                    }
+                    else {
+                        for (var i = 0; i < notAdded.length - 1; i++) {
+                            toast = toast + notAdded[i] + ", ";
+                        }
+
+                        toast = toast + notAdded[notAdded.length - 1] + " were not added.";
+                    }
+
+                    toastr.error(toast, "Oops!");
+
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
+                }
+
                 //location.reload(true);
-                reloadPage();
                 // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
 
             })
@@ -611,6 +658,8 @@
             .always(function() {
                 console.log("complete");
             });
+
+        $("#AddNewAdminModal").modal("toggle");
     }
 
 
@@ -862,7 +911,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAccount('add_tableA')">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitAdmins('add_tableA')" >Confirm</button>
+                    <button type="button" class="btn btn-success" onclick="submitAdmins('add_tableA')" >Confirm</button>
                 </div>
             </form>
         </div>
