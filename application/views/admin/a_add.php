@@ -200,7 +200,7 @@
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
 
-                if (columns[j]) {
+                if (!columns[j].trim()) {
                     valid = false;
                     return false;
                 }
@@ -233,7 +233,7 @@
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j + 1] = table.rows[i].cells[j].childNodes[0].value;
 
-                if (columns[j + 1]) {
+                if (!columns[j + 1].trim()) {
                     valid = false;
                     break;
                 }
@@ -291,15 +291,15 @@
                     if (notAdded.length == 1) {
                         toast = notAdded + " was not added.";
                     }
-                    else {
+                    else if (notAdded.length > 1) {
                         for (var i = 0; i < notAdded.length - 1; i++) {
                             toast = toast + notAdded[i] + ", ";
                         }
 
                         toast = toast + notAdded[notAdded.length - 1] + " were not added.";
-                    }
 
-                    toastr.error(toast, "Oops!");
+                        toastr.error(toast, "Oops!");
+                    }
 
                     var delay = 1000;
                     setTimeout(function() {
@@ -329,7 +329,7 @@
         var buildingName = $('#bldgName').val();
        // console.log("Adding"+buildingName);
 
-        if (buildingName) {
+        if (!buildingName.trim()) {
             console.log("no input");
             toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
             return;
