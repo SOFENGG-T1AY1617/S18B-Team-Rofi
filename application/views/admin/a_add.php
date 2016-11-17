@@ -472,7 +472,7 @@ include 'a_navbar.php';
 
 <?php if($_SESSION['admin_typeid'] == 1): ?>
     <div class="panel-group clearfix col-md-offset-2 col-md-8" role="tablist">
-                    <button type ="button"data-toggle="modal" data-target="#AddNewBuildingModal" class="btn btn-default col-md-12">Add Building</button>
+                    <button type ="button"data-toggle="modal" data-target="#AddNewBuildingModal" class="btn btn-success btn-block">+ Add Building</button>
     </div>
 <?php endif;?>
 <div id="panels" class = "col-md-offset-2 col-md-8">
@@ -515,8 +515,12 @@ include 'a_navbar.php';
                                 </div>
                             </li>
                             <div class = "panel-footer clearfix" id = "<?=$row->buildingid?>footer">
-                                <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default col-md-2 col-md-offset-8 add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">Add Rooms</button>
-                                <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>footer')">Edit Rooms</button>
+                                <span class = " col-md-offset-8 col-md-2">
+                                    <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-success btn-block add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">+ Add Rooms</button>
+                                </span>
+                                <span class = "col-md-2">
+                                    <button class="btn btn-info btn-block" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>footer')">Edit Rooms</button>
+                                </span>
                             </div>
                         </form>
                 </div>
