@@ -6,8 +6,10 @@
            //console.log("Building id: " + buildingid);
            $("#add_table").attr("name", buildingid);
            $("#modal-building-name").text($(this).data("buildingname"));
+
        });
 
+        addRoom('add_table');
         setInputRules();
 
     });
@@ -100,12 +102,9 @@
 
         initialTableData = getTableDataWithID(tID);
 
-
-        var addID = ""+tID+"_addbtn";
-        console.log(addID);
         footerA.innerHTML =
 
-            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"submit\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
             "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"')\" type=\"button\" value=\"Save Changes\"></div>";
 
     }
@@ -113,7 +112,7 @@
     function changeViewToView(table, footer){
 
 
-        console.log(table);
+        console.log("fuck this shit im out ~");
         var tableA = document.getElementById(table);
         var footerA = document.getElementById(footer);
 
@@ -149,15 +148,6 @@
 
         tableA.innerHTML = initialTable;
         footerA.innerHTML = initialFooter;
-
-        var addID = ""+tableA.id+"_addbtn";
-        var add = document.getElementById(addID.toString());
-
-
-
-        add.innerHTML =
-            "";
-
 
     }
 
@@ -506,8 +496,6 @@ include 'a_navbar.php';
                                     </tbody>
                                 </table>
 
-                                <div id = "<?=$row->buildingid?>table_addbtn">
-                                </div>
                             </li>
                             <div class = "panel-footer clearfix" id = "<?=$row->buildingid?>footer">
                                 <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default col-md-2 col-md-offset-8 add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">Add Rooms</button>
@@ -548,9 +536,6 @@ include 'a_navbar.php';
                             <tbody>
 
                             <tr>
-                                <td><input type="text" class="form-control" placeholder="Enter name of room"></td>
-                                <td><input type="number" min="0" class="form-control number-input" placeholder="Enter number of PCs in the room"></td>
-                                <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default"><i class="material-icons">clear</i></button></td>
                             </tr>
                             </tbody>
                         </table>
