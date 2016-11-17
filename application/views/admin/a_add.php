@@ -196,7 +196,7 @@
             var columns = [];
             // columns within the row
             //for (var j = 0; j < table.rows[i].cells.length; j++)
-            for (var j = 0; j < 2; j++)
+            for (var j = 0; j < table.rows[i].cells.length-1; j++)
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
@@ -411,6 +411,8 @@
             .fail(function() {
                 console.log("fail");
                 //console.log(result);
+
+                reloadPage();
             })
             .always(function() {
                 console.log("complete");
