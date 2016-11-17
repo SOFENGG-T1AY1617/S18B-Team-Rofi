@@ -339,7 +339,7 @@
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
                 console.log(j+": "+columns[j]);
 
-                if (!columns[j].trim()) {
+                if (!columns[j].trim() || columns[j] == 0) { // 0 for department dropdown
                     valid = false;
                     return false;
                 }
@@ -656,7 +656,7 @@
         console.log(tableData);
 
         if (tableData == false) {
-            toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
+            toastr.error("An input field is empty or a department for admin/s is not set. Please fill it and try again.", "Oops!");
             return;
         }
 
