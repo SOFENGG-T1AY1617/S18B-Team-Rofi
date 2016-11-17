@@ -67,6 +67,7 @@
     function changeViewToEdit(table, footer){
         console.log(table);
         var tableA = document.getElementById(table);
+        initialTable = tableA.innerHTML;
         var rows = tableA.rows;
 
         for(var i = 1; i < rows.length; i++){
@@ -103,40 +104,44 @@
 
     }
 
+    var initialTable;
     function changeViewToView(table, footer){
+
 
         console.log(table);
         var tableA = document.getElementById(table);
         var footerA = document.getElementById(footer);
         var rows = tableA.rows;
-        var deleteRows=[];
-            var lengthofdel=0;
-        for(var i = 1; i < rows.length; i++){
-            var cells = rows[i].cells;
+//
+//        var deleteRows=[];
+//            var lengthofdel=0;
+//
+//        for(var i = 1; i < rows.length; i++){
+//            var cells = rows[i].cells;
+//
+//            var curName = cells[0].getElementsByTagName("input")[0].value;
+//            var curNum = cells[1].getElementsByTagName("input")[0].value;
+//
+//            cells[2].innerHTML = "";
+//
+//            if(curName != "" && curNum != ""){
+//                cells[0].innerHTML = curName;
+//                cells[1].innerHTML = curNum;
+//            }
+//            else{
+//                console.log(i);
+//                deleteRows[lengthofdel] = i;
+//                lengthofdel ++;
+//            }
+//
+//
+//        }
+//
+//        for(var i=lengthofdel-1; i >= 0 ; i--){
+//            tableA.deleteRow(deleteRows[i]);
+//        }
 
-            var curName = cells[0].getElementsByTagName("input")[0].value;
-            var curNum = cells[1].getElementsByTagName("input")[0].value;
-
-            cells[2].innerHTML = "";
-
-            if(curName != "" && curNum != ""){
-                cells[0].innerHTML = curName;
-                cells[1].innerHTML = curNum;
-            }
-            else{
-                console.log(i);
-                deleteRows[lengthofdel] = i;
-                lengthofdel ++;
-            }
-
-
-        }
-
-        for(var i=lengthofdel-1; i >= 0 ; i--){
-            tableA.deleteRow(deleteRows[i]);
-        }
-
-
+        tableA.innerHTML = initialTable;
         var addID = ""+tableA.id+"_addbtn";
         var add = document.getElementById(addID.toString());
 
