@@ -104,13 +104,14 @@
 
         footerA.innerHTML =
 
-            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"submit\"><!--onclick=\"changeViewToView('"+tID+"','"+fID+"')\"-->Cancel</button>"+
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
             "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"')\" type=\"button\" value=\"Save Changes\"></div>";
 
     }
 
     function changeViewToView(table, footer){
 
+        reloadPage(); // TODO TEMPORARY FIX
 
         console.log("fuck this shit im out ~");
         var tableA = document.getElementById(table);
