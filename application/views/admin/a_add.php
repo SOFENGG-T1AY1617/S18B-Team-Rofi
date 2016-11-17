@@ -64,10 +64,17 @@
 
     var initialTableData;
 
+    var initialTable;
+    var initialFooter;
+
     function changeViewToEdit(table, footer){
         console.log(table);
         var tableA = document.getElementById(table);
+        var footerA  = document.getElementById(footer);
+
         initialTable = tableA.innerHTML;
+        initialFooter = footerA.innerHTML;
+
         var rows = tableA.rows;
 
         for(var i = 1; i < rows.length; i++){
@@ -93,7 +100,6 @@
 
         initialTableData = getTableDataWithID(tID);
 
-        var footerA  = document.getElementById(footer);
 
         var addID = ""+tID+"_addbtn";
         console.log(addID);
@@ -104,15 +110,15 @@
 
     }
 
-    var initialTable;
     function changeViewToView(table, footer){
 
 
         console.log(table);
         var tableA = document.getElementById(table);
         var footerA = document.getElementById(footer);
-        var rows = tableA.rows;
-//
+
+//        var rows = tableA.rows;
+
 //        var deleteRows=[];
 //            var lengthofdel=0;
 //
@@ -142,6 +148,8 @@
 //        }
 
         tableA.innerHTML = initialTable;
+        footerA.innerHTML = initialFooter;
+
         var addID = ""+tableA.id+"_addbtn";
         var add = document.getElementById(addID.toString());
 
@@ -150,10 +158,6 @@
         add.innerHTML =
             "";
 
-
-        footerA.innerHTML =
-    "<button type =\"button\" data-toggle=\"modal\" data-target=\"#AddNewRoomsModal\" class=\" col-md-offset-8 btn btn-default col-md-2\">Add Room</button>"+
-            " <button class=\"btn btn-default col-md-2\" type=\"button\" onclick=\"changeViewToEdit('"+tableA.id+"', '"+footer+"')\">Edit Rooms</button>";
 
     }
 
