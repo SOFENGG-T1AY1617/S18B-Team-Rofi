@@ -313,23 +313,34 @@ class Admin_Model extends CI_Model
 
     function insertModerators($data) {
         $moderators = $data['moderators'];
-
-
+        $numAdded = 0;
+        $notAdded = [];
 
         foreach($moderators as $mod) {
 
-            if(!$this->isExistingModerator($mod[2])) {
-                $insertModData = array(
-                    'first_name' => $mod[0],
-                    'last_name' => $mod[1],
-                    'password' => "password",
-                    'email' => $mod[2],
-                    'mod_departmentid' => $data['departmentid']
-                );
+            $insertModData = array(
+                'first_name' => $mod[0],
+                'last_name' => $mod[1],
+                'password' => "password",
+                'email' => $mod[2],
+                'mod_departmentid' => $data['departmentid']
+            );
 
-                $this->db->insert(TABLE_MODERATORS,$insertModData);
+            if(!($this->isExistingModerator($insertModData[COLUMN_EMAIL]))) {
+                $this->db->insert(TABLE_MODERATORS, $insertModData);
+                $numAdded++;
+            } else {
+                $notAdded[] = $mod[0] . ' ' . $mod[1];
             }
+
         }
+
+        $returnData = array(
+            'numAdded' => $numAdded,
+            'notAdded' => $notAdded
+        );
+
+        return $returnData;
     }
 
 
@@ -427,7 +438,7 @@ class Admin_Model extends CI_Model
                 $this->insertAdmin($insertAdminData);
                 $numAdded++;
             } else {
-                $notAdded[] = $admin[0] . " " . $admin[1];
+                $notAdded[] = $admin[0] . ' ' . $admin[1];
             }
         }
 

@@ -306,8 +306,6 @@
 
     function getTableData(tableID) {
         var table = document.getElementById(tableID);
-        //var tr = table.getElementsByTagName('tr');
-
         var jObject = [];
         for (var i = 1; i < table.rows.length; i++)
         {
@@ -322,8 +320,9 @@
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
+                console.log(j+": "+columns[j]);
 
-                if (columns[j]) {
+                if (!columns[j].trim()) {
                     valid = false;
                     return false;
                 }
@@ -360,7 +359,7 @@
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j + 1] = table.rows[i].cells[j+1].childNodes[0].data;
 
-                if (columns[j + 1] == "") {
+                if (!columns[j + 1].trim()) {
                     valid = false;
                     break;
                 }
@@ -470,6 +469,10 @@
         var tableData = getTableData(tableID);
         console.log(tableData);
 
+        if (tableData == false) {
+            toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
+            return;
+        }
 
         $.ajax({
             url: '<?=base_url('admin/addModerators')?>',
@@ -481,9 +484,48 @@
         })
             .done(function(result) {
                 console.log("done");
-                //
-                reloadPage();
-                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+
+                if (result['result'] == "success") {
+                    console.log(result['numAdded']);
+                    var toast = "";
+                    if (result['numAdded'] == 0) {
+                        toast = "No moderators were added.";
+                    }
+                    else if (result['numAdded'] == 1) {
+                        toast = "1 moderator was added successfully.";
+                    }
+                    else if (result['numAdded'] > 1 ) {
+                        toast = result['numAdded'] + " moderators were added successfully.";
+                    }
+                    toastr.success(toast, "Success");
+
+                    var notAdded = result['notAdded'];
+                    console.log(notAdded);
+
+                    toast = "";
+                    if (notAdded.length == 1) {
+                        toast = notAdded + " was not added.";
+                    }
+                    else if ( notAdded.length > 1 ) {
+                        for (var i = 0; i < notAdded.length - 1; i++) {
+                            toast = toast + notAdded[i] + ", ";
+                        }
+
+                        toast = toast + notAdded[notAdded.length - 1] + " were not added.";
+
+                        toastr.error(toast, "Oops!");
+                    }
+
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    reloadPage();
+                }
 
             })
             .fail(function(result) {
@@ -493,6 +535,8 @@
             .always(function() {
                 console.log("complete");
             });
+
+        $("#AddNewModeratorModal").modal("toggle");
     }
 
     function getAdminChangedData(newTableData) {
@@ -622,19 +666,19 @@
                     var notAdded = result['notAdded'];
                     console.log(notAdded);
 
-                    toast = ""
+                    toast = "";
                     if (notAdded.length == 1) {
                         toast = notAdded + " was not added.";
                     }
-                    else {
+                    else if (notAdded.length > 1) {
                         for (var i = 0; i < notAdded.length - 1; i++) {
                             toast = toast + notAdded[i] + ", ";
                         }
 
                         toast = toast + notAdded[notAdded.length - 1] + " were not added.";
-                    }
 
-                    toastr.error(toast, "Oops!");
+                        toastr.error(toast, "Oops!");
+                    }
 
                     var delay = 1000;
                     setTimeout(function() {
@@ -855,7 +899,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddAccount('add_table')">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitModerator('add_table')">Confirm</button>
+                    <button type="button" class="btn btn-success" onclick="submitModerator('add_table')">Confirm</button>
                 </div>
             </form>
         </div>

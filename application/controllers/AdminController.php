@@ -277,9 +277,16 @@ class AdminController extends CI_Controller
             'departmentid' => $_SESSION['admin_departmentid']
         );
 
-        $this->admin->insertModerators($modData);
+        $updateResult = $this->admin->insertModerators($modData);
 
-        echo json_encode("success");
+        $result = array(
+            'result' => "success",
+            'numAdded' => $updateResult['numAdded'],
+            'notAdded' => $updateResult['notAdded'],
+        );
+
+        echo json_encode($result);
+
     }
 
     public function updateModerators()
