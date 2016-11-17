@@ -115,8 +115,18 @@
         var rows = table.rows;
         var i;
         console.log(rows.length);
-        for(i=rows.length-1; i>1; i--){
+        for(i=rows.length-1; i>0; i--){
             table.deleteRow(i);
+        }
+        console.log(tableID);
+        switch(tableID){
+            case 'add_table':
+                addAccountModerator(tableID);
+                break;
+            case 'add_tableA':
+                addAccountAdmin(tableID);
+                break;
+
         }
 
     }

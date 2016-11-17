@@ -156,10 +156,12 @@
         var table = document.getElementById(tableID);
         var rows = table.rows;
         var i;
-        console.log(rows.length)
-        for(i=rows.length-1; i>1; i--){
+
+        for(i=rows.length-1; i>0; i--){
             table.deleteRow(i);
         }
+
+        addRoom(tableID);
 
     }
 
@@ -252,7 +254,6 @@
     function submitRoom() {
         var tableID = $("#add_table").attr("id");
         var tableData = getTableData(tableID);
-        //console.log(tableData);
 
         if (tableData == false) {
             toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
