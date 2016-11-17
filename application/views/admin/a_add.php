@@ -292,7 +292,11 @@
                     else if (result['numAdded'] > 1 ) {
                         toast = result['numAdded'] + " rooms were added successfully.";
                     }
-                    toastr.success(toast, "Success");
+
+                    if (result['numAdded'] > 0)
+                        toastr.success(toast, "Success");
+                    else
+                        toastr.info(toast, "Info");
 
                     var notAdded = result['notAdded'];
                     console.log(notAdded);

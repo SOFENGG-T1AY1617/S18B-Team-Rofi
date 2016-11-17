@@ -514,7 +514,11 @@
                     else if (result['numAdded'] > 1 ) {
                         toast = result['numAdded'] + " moderators were added successfully.";
                     }
-                    toastr.success(toast, "Success");
+
+                    if (result['numAdded'] > 0)
+                        toastr.success(toast, "Success");
+                    else
+                        toastr.info(toast, "Info");
 
                     var notAdded = result['notAdded'];
                     console.log(notAdded);
@@ -679,7 +683,11 @@
                     else if (result['numAdded'] > 1 ) {
                         toast = result['numAdded'] + " admins were added successfully.";
                     }
-                    toastr.success(toast, "Success");
+
+                    if (result['numAdded'] > 0)
+                        toastr.success(toast, "Success");
+                    else
+                        toastr.info(toast, "Info");
 
                     var notAdded = result['notAdded'];
                     console.log(notAdded);
@@ -709,9 +717,6 @@
                 else {
                     reloadPage();
                 }
-
-                //location.reload(true);
-                // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
 
             })
             .fail(function(result) {
