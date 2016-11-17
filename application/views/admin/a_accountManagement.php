@@ -765,56 +765,6 @@
 include 'a_navbar.php';
 ?>
 
-<div class = "col-md-2"></div>
-<div id="panels" class = "col-md-8">
-
-    <div class="panel-group" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="collapseListGroupHeadingMod">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#collapseListGroupMod" aria-expanded="true" aria-controls="collapseListGroupMod">
-                        List of Moderators
-                    </a></h4>
-            </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupMod" aria-labelledby="collapseListGroupHeadingMod" aria-expanded="false">
-                <ul class="list-group">
-                    <form>
-                        <li class="list-group-item">
-                            <table class="table table-hover" id="modtable">
-                                <thead>
-                                <tr>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>Department</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                <?php foreach($moderators as $mod):?>
-                                    <tr>
-                                        <td><?=$mod->first_name?></td>
-                                        <td><?=$mod->last_name?></td>
-                                        <td><?=$mod->email?></td>
-                                        <td><?=$mod->name?></td>
-                                        <td></td>
-                                    </tr>
-                                <?php endforeach;?>
-                                </tbody>
-                            </table>
-                        </li>
-                        <div class = "panel-footer clearfix" id = "modtable_footer">
-                            <button type ="button"data-toggle="modal" data-target="#AddNewModeratorModal" class="btn btn-default col-md-2 col-md-offset-8">Add Moderators</button>
-                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('modtable','modtable_footer', 'AddNewModeratorModal')">Edit Accounts</button>
-                        </div>
-                    </form>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
 <?php if($_SESSION['admin_typeid'] == 1): ?>
     <!-- Only show admin panel if user is a superuser -->
     <div id="panels" class = "col-md-offset-2 col-md-8">
@@ -866,7 +816,57 @@ include 'a_navbar.php';
         </div>
     </div>
     <div class = "col-md-2"></div>
+    <div class = "col-md-2"></div>
 <?php endif;?>
+
+<div id="panels" class = "col-md-8 col-md-offset-2">
+
+    <div class="panel-group" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="collapseListGroupHeadingMod">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" href="#collapseListGroupMod" aria-expanded="true" aria-controls="collapseListGroupMod">
+                        List of Moderators
+                    </a></h4>
+            </div>
+            <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupMod" aria-labelledby="collapseListGroupHeadingMod" aria-expanded="false">
+                <ul class="list-group">
+                    <form>
+                        <li class="list-group-item">
+                            <table class="table table-hover" id="modtable">
+                                <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <?php foreach($moderators as $mod):?>
+                                    <tr>
+                                        <td><?=$mod->first_name?></td>
+                                        <td><?=$mod->last_name?></td>
+                                        <td><?=$mod->email?></td>
+                                        <td><?=$mod->name?></td>
+                                        <td></td>
+                                    </tr>
+                                <?php endforeach;?>
+                                </tbody>
+                            </table>
+                        </li>
+                        <div class = "panel-footer clearfix" id = "modtable_footer">
+                            <button type ="button"data-toggle="modal" data-target="#AddNewModeratorModal" class="btn btn-default col-md-2 col-md-offset-8">Add Moderators</button>
+                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('modtable','modtable_footer', 'AddNewModeratorModal')">Edit Accounts</button>
+                        </div>
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Moderator Modal -->
 <div id="AddNewModeratorModal" class="modal fade" role="dialog">

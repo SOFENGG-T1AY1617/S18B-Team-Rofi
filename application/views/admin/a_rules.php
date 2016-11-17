@@ -14,10 +14,11 @@
                 e.preventDefault();
         }, false);
     }
-
+    var initialTable;
     function changeViewToEdit(table, footer){
         console.log(footer);
         var tableA = document.getElementById(table);
+        initialTable = tableA.innerHTML;
         var rows = tableA.rows;
         //var tID = table.id;
         //var fID = footer.id;
@@ -73,29 +74,7 @@
 
     function changeViewToView(table, footer){
 
-        console.log(table);
-        var tableA = table;
-        var rows = tableA.rows;
-
-        var cells1 = rows[0].cells;
-        var curSettingTI = "A timeslot is equal to 15 minutes.";
-        cells1[1].innerHTML = curSettingTI;
-
-        var cells2 = rows[1].cells;
-        var curSettingTL = "The user can choose up to 4 timeslots.";
-        cells2[1].innerHTML = curSettingTL;
-
-        var cells3 = rows[2].cells;
-        var curSettingRA = "The user can reserve 1 day before the actual reservation date.";
-        cells3[1].innerHTML = curSettingRA;
-
-        var cells4 = rows[3].cells;
-        var curSettingRE = "The reservation will expire if the user fails to show up in 15 minutes.";
-        cells4[1].innerHTML = curSettingRE;
-
-        var cells5 = rows[4].cells;
-        var curSettingCE = " The confirmation email will expire after 60 minutes.";
-        cells5[1].innerHTML = curSettingCE;
+        document.getElementById(table).innerHTML = initialTable;
 
         document.getElementById(footer).innerHTML =
             " <button class=\"btn btn-default col-md-3 col-md-offset-9\" type=\"button\" onclick=\"changeViewToEdit("+table.id+", "+footer.id+")\">Edit Information</button>";
@@ -195,7 +174,7 @@ include 'a_navbar.php';
 ?>
 
 <div class = "col-md-2"></div>
-<div id="panels" class = "col-md-8">
+<div id="panels" class = "col-md-8" id="rulePanel">
     <?php foreach($rules as $rule): ?>
         <div class="panel-group" role="tablist">
             <div class="panel panel-default">
