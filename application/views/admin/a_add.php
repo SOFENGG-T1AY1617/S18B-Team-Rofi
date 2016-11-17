@@ -200,7 +200,7 @@
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
 
-                if (columns[j] == "") {
+                if (columns[j]) {
                     valid = false;
                     return false;
                 }
@@ -233,7 +233,7 @@
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j + 1] = table.rows[i].cells[j].childNodes[0].value;
 
-                if (columns[j + 1] == "") {
+                if (columns[j + 1]) {
                     valid = false;
                     break;
                 }
@@ -329,7 +329,7 @@
         var buildingName = $('#bldgName').val();
        // console.log("Adding"+buildingName);
 
-        if (buildingName == "") {
+        if (buildingName) {
             console.log("no input");
             toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
             return;
