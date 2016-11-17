@@ -98,9 +98,9 @@ class Admin_Model extends CI_Model
 
     function queryAllRooms() {
         //return $this->db->get(TABLE_ROOMS)->result();
-        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
-                FROM rooms NATURAL JOIN computers
-                GROUP BY roomid
+        $sql = "SELECT rooms.roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
+                FROM rooms LEFT JOIN computers ON rooms.roomid = computers.roomid
+                GROUP BY rooms.roomid
                 ORDER BY name";
         return $this->db->query($sql)->result();
     }
