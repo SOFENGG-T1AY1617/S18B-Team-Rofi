@@ -104,7 +104,7 @@
 
         footerA.innerHTML =
 
-            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"submit\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"submit\"><!--onclick=\"changeViewToView('"+tID+"','"+fID+"')\"-->Cancel</button>"+
             "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"')\" type=\"button\" value=\"Save Changes\"></div>";
 
     }
