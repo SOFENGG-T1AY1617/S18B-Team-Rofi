@@ -529,9 +529,10 @@
                         }
 
                         toast = toast + notAdded[notAdded.length - 1] + " were not added.";
-
-                        toastr.error(toast, "Oops!");
                     }
+
+                    if (notAdded.length > 0)
+                        toastr.error(toast, "Oops!");
 
                     var delay = 1000;
                     setTimeout(function() {
@@ -693,9 +694,10 @@
                         }
 
                         toast = toast + notAdded[notAdded.length - 1] + " were not added.";
-
-                        toastr.error(toast, "Oops!");
                     }
+
+                    if (notAdded.length > 0)
+                        toastr.error(toast, "Oops!");
 
                     var delay = 1000;
                     setTimeout(function() {
