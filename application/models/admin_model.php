@@ -277,9 +277,13 @@ class Admin_Model extends CI_Model
     function insertRoomsAndComputers($data) {
         $rooms = $data['rooms'];
         $numAdded = 0;
+        $notAdded = [];
+
         foreach($rooms as $room) {
-            if ($this->isExistingRoom($room[0]))
+            if ($this->isExistingRoom($room[0])) {
+                $notAdded[] = $room[0];
                 continue;
+            }
 
             $insertRoomData = array(
                 'name' => $room[0],
@@ -298,7 +302,13 @@ class Admin_Model extends CI_Model
             $numAdded++;
         }
 
-        return $numAdded;
+        $result = array(
+            'numAdded' => $numAdded,
+            'notAdded' => $notAdded,
+        );
+
+
+        return $result;
     }
 
     function insertModerators($data) {

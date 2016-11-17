@@ -283,6 +283,24 @@
                         toast = result['numAdded'] + " rooms were added successfully.";
                     }
                     toastr.success(toast, "Success");
+
+                    var notAdded = result['notAdded'];
+                    console.log(notAdded);
+
+                    toast = ""
+                    if (notAdded.length == 1) {
+                        toast = notAdded + " was not added.";
+                    }
+                    else {
+                        for (var i = 0; i < notAdded.length - 1; i++) {
+                            toast = toast + notAdded[i] + ", ";
+                        }
+
+                        toast = toast + notAdded[notAdded.length - 1] + " were not added.";
+                    }
+
+                    toastr.error(toast, "Oops!");
+
                     var delay = 1000;
                     setTimeout(function() {
                         reloadPage();
@@ -311,7 +329,12 @@
         var buildingName = $('#bldgName').val();
        // console.log("Adding"+buildingName);
 
-        if(buildingName!=null&&buildingName!="")
+        if (buildingName == "") {
+            console.log("no input");
+            toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
+            return;
+        }
+        
         $.ajax({
             url: '<?=base_url('admin/addBuilding')?>',
             type: 'GET',
@@ -339,9 +362,13 @@
             .always(function() {
                 console.log("complete");
             });
-        else
-            console.log("no input");
-            //TODO Handle Errors TOAST MAYBE
+
+        $('#AddNewBuildingModal').modal('toggle');
+
+
+
+
+
     }
 
     function submitChanges(tableID) {
@@ -556,7 +583,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="submitBuilding()">Confirm</button>
+                    <button type="button" class="btn btn-success" onclick="submitBuilding()">Confirm</button>
                 </div>
             </form>
         </div>
