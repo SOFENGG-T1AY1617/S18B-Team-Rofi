@@ -41,7 +41,7 @@
 
         cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name of the room\">";
         cellNumber.innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" placeholder=\"Enter number of PCs in the room\">";
-        deleteCol.innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>"
+        deleteCol.innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\">&times;</button>"
 
         setInputRules();
     }
@@ -67,17 +67,35 @@
     var initialTableData;
 
     var initialTable;
-    var initialFooter;
+    var initialButtons;
+    var isEditing=false;
 
-    function changeViewToEdit(table, footer){
+    function changeViewToEdit(table, buttons, modal){
         console.log(table);
-        var tableA = document.getElementById(table);
-        var footerA  = document.getElementById(footer);
 
+        if(!isEditing){
+
+        var tableA = document.getElementById(table);
+        var buttonsA  = document.getElementById(buttons);
+        var tID = table;
+        var bID = buttons;
+
+        isEditing = true;
         initialTable = tableA.innerHTML;
-        initialFooter = footerA.innerHTML;
+        initialButtons = buttonsA.innerHTML;
 
         var rows = tableA.rows;
+
+
+        var buttonsStr =
+            "<span class = \"col-md-2\">"+
+            "<button class=\"btn  btn-danger btn-block col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+bID+"', '"+modal+"')\">Cancel</button>"+
+            "</span>"+
+            "<span class = \"col-md-2\">"+
+            "<button class=\"btn  btn-success btn-block col-md-20\" type=\"button\" onclick=\"+submitChanges('"+tID+"')\" >Save Changes</div>"+
+            "</span>";
+
+        document.getElementById(buttons).innerHTML = buttonsStr;
 
         for(var i = 1; i < rows.length; i++){
             var cells = rows[i].cells;
@@ -90,32 +108,30 @@
 
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curRoomID+"\" value=\""+curName+"\">";
             cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\""+curCapID+"\" value=\""+curNum+"\">";
-            cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow("+curCapID+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
+            cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow("+curCapID+")\" class=\"btn btn-default\">&times;</button>";
 
 
         }
 
         setInputRules();
 
-        var tID = table;
-        var fID = footer;
 
         initialTableData = getTableDataWithID(tID);
 
-        footerA.innerHTML =
+        }
+        else{
+            // TODO ADD TOAST
 
-            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
-            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"')\" type=\"button\" value=\"Save Changes\"></div>";
-
+            toastr.error("You are currently editing another building. Please save or cancel first!", "Oops!");
+        }
     }
 
-    function changeViewToView(table, footer){
+    function changeViewToView(table, buttons, modal){
 
-        reloadPage(); // TODO TEMPORARY FIX
-
+//        reloadPage(); // TODO TEMPORARY FIX
         console.log("fuck this shit im out ~");
         var tableA = document.getElementById(table);
-        var footerA = document.getElementById(footer);
+        var buttonsA = document.getElementById(buttons);
 
 //        var rows = tableA.rows;
 
@@ -147,9 +163,17 @@
 //            tableA.deleteRow(deleteRows[i]);
 //        }
 
-        tableA.innerHTML = initialTable;
-        footerA.innerHTML = initialFooter;
 
+            tableA.innerHTML = initialTable;
+        var buttonsStr =  "<span class = \"col-md-2\">"+
+            "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default btn-block add-room-btn\" >+ Add Rooms</button>"+
+            "</span>"+
+            "<span class = \"col-md-2\">"+
+            "<button class=\"btn btn-default btn-block\" type=\"button\" onclick=\"changeViewToEdit('"+table+"','"+buttons+"','"+modal+"')\">Edit Rooms</button>"+
+            "</span>";
+
+        buttonsA.innerHTML = buttonsStr;
+        isEditing = false;
     }
 
     function cancelAddRoom(tableID){
@@ -169,7 +193,7 @@
         var tableA = document.getElementById(table);
        for(var x=index+1;x<tableA.rows.length;x++)
             {
-                tableA.rows[x].cells[2].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(x-1)+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>"
+                tableA.rows[x].cells[2].innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(x-1)+")\" class=\"btn btn-default\">&times;</button>"
                 console.log(x-1);
             }
 
@@ -340,7 +364,7 @@
             toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
             return;
         }
-        
+
         $.ajax({
             url: '<?=base_url('admin/addBuilding')?>',
             type: 'GET',
@@ -477,8 +501,17 @@ include 'a_navbar.php';
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="collapseListGroupHeading<?=$row->buildingid?>">
                     <h4 class="panel-title clearfix ">
-                        <a href="#collapseListGroup<?=$row->buildingid?>" class="col-md-10" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup<?=$row->buildingid?>">
-                            <?=$row->name?></a></h4>
+                        <a href="#collapseListGroup<?=$row->buildingid?>" class="col-md-8" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListGroup<?=$row->buildingid?>">
+                            <?=$row->name?></a>
+                        <div id = "<?=$row->buildingid?>_buttons">
+                                <span class = "col-md-2">
+                                    <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default btn-block add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">+ Add Rooms</button>
+                                </span>
+                                 <span class = "col-md-2">
+                                    <button class="btn btn-default btn-block" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>_buttons', 'AddNewRoomsModal')">Edit Rooms</button>
+                                </span>
+                        </div>
+                    </h4>
                 </div>
                 <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroup<?=$row->buildingid?>" aria-labelledby="collapseListGroupHeading<?=$row->buildingid?>" aria-expanded="false">
                     <ul class="list-group">
@@ -492,8 +525,10 @@ include 'a_navbar.php';
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <?php $i=0; ?>
                                     <?php foreach($rooms as $room):?>
                                         <?php if($room->buildingid == $row->buildingid): ?>
+                                            <?php $i += 1; ?>
                                             <tr>
                                                 <td id="room_<?=$room->roomid?>"><?=$room->name?></td>
                                                 <td id="capacity_<?=$room->roomid?>"><?=$room->capacity?></td>
@@ -502,17 +537,19 @@ include 'a_navbar.php';
                                         <?php endif; ?>
                                     <?php endforeach;?>
                                     </tbody>
+
+
                                 </table>
 
+
+                                <?php if($i == 0):?>
+                                    <div id="norooms_message">
+                                        <h4 style="text-align: center"> NO REGISTERED ROOMS </h4>
+                                    </div>
+                                <?php endif;?>
+
                             </li>
-                            <div class = "panel-footer clearfix" id = "<?=$row->buildingid?>footer">
-                                <span class = " col-md-offset-8 col-md-2">
-                                    <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-success btn-block add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">+ Add Rooms</button>
-                                </span>
-                                <span class = "col-md-2">
-                                    <button class="btn btn-info btn-block" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>footer')">Edit Rooms</button>
-                                </span>
-                            </div>
+
                         </form>
                 </div>
             </div>

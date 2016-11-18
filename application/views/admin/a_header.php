@@ -25,7 +25,6 @@
     <script src="<?=base_url()?>/assets/js/toastr.min.js"></script>
     <script src="<?=base_url()?>/assets/js/jquery.numeric.min.js"></script>
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script type="text/javascript">
         //toastr["error"]("You cannot select more than 4 slots at once!", "Error")
