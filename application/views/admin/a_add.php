@@ -487,15 +487,20 @@
 include 'a_navbar.php';
 ?>
 
+<ol class="breadcrumb  col-md-offset-2 col-md-5">
+    <li><a href="#">Admin</a></li>
+    <li><a href="#">Application Settings</a></li>
+    <li class="active">Manage Areas</li>
+</ol>
+
 <?php if($_SESSION['admin_typeid'] == 1): ?>
-    <div class="panel-group clearfix col-md-offset-2 col-md-8" role="tablist">
+    <div class="panel-group clearfix col-md-3" role="tablist">
                     <button type ="button"data-toggle="modal" data-target="#AddNewBuildingModal" class="btn btn-success btn-block">+ Add Building</button>
     </div>
 <?php endif;?>
 <div id="panels" class = "col-md-offset-2 col-md-8">
 
 
-    <!-- SINGLE PANEL -->
     <?php foreach($buildings as $row):?>
         <div class="panel-group" role="tablist">
             <div class="panel panel-default">

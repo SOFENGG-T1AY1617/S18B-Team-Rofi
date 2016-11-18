@@ -793,6 +793,12 @@
 include 'a_navbar.php';
 ?>
 
+
+<ol class="breadcrumb  col-md-offset-2 col-md-10">
+    <li><a href="#">Admin</a></li>
+    <li class="active">Account Management</li>
+</ol>
+
 <?php if($_SESSION['admin_typeid'] == 1): ?>
     <!-- Only show admin panel if user is a superuser -->
     <div id="panels" class = "col-md-offset-2 col-md-8">

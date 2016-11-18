@@ -173,6 +173,12 @@
 include 'a_navbar.php';
 ?>
 
+<ol class="breadcrumb  col-md-offset-2 col-md-10">
+    <li><a href="#">Admin</a></li>
+    <li><a href="#">Application Settings</a></li>
+    <li class="active">Adjust Business Rules</li>
+</ol>
+
 <div class = "col-md-2"></div>
 <div id="panels" class = "col-md-8" id="rulePanel">
     <?php foreach($rules as $rule): ?>
