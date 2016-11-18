@@ -390,7 +390,7 @@ class AdminController extends CI_Controller
 
 
 
-            /*            // Check if deleted
+
                         if ($data[4] == -1) {
                             $this->admin->deleteRoom($data[0]);
 
@@ -400,7 +400,7 @@ class AdminController extends CI_Controller
 
                             continue;
                         }
-            */
+
 
 //TODO FIX DELETE PLEASE
 

@@ -67,18 +67,27 @@
 
         var tableA = document.getElementById(table);
         updateIndexOfDeleteButtons(table,rowNum);
-        /*
-        var table_ID= $(table).attr("id");
+
+
+
+       // var table_ID= $(table).attr("id");
         //$('table.row['+rowNum+']').hide();
 
-        console.log(table_ID);
-        var tableID = $(table.rows[rowNum].cells[0]).attr("id");
-        console.log(table.rows[rowNum].cells[0]);
-        console.log($(tableID).parents('tr'));
-        $(tableID).parents('tr').hide();
-        $(tableID).val("-1");*/
 
-        tableA.deleteRow(rowNum);
+ //       console.log("Delete Check:" +table+" "+rowNum);
+
+        //console.log($(tableA));
+        rowNum = parseInt(rowNum);
+       // console.log(table_ID);
+        var tableID = tableA.rows[rowNum].cells[4];
+       // console.log(table.rows[rowNum].cells[0]);
+        console.log(tableID);
+        $(tableID).parents('tr').hide();
+        $(tableID).val("-1");
+
+        console.log($(tableID).val());
+
+        //tableA.deleteRow(rowNum);
     }
     
     function updateIndexOfDeleteButtons(table,index)
@@ -205,7 +214,7 @@
             }
             drop+="</select>";
             cells[3].innerHTML = drop;
-            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+i+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
+            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
 
             console.log(tID);
 
@@ -563,6 +572,7 @@
 
     function getAdminChangedData(newTableData) {
         var changedData = [];
+        var deleteData  = [];
         var changedDataIndex = 0;
 
 
@@ -586,24 +596,29 @@
                 }
             }
 
-            if (initialAdminTableData[i][0] != newTableData[i][0] ||
-                initialAdminTableData[i][1] != newTableData[i][1] ||
-                initialAdminTableData[i][2] != newTableData[i][2] ||
-                // initialAdminTableData[i][4] != newTableData[i][4]
-                inDeptID != newTableData[i][3]
-            ) {
-                for(var k = 0; k<admins.length; k++){
-                    if(initialAdminTableData[i][2]==admins[k]['email']){
-                        newTableData[i][4] = admins[k]['administratorid'];
-                        console.log("HERE: " + admins[k]['administratorid']);
+
+
+            if(newTableData[i][4]!=-1)
+                if (initialAdminTableData[i][0] != newTableData[i][0] ||
+                    initialAdminTableData[i][1] != newTableData[i][1] ||
+                    initialAdminTableData[i][2] != newTableData[i][2] ||
+                    // initialAdminTableData[i][4] != newTableData[i][4]
+                    inDeptID != newTableData[i][3]
+                ) {
+                    for(var k = 0; k<admins.length; k++){
+                        if(initialAdminTableData[i][2]==admins[k]['email']){
+                            newTableData[i][4] = admins[k]['administratorid'];
+                            console.log("HERE: " + admins[k]['administratorid']);
+                        }
                     }
+
+                    changedData[changedDataIndex] = newTableData[i];
+                    changedDataIndex++;
+
+                    //console.log("aa "+ initialAdminTableData[i]+" "+newTableData[i]);
                 }
-
-                changedData[changedDataIndex] = newTableData[i];
-                changedDataIndex++;
-
-                //console.log("aa "+ initialAdminTableData[i]+" "+newTableData[i]);
-            }
+            else
+                console.log()
         }
 
         return changedData;
