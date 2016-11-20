@@ -490,7 +490,7 @@ include 'a_navbar.php';
 <ol class="breadcrumb  col-md-offset-2 col-md-5">
     <li><a href="#">Admin</a></li>
     <li><a href="#">Application Settings</a></li>
-    <li class="active">Manage Areas</li>
+    <li class="active">Manage Buildings</li>
 </ol>
 
 <?php if($_SESSION['admin_typeid'] == 1): ?>
@@ -628,6 +628,19 @@ include 'a_navbar.php';
                         <label for="bldgPrefix">Prefix:</label>
                         <input type="text" class="form-control" id="bldgPrefix" placeholder="Enter the prefix to be used. (ie. G for Gokongwei, SJ for St. Joseph Hall etc...)">
                     </div>-->
+
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="Room" >
+                            Room
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="Floor">
+                            Floor
+                        </label>
+                    </div>
 
                 </div>
                 <div class="modal-footer">

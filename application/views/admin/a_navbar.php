@@ -29,7 +29,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Application Settings<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li id="add_button"><a href="<?=site_url("admin/" . ADMIN_AREA_MANAGEMENT)?>">Manage Areas</a></li>
+                        <li id="add_button"><a href="<?=site_url("admin/" . ADMIN_AREA_MANAGEMENT)?>">Manage Buildings</a></li>
                         <li id="modify_button"><a href="<?=site_url("admin/" . ADMIN_SCHEDULING)?>">Modify Schedule</a></li>
                         <li><a href="<?=site_url("admin/" . ADMIN_BUSINESS_RULES)?>">Adjust Business Rules</a></li>
                     </ul>
