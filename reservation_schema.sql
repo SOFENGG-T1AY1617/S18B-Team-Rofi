@@ -6,9 +6,14 @@ CREATE TABLE `reservation_system`.`departments` (
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`departmentid`));
 
+CREATE TABLE `reservation_system`.`attendance` (
+  `attendanceid` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`attendanceid`));
+
 CREATE TABLE `reservation_system`.`area_types` (
   `area_typeid` INT NOT NULL AUTO_INCREMENT,
-  `type` VARCHAR(45) NOT NULL,
+  `type` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`area_typeid`));
 
 CREATE TABLE `reservation_system`.`buildings` (
@@ -77,6 +82,7 @@ CREATE TABLE `reservation_system`.`reservations` (
   `typeid` INT NOT NULL,
   `verified` BIT NOT NULL DEFAULT 0,
   `verificationcode` VARCHAR(40) NOT NULL,
+  `attendance` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`reservationid`),
   INDEX `typeid_idx` (`typeid` ASC),
   INDEX `collegeid_idx` (`collegeid` ASC),
@@ -159,6 +165,21 @@ CREATE TABLE `reservation_system`.`email_extension`(
   `email_extensionid` INT NOT NULL AUTO_INCREMENT,
   `email_extension` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`email_extensionid`));
+
+CREATE TABLE `reservation_system`.`archive_reservations` (
+  `archive_reservationid` INT NOT NULL AUTO_INCREMENT,
+  `computerid` INT NOT NULL,
+  `useridno` INT NOT NULL,
+  `email` VARCHAR(30) NOT NULL,
+  `date` DATE NOT NULL,
+  `start_restime` TIME NOT NULL,
+  `end_restime` TIME NOT NULL,
+  `collegeid` INT,
+  `typeid` INT NOT NULL,
+  `verified` BIT NOT NULL DEFAULT 0,
+  `verificationcode` VARCHAR(40) NOT NULL,
+  `attendance` INT NOT NULL DEFAULT 0, 
+  PRIMARY KEY (`reservationid`));
 
 /*dummy data*/
 INSERT INTO `reservation_system`.`email_extension`(`email_extension`)
@@ -268,15 +289,15 @@ VALUES ("Senior High School"),
        
 INSERT INTO `reservation_system`.`reservations`
 	(`computerid`, `useridno`, `email`, `date`, `start_restime`, `end_restime`,
-    `collegeid`, `typeid`, `verificationcode`)
-VALUES (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j209"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j209"),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j210"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j210"),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j211"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j211"),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-11-21", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j212"),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-11-21", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j212");
+    `collegeid`, `typeid`, `verificationcode`, `attendance`)
+VALUES (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j209", 1),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j209", 1),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j210", 1),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j210", 1),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j211", 1),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j211", 1),
+       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-11-21", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j212", 1),
+	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-11-21", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j212", 1);
 
 INSERT INTO `reservation_system`.`admin_types` (`admin_type`)
 VALUES ("Super Administrator"),
