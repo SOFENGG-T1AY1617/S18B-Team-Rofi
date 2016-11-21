@@ -179,7 +179,7 @@ CREATE TABLE `reservation_system`.`archive_reservations` (
   `verified` BIT NOT NULL DEFAULT 0,
   `verificationcode` VARCHAR(40) NOT NULL,
   `attendance` INT NOT NULL DEFAULT 0, 
-  PRIMARY KEY (`reservationid`));
+  PRIMARY KEY (`archive_reservationid`));
 
 /*dummy data*/
 INSERT INTO `reservation_system`.`email_extension`(`email_extension`)
