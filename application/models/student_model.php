@@ -109,12 +109,33 @@ class Student_Model extends CI_Model
         return $this->db->get(TABLE_BUILDINGS)->result();
     }
 
+    function queryNonEmptyBuildings() {
+        $sql = "SELECT b.buildingid, b.name
+                FROM buildings b INNER JOIN rooms r 
+                  ON b.buildingid = r.buildingid
+                GROUP BY b.buildingid
+                HAVING COUNT(roomid) > 0";
+        return $this->db->query($sql)->result();
+
+    }
+
     function queryAllRoomsAtBuildingID($id) {
         $sql = "SELECT * 
                 FROM rooms NATURAL JOIN 
                   (SELECT buildingid
                    FROM buildings
                    WHERE buildingid = ?) b";
+        return $this->db->query($sql, array($id))->result();
+    }
+
+    function queryNonEmptyRoomsAtBuildingID($id) {
+        $sql = "SELECT r.roomid, r.name
+                FROM rooms r NATURAL JOIN 
+                  (SELECT buildingid
+                   FROM buildings
+                   WHERE buildingid = ?) b NATURAL JOIN computers
+                GROUP BY r.roomid
+                HAVING COUNT(computerid) > 0";
         return $this->db->query($sql, array($id))->result();
     }
 

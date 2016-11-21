@@ -27,7 +27,7 @@ class Controller extends CI_Controller {
     {
 
         //$maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
-        $data['buildings'] = $this->student->queryAllBuildings();
+        $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
 
@@ -88,7 +88,8 @@ class Controller extends CI_Controller {
             'buildingid' => $this->input->get('buildingid'),
         );
 
-        $data = $this->student->queryAllRoomsAtBuildingID($getData['buildingid']);
+        //$data = $this->student->queryAllRoomsAtBuildingID($getData['buildingid']);
+        $data = $this->student->queryNonEmptyRoomsAtBuildingID($getData['buildingid']);
         /*$data = array(
           'result' => $this->student->queryAllRoomsAtBuildingID($getData['buildingid']),
         );*/

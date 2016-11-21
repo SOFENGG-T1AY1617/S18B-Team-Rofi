@@ -64,7 +64,7 @@
 
     }
 
-    var initialTableData;
+    //var initialTableData;
 
     var initialTable;
     var initialFooter;
@@ -100,17 +100,20 @@
         var tID = table;
         var fID = footer;
 
-        initialTableData = getTableDataWithID(tID);
+        var initialTableData = getTableDataWithID(tID);
+
+        //var init = getTableDataWithID(tID);
 
         footerA.innerHTML =
 
-            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" type=\"submit\"><!--onclick=\"changeViewToView('"+tID+"','"+fID+"')\"-->Cancel</button>"+
-            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"')\" type=\"button\" value=\"Save Changes\"></div>";
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
+            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"','"+initialTableData+"')\" type=\"button\" value=\"Save Changes\"></div>";
 
     }
 
     function changeViewToView(table, footer){
 
+        reloadPage(); // TODO TEMPORARY FIX
 
         console.log("fuck this shit im out ~");
         var tableA = document.getElementById(table);
@@ -196,7 +199,7 @@
             var columns = [];
             // columns within the row
             //for (var j = 0; j < table.rows[i].cells.length; j++)
-            for (var j = 0; j < 2; j++)
+            for (var j = 0; j < table.rows[i].cells.length-1; j++)
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
@@ -376,8 +379,13 @@
 
     }
 
-    function submitChanges(tableID) {
-        var changedData = getChangedData(getTableDataWithID(tableID));
+    function submitChanges(tableID, initialTableData) {
+        console.log(initialTableData);
+        var initial = parseTableData(initialTableData);
+        console.log(initial);
+        //return;
+
+        var changedData = getChangedData(initial, getTableDataWithID(tableID));
 
         $.ajax({
             url: '<?=base_url('admin/updateRooms')?>',
@@ -411,13 +419,29 @@
             .fail(function() {
                 console.log("fail");
                 //console.log(result);
+
+                //reloadPage();
             })
             .always(function() {
                 console.log("complete");
             });
     }
 
-    function getChangedData(newTableData) {
+    function parseTableData(tableData) {
+        var data = tableData.split(",");
+        var newTableData = [];
+        for(var i = 0; i < data.length; i +=3) {
+            var columns = [];
+            for (var j = i; j < i + 3; j++) {
+                columns[j % 3] = data[j];
+            }
+            newTableData[i / 3] = columns;
+        }
+
+        return newTableData;
+    }
+
+    function getChangedData(initialTableData, newTableData) {
         var changedData = [];
         var changedDataIndex = 0;
 
