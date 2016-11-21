@@ -170,13 +170,15 @@ $defaultTab = 1;
                         if (slotsPicked.length < maxNumberOfSlots && (($.inArray(slotID, slotsPicked)) == -1)) {
                             slotsPicked.push(slotID);
                             this.setAttribute("class", "slotCell selected");
+
+                            disableAllRelativeSlots(slotID);
                         }
                         else {
                             toastr.error("You cannot select more than "+ maxNumberOfSlots +" slots at once!", "Error");
                         }
 
                         console.log(slotsPicked);
-                        outputSlots();
+                        updateSelectedSlots();
 
                     });
 
@@ -187,12 +189,12 @@ $defaultTab = 1;
                             var existIndex = slotsPicked.indexOf(slotID);
                             slotsPicked.splice(existIndex, 1);
 
-                           this.setAttribute("class", "slotCell free");
-
+                            enableAllRelativeSlots(slotID);
+                            deselectSlot($("[id='" + slotID + "']"));
                         }
 
                         console.log(slotsPicked);
-                        outputSlots();
+                        updateSelectedSlots();
                     });
 
 
@@ -217,6 +219,46 @@ $defaultTab = 1;
                     });
 
                 });
+
+                function deselectSlot (slot) {
+                    if (slot.hasClass('selected'))
+                        slot.removeClass('selected');
+
+                    slot.addClass('free');
+                }
+
+                function enableSlot (slot) {
+                    if (slot.hasClass('disabled'))
+                        slot.removeClass('disabled');
+                }
+
+                function disableSlot (slot) {
+                    slot.addClass('disabled');
+                }
+
+                function disableAllRelativeSlots(id) {
+
+                    var splittedID = id.split("_");
+                    var pcID = splittedID[0];
+                    var relativeDateTime = splittedID[1] + "_" + splittedID[2] + "_" + splittedID[3];
+
+                    $("[id*='" + relativeDateTime + "']:not([id^='" + pcID + "'])").each(function () {
+                        disableSlot($(this));
+                    });
+
+                }
+
+                function enableAllRelativeSlots(id) {
+
+                    var splittedID = id.split("_");
+                    var pcID = splittedID[0];
+                    var relativeDateTime = splittedID[1] + "_" + splittedID[2] + "_" + splittedID[3];
+
+                    $("[id*='" + relativeDateTime + "']").each(function () {
+                        enableSlot($(this));
+                    });
+
+                }
 
                 function updateTimesHeader(isToday) {
 
@@ -628,10 +670,10 @@ $defaultTab = 1;
                                             clickableSlot1.className = "slotCell pull-left taken";
                                         }
 
-                                        for (var x in slotsPicked) {
+                                        /*for (var x in slotsPicked) {
                                             if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
                                                 disableSlot(clickableSlot1);
-                                        }
+                                        }*/
 
                                         slotCell.appendChild(clickableSlot1);
 
@@ -646,11 +688,7 @@ $defaultTab = 1;
                         }
                     }
 
-                    updateSelectedSlots();
-                }
-
-                function disableSlot (slot) {
-                    slot.className += ' disabled';
+                    //updateSelectedSlots();
                 }
 
             </script>
