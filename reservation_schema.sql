@@ -143,7 +143,16 @@ CREATE TABLE `reservation_system`.`business_rules` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+CREATE TABLE `reservation_system`.`email_extension`(
+  `email_extensionid` INT NOT NULL AUTO_INCREMENT,
+  `email_extension` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`email_extensionid`));
+
 /*dummy data*/
+INSERT INTO `reservation_system`.`email_extension`(`email_extension`)
+VALUES ("@dlsu.edu.ph"),
+	   ("@delasalle.ph");
+
 INSERT INTO `reservation_system`.`buildings` (`name`)
 VALUES ("Gokongwei Hall"),
 	   ("Henry Sy Sr. Hall"),
@@ -225,10 +234,11 @@ VALUES (1, 1),
 	   (10, 6);
 
 INSERT INTO `reservation_system`.`colleges` (`name`)
-VALUES ("College of Business"),
-	   ("College of Computer Science"),
-	   ("College of Engineering"),
+VALUES ("Ramon V. Del Rosario College of Business"),
+	   ("College of Computer Studies"),
+	   ("Gokongwei College of Engineering"),
 	   ("School of Economics"),
+	   ("Br. Andrew Gonzales College of Education"),
 	   ("College of Law"),
 	   ("College of Liberal Arts"),
 	   ("College of Science");
