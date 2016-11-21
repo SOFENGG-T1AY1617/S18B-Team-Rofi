@@ -236,13 +236,17 @@ $defaultTab = 1;
                     slot.addClass('disabled');
                 }
 
+                function disableSlotObject (slotObject) {
+                    slotObject.className += ' disabled';
+                }
+
                 function disableAllRelativeSlots(id) {
 
                     var splittedID = id.split("_");
                     var pcID = splittedID[0];
                     var relativeDateTime = splittedID[1] + "_" + splittedID[2] + "_" + splittedID[3];
 
-                    $("[id*='" + relativeDateTime + "']:not([id^='" + pcID + "'])").each(function () {
+                    $("[id*='" + relativeDateTime + "']:not([id^='" + pcID + "_'])").each(function () {
                         disableSlot($(this));
                     });
 
@@ -670,10 +674,12 @@ $defaultTab = 1;
                                             clickableSlot1.className = "slotCell pull-left taken";
                                         }
 
-                                        /*for (var x in slotsPicked) {
-                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1))
-                                                disableSlot(clickableSlot1);
-                                        }*/
+                                        for (var x in slotsPicked) {
+                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)) {
+                                                disableSlotObject(clickableSlot1);
+                                            }
+
+                                        }
 
                                         slotCell.appendChild(clickableSlot1);
 
@@ -681,6 +687,7 @@ $defaultTab = 1;
                                     }
 
                                     $('#tableBody').append(newTableRow);
+
                                 }
 
                             }
