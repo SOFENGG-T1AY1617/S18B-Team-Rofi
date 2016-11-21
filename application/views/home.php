@@ -937,7 +937,8 @@ $defaultTab = 1;
 
                                 <div class="form-group">
                                     <label for="email">Email:</label>
-                                    <input type="email" class="form-control" name="form-email" id="email" required>
+                                    <i><small class = "text-primary pull-right">Only DLSU Email is allowed (dlsu.edu.ph)</small></i>
+                                    <input type="email" class="form-control" name="form-email" id="email" required> <br/>
                                 </div>
                             </form>
                         </div>
