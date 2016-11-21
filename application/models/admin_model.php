@@ -585,6 +585,7 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($id))->row_array();
     }
 
+
     function queryAdminsAtEmail($email) {
         $sql = "SELECT * 
                       FROM Administrators
@@ -596,6 +597,12 @@ class Admin_Model extends CI_Model
         // Delete all computers in room
         // Delete room
         $this->db->delete(TABLE_ADMINISTRATORS, array('email' => $email));
+    }
+
+    function deleteAdminAtID($ID) {
+        // Delete all computers in room
+        // Delete room
+        $this->db->delete(TABLE_ADMINISTRATORS, array(COLUMN_ADMINISTRATORID => $ID));
     }
 
     function updateAdminEmail($data) {
