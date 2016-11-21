@@ -429,7 +429,7 @@ class AdminController extends CI_Controller
 
             }
 
-            if ($data[3] != $admin['Admin_departmentid']) {
+            if ($data[3] != $admin['admin_departmentid']) {
                 // Update departmentid
                 $updateData = array(
                     'id' => $data[5],
