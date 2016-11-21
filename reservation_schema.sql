@@ -1,39 +1,39 @@
 DROP SCHEMA IF EXISTS `reservation_system`;
 CREATE SCHEMA `reservation_system`;
 
-CREATE TABLE `reservation_system`.`buildings` (
-  `buildingid` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`buildingid`));
-
 CREATE TABLE `reservation_system`.`departments` (
   `departmentid` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`departmentid`));
 
-CREATE TABLE `reservation_system`.`room_types` (
-  `room_typeid` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE `reservation_system`.`area_types` (
+  `area_typeid` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`room_typeid`));
+  PRIMARY KEY (`area_typeid`));
+
+CREATE TABLE `reservation_system`.`buildings` (
+  `buildingid` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `area_typeid` INT NOT NULL,
+  PRIMARY KEY (`buildingid`),
+  INDEX `area_typeidx` (`area_typeid` ASC),
+  CONSTRAINT `area_typeid`
+    FOREIGN KEY (`area_typeid`)
+    REFERENCES `reservation_system`.`area_types` (`area_typeid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
 CREATE TABLE `reservation_system`.`rooms` (
   `roomid` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   `buildingid` INT NOT NULL,
   `departmentid` INT NOT NULL,
-  `room_typeid` INT NOT NULL,
   PRIMARY KEY (`roomid`),
   INDEX `buildingid_idx` (`buildingid` ASC),
   INDEX `department_idx` (`departmentid` ASC),
-  INDEX `room_typeidx` (`room_typeid` ASC),
   CONSTRAINT `buildingid`
     FOREIGN KEY (`buildingid`)
     REFERENCES `reservation_system`.`buildings` (`buildingid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `room_typeid`
-    FOREIGN KEY (`room_typeid`)
-    REFERENCES `reservation_system`.`room_types` (`room_typeid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `departmentid`
@@ -165,27 +165,27 @@ INSERT INTO `reservation_system`.`email_extension`(`email_extension`)
 VALUES ("@dlsu.edu.ph"),
 	   ("@delasalle.ph");
 
-INSERT INTO `reservation_system`.`buildings` (`name`)
-VALUES ("Gokongwei Hall"),
-	   ("Henry Sy Sr. Hall"),
-	   ("Miguel Hall"),
-	   ("Saint Joseph Hall");
+INSERT INTO `reservation_system`.`area_types` (`type`)
+VALUES ("Room"),
+	   ("Floor");
+
+INSERT INTO `reservation_system`.`buildings` (`name`, `area_typeid`)
+VALUES ("Gokongwei Hall", 1),
+	   ("Henry Sy Sr. Hall", 2),
+	   ("Miguel Hall", 1),
+	   ("Saint Joseph Hall", 1);
 
 INSERT INTO `reservation_system`.`departments` (`name`)
 VALUES ("ITS"),
 	   ("Library");
 
-INSERT INTO `reservation_system`.`room_types` (`type`)
-VALUES ("Room"),
-	   ("Floor");
-
-INSERT INTO `reservation_system`.`rooms` (`name`, `buildingid`, `departmentid`, `room_typeid`)
-VALUES ("G202A", 1, 1, 1),
-	   ("G202B", 1, 1, 1),
-	   ("SJ212", 4, 1, 1),
-	   ("6F", 2, 2, 2),
-	   ("7F", 2, 2, 2),
-	   ("8F", 2, 2, 2);
+INSERT INTO `reservation_system`.`rooms` (`name`, `buildingid`, `departmentid`)
+VALUES ("G202A", 1, 1),
+	   ("G202B", 1, 1),
+	   ("SJ212", 4, 1),
+	   ("6F", 2, 2),
+	   ("7F", 2, 2),
+	   ("8F", 2, 2);
 
 INSERT INTO `reservation_system`.`computers` (`computerno`, `roomid`)
 VALUES (1, 1),
