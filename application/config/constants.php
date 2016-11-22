@@ -116,7 +116,9 @@ define("COLUMN_ENDRESTIME", "endrestime");
 define("COLUMN_VERIFIED", "verified");
 define("COLUMN_VERFICATIONCODE", "verificationcode");
 
-define("MAX_RESERVATIONS", 4);
+define("TABLE_EMAIL_EXTENSION", "email_extension");
+define("COLUMN_EMAIL_EXTENSIONID", "email_extensionid");
+define("COLUMN_EMAIL_EXTENSION", "email_extension");
 
 define('TABLE_ADMINISTRATORS', "administrators");
 define("COLUMN_ADMINISTRATORID", "administratorid");

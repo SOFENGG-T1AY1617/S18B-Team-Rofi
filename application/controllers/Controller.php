@@ -30,6 +30,7 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
+        $data['email_extensions'] = $this->student->queryEmailExtensions();
 
         $data['tab'] = 1; // set to first tab on open
 

@@ -983,7 +983,12 @@ $defaultTab = 1;
                                 <div class="form-group">
                                     <label for="email">Email:</label>
                                     <i><small class = "text-primary pull-right">Only DLSU Email is allowed (dlsu.edu.ph)</small></i>
-                                    <input type="email" class="form-control" name="form-email" id="email" required> <br/>
+                                    <input type="text" class="form-control" name="form-email" id="email" required> <br/>
+                                    <select class="form-control" name="form-email-extension" id="select-email-extension">
+                                        <?php foreach($email_extensions as $row):?>
+                                            <option value="<?=$row->email_extension?>"><?=$row->email_extension?></option>
+                                        <?php endforeach;?>
+                                    </select>
                                 </div>
                             </form>
                         </div>
