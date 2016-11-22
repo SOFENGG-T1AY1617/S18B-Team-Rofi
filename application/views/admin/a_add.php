@@ -64,7 +64,7 @@
 
     }
 
-    var initialTableData;
+    //var initialTableData;
 
     var initialTable;
     var initialButtons;
@@ -116,11 +116,18 @@
         setInputRules();
 
 
-        initialTableData = getTableDataWithID(tID);
+        var initialTableData = getTableDataWithID(tID);
+
+        //var init = getTableDataWithID(tID);
 
         }
         else{
             // TODO ADD TOAST
+        footerA.innerHTML =
+
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
+            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"','"+initialTableData+"')\" type=\"button\" value=\"Save Changes\"></div>";
+
 
             toastr.error("You are currently editing another building. Please save or cancel first!", "Oops!");
         }
@@ -401,8 +408,13 @@
 
     }
 
-    function submitChanges(tableID) {
-        var changedData = getChangedData(getTableDataWithID(tableID));
+    function submitChanges(tableID, initialTableData) {
+        console.log(initialTableData);
+        var initial = parseTableData(initialTableData);
+        console.log(initial);
+        //return;
+
+        var changedData = getChangedData(initial, getTableDataWithID(tableID));
 
         $.ajax({
             url: '<?=base_url('admin/updateRooms')?>',
@@ -437,14 +449,28 @@
                 console.log("fail");
                 //console.log(result);
 
-                reloadPage();
+                //reloadPage();
             })
             .always(function() {
                 console.log("complete");
             });
     }
 
-    function getChangedData(newTableData) {
+    function parseTableData(tableData) {
+        var data = tableData.split(",");
+        var newTableData = [];
+        for(var i = 0; i < data.length; i +=3) {
+            var columns = [];
+            for (var j = i; j < i + 3; j++) {
+                columns[j % 3] = data[j];
+            }
+            newTableData[i / 3] = columns;
+        }
+
+        return newTableData;
+    }
+
+    function getChangedData(initialTableData, newTableData) {
         var changedData = [];
         var changedDataIndex = 0;
 

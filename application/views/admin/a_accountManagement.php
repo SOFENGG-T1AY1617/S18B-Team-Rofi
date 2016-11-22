@@ -67,18 +67,27 @@
 
         var tableA = document.getElementById(table);
         updateIndexOfDeleteButtons(table,rowNum);
-        /*
-        var table_ID= $(table).attr("id");
+
+
+
+       // var table_ID= $(table).attr("id");
         //$('table.row['+rowNum+']').hide();
 
-        console.log(table_ID);
-        var tableID = $(table.rows[rowNum].cells[0]).attr("id");
-        console.log(table.rows[rowNum].cells[0]);
-        console.log($(tableID).parents('tr'));
-        $(tableID).parents('tr').hide();
-        $(tableID).val("-1");*/
 
-        tableA.deleteRow(rowNum);
+ //       console.log("Delete Check:" +table+" "+rowNum);
+
+        //console.log($(tableA));
+        rowNum = parseInt(rowNum);
+       // console.log(table_ID);
+        var tableID = tableA.rows[rowNum].cells[4].childNodes[0];
+       // console.log(table.rows[rowNum].cells[0]);
+        console.log(tableID);
+        $(tableID).parents('tr').hide();
+        $(tableID).val("-1");
+
+        console.log($(tableID).val());
+
+        //tableA.deleteRow(rowNum);
     }
     
     function updateIndexOfDeleteButtons(table,index)
@@ -95,7 +104,10 @@
                 console.log(tableA.rows.length);
                 if( tableA.rows[x].cells[y].id=="DELETECOLUMN")
                 {
-                    tableA.rows[x].cells[y].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+table+"', "+(x-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
+
+                    tableA.rows[x].cells[y].innerHTML =
+                        "<button type =\"button\" onclick=\"clearAccount('"+table+"', "+(x)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
+
                     console.log(tableA.rows[x].cells[y].id);
 
                 }
@@ -215,7 +227,7 @@
             }
             drop+="</select>";
             cells[3].innerHTML = drop;
-            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+i+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
+            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
             console.log(tID);
 
@@ -359,6 +371,8 @@
                 }
             }
 
+            columns[4] = table.rows[i].cells[4].childNodes[0].value;
+
             if (valid) {
                 jObject[row] = columns;
             }
@@ -435,11 +449,11 @@
                 initialModTableData[i][1] != newTableData[i][1] ||
                 initialModTableData[i][2] != newTableData[i][2] ||
                // initialModTableData[i][4] != newTableData[i][4]
-                inDeptID != newTableData[i][3]
+                inDeptID != newTableData[i][3]||newTableData[i][4]==-1
             ) {
                 for(var k = 0; k<mods.length; k++){
                     if(initialModTableData[i][2]==mods[k]['email']){
-                        newTableData[i][4] = mods[k]['moderatorid'];
+                        newTableData[i][5] = mods[k]['moderatorid'];
                             console.log("HERE: " + mods[k]['moderatorid']);
                     }
                 }
@@ -456,6 +470,8 @@
 
     function submitModeratorChanges(tableID) {
         var changedData = getModChangedData(getTableData(tableID));
+
+        console.log(changedData);
 
         $.ajax({
             url: '<?=base_url('admin/updateModerators')?>',
@@ -600,31 +616,41 @@
                 }
             }
 
-            if (initialAdminTableData[i][0] != newTableData[i][0] ||
-                initialAdminTableData[i][1] != newTableData[i][1] ||
-                initialAdminTableData[i][2] != newTableData[i][2] ||
-                // initialAdminTableData[i][4] != newTableData[i][4]
-                inDeptID != newTableData[i][3]
-            ) {
-                for(var k = 0; k<admins.length; k++){
-                    if(initialAdminTableData[i][2]==admins[k]['email']){
-                        newTableData[i][4] = admins[k]['administratorid'];
-                        console.log("HERE: " + admins[k]['administratorid']);
+
+          //  for(var k = 0; k<5; k++)
+            console.log(newTableData[i]);
+
+
+                if (initialAdminTableData[i][0] != newTableData[i][0] ||
+                    initialAdminTableData[i][1] != newTableData[i][1] ||
+                    initialAdminTableData[i][2] != newTableData[i][2] ||
+                    // initialAdminTableData[i][4] != newTableData[i][4]
+                    inDeptID != newTableData[i][3]||newTableData[i][4]==-1
+                ) {
+                    for (var k = 0; k < admins.length; k++) {
+                        if (initialAdminTableData[i][2] == admins[k]['email']) {
+                            newTableData[i][5] = admins[k]['administratorid'];
+                            console.log("HERE: " + admins[k]['administratorid']);
+                        }
                     }
+
+                    changedData[changedDataIndex] = newTableData[i];
+                    changedDataIndex++;
+
+                    //console.log("aa "+ initialAdminTableData[i]+" "+newTableData[i]);
                 }
 
-                changedData[changedDataIndex] = newTableData[i];
-                changedDataIndex++;
 
-                //console.log("aa "+ initialAdminTableData[i]+" "+newTableData[i]);
-            }
         }
 
+        console.log(changedData);
         return changedData;
     }
 
     function submitAdminChanges(tableID) {
         var changedData = getAdminChangedData(getTableData(tableID));
+
+        console.log(changedData);
 
         $.ajax({
             url: '<?=base_url('admin/updateAdmins')?>',

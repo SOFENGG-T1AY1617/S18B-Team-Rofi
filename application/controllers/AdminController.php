@@ -296,21 +296,19 @@ class AdminController extends CI_Controller
 
         foreach ($changedData as $data) {
             // Query room data
-            $mod = $this->admin->queryModeratorAtID($data[4]);
+            $mod = $this->admin->queryModeratorAtID($data[5]);
 
 
-
-/*            // Check if deleted
             if ($data[4] == -1) {
-                $this->admin->deleteRoom($data[0]);
+                $this->admin->deleteModerator($mod['email']);
 
                 $result = array(
-                    'result' => "success",
+                'result' => "success"
                 );
 
                 continue;
-            }
-*/
+                }
+
 
 //TODO FIX DELETE PLEASE
 
@@ -318,7 +316,7 @@ class AdminController extends CI_Controller
             if ($data[0] != $mod['first_name']) {
                 // Update firts name
                     $updateData = array(
-                        'id' => $data[4],
+                        'id' => $data[5],
                         'fName' => $data[0],
                     );
                     $this->admin->updateModFirstName($updateData);
@@ -331,7 +329,7 @@ class AdminController extends CI_Controller
             if ($data[1] != $mod['last_name']) {
                 // Update last name
                 $updateData = array(
-                    'id' => $data[4],
+                    'id' => $data[5],
                     'lName' => $data[1],
                 );
                 $this->admin->updateModLastName($updateData);
@@ -344,7 +342,7 @@ class AdminController extends CI_Controller
             if ($data[3] != $mod['mod_departmentid']) {
                 // Update departmentid
                 $updateData = array(
-                    'id' => $data[4],
+                    'id' => $data[5],
                     'dept' => $data[3],
                 );
                 $this->admin->updateModDepartment($updateData);
@@ -363,7 +361,7 @@ class AdminController extends CI_Controller
                 } else {
                     // Update room name
                     $updateData = array(
-                        'id' => $data[4],
+                        'id' => $data[5],
                         'email' => $data[2],
                     );
                     $this->admin->updateModEmail($updateData);
@@ -386,21 +384,21 @@ class AdminController extends CI_Controller
 
         foreach ($changedData as $data) {
             // Query room data
-            $admin= $this->admin->queryAdminAtID($data[4]);
+            $admin= $this->admin->queryAdminAtID($data[5]);
 
 
 
-            /*            // Check if deleted
+
                         if ($data[4] == -1) {
-                            $this->admin->deleteRoom($data[0]);
+                            $this->admin->deleteAdmin($admin['email']);
 
                             $result = array(
-                                'result' => "success",
+                                'result' => "success"
                             );
 
                             continue;
                         }
-            */
+
 
 //TODO FIX DELETE PLEASE
 
@@ -408,7 +406,7 @@ class AdminController extends CI_Controller
             if ($data[0] != $admin['first_name']) {
                 // Update firts name
                 $updateData = array(
-                    'id' => $data[4],
+                    'id' => $data[5],
                     'fName' => $data[0],
                 );
                 $this->admin->updateAdminFirstName($updateData);
@@ -421,7 +419,7 @@ class AdminController extends CI_Controller
             if ($data[1] != $admin['last_name']) {
                 // Update last name
                 $updateData = array(
-                    'id' => $data[4],
+                    'id' => $data[5],
                     'lName' => $data[1],
                 );
                 $this->admin->updateAdminLastName($updateData);
@@ -431,10 +429,10 @@ class AdminController extends CI_Controller
 
             }
 
-            if ($data[3] != $admin['Admin_departmentid']) {
+            if ($data[3] != $admin['admin_departmentid']) {
                 // Update departmentid
                 $updateData = array(
-                    'id' => $data[4],
+                    'id' => $data[5],
                     'dept' => $data[3],
                 );
                 $this->admin->updateAdminDepartment($updateData);
@@ -453,7 +451,7 @@ class AdminController extends CI_Controller
                 } else {
                     // Update room name
                     $updateData = array(
-                        'id' => $data[4],
+                        'id' => $data[5],
                         'email' => $data[2],
                     );
                     $this->admin->updateAdminEmail($updateData);
