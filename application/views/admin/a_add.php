@@ -70,32 +70,15 @@
     var initialButtons;
     var isEditing=false;
 
-    function changeViewToEdit(table, buttons, modal){
+  function changeViewToEdit(table, footer){
         console.log(table);
-
-        if(!isEditing){
-
         var tableA = document.getElementById(table);
-        var buttonsA  = document.getElementById(buttons);
-        var tID = table;
-        var bID = buttons;
+        var footerA  = document.getElementById(footer);
 
-        isEditing = true;
         initialTable = tableA.innerHTML;
-        initialButtons = buttonsA.innerHTML;
+        initialFooter = footerA.innerHTML;
 
         var rows = tableA.rows;
-
-
-        var buttonsStr =
-            "<span class = \"col-md-2\">"+
-            "<button class=\"btn  btn-danger btn-block col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+bID+"', '"+modal+"')\">Cancel</button>"+
-            "</span>"+
-            "<span class = \"col-md-2\">"+
-            "<button class=\"btn  btn-success btn-block col-md-20\" type=\"button\" onclick=\"+submitChanges('"+tID+"')\" >Save Changes</div>"+
-            "</span>";
-
-        document.getElementById(buttons).innerHTML = buttonsStr;
 
         for(var i = 1; i < rows.length; i++){
             var cells = rows[i].cells;
@@ -108,29 +91,25 @@
 
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curRoomID+"\" value=\""+curName+"\">";
             cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\""+curCapID+"\" value=\""+curNum+"\">";
-            cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow("+curCapID+")\" class=\"btn btn-default\">&times;</button>";
+            cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow("+curCapID+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
 
         }
 
         setInputRules();
 
+        var tID = table;
+        var fID = footer;
 
         var initialTableData = getTableDataWithID(tID);
 
         //var init = getTableDataWithID(tID);
 
-        }
-        else{
-            // TODO ADD TOAST
-//        footerA.innerHTML =
-//
-//            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
-//            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"','"+initialTableData+"')\" type=\"button\" value=\"Save Changes\"></div>";
+        footerA.innerHTML =
 
+            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
+            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"','"+initialTableData+"')\" type=\"button\" value=\"Save Changes\"></div>";
 
-            toastr.error("You are currently editing another building. Please save or cancel first!", "Oops!");
-        }
     }
 
     function changeViewToView(table, buttons, modal){
