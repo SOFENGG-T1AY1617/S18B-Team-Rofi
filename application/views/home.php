@@ -980,19 +980,25 @@ $defaultTab = 1;
                                     </select>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="email">Email:</label>
-                                    <i><small class = "text-primary pull-right">Only DLSU Email is allowed (dlsu.edu.ph)</small></i>
-                                    <input type="text" class="form-control" name="form-email" id="email" required> <br/>
-                                    <select class="form-control" name="form-email-extension" id="select-email-extension">
-                                        <?php foreach($email_extensions as $row):?>
-                                            <option value="<?=$row->email_extension?>"><?=$row->email_extension?></option>
-                                        <?php endforeach;?>
-                                    </select>
+                                <label for="email">Email:</label>
+                                <i><small class = "text-primary pull-right">Only DLSU Email is allowed (dlsu.edu.ph)</small></i>
+
+                                <div class = "row">
+                                    <div class = "col-md-12">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="form-email" id="email" required />
+                                            <span class = "input-group-addon">@</span>
+                                            <select class="form-control" name="form-email-extension" id="select-email-extension">
+                                                <?php foreach($email_extensions as $row):?>
+                                                    <option value="<?=$row->email_extension?>"><?=$row->email_extension?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
-                        <div class = "col-md-12 col-md-offset-2">
+                        <div id = "second-step-slots" class = "row col-md-10 col-md-offset-2">
                             <b>Time Slots:</b>
                             <br/>
                             <div class = "row">

@@ -51,6 +51,10 @@ div.date-font {
     height: auto;
 }
 
+#second-step-slots {
+    margin-top: 10px;
+}
+
 #my_number_of_slots{
     font-size: 90%;
 }
