@@ -238,6 +238,20 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
+    function hasOngoingReservations($id) {
+        $sql = "SELECT *
+                FROM (SELECT *
+                      FROM reservations
+                      WHERE concat_ws(' ', date, start_restime) >= NOW()) r NATURAL JOIN
+                  (SELECT roomid
+                   FROM rooms
+                   WHERE roomid = ?) ro";
+        $result = $this->db->query($sql, array($id))->result();
+
+        return count($result)>=1;
+    }
+
+
     function queryReservationsOfComputerIDOnDate($id, $date) {
         $sql = "SELECT *
                 FROM (SELECT *

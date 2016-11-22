@@ -191,6 +191,8 @@ class AdminController extends CI_Controller
     {
         $changedData = $this->input->get("changedData");
 
+        $notDeleted = [];
+        $notChanged = [];
         foreach ($changedData as $data) {
             // Query room data
             $room = $this->admin->queryRoomAtID($data[0]);
@@ -198,11 +200,15 @@ class AdminController extends CI_Controller
 
             // Check if deleted
             if ($data[2] == -1) {
-                $this->admin->deleteRoom($data[0]);
 
-                $result = array(
-                    'result' => "success",
-                );
+
+                // Check if has reservations
+                if ($this->admin->hasOngoingReservations($data[0])) {
+                    $notDeleted[] = $data[1];
+                }
+                else {
+                    $this->admin->deleteRoom($data[0]);
+                }
 
                 continue;
             }
@@ -211,9 +217,7 @@ class AdminController extends CI_Controller
             if ($data[1] != $room['name']) {
                 if ($this->admin->isExistingRoom($data[1])) {
                     // If room name already exists, cannot change
-                    $result = array(
-                        'result' => "name_invalid",
-                    );
+                    $notChanged[] = $data[1];
                 } else {
                     // Update room name
                     $updateData = array(
@@ -221,9 +225,7 @@ class AdminController extends CI_Controller
                         'name' => $data[1],
                     );
                     $this->admin->updateRoomName($updateData);
-                    $result = array(
-                        'result' => "success",
-                    );
+
                 }
             }
 
@@ -238,9 +240,7 @@ class AdminController extends CI_Controller
 
                 $this->admin->addComputersToRoom($updateData);
 
-                $result = array(
-                    'result' => "success",
-                );
+
             } else if ($data[2] < $room['capacity']) {
                 // Remove computers
                 $updateData = array(
@@ -250,11 +250,15 @@ class AdminController extends CI_Controller
 
                 $this->admin->removeComputersFromRoom($updateData);
 
-                $result = array(
-                    'result' => "success",
-                );
+
             }
         }
+
+        $result = array(
+            'result' => "success",
+            'notChanged' => $notChanged,
+            'notDeleted' => $notDeleted,
+        );
 
         echo json_encode($result);
     }
