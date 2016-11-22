@@ -36,9 +36,15 @@ class AdminController extends CI_Controller
 
         private function initAdmin(){
 
-            $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-            $this->load->view('admin/home'); // $this->load->view('admin', $data); set to this if data is set
-            //$this->load->view('template/footer'); // include bootstrap 3 footer
+
+            
+        date_default_timezone_set('Asia/Hong_Kong');
+
+        //$this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
+        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
+        $this->load->view('admin/home'); // $this->load->view('admin', $data); set to this if data is set
+        //$this->load->view('template/footer'); // include bootstrap 3 footer
+
 
         }
 
