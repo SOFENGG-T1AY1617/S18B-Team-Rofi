@@ -70,30 +70,41 @@ include 'a_navbar.php';
         updateTimesHeader(dateSelected == dateToday);
 
         $(document).on( "click", ".slotCell.enabled:not(.selected)",function() {
-            var slotID = $(this).attr('id');
-
-            slotsPicked.push(slotID);
-            $(this).addClass(".selected");
+            selectSlot($(this));
 
             console.log(slotsPicked);
-            outputSlots();
+            //outputSlots();
 
         });
 
         $(document).on( "click", ".slotCell.selected",function() {
-            var slotID = $(this).attr('id');
-
-            if (($.inArray(slotID, slotsPicked)) > -1) {
-                var existIndex = slotsPicked.indexOf(slotID);
-                slotsPicked.splice(existIndex, 1);
-
-                $(this).removeClass(".selected");
-
-            }
+            deselectSlot($(this));
 
             console.log(slotsPicked);
-            outputSlots();
+            //outputSlots();
         });
+
+        $(document).on( "click", ".horizSelect", function () {
+            var cellID = ($(this).attr("id")).split('_');
+
+            var PCID = cellID[1];
+
+            $("[id^='" + PCID + "_']").each(function () {
+                selectSlot($(this));
+            });
+        });
+
+        $(document).on( "click", ".vertSelect", function () {
+            var cellID = ($(this).attr("id")).split('_');
+
+            var time1 = cellID[1];
+            var time2 = cellID[2];
+
+            $("[id*='" + time1 + "_" + time2 +"']").each(function () {
+                selectSlot($(this));
+            });
+        });
+
 
         $("input[name=optradio]:radio").change(function () {
 
@@ -150,9 +161,6 @@ include 'a_navbar.php';
         for (var i = 0; i < slotsPicked.length; i++) {
             slotsDisabled.push(slotsPicked[i]);
         }
-
-        
-
     }
 
     function toggleSelectedSlots () {
@@ -170,6 +178,22 @@ include 'a_navbar.php';
 
     }
 
+    function selectSlot (slot) {
+        slotsPicked.push(slot.attr("id"));
+        slot.addClass ('selected');
+    }
+
+    function deselectSlot (slot) {
+        var slotID = slot.attr("id");
+
+        if (($.inArray(slotID, slotsPicked)) > -1) {
+            var existIndex = slotsPicked.indexOf(slotID);
+            slotsPicked.splice(existIndex, 1);
+
+            slot.removeClass('selected');
+        }
+    }
+
     function updateTimesHeader(isToday) {
 
         var slotTable = $('#slotTable');
@@ -177,6 +201,7 @@ include 'a_navbar.php';
         slotTable.floatThead('destroy');
 
         var currentTimeArray = (isToday ? times_today_DISPLAY : times_tomorrow_DISPLAY);
+        var currentTimeArrayForIDs = (isToday ? times_today : times_tomorrow);
 
         var timesRow = document.createElement("tr");
         var PCNumbersTH = document.createElement("th");
@@ -185,11 +210,14 @@ include 'a_navbar.php';
 
         timesRow.appendChild(PCNumbersTH);
 
+        var n = 0; // use to traverse for creating IDs
         for (var i = 0; i < currentTimeArray.length - 1; i++) {
             var th = document.createElement("th");
 
             th.appendChild(document.createTextNode(currentTimeArray[i]));
 
+            th.setAttribute("id", "TIME_" + currentTimeArrayForIDs[n++] + "_" + currentTimeArrayForIDs[n] );
+            th.className = 'vertSelect';
             timesRow.appendChild(th);
         }
 
@@ -409,6 +437,9 @@ include 'a_navbar.php';
 
                         newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
 
+                        newPCNoCell.setAttribute("id", "PC_" + computers[k].computerid);
+                        newPCNoCell.className += 'horizSelect';
+
                         newTableRow.appendChild(newPCNoCell);
 
                         var n = 0; // counter for traversing through currentTimeArray
@@ -449,8 +480,6 @@ include 'a_navbar.php';
                                     clickableSlot1.className = clickableSlot1.className + " selected";
                                 }
 
-                            } else {
-                                clickableSlot1.className = "slotCell pull-left taken";
                             }
 
                             slotCell.appendChild(clickableSlot1);
