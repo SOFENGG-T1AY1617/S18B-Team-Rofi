@@ -599,7 +599,7 @@ $defaultTab = 1;
                             }
                         }
 
-                        /*
+                        /*PC
                          * IF : OPTION 0
                          *   MAKE <tr> dedicated for room number first before proceeding
                          *
@@ -613,7 +613,8 @@ $defaultTab = 1;
 
                         var currentTimeArray = (dateSelected == dateToday ? times_today : times_tomorrow);
 
-                        if(currentTimeArray.length>0) {
+                        console.log(currentTimeArray);
+                        if(currentTimeArray.length-1>0) {
                             for (var i = 0; i < roomIDs.length; i++) {
                                 var roomTitleRow = document.createElement("tr");
                                 var roomTitleCell = document.createElement("th");
@@ -699,9 +700,10 @@ $defaultTab = 1;
                             var tableMessageCell = document.createElement("th");
 
                             tableMessageCell.appendChild(document.createTextNode("No slots left for today"));
-                            tableMessageCell.setAttribute("colspan", 100);
+                            tableMessageCell.setAttribute("colspan", 10000);
 
                             tableMessageRow.appendChild(tableMessageCell);
+
 
                             $('#tableBody').append(tableMessageRow);
 
