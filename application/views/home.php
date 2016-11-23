@@ -873,7 +873,7 @@ $defaultTab = 1;
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function () {
 
 
-
+                        //console.log($("#email").val().trim() + "@" + $("#select-email-extension").val());
                         $("#email_message").css("visibility", "visible");
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
@@ -883,7 +883,7 @@ $defaultTab = 1;
                                 idnumber: $("#id-number").val(),
                                 typeid: $("#select-type").val(),
                                 collegeid: $("#select-college").val(),
-                                email: $("#email").val(),
+                                email: $("#email").val().trim() + "@" + $("#select-email-extension").val(),
                                 date: $("#text-date").val(),
                                 slots: slotsPicked,
                                 departmentid: currentDeptID
