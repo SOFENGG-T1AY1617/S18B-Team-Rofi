@@ -696,21 +696,21 @@ $defaultTab = 1;
 
                             }
                         }else{
-                            var tableMessageRow = document.createElement("tr");
-                            var tableMessageCell = document.createElement("th");
 
-                            tableMessageCell.appendChild(document.createTextNode("No slots left for today"));
-                            tableMessageCell.setAttribute("colspan", 10000);
+                            emptyTables();
 
-                            tableMessageRow.appendChild(tableMessageCell);
-
-
-                            $('#tableBody').append(tableMessageRow);
+                            $('#slotTable').html("<div class = 'message slots' border='none'>Sorry, no available slots left for Today</div>");
+                            $('#slotTable').attr('border','none');
 
                         }
                     }
 
                     //updateSelectedSlots();
+                }
+
+                function emptyTables(){
+                    $('#slotTable').empty();
+                    $('#tableHead').empty();
                 }
 
             </script>
