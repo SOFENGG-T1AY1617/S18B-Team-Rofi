@@ -30,6 +30,7 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
+        $data['email_extensions'] = $this->student->queryEmailExtensions();
 
         $data['tab'] = 1; // set to first tab on open
 
@@ -251,15 +252,12 @@ class Controller extends CI_Controller {
             }
         }
 
-        if (strlen($getData['email']) < 4) {
-            $errors[] = "Email Address";
-        }
-        else if (strpos($getData['email'], '@') == false) {
+        if (count(explode("@", $getData['email'])) <= 1) {
             $errors[] = "Email Address";
         }
         else { // Check if valid email address
             $emailArray = explode("@", $getData['email']);
-            if (strcmp($emailArray[1],"dlsu.edu.ph") != 0) {
+            if (strlen($emailArray[0]) < 4) {
                 $errors[] = "Email Address";
             }
         }
