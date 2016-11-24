@@ -659,7 +659,8 @@ class Admin_Model extends CI_Model
 
     function archivePastReservations($date, $time) {
         $sql = "call archive_past_reservations(?, ?)";
-        return $this->db->query($sql, array($date, $time))->result();
+
+        $this->db->query($sql, array($date, $time));
     }
 
 }

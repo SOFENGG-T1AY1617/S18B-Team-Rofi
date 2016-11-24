@@ -25,20 +25,11 @@ class AdminController extends CI_Controller
 
     public function index()
     {
-        /*if(isset($_SESSION['email'])) {
-            $this->initAdmin();
-        }
-        else {
-          $this->signInView("");
-        }*/
+        date_default_timezone_set('Asia/Hong_Kong');
         $this->loadView("");
     }
 
-    private function initAdmin(){
-
-        date_default_timezone_set('Asia/Hong_Kong');
-
-        //$this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
+    private function initAdmin() {
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/home'); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
@@ -46,6 +37,7 @@ class AdminController extends CI_Controller
     }
 
     public function loadView($viewName) {
+        $this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
         if(!isset($_SESSION['email'])) {
             $this->signInView("");
         }
