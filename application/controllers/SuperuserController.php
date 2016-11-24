@@ -33,8 +33,12 @@ class SuperuserController extends CI_Controller
 
     private function initSuperuser(){
 
+        $data['buildings'] = $this->admin->queryAllBuildings();
+
+            $data['rooms'] = $this->admin->queryAllRooms();
+
         $this->load->view('superuser/su_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('superuser/su_index'); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('superuser/su_index', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
 
     }
