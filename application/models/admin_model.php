@@ -474,13 +474,14 @@ class Admin_Model extends CI_Model
         return count($result)>=1;
     }
 
-    function insertDepartment($data) {
-
+    function insertDepartment($department) {
+        $this->db->insert(TABLE_DEPARTMENTS, $department);
     }
 
-    function insertDepartments($data) {
-
+    function insertBusinessRules($rules) {
+        $this->db->insert(TABLE_BUSINESS_RULES, $rules);
     }
+
 
     function removeComputersFromRoom($data) {
         $roomid = $data['roomid'];
