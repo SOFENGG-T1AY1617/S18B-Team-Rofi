@@ -190,7 +190,7 @@ div.legend.taken{
     margin-top: 10px;
 }
 
-.horizSelect:hover, .vertSelect:hover {
+.horizSelect:hover, .vertSelect:hover, .used {
     background-color: #dddddd;
     cursor: pointer;
 }

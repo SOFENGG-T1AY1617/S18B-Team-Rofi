@@ -72,7 +72,7 @@ include 'a_navbar.php';
         $(document).on( "click", ".slotCell.enabled:not(.selected)",function() {
             selectSlot($(this));
 
-            console.log(slotsPicked);
+            //console.log(slotsPicked);
             //outputSlots();
 
         });
@@ -80,7 +80,7 @@ include 'a_navbar.php';
         $(document).on( "click", ".slotCell.selected",function() {
             deselectSlot($(this));
 
-            console.log(slotsPicked);
+            //console.log(slotsPicked);
             //outputSlots();
         });
 
@@ -89,20 +89,42 @@ include 'a_navbar.php';
 
             var PCID = cellID[1];
 
-            $("[id^='" + PCID + "_']").each(function () {
+            var jQuerySelector = "[id^='" + PCID + "_']";
+
+            $(jQuerySelector).each(function () {
                 selectSlot($(this));
             });
+
+            if($(this).hasClass('used')) {
+                $(jQuerySelector).each(function () {
+                    deselectSlot($(this));
+                });
+                $(this).removeClass('used');
+            } else
+                $(this).addClass('used');
         });
 
         $(document).on( "click", ".vertSelect", function () {
-            var cellID = ($(this).attr("id")).split('_');
+            var cellID = $(this).attr("id");
 
-            var time1 = cellID[1];
-            var time2 = cellID[2];
+            var splittedCellID = cellID.split('_');
 
-            $("[id*='" + time1 + "_" + time2 +"']").each(function () {
+            var time1 = splittedCellID[1];
+            var time2 = splittedCellID[2];
+
+            var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+
+            $(jQuerySelector).each(function () {
                 selectSlot($(this));
             });
+
+            if($(this).hasClass('used')) {
+                $(jQuerySelector).each(function () {
+                    deselectSlot($(this));
+                });
+                $(this).removeClass('used');
+            } else
+                $(this).addClass('used');
         });
 
 
@@ -192,6 +214,19 @@ include 'a_navbar.php';
 
             slot.removeClass('selected');
         }
+
+        var splittedID = slotID.split("_");
+
+        var removeUseSelectorHoriz = "#PC_" + splittedID[0];
+        var removeUseSelectorVert = "[id = 'TIME" + "_" + splittedID[2] + "_" + splittedID[3] + "']";
+
+        console.log(removeUseSelectorVert);
+
+        if ($(removeUseSelectorHoriz).hasClass('used'))
+            $(removeUseSelectorHoriz).removeClass('used');
+
+        if ($(removeUseSelectorVert).hasClass('used'))
+            $(removeUseSelectorVert).removeClass('used');
     }
 
     function updateTimesHeader(isToday) {
