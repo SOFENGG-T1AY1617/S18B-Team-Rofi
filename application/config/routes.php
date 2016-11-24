@@ -96,4 +96,6 @@ $route['admin/business_rules'] = 'AdminController/ruleView';*/
 
 /*Superuser - sorry im adding new routes*/
 $route['superuser'] = 'SuperuserController';
-$route['superuser/index'] = 'SuperuserController/initSuperuser';
+$route['superuser/bldg'] = 'SuperuserController';
+$route['superuser/dept'] = 'SuperuserController/loadDepartmentView';
+

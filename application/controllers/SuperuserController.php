@@ -28,6 +28,7 @@ class SuperuserController extends CI_Controller
         else {
           $this->signInView("");
         }*/
+
         $this->loadView("");
     }
 
@@ -43,10 +44,24 @@ class SuperuserController extends CI_Controller
 
     }
 
+    private function loadDepartmentView(){
+
+        $data['administrators'] = $this->admin->queryAllAdministators();
+
+        $data['departments'] = $this->admin->queryAllDepartments();
+
+        $this->load->view('superuser/su_header'); // include bootstrap 3 header -> included in home
+        $this->load->view('superuser/su_dept', $data); // $this->load->view('admin', $data); set to this if data is set
+        //$this->load->view('template/footer'); // include bootstrap 3 footer
+
+    }
+
     public function loadView($viewName) {
 
             switch ($viewName) {
-
+//                case SU_DEPARTMENT:
+//                    $this->loadDepartmentView();
+//                    break;
                 default:
                     $this->initSuperuser();
             }
