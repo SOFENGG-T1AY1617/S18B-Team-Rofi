@@ -310,4 +310,8 @@ class Student_Model extends CI_Model
 
         return $slotLimit[0]->slotLimit;
     }
+
+    function queryEmailExtensions() {
+        return $this->db->get(TABLE_EMAIL_EXTENSION)->result();
+    }
 }

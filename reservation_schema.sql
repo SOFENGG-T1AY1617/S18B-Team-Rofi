@@ -183,8 +183,8 @@ CREATE TABLE `reservation_system`.`archive_reservations` (
 
 /*dummy data*/
 INSERT INTO `reservation_system`.`email_extension`(`email_extension`)
-VALUES ("@dlsu.edu.ph"),
-	   ("@delasalle.ph");
+VALUES ("dlsu.edu.ph"),
+	   ("delasalle.ph");
 
 INSERT INTO `reservation_system`.`area_types` (`type`)
 VALUES ("Room"),
