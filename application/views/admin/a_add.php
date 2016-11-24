@@ -17,7 +17,7 @@
     function setInputRules() {
         $('input[type=number]').numeric();
         $(".number-input").keypress(function(event) {
-            if ( event.which == 45 || event.which == 189) {
+            if ( event.which == 45 || event.which == 189 || event.which == 46) {
                 event.preventDefault();
             }
         });
