@@ -102,6 +102,8 @@
           var bID = buttons;
 
           //var init = getTableDataWithID(tID);
+          initialButtons = document.getElementById(bID).innerHTML;
+
 
           var buttonsStr =
               "<span class = \"col-md-2\">"+
@@ -160,16 +162,19 @@
 //            tableA.deleteRow(deleteRows[i]);
 //        }
 
+      //
 
             tableA.innerHTML = initialTable;
-        var buttonsStr =  "<span class = \"col-md-2\">"+
-            "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default btn-block add-room-btn\" >+ Add Rooms</button>"+
-            "</span>"+
-            "<span class = \"col-md-2\">"+
-            "<button class=\"btn btn-default btn-block\" type=\"button\" onclick=\"changeViewToEdit('"+table+"','"+buttons+"','"+modal+"')\">Edit Rooms</button>"+
-            "</span>";
+//        var buttonsStr =  "<span class = \"col-md-2\">"+
+//            "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default btn-block add-room-btn\" >+ Add Rooms</button>"+
+//            "</span>"+
+//            "<span class = \"col-md-2\">"+
+//            "<button class=\"btn btn-default btn-block\" type=\"button\" onclick=\"changeViewToEdit('"+table+"','"+buttons+"','"+modal+"')\">Edit Rooms</button>"+
+//            "</span>";
 
-        buttonsA.innerHTML = buttonsStr;
+
+
+        buttonsA.innerHTML = initialButtons;
         isEditing = false;
     }
 
