@@ -106,15 +106,23 @@ define("TABLE_TYPES", "types");
 define("COLUMN_TYPEID", "typeid");
 define("COLUMN_TYPE", "type");
 
+define("TABLE_USERS", "users");
+define("COLUMN_USERID", "userid");
+define("COLUMN_LAST_NAME", "last_name");
+define("COLUMN_FIRST_NAME", "first_name");
+define("COLUMN_MIDDLE_NAME", "middle_name");
+define("COLUMN_BIRTHDATE", "birthdate");
+
 define("TABLE_RESERVATIONS", "reservations");
 define("COLUMN_RESERVATIONID", "reservationid");
-define("COLUMN_USERIDNO", "useridno");
 define("COLUMN_EMAIL", "email");
 define("COLUMN_DATE", "date");
 define("COLUMN_STARTRESTIME", "startrestime");
 define("COLUMN_ENDRESTIME", "endrestime");
 define("COLUMN_VERIFIED", "verified");
 define("COLUMN_VERFICATIONCODE", "verificationcode");
+define("COLUMN_ATTENDANCE", "attendance");
+define("COLUMN_TIME_RESERVED", "time_reserved");
 
 define("TABLE_EMAIL_EXTENSION", "email_extension");
 define("COLUMN_EMAIL_EXTENSIONID", "email_extensionid");
@@ -122,9 +130,6 @@ define("COLUMN_EMAIL_EXTENSION", "email_extension");
 
 define('TABLE_ADMINISTRATORS', "administrators");
 define("COLUMN_ADMINISTRATORID", "administratorid");
-define("COLUMN_LAST_NAME", "last_name");
-define("COLUMN_FIRST_NAME", "first_name");
-define("COLUMN_MIDDLE_NAME", "middle_name");
 define("COLUMN_ADMIN_DEPARTMENTID", "admin_departmentid");
 define("COLUMN_PASSWORD", "password");
 

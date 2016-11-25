@@ -81,8 +81,8 @@ CREATE TABLE `reservation_system`.`types` (
   `type` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`typeid`));
 
-CREATE TABLE `reservation_system`.`students` (
-  `studentid` INT NOT NULL,
+CREATE TABLE `reservation_system`.`users` (
+  `userid` INT NOT NULL,
   `last_name` VARCHAR(30) NOT NULL,
   `first_name` VARCHAR(30) NOT NULL,
   `middle_name` VARCHAR(30) NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE `reservation_system`.`students` (
   `collegeid` INT NOT NULL,
   `email` VARCHAR(50) NOT NULL,
   `password` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`studentid`),
+  PRIMARY KEY (`userid`),
   INDEX `typeid_idx` (`typeid` ASC),
   INDEX `collegeid_idx` (`collegeid` ASC),
   CONSTRAINT `typeid`
@@ -108,13 +108,14 @@ CREATE TABLE `reservation_system`.`students` (
 CREATE TABLE `reservation_system`.`reservations` (
   `reservationid` INT NOT NULL AUTO_INCREMENT,
   `computerid` INT NOT NULL,
-  `studentid` INT NOT NULL,
+  `userid` INT NOT NULL,
   `date` DATE NOT NULL,
   `start_restime` TIME NOT NULL,
   `end_restime` TIME NOT NULL,
   `verified` BIT NOT NULL DEFAULT 0,
   `verificationcode` VARCHAR(40) NOT NULL,
   `attendance` INT NOT NULL DEFAULT 0,
+  `time_reserved` DATETIME DEFAULT NULL,
   PRIMARY KEY (`reservationid`),
   INDEX `computerid_idx` (`computerid` ASC),
   CONSTRAINT `computerid`
@@ -122,6 +123,17 @@ CREATE TABLE `reservation_system`.`reservations` (
     REFERENCES `reservation_system`.`computers` (`computerid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+DELIMITER $$
+DROP TRIGGER IF EXISTS reservation_system.reservations_BINS$$
+USE `reservation_system`$$
+CREATE TRIGGER `reservations_BINS` BEFORE INSERT ON `reservations` FOR EACH ROW
+BEGIN
+  IF (NEW.time_reserved IS NULL) THEN
+  SET NEW.time_reserved = CONCAT(curdate(), ' ', curtime());
+  END IF;
+END$$
+DELIMITER ;
 
 CREATE TABLE `reservation_system`.`admin_types` (
   `admin_typeid` INT NOT NULL AUTO_INCREMENT,
@@ -191,7 +203,7 @@ CREATE TABLE `reservation_system`.`email_extension`(
 CREATE TABLE `reservation_system`.`archive_reservations` (
   `archive_reservationid` INT NOT NULL AUTO_INCREMENT,
   `computerid` INT NOT NULL,
-  `studentid` INT NOT NULL,
+  `userid` INT NOT NULL,
   `date` DATE NOT NULL,
   `start_restime` TIME NOT NULL,
   `end_restime` TIME NOT NULL,
@@ -311,12 +323,13 @@ VALUES ("Senior High School"),
 	   ("Faculty"),
 	   ("Staff");
 
-INSERT INTO `reservation_system`.`students` (`studentid`, `last_name`, `first_name`, `middle_name`, `birthdate`,
+INSERT INTO `reservation_system`.`users` (`userid`, `last_name`, `first_name`, `middle_name`, `birthdate`,
 	`typeid`, `collegeid`, `email`, `password`)
-VALUES(11428260, "Santos", "Rofi Emmanuelle", "Lectura", "1997-04-19", 2, 2, "rofisantos@dlsu.edu.ph", "password");
+VALUES(11428260, "Santos", "Rofi Emmanuelle", "Lectura", "1997-04-19", 2, 2, "rofisantos@dlsu.edu.ph", "password"),
+  (11425520, "Chan", "Kevin Gray", "Dayao", 1998-01-11, 2, 2, "kevin_gray_chan@dlsu.edu.ph", "password");
        
 INSERT INTO `reservation_system`.`reservations`
-	(`computerid`,  `date`, `studentid`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)
+	(`computerid`,  `date`, `userid`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)
 VALUES (1, "2016-10-18", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j209", 1),
 	   (1, "2016-10-18", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j209", 1),
        (1, "2016-10-19", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j210", 1),

@@ -55,7 +55,7 @@ $defaultTab = 1;
                    </li>
 
                    <li role="presentation" class="tab_2 disabled">
-                       <a href="#tab_1_2">Step 2 : Provide your personal information</a>
+                       <a href="#tab_1_2">Step 2 : Enter your DLSU account</a>
                    </li>
 
                     <li role="presentation" class="tab_3 disabled">
@@ -877,9 +877,9 @@ $defaultTab = 1;
                         $("#email_message").css("visibility", "visible");
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
-                            type: 'GET',
+                            type: 'POST',
                             dataType: 'json',
-                            data: {
+                            /*data: {
                                 idnumber: $("#id-number").val(),
                                 typeid: $("#select-type").val(),
                                 collegeid: $("#select-college").val(),
@@ -887,18 +887,30 @@ $defaultTab = 1;
                                 date: $("#text-date").val(),
                                 slots: slotsPicked,
                                 departmentid: currentDeptID
+                            }*/
+                            data: {
+                                userid: $("#id-number").val(),
+                                password: $("#password").val(),
+                                slots: slotsPicked,
+                                departmentid: currentDeptID,
                             }
                         })
                             .done(function(result) {
                                 console.log("done");
+                                console.log(result);
                                 if (result['status'] == "fail") {
                                     $("#email_message").css("visibility", "hidden");
-                                    console.log("Count: " + result['count']);
-                                    console.log("Num Reservations: " + result['num']);
-                                    errors = result['errors'];
+                                    var errors = result['errors'];
                                     console.log(errors);
                                     if (errors.length > 0) {
-                                        toast = "You have an error in the following input";
+                                        if (errors[0] == "UserID") {
+                                            toastr.error("ID Number isn't valid!", "Oops!")
+                                        }
+                                        else if (errors[0] == "Password") {
+                                            toastr.error("Your password is incorrect!", "Oops!");
+                                        }
+
+                                        /*toast = "You have an error in the following input";
 
                                         console.log ("NUMBER OF ERRORS: " + errors.length);
 
@@ -913,18 +925,18 @@ $defaultTab = 1;
                                             toast = toast + errors[i] + ", ";
                                         }
                                         toast = toast + errors[errors.length - 1];
-                                        toastr.error(toast, "Submission failed");
+                                        toastr.error(toast, "Submission failed");*/
                                     }
                                     if (result['email_status'] == "fail") {
                                         toastr.error("An error occurred while trying to reserve. Please try again.", "Submission failed");
                                     }
                                     if (result['numReservations_status'] == "fail") {
-                                        toast = "You've already reserved " + result['reserved'] +
+                                        var toast = "You've already reserved " + result['reserved'] +
                                             " slots! You can only have a maximum of " + maxNumberOfSlots + ".";
                                         toastr.error(toast, "Too many reservations");
                                     }
                                     if (result['reservation_status'] == 'fail') {
-                                        toast = "Sorry, but a slot you picked was already selected: ";
+                                        var toast = "Sorry, but a slot you picked was already selected: ";
                                         var reservations = result['sameReservations'];
                                         for (var i = 0; i < reservations.length - 1; i++) {
                                             var message = "[" + reservations[i]['date'] + " " +
@@ -976,12 +988,17 @@ $defaultTab = 1;
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" name="form-password" id="password">
+                                </div>
+
+                                <!--<div class="form-group">
                                     <label for="type">Type:</label>
                                     <select class="form-control" name="form-type" id="select-type" onchange="checkType(this.value)">
                                         <option value="0" selected disabled>Choose your type...</option>
-                                        <?php foreach($types as $row):?>
-                                            <option value="<?=$row->typeid?>"><?=$row->type?></option>
-                                        <?php endforeach;?>
+                                        <?php /*foreach($types as $row):*/?>
+                                            <option value="<?/*=$row->typeid*/?>"><?/*=$row->type*/?></option>
+                                        <?php /*endforeach;*/?>
                                     </select>
                                 </div>
 
@@ -989,9 +1006,9 @@ $defaultTab = 1;
                                     <label for="college">College:</label>
                                     <select class="form-control" name="form-college" id="select-college">
                                         <option value="0" selected disabled>Choose your college...</option>
-                                        <?php foreach($colleges as $row):?>
-                                            <option value="<?=$row->collegeid?>"><?=$row->name?></option>
-                                        <?php endforeach;?>
+                                        <?php /*foreach($colleges as $row):*/?>
+                                            <option value="<?/*=$row->collegeid*/?>"><?/*=$row->name*/?></option>
+                                        <?php /*endforeach;*/?>
                                     </select>
                                 </div>
 
@@ -1004,13 +1021,13 @@ $defaultTab = 1;
                                             <input type="text" class="form-control" name="form-email" id="email" required />
                                             <span class = "input-group-addon">@</span>
                                             <select class="form-control" name="form-email-extension" id="select-email-extension">
-                                                <?php foreach($email_extensions as $row):?>
-                                                    <option value="<?=$row->email_extension?>"><?=$row->email_extension?></option>
-                                                <?php endforeach;?>
+                                                <?php /*foreach($email_extensions as $row):*/?>
+                                                    <option value="<?/*=$row->email_extension*/?>"><?/*=$row->email_extension*/?></option>
+                                                <?php /*endforeach;*/?>
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                             </form>
                         </div>
                         <div id = "second-step-slots" class = "row col-md-10 col-md-offset-2">
