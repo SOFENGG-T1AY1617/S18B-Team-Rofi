@@ -314,4 +314,16 @@ class Student_Model extends CI_Model
     function queryEmailExtensions() {
         return $this->db->get(TABLE_EMAIL_EXTENSION)->result();
     }
+
+    function isValidIDNumber($idnumber) {
+
+    }
+
+    function isValidUser($userData) {
+
+    }
+
+    function getUserData($idnumber) {
+
+    }
 }

@@ -136,7 +136,7 @@ class Controller extends CI_Controller {
     }
 
     public function submitReservation() {
-        $getData = array(
+        /*$reservationData = array(
             'idnumber' => $this->input->get('idnumber'),
             'collegeid' => $this->input->get('collegeid'),
             'typeid' => $this->input->get('typeid'),
@@ -144,17 +144,25 @@ class Controller extends CI_Controller {
             'slots' => $this->input->get('slots'),
             'verificationCode' => "",
             'departmentid' => $this->input->get('departmentid')
+        );*/
+
+        $reservationData = array(
+            'idnumber' => $this->input->post('idnumber'),
+            'password' => $this->input->post('password'),
+            'slots' => $this->input->post('slots'),
+            'verificationCode' => "",
+            'departmentid' => $this->input->post('departmentid')
         );
 
-        $errors = $this->validateInput($getData);
+        $errors = $this->validateInput($reservationData);
         if (count($errors) > 0) {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
             );
         }
-        else if ((count($getData['slots']) +
-            ($numReservations = $this->numReservations($getData['idnumber']))) > $this->getMaxReservations($getData['idnumber'], $getData['departmentid'])) {
+        else if ((count($reservationData['slots']) +
+            ($numReservations = $this->numReservations($reservationData['idnumber']))) > $this->getMaxReservations($reservationData['idnumber'], $reservationData['departmentid'])) {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
@@ -163,15 +171,19 @@ class Controller extends CI_Controller {
             );
         }
         else if (count($errors) == 0){ // Add to database
-            $slots = $this->parseSlots($getData['slots']);
-            $getData['slots'] = $slots;
+            $slots = $this->parseSlots($reservationData['slots']);
+            $reservationData['slots'] = $slots;
 
-            $getData['verificationCode'] = $this->getVerificationCode();
-            if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
-                $this->student->createReservation($getData);
+            $reservationData['verificationCode'] = $this->getVerificationCode();
+
+            // Get user's email
+            $userData = $this->student->getUserData($reservationData['idnumber']);
+
+            if ($this->sendVerificationEmail($userData['email'], $reservationData['verificationCode'])) {
+                $this->student->createReservation($reservationData);
                 $data = array(
                     'status' => 'success',
-                    'data' => $getData,
+                    'data' => $reservationData,
                 );
             }
             else {
@@ -193,12 +205,12 @@ class Controller extends CI_Controller {
                 );
             }
             else {
-                $getData['verificationCode'] = $this->getVerificationCode();
-                if ($this->sendVerificationEmail($getData['email'], $getData['verificationCode'])) {
-                    $this->student->createReservation($getData);
+                $reservationData['verificationCode'] = $this->getVerificationCode();
+                if ($this->sendVerificationEmail($reservationData['email'], $reservationData['verificationCode'])) {
+                    $this->student->createReservation($reservationData);
                     $data = array(
                         'status' => 'success',
-                        'data' => $getData,
+                        'data' => $reservationData,
                     );
                 }
 
@@ -211,7 +223,7 @@ class Controller extends CI_Controller {
                 }
                 $data = array(
                     'status' => 'success',
-                    'data' => $getData,
+                    'data' => $reservationData,
                 );
             }*/
         }
@@ -225,11 +237,24 @@ class Controller extends CI_Controller {
         return count($reservations);
     }
 
-    private function validateInput($getData) {
+    private function validateInput($reservationData) {
         $errors = [];
 
-        // Check if data is valid
-        $idNumber = $getData['idnumber'];
+        // Check if id number exists
+        if (!$this->student->isValidIDNumber($reservationData['idnumber'])) {
+            // ID Number was not found
+            $errors[] = "Username";
+        }
+        else if (!$this->student->isValidUser(array(
+            'idnumber' => $reservationData['idnumber'],
+            'password' => $reservationData['password']))) {
+            // ID Number was found but password does not match
+
+            $errors = "Password";
+        }
+
+        /*// Check if data is valid
+        $idNumber = $reservationData['idnumber'];
         if (strlen($idNumber) > 8 || strlen($idNumber < 8) ||
             substr($idNumber, 0, 1) != '1') { // Invalid id number
             $errors[] = "ID Number";
@@ -241,26 +266,26 @@ class Controller extends CI_Controller {
                 $errors[] = "ID Number";
             }
         }
-        if ($getData['typeid'] == 0) {
+        if ($reservationData['typeid'] == 0) {
             $errors[] = "Type";
         }
         else {
-            $type = $this->student->queryTypeAtTypeID($getData['typeid']);
+            $type = $this->student->queryTypeAtTypeID($reservationData['typeid']);
 
-            if (strpos(strtolower($type['type']), 'graduate') !== false && $getData['collegeid'] == 0) {
+            if (strpos(strtolower($type['type']), 'graduate') !== false && $reservationData['collegeid'] == 0) {
                 $errors[] = "College";
             }
         }
 
-        if (count(explode("@", $getData['email'])) <= 1) {
+        if (count(explode("@", $reservationData['email'])) <= 1) {
             $errors[] = "Email Address";
         }
         else { // Check if valid email address
-            $emailArray = explode("@", $getData['email']);
+            $emailArray = explode("@", $reservationData['email']);
             if (strlen($emailArray[0]) < 4) {
                 $errors[] = "Email Address";
             }
-        }
+        }*/
 
         return $errors;
     }
