@@ -679,17 +679,18 @@ include 'a_navbar.php';
                         <input type="text" class="form-control" id="bldgPrefix" placeholder="Enter the prefix to be used. (ie. G for Gokongwei, SJ for St. Joseph Hall etc...)">
                     </div>-->
 
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="Room" >
-                            Room
-                        </label>
+                                  <div>
+                        <label for="Type">Area Type:</label>
                     </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="Floor">
-                            Floor
+                    <div class="btn-group" data-toggle="buttons">
+
+                        <label class="btn btn-default active">
+                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Rooms
                         </label>
+                        <label class="btn btn-default">
+                            <input type="radio" name="options" id="option2" autocomplete="off"> Floors
+                        </label>
+
                     </div>
 
                 </div>
