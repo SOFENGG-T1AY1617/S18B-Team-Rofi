@@ -599,7 +599,7 @@ $defaultTab = 1;
                             }
                         }
 
-                        /*
+                        /*PC
                          * IF : OPTION 0
                          *   MAKE <tr> dedicated for room number first before proceeding
                          *
@@ -613,89 +613,104 @@ $defaultTab = 1;
 
                         var currentTimeArray = (dateSelected == dateToday ? times_today : times_tomorrow);
 
-                        for (var i = 0; i < roomIDs.length; i++) {
-                            var roomTitleRow = document.createElement("tr");
-                            var roomTitleCell = document.createElement("th");
+                        console.log(currentTimeArray);
+                        if(currentTimeArray.length-1>0) {
+                            for (var i = 0; i < roomIDs.length; i++) {
+                                var roomTitleRow = document.createElement("tr");
+                                var roomTitleCell = document.createElement("th");
 
-                            roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
-                            roomTitleCell.setAttribute("colspan", currentTimeArray.length + 1);
+                                roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
+                                roomTitleCell.setAttribute("colspan", currentTimeArray.length + 1);
 
-                            roomTitleRow.appendChild(roomTitleCell);
+                                roomTitleRow.appendChild(roomTitleCell);
 
-                            $('#tableBody').append(roomTitleRow);
+                                $('#tableBody').append(roomTitleRow);
 
-                            /*var $table = $('#slotTable');
-                            $table.floatThead({
-                                scrollContainer: function ($table) {
-                                    return $table.closest('#slots');
-                                }
-                            });*/
+                                /*var $table = $('#slotTable');
+                                 $table.floatThead({
+                                 scrollContainer: function ($table) {
+                                 return $table.closest('#slots');
+                                 }
+                                 });*/
 
-                            for (var k = 0; k < computers.length; k++) {
+                                for (var k = 0; k < computers.length; k++) {
 
-                                if (computers[k].roomid == roomIDs[i]) {
+                                    if (computers[k].roomid == roomIDs[i]) {
 
-                                    var newTableRow = document.createElement("tr");
-                                    var newPCNoCell = document.createElement("th");
+                                        var newTableRow = document.createElement("tr");
+                                        var newPCNoCell = document.createElement("th");
 
-                                    newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
+                                        newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
 
-                                    newTableRow.appendChild(newPCNoCell);
+                                        newTableRow.appendChild(newPCNoCell);
 
-                                    var n = 0; // counter for traversing through currentTimeArray
+                                        var n = 0; // counter for traversing through currentTimeArray
 
-                                    for (var m = 0; m < currentTimeArray.length - 1; m++) { // generate time slot cells
-                                        var slotCell = document.createElement("td");
-                                        var clickableSlot1 = document.createElement("div");
+                                        for (var m = 0; m < currentTimeArray.length - 1; m++) { // generate time slot cells
+                                            var slotCell = document.createElement("td");
+                                            var clickableSlot1 = document.createElement("div");
 
-                                        slotCell.className = "nopadding";
+                                            slotCell.className = "nopadding";
 
-                                        var taken = false;
-                                        for (var p = 0; p < reservations.length; p++) {
-                                            if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
-                                                taken = true;
-                                        }
-
-                                        var chosenTime1 = currentTimeArray[n++];
-                                        var chosenTime2 = currentTimeArray[n];
-
-                                        if (!taken) {
-                                            var computerID = computers[k].computerid;
-
-                                            var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
-
-                                            clickableSlot1.setAttribute("id", strID);
-
-                                            if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)
-                                                clickableSlot1.className = "slotCell pull-left selected";
-                                            else
-                                                clickableSlot1.className = "slotCell pull-left free";
-                                        } else {
-                                            clickableSlot1.className = "slotCell pull-left taken";
-                                        }
-
-                                        for (var x in slotsPicked) {
-                                            if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)) {
-                                                disableSlotObject(clickableSlot1);
+                                            var taken = false;
+                                            for (var p = 0; p < reservations.length; p++) {
+                                                if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
+                                                    taken = true;
                                             }
 
+                                            var chosenTime1 = currentTimeArray[n++];
+                                            var chosenTime2 = currentTimeArray[n];
+
+                                            if (!taken) {
+                                                var computerID = computers[k].computerid;
+
+                                                var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
+
+                                                clickableSlot1.setAttribute("id", strID);
+
+                                                if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)
+                                                    clickableSlot1.className = "slotCell pull-left selected";
+                                                else
+                                                    clickableSlot1.className = "slotCell pull-left free";
+                                            } else {
+                                                clickableSlot1.className = "slotCell pull-left taken";
+                                            }
+
+                                            for (var x in slotsPicked) {
+                                                if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)) {
+                                                    disableSlotObject(clickableSlot1);
+                                                }
+
+                                            }
+
+                                            slotCell.appendChild(clickableSlot1);
+
+                                            newTableRow.appendChild(slotCell);
                                         }
 
-                                        slotCell.appendChild(clickableSlot1);
+                                        $('#tableBody').append(newTableRow);
 
-                                        newTableRow.appendChild(slotCell);
                                     }
-
-                                    $('#tableBody').append(newTableRow);
 
                                 }
 
                             }
+                        }else{
+
+                            emptyTables();
+
+                            $('#slotTable').html("<div class = 'message slots' border='none'>Sorry, no available slots left for Today</div>");
+                            $('#slotTable').attr('border','none');
 
                         }
                     }
 
                     //updateSelectedSlots();
+                }
+
+                function emptyTables(){
+                    $('#slotTable').empty();
+                    $('#tableHead').empty();
                 }
 
             </script>
@@ -858,7 +873,7 @@ $defaultTab = 1;
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function () {
 
 
-
+                        //console.log($("#email").val().trim() + "@" + $("#select-email-extension").val());
                         $("#email_message").css("visibility", "visible");
                         $.ajax({
                             url: '<?php echo base_url('submitReservation') ?>',
@@ -868,7 +883,7 @@ $defaultTab = 1;
                                 idnumber: $("#id-number").val(),
                                 typeid: $("#select-type").val(),
                                 collegeid: $("#select-college").val(),
-                                email: $("#email").val(),
+                                email: $("#email").val().trim() + "@" + $("#select-email-extension").val(),
                                 date: $("#text-date").val(),
                                 slots: slotsPicked,
                                 departmentid: currentDeptID
@@ -980,14 +995,25 @@ $defaultTab = 1;
                                     </select>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="email">Email:</label>
-                                    <i><small class = "text-primary pull-right">Only DLSU Email is allowed (dlsu.edu.ph)</small></i>
-                                    <input type="email" class="form-control" name="form-email" id="email" required> <br/>
+                                <label for="email">Email:</label>
+                                <i><small class = "text-primary pull-right">Only DLSU Email is allowed (dlsu.edu.ph)</small></i>
+
+                                <div class = "row">
+                                    <div class = "col-md-12">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="form-email" id="email" required />
+                                            <span class = "input-group-addon">@</span>
+                                            <select class="form-control" name="form-email-extension" id="select-email-extension">
+                                                <?php foreach($email_extensions as $row):?>
+                                                    <option value="<?=$row->email_extension?>"><?=$row->email_extension?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
-                        <div class = "col-md-12 col-md-offset-2">
+                        <div id = "second-step-slots" class = "row col-md-10 col-md-offset-2">
                             <b>Time Slots:</b>
                             <br/>
                             <div class = "row">

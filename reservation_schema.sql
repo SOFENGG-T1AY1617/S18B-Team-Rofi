@@ -6,6 +6,11 @@ CREATE TABLE `reservation_system`.`departments` (
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`departmentid`));
 
+CREATE TABLE `reservation_system`.`computer_status` (
+  `statusid` INT NOT NULL AUTO_INCREMENT,
+  `status` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`statusid`));
+
 CREATE TABLE `reservation_system`.`attendance` (
   `attendanceid` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(20) NOT NULL,
@@ -51,11 +56,18 @@ CREATE TABLE `reservation_system`.`computers` (
   `computerid` INT NOT NULL AUTO_INCREMENT,
   `computerno` INT NOT NULL,
   `roomid` INT NOT NULL,
+  `statusid` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`computerid`),
   INDEX `roomid_idx` (`roomid` ASC),
+  INDEX `statusid_idx` (`statusid` ASC),
   CONSTRAINT `roomid`
     FOREIGN KEY (`roomid`)
     REFERENCES `reservation_system`.`rooms` (`roomid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `statusid`
+    FOREIGN KEY (`statusid`)
+    REFERENCES `reservation_system`.`computer_status` (`statusid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -69,29 +81,19 @@ CREATE TABLE `reservation_system`.`types` (
   `type` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`typeid`));
 
-
-CREATE TABLE `reservation_system`.`reservations` (
-  `reservationid` INT NOT NULL AUTO_INCREMENT,
-  `computerid` INT NOT NULL,
-  `useridno` INT NOT NULL,
-  `email` VARCHAR(30) NOT NULL,
-  `date` DATE NOT NULL,
-  `start_restime` TIME NOT NULL,
-  `end_restime` TIME NOT NULL,
-  `collegeid` INT,
+CREATE TABLE `reservation_system`.`students` (
+  `studentid` INT NOT NULL,
+  `last_name` VARCHAR(30) NOT NULL,
+  `first_name` VARCHAR(30) NOT NULL,
+  `middle_name` VARCHAR(30) NOT NULL,
+  `birthdate` DATE NOT NULL,
   `typeid` INT NOT NULL,
-  `verified` BIT NOT NULL DEFAULT 0,
-  `verificationcode` VARCHAR(40) NOT NULL,
-  `attendance` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`reservationid`),
+  `collegeid` INT NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `password` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`studentid`),
   INDEX `typeid_idx` (`typeid` ASC),
   INDEX `collegeid_idx` (`collegeid` ASC),
-  INDEX `computerid_idx` (`computerid` ASC),
-  CONSTRAINT `computerid`
-    FOREIGN KEY (`computerid`)
-    REFERENCES `reservation_system`.`computers` (`computerid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `typeid`
     FOREIGN KEY (`typeid`)
     REFERENCES `reservation_system`.`types` (`typeid`)
@@ -100,6 +102,24 @@ CREATE TABLE `reservation_system`.`reservations` (
   CONSTRAINT `collegeid`
     FOREIGN KEY (`collegeid`)
     REFERENCES `reservation_system`.`colleges` (`collegeid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `reservation_system`.`reservations` (
+  `reservationid` INT NOT NULL AUTO_INCREMENT,
+  `computerid` INT NOT NULL,
+  `studentid` INT NOT NULL,
+  `date` DATE NOT NULL,
+  `start_restime` TIME NOT NULL,
+  `end_restime` TIME NOT NULL,
+  `verified` BIT NOT NULL DEFAULT 0,
+  `verificationcode` VARCHAR(40) NOT NULL,
+  `attendance` INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`reservationid`),
+  INDEX `computerid_idx` (`computerid` ASC),
+  CONSTRAINT `computerid`
+    FOREIGN KEY (`computerid`)
+    REFERENCES `reservation_system`.`computers` (`computerid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -153,6 +173,8 @@ CREATE TABLE `reservation_system`.`business_rules` (
   `accessibility` INT NOT NULL,
   `reservation_expiry` INT NOT NULL,
   `confirmation_expiry` INT NOT NULL,
+  `start_time` TIME NOT NULL,
+  `end_time` TIME NOT NULL,
   PRIMARY KEY (`business_rulesid`),
   INDEX `department_id_idx` (`departmentid` ASC),
   CONSTRAINT `business_departmentid`
@@ -169,13 +191,10 @@ CREATE TABLE `reservation_system`.`email_extension`(
 CREATE TABLE `reservation_system`.`archive_reservations` (
   `archive_reservationid` INT NOT NULL AUTO_INCREMENT,
   `computerid` INT NOT NULL,
-  `useridno` INT NOT NULL,
-  `email` VARCHAR(30) NOT NULL,
+  `studentid` INT NOT NULL,
   `date` DATE NOT NULL,
   `start_restime` TIME NOT NULL,
   `end_restime` TIME NOT NULL,
-  `collegeid` INT,
-  `typeid` INT NOT NULL,
   `verified` BIT NOT NULL DEFAULT 0,
   `verificationcode` VARCHAR(40) NOT NULL,
   `attendance` INT NOT NULL DEFAULT 0, 
@@ -183,12 +202,17 @@ CREATE TABLE `reservation_system`.`archive_reservations` (
 
 /*dummy data*/
 INSERT INTO `reservation_system`.`email_extension`(`email_extension`)
-VALUES ("@dlsu.edu.ph"),
-	   ("@delasalle.ph");
+VALUES ("dlsu.edu.ph"),
+	   ("delasalle.ph");
 
 INSERT INTO `reservation_system`.`area_types` (`type`)
 VALUES ("Room"),
 	   ("Floor");
+
+INSERT INTO `reservation_system`.`computer_status` (`status`)
+VALUES ("Enabled"),
+	   ("Disabled"),
+       ("Taken");
 
 INSERT INTO `reservation_system`.`buildings` (`name`, `area_typeid`)
 VALUES ("Gokongwei Hall", 1),
@@ -208,67 +232,67 @@ VALUES ("G202A", 1, 1),
 	   ("7F", 2, 2),
 	   ("8F", 2, 2);
 
-INSERT INTO `reservation_system`.`computers` (`computerno`, `roomid`)
-VALUES (1, 1),
-	   (2, 1),
-	   (3, 1),
-	   (4, 1),
-	   (5, 1),
-	   (6, 1),
-	   (7, 1),
-	   (8, 1),
-	   (9, 1),
-	   (10, 1),
-	   (1, 2),
-	   (2, 2),
-	   (3, 2),
-	   (4, 2),
-	   (5, 2),
-	   (6, 2),
-	   (7, 2),
-	   (8, 2),
-	   (9, 2),
-	   (10, 2),
-	   (1, 3),
-	   (2, 3),
-	   (3, 3),
-	   (4, 3),
-	   (5, 3),
-	   (6, 3),
-	   (7, 3),
-	   (8, 3),
-	   (9, 3),
-	   (10, 3),
-	   (1, 4),
-	   (2, 4),
-	   (3, 4),
-	   (4, 4),
-	   (5, 4),
-	   (6, 4),
-	   (7, 4),
-	   (8, 4),
-	   (9, 4),
-	   (10, 4),
-	   (1, 5),
-	   (2, 5),
-	   (3, 5),
-	   (4, 5),
-	   (5, 5),
-	   (6, 5),
-	   (7, 5),
-	   (8, 5),
-	   (9, 5),
-	   (10, 5),
-	   (1, 6),
-	   (2, 6),
-	   (3, 6),
-	   (4, 6),
-	   (5, 6),
-	   (6, 6),
-	   (7, 6),
-	   (8, 6),
-	   (9, 6),
-	   (10, 6);
+INSERT INTO `reservation_system`.`computers` (`computerno`, `roomid`, `statusid`)
+VALUES (1, 1, 1),
+	   (2, 1, 2),
+	   (3, 1, 1),
+	   (4, 1, 2),
+	   (5, 1, 1),
+	   (6, 1, 2),
+	   (7, 1, 1),
+	   (8, 1, 2),
+	   (9, 1, 1),
+	   (10, 1, 2),
+	   (1, 2, 1),
+	   (2, 2, 2),
+	   (3, 2, 1),
+	   (4, 2, 2),
+	   (5, 2, 1),
+	   (6, 2, 2),
+	   (7, 2, 1),
+	   (8, 2, 2),
+	   (9, 2, 1),
+	   (10, 2, 2),
+	   (1, 3, 1),
+	   (2, 3, 2),
+	   (3, 3, 1),
+	   (4, 3, 2),
+	   (5, 3, 1),
+	   (6, 3, 2),
+	   (7, 3, 1),
+	   (8, 3, 2),
+	   (9, 3, 1),
+	   (10, 3, 2),
+	   (1, 4, 1),
+	   (2, 4, 2),
+	   (3, 4, 1),
+	   (4, 4, 2),
+	   (5, 4, 1),
+	   (6, 4, 2),
+	   (7, 4, 1),
+	   (8, 4, 2),
+	   (9, 4, 1),
+	   (10, 4, 2),
+	   (1, 5, 1),
+	   (2, 5, 2),
+	   (3, 5, 1),
+	   (4, 5, 2),
+	   (5, 5, 1),
+	   (6, 5, 2),
+	   (7, 5, 1),
+	   (8, 5, 2),
+	   (9, 5, 1),
+	   (10, 5, 2),
+	   (1, 6, 1),
+	   (2, 6, 2),
+	   (3, 6, 1),
+	   (4, 6, 2),
+	   (5, 6, 1),
+	   (6, 6, 2),
+	   (7, 6, 1),
+	   (8, 6, 2),
+	   (9, 6, 1),
+	   (10, 6, 2);
 
 INSERT INTO `reservation_system`.`colleges` (`name`)
 VALUES ("Ramon V. Del Rosario College of Business"),
@@ -286,18 +310,21 @@ VALUES ("Senior High School"),
 	   ("Graduate"),
 	   ("Faculty"),
 	   ("Staff");
+
+INSERT INTO `reservation_system`.`students` (`studentid`, `last_name`, `first_name`, `middle_name`, `birthdate`,
+	`typeid`, `collegeid`, `email`, `password`)
+VALUES(11428260, "Santos", "Rofi Emmanuelle", "Lectura", "1997-04-19", 2, 2, "rofisantos@dlsu.edu.ph", "password");
        
 INSERT INTO `reservation_system`.`reservations`
-	(`computerid`, `useridno`, `email`, `date`, `start_restime`, `end_restime`,
-    `collegeid`, `typeid`, `verificationcode`, `attendance`)
-VALUES (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j209", 1),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-18", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j209", 1),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j210", 1),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-19", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j210", 1),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j211", 1),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-10-20", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j211", 1),
-       (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-11-21", "11:00:00", "11:14:59", 2, 2, "45t45y0965134213yktreioet54j212", 1),
-	   (1, 11425520, "kevin_gray_chan@dlsu.edu.ph", "2016-11-21", "11:15:00", "11:29:59", 2, 2, "45t45y0965134213yktreioet54j212", 1);
+	(`computerid`,  `date`, `studentid`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)
+VALUES (1, "2016-10-18", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j209", 1),
+	   (1, "2016-10-18", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j209", 1),
+       (1, "2016-10-19", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j210", 1),
+	   (1, "2016-10-19", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j210", 1),
+       (1, "2016-10-20", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j211", 1),
+	   (1, "2016-10-20", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j211", 1),
+       (1, "2016-11-21", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j212", 1),
+	   (1, "2016-11-21", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j212", 1);
 
 INSERT INTO `reservation_system`.`admin_types` (`admin_type`)
 VALUES ("Super Administrator"),
@@ -312,10 +339,10 @@ VALUES ("james.sy@dlsu.edu.ph","Sy", "James", 1, 1, "password"),
 INSERT INTO `reservation_system`.`moderators` 
 	(`email`, `last_name`, `first_name`, `mod_departmentid`, `password`)
 VALUES ("rofi_santos@dlsu.edu.ph","Santos", "Rofi", 1, "password"),
-	   ("patrich.tobias@dlsu.edu.ph", "Tobias", "Patrick", 1, "password"),
-	   ("benson.polican","Polican", "Benson", 2, "password");
+	   ("patrick.tobias@dlsu.edu.ph", "Tobias", "Patrick", 1, "password"),
+	   ("benson.polican@dlsu.edu.ph","Polican", "Benson", 2, "password");
 
 INSERT INTO `reservation_system`.`business_rules` 
-	(`departmentid`, `interval`, `limit`, `accessibility`, `reservation_expiry`, `confirmation_expiry`)
-VALUES (1, 15, 4, 1, 15, 60),
-	   (2, 20, 5, 1, 20, 90);
+	(`departmentid`, `interval`, `limit`, `start_time`, `end_time`, `accessibility`, `reservation_expiry`, `confirmation_expiry`)
+VALUES (1, 15, 4, "6:00:00", "20:00:00", 1, 15, 60),
+	   (2, 20, 5, "8:00:00", "18:00:00", 1, 20, 90);

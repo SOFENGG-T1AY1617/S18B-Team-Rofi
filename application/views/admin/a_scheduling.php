@@ -77,30 +77,21 @@ include 'a_navbar.php';
         updateTimesHeader(dateSelected == dateToday);
 
         $(document).on( "click", ".slotCell.enabled:not(.selected)",function() {
-            var slotID = $(this).attr('id');
-
-            slotsPicked.push(slotID);
-            $(this).addClass(".selected");
-
-            console.log(slotsPicked);
-            outputSlots();
-
+            selectSlot($(this));
         });
 
-        $(document).on( "click", ".slotCell.selected",function() {
-            var slotID = $(this).attr('id');
-
-            if (($.inArray(slotID, slotsPicked)) > -1) {
-                var existIndex = slotsPicked.indexOf(slotID);
-                slotsPicked.splice(existIndex, 1);
-
-                $(this).removeClass(".selected");
-
-            }
-
-            console.log(slotsPicked);
-            outputSlots();
+        $(document).on( "click", ".slotCell.selected, .slotCell.selectedY, .slotCell.selectedX",function() {
+            deselectSlot($(this));
         });
+
+        $(document).on( "click", ".horizSelect", function () {
+            toggleSlotsHorizontal($(this));
+        });
+
+        $(document).on( "click", ".vertSelect", function () {
+            toggleSlotsVertical($(this));
+        });
+
 
         $("input[name=optradio]:radio").change(function () {
 
@@ -157,9 +148,6 @@ include 'a_navbar.php';
         for (var i = 0; i < slotsPicked.length; i++) {
             slotsDisabled.push(slotsPicked[i]);
         }
-
-        
-
     }
 
     function toggleSelectedSlots () {
@@ -177,6 +165,123 @@ include 'a_navbar.php';
 
     }
 
+    function selectSlot (slot) {
+        slotsPicked.push(slot.attr("id"));
+        slot.addClass ('selected');
+    }
+
+    function selectSlotX (slot) {
+        slotsPicked.push(slot.attr("id"));
+        slot.addClass ('selectedX');
+
+        if (slot.hasClass('selected'))
+            slot.removeClass('selected');
+    }
+
+    function selectSlotY (slot) {
+        slotsPicked.push(slot.attr("id"));
+        slot.addClass ('selectedY');
+
+        if (slot.hasClass('selected'))
+            slot.removeClass('selected');
+    }
+
+    function deselectSlot (slot) {
+        var slotID = slot.attr("id");
+
+        if (($.inArray(slotID, slotsPicked)) > -1) {
+            var existIndex = slotsPicked.indexOf(slotID);
+            slotsPicked.splice(existIndex, 1);
+
+            if (slot.hasClass('selected'))
+                slot.removeClass('selected');
+
+            if (slot.hasClass('selectedY'))
+                slot.removeClass('selectedY');
+
+            if (slot.hasClass('selectedX'))
+                slot.removeClass('selectedX');
+        }
+
+        var splittedID = slotID.split("_");
+
+        var removeUseSelectorHoriz = "#PC_" + splittedID[0];
+        var removeUseSelectorVert = "[id = 'TIME" + "_" + splittedID[2] + "_" + splittedID[3] + "']";
+
+        if ($(removeUseSelectorHoriz).hasClass('used'))
+            $(removeUseSelectorHoriz).removeClass('used');
+
+        if ($(removeUseSelectorVert).hasClass('used'))
+            $(removeUseSelectorVert).removeClass('used');
+    }
+
+    function deselectSlotX (slot) {
+        var slotID = slot.attr("id");
+
+        if (($.inArray(slotID, slotsPicked)) > -1) {
+            var existIndex = slotsPicked.indexOf(slotID);
+            slotsPicked.splice(existIndex, 1);
+
+            if (slot.hasClass('selectedX'))
+                slot.removeClass('selectedX');
+        }
+    }
+
+    function deselectSlotY (slot) {
+        var slotID = slot.attr("id");
+
+        if (($.inArray(slotID, slotsPicked)) > -1) {
+            var existIndex = slotsPicked.indexOf(slotID);
+            slotsPicked.splice(existIndex, 1);
+
+            if (slot.hasClass('selectedY'))
+                slot.removeClass('selectedY');
+        }
+    }
+
+    function toggleSlotsVertical (cell) {
+        var cellID = cell.attr("id");
+
+        var splittedCellID = cellID.split('_');
+
+        var time1 = splittedCellID[1];
+        var time2 = splittedCellID[2];
+
+        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+
+        $(jQuerySelector).each(function () {
+            selectSlotY($(this));
+        });
+
+        if(cell.hasClass('used')) {
+            $(jQuerySelector).each(function () {
+                deselectSlotY($(this));
+            });
+            cell.removeClass('used');
+        } else
+            cell.addClass('used');
+    }
+
+    function toggleSlotsHorizontal (cell) {
+        var cellID = (cell.attr("id")).split('_');
+
+        var PCID = cellID[1];
+
+        var jQuerySelector = "[id^='" + PCID + "_']";
+
+        $(jQuerySelector).each(function () {
+            selectSlotX($(this));
+        });
+
+        if($(cell).hasClass('used')) {
+            $(jQuerySelector).each(function () {
+                deselectSlotX($(this));
+            });
+            $(cell).removeClass('used');
+        } else
+            $(cell).addClass('used');
+    }
+
     function updateTimesHeader(isToday) {
 
         var slotTable = $('#slotTable');
@@ -184,6 +289,7 @@ include 'a_navbar.php';
         slotTable.floatThead('destroy');
 
         var currentTimeArray = (isToday ? times_today_DISPLAY : times_tomorrow_DISPLAY);
+        var currentTimeArrayForIDs = (isToday ? times_today : times_tomorrow);
 
         var timesRow = document.createElement("tr");
         var PCNumbersTH = document.createElement("th");
@@ -192,11 +298,14 @@ include 'a_navbar.php';
 
         timesRow.appendChild(PCNumbersTH);
 
+        var n = 0; // use to traverse for creating IDs
         for (var i = 0; i < currentTimeArray.length - 1; i++) {
             var th = document.createElement("th");
 
             th.appendChild(document.createTextNode(currentTimeArray[i]));
 
+            th.setAttribute("id", "TIME_" + currentTimeArrayForIDs[n++] + "_" + currentTimeArrayForIDs[n] );
+            th.className = 'vertSelect';
             timesRow.appendChild(th);
         }
 
@@ -416,6 +525,9 @@ include 'a_navbar.php';
 
                         newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
 
+                        newPCNoCell.setAttribute("id", "PC_" + computers[k].computerid);
+                        newPCNoCell.className += 'horizSelect';
+
                         newTableRow.appendChild(newPCNoCell);
 
                         var n = 0; // counter for traversing through currentTimeArray
@@ -456,8 +568,6 @@ include 'a_navbar.php';
                                     clickableSlot1.className = clickableSlot1.className + " selected";
                                 }
 
-                            } else {
-                                clickableSlot1.className = "slotCell pull-left taken";
                             }
 
                             slotCell.appendChild(clickableSlot1);

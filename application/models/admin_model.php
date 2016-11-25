@@ -238,6 +238,20 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
+    function hasOngoingReservations($id) {
+        $sql = "SELECT *
+                FROM (SELECT *
+                      FROM reservations
+                      WHERE concat_ws(' ', date, start_restime) >= NOW()) r NATURAL JOIN
+                  (SELECT roomid
+                   FROM rooms
+                   WHERE roomid = ?) ro";
+        $result = $this->db->query($sql, array($id))->result();
+
+        return count($result)>=1;
+    }
+
+
     function queryReservationsOfComputerIDOnDate($id, $date) {
         $sql = "SELECT *
                 FROM (SELECT *
@@ -460,13 +474,14 @@ class Admin_Model extends CI_Model
         return count($result)>=1;
     }
 
-    function insertDepartment($data) {
-
+    function insertDepartment($department) {
+        $this->db->insert(TABLE_DEPARTMENTS, $department);
     }
 
-    function insertDepartments($data) {
-
+    function insertBusinessRules($rules) {
+        $this->db->insert(TABLE_BUSINESS_RULES, $rules);
     }
+
 
     function removeComputersFromRoom($data) {
         $roomid = $data['roomid'];
@@ -641,6 +656,12 @@ class Admin_Model extends CI_Model
         $result = $query->result();
 
         return count($result)>=1;
+    }
+
+    function archivePastReservations($date, $time) {
+        $sql = "call archive_past_reservations(?, ?)";
+
+        $this->db->query($sql, array($date, $time));
     }
 
 }
