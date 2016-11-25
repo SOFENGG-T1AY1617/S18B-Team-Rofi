@@ -34,7 +34,7 @@ class AdminController extends CI_Controller
             $this->loadView("");
         }
 
-        private function initAdmin(){
+        private function initAdmin(){   
 
 
             
