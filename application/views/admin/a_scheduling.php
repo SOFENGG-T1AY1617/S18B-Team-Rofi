@@ -71,38 +71,18 @@ include 'a_navbar.php';
 
         $(document).on( "click", ".slotCell.enabled:not(.selected)",function() {
             selectSlot($(this));
-
-            console.log(slotsPicked);
-            //outputSlots();
-
         });
 
-        $(document).on( "click", ".slotCell.selected",function() {
+        $(document).on( "click", ".slotCell.selected, .slotCell.selectedY, .slotCell.selectedX",function() {
             deselectSlot($(this));
-
-            console.log(slotsPicked);
-            //outputSlots();
         });
 
         $(document).on( "click", ".horizSelect", function () {
-            var cellID = ($(this).attr("id")).split('_');
-
-            var PCID = cellID[1];
-
-            $("[id^='" + PCID + "_']").each(function () {
-                selectSlot($(this));
-            });
+            toggleSlotsHorizontal($(this));
         });
 
         $(document).on( "click", ".vertSelect", function () {
-            var cellID = ($(this).attr("id")).split('_');
-
-            var time1 = cellID[1];
-            var time2 = cellID[2];
-
-            $("[id*='" + time1 + "_" + time2 +"']").each(function () {
-                selectSlot($(this));
-            });
+            toggleSlotsVertical($(this));
         });
 
 
@@ -183,6 +163,22 @@ include 'a_navbar.php';
         slot.addClass ('selected');
     }
 
+    function selectSlotX (slot) {
+        slotsPicked.push(slot.attr("id"));
+        slot.addClass ('selectedX');
+
+        if (slot.hasClass('selected'))
+            slot.removeClass('selected');
+    }
+
+    function selectSlotY (slot) {
+        slotsPicked.push(slot.attr("id"));
+        slot.addClass ('selectedY');
+
+        if (slot.hasClass('selected'))
+            slot.removeClass('selected');
+    }
+
     function deselectSlot (slot) {
         var slotID = slot.attr("id");
 
@@ -190,8 +186,93 @@ include 'a_navbar.php';
             var existIndex = slotsPicked.indexOf(slotID);
             slotsPicked.splice(existIndex, 1);
 
-            slot.removeClass('selected');
+            if (slot.hasClass('selected'))
+                slot.removeClass('selected');
+
+            if (slot.hasClass('selectedY'))
+                slot.removeClass('selectedY');
+
+            if (slot.hasClass('selectedX'))
+                slot.removeClass('selectedX');
         }
+
+        var splittedID = slotID.split("_");
+
+        var removeUseSelectorHoriz = "#PC_" + splittedID[0];
+        var removeUseSelectorVert = "[id = 'TIME" + "_" + splittedID[2] + "_" + splittedID[3] + "']";
+
+        if ($(removeUseSelectorHoriz).hasClass('used'))
+            $(removeUseSelectorHoriz).removeClass('used');
+
+        if ($(removeUseSelectorVert).hasClass('used'))
+            $(removeUseSelectorVert).removeClass('used');
+    }
+
+    function deselectSlotX (slot) {
+        var slotID = slot.attr("id");
+
+        if (($.inArray(slotID, slotsPicked)) > -1) {
+            var existIndex = slotsPicked.indexOf(slotID);
+            slotsPicked.splice(existIndex, 1);
+
+            if (slot.hasClass('selectedX'))
+                slot.removeClass('selectedX');
+        }
+    }
+
+    function deselectSlotY (slot) {
+        var slotID = slot.attr("id");
+
+        if (($.inArray(slotID, slotsPicked)) > -1) {
+            var existIndex = slotsPicked.indexOf(slotID);
+            slotsPicked.splice(existIndex, 1);
+
+            if (slot.hasClass('selectedY'))
+                slot.removeClass('selectedY');
+        }
+    }
+
+    function toggleSlotsVertical (cell) {
+        var cellID = cell.attr("id");
+
+        var splittedCellID = cellID.split('_');
+
+        var time1 = splittedCellID[1];
+        var time2 = splittedCellID[2];
+
+        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+
+        $(jQuerySelector).each(function () {
+            selectSlotY($(this));
+        });
+
+        if(cell.hasClass('used')) {
+            $(jQuerySelector).each(function () {
+                deselectSlotY($(this));
+            });
+            cell.removeClass('used');
+        } else
+            cell.addClass('used');
+    }
+
+    function toggleSlotsHorizontal (cell) {
+        var cellID = (cell.attr("id")).split('_');
+
+        var PCID = cellID[1];
+
+        var jQuerySelector = "[id^='" + PCID + "_']";
+
+        $(jQuerySelector).each(function () {
+            selectSlotX($(this));
+        });
+
+        if($(cell).hasClass('used')) {
+            $(jQuerySelector).each(function () {
+                deselectSlotX($(this));
+            });
+            $(cell).removeClass('used');
+        } else
+            $(cell).addClass('used');
     }
 
     function updateTimesHeader(isToday) {

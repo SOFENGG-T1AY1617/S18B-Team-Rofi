@@ -121,6 +121,10 @@ th:first-child {
     background-color: var(--disabled);
 }
 
+.slotCell.enabled.selectedX,
+.slotCell.disabled.selectedX,
+.slotCell.enabled.selectedY,
+.slotCell.disabled.selectedY,
 .slotCell.enabled.selected,
 .slotCell.disabled.selected {
     -moz-box-shadow:    inset 0 0 0 2px #000000;
@@ -190,7 +194,7 @@ div.legend.taken{
     margin-top: 10px;
 }
 
-.horizSelect:hover, .vertSelect:hover {
+.horizSelect:hover, .vertSelect:hover, .used {
     background-color: #dddddd;
     cursor: pointer;
 }

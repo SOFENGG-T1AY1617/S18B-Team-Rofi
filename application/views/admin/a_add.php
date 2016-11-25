@@ -17,7 +17,7 @@
     function setInputRules() {
         $('input[type=number]').numeric();
         $(".number-input").keypress(function(event) {
-            if ( event.which == 45 || event.which == 189) {
+            if ( event.which == 45 || event.which == 189 || event.which == 46) {
                 event.preventDefault();
             }
         });
@@ -342,7 +342,7 @@
             toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
             return;
         }
-        
+
         $.ajax({
             url: '<?=base_url('admin/addBuilding')?>',
             type: 'GET',
@@ -404,11 +404,45 @@
                     /*$(window).load(function(){
                         toastr.success("Changes were made successfully.", "Success");
                     });*/
-                    toastr.success("Changes were made successfully.", "Success");
+
+                    var notChanged = result['notChanged'];
+                    var notDeleted = result['notDeleted'];
+
+                    if (notChanged.length > 0) {
+                        var toast = "";
+
+                        for (var i = 0; i < notChanged.length - 1; i++) {
+                            toast += notChanged[i] + ", ";
+                        }
+
+                        toast += notChanged[notChanged.length - 1] + " could not be changed due to duplicate room names.";
+                        toastr.error(toast, "Error!");
+                    }
+
+                    if (notDeleted.length > 0) {
+                        var toast = "";
+
+                        for (var i = 0; i < notDeleted.length - 1; i++) {
+                            toast += notDeleted[i] + ", ";
+                        }
+
+                        toast += notDeleted[notDeleted.length - 1] + " could not be deleted due to existing reservations.";
+                        toastr.error(toast, "Error!");
+                    }
+
+                    if (notDeleted.length == 0 && notChanged.length == 0)
+                        toastr.success("Changes were made successfully.", "Success");
+                    else {
+                        toastr.warning("Not all changes were successful.", "Warning");
+                    }
+
+
                     var delay = 1000;
                     setTimeout(function() {
                         reloadPage();
                     }, delay);
+
+
 
 
                 }
