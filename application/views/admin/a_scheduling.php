@@ -130,22 +130,63 @@ include 'a_navbar.php';
 
     });
 
+    function enableSlot (slot) {
+        if (slot.hasClass('disabled'))
+            slot.removeClass('disabled');
+
+        slot.addClass('enabled');
+    }
+
+    function disableSlot (slot) {
+        if (slot.hasClass('enabled'))
+            slot.removeClass('enabled');
+
+        slot.addClass('disabled');
+        slotsDisabled.push(slot.attr('id'));
+    }
+
     function enableSelectedSlots () {
         console.log ("enable");
 
+        for (var i = 0; i < slotsPicked.length; i++) {
+            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
+
+            if (($.inArray(slotsPicked[i], slotsDisabled)) > -1) {
+                var existIndex = slotsDisabled.indexOf(slotsPicked[i]);
+                slotsDisabled.splice(existIndex, 1);
+
+                enableSlot($(jQuerySelector));
+            }
+        }
     }
 
     function disableSelectedSlots () {
         console.log ("disable");
 
         for (var i = 0; i < slotsPicked.length; i++) {
-            slotsDisabled.push(slotsPicked[i]);
+            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
+
+            disableSlot($(jQuerySelector));
         }
     }
 
     function toggleSelectedSlots () {
         console.log ("toggle");
 
+        for (var i = 0; i < slotsPicked.length; i++) {
+            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
+
+            if ($(jQuerySelector).hasClass('disabled')) {
+                if (($.inArray(slotsPicked[i], slotsDisabled)) > -1) {
+                    var existIndex = slotsDisabled.indexOf(slotsPicked[i]);
+                    slotsDisabled.splice(existIndex, 1);
+
+                    enableSlot($(jQuerySelector));
+                }
+            } else if ($(jQuerySelector).hasClass('enabled')) {
+                disableSlot($(jQuerySelector));
+            }
+        }
     }
 
     function enableAllSlotsInRoom () {
@@ -159,12 +200,16 @@ include 'a_navbar.php';
     }
 
     function selectSlot (slot) {
-        slotsPicked.push(slot.attr("id"));
+        if (($.inArray(slot.attr('id'), slotsPicked)) == -1)
+            slotsPicked.push(slot.attr("id"));
+
         slot.addClass ('selected');
     }
 
     function selectSlotX (slot) {
-        slotsPicked.push(slot.attr("id"));
+        if (($.inArray(slot.attr('id'), slotsPicked)) == -1)
+            slotsPicked.push(slot.attr("id"));
+
         slot.addClass ('selectedX');
 
         if (slot.hasClass('selected'))
@@ -172,7 +217,9 @@ include 'a_navbar.php';
     }
 
     function selectSlotY (slot) {
-        slotsPicked.push(slot.attr("id"));
+        if (($.inArray(slot.attr('id'), slotsPicked)) == -1)
+            slotsPicked.push(slot.attr("id"));
+
         slot.addClass ('selectedY');
 
         if (slot.hasClass('selected'))
@@ -576,10 +623,6 @@ include 'a_navbar.php';
             }
         }
     }
-
-    function disableSlot (slot) {
-        slot.className += ' disabled';
-    }
 </script>
 
 <div class = "container">
@@ -660,7 +703,7 @@ include 'a_navbar.php';
                 <div class = "col-md-6 col-md-offset-6 text-right">
                     <button id = "enable-btn" class = "btn btn-success">Enable slot(s)</button>
                     <button id = "disable-btn" class = "btn btn-danger">Disable slot(s)</button>
-                    <button id = "toggle-btn" class = "btn btn-info">Toggle slot(s)</button>
+                    <button id = "toggle-btn" class = "btn btn-default">Toggle slot(s)</button>
                 </div>
             </div>
         </div>
