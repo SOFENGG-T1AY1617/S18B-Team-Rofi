@@ -69,7 +69,7 @@ include 'su_navbar.php';
     </div>
 
     <!-- Modal -->
-    <div id="AddNewBuildingModal" class="modal fade" role="dialog">
+    <div id="AddNewDepartmentModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
             <!-- Modal content-->
@@ -82,8 +82,8 @@ include 'su_navbar.php';
                     <div class="modal-body clearfix">
 
                         <div class="form-group">
-                            <label for="bldgName">Building Name:</label>
-                            <input type="text" class="form-control" id="bldgName" placeholder="Enter the name of the building...">
+                            <label for="deptName">Department Name:</label>
+                            <input type="text" class="form-control" id="deptName" placeholder="Enter the name of the department...">
                         </div>
                         <!--<div class="form-group">
                             <label for="bldgPrefix">Prefix:</label>

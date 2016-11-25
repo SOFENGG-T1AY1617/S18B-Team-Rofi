@@ -44,7 +44,7 @@ class SuperuserController extends CI_Controller
 
     }
 
-    private function loadDepartmentView(){
+    public function loadDepartmentView(){
 
         $data['administrators'] = $this->admin->queryAllAdministators();
 
