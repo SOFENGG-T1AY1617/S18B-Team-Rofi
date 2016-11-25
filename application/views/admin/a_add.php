@@ -70,50 +70,61 @@
     var initialButtons;
     var isEditing=false;
 
-  function changeViewToEdit(table, footer){
+  function changeViewToEdit(table, buttons, modal){
         console.log(table);
-        var tableA = document.getElementById(table);
-        var footerA  = document.getElementById(footer);
+      if(!isEditing) {
 
-        initialTable = tableA.innerHTML;
-        initialFooter = footerA.innerHTML;
+          var tableA = document.getElementById(table);
 
-        var rows = tableA.rows;
+          initialTable = tableA.innerHTML;
 
-        for(var i = 1; i < rows.length; i++){
-            var cells = rows[i].cells;
+          var rows = tableA.rows;
 
-
-            var curRoomID = $(cells[0]).attr("id");
-            var curCapID = $(cells[1]).attr("id");
-            var curName = cells[0].innerHTML;
-            var curNum = cells[1].innerHTML;
-
-            cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curRoomID+"\" value=\""+curName+"\">";
-            cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\""+curCapID+"\" value=\""+curNum+"\">";
-            cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow("+curCapID+")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
+          for (var i = 1; i < rows.length; i++) {
+              var cells = rows[i].cells;
 
 
-        }
+              var curRoomID = $(cells[0]).attr("id");
+              var curCapID = $(cells[1]).attr("id");
+              var curName = cells[0].innerHTML;
+              var curNum = cells[1].innerHTML;
 
-        setInputRules();
+              cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"" + curRoomID + "\" value=\"" + curName + "\">";
+              cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"" + curCapID + "\" value=\"" + curNum + "\">";
+              cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow(" + curCapID + ")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
-        var tID = table;
-        var fID = footer;
 
-        var initialTableData = getTableDataWithID(tID);
+          }
 
-        //var init = getTableDataWithID(tID);
+          setInputRules();
 
-        footerA.innerHTML =
+          var tID = table;
+          var bID = buttons;
 
-            "<button class=\"btn btn-default col-md-offset-8 col-md-2\" onclick=\"changeViewToView('"+tID+"','"+fID+"')\">Cancel</button>"+
-            "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('"+tID+"','"+initialTableData+"')\" type=\"button\" value=\"Save Changes\"></div>";
+          //var init = getTableDataWithID(tID);
 
+          var buttonsStr =
+              "<span class = \"col-md-2\">"+
+              "<button class=\"btn  btn-danger btn-block col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+bID+"', '"+modal+"')\">Cancel</button>"+
+              "</span>"+
+              "<span class = \"col-md-2\">"+
+              "<button class=\"btn  btn-success btn-block col-md-20\" type=\"button\" onclick=\"+submitChanges('"+tID+"')\" >Save Changes</div>"+
+              "</span>";
+
+          document.getElementById(bID).innerHTML = buttonsStr;
+
+//          footerA.innerHTML =
+//
+//              "<button class=\"btn btn-default col-md-offset-8 col-md-2\" onclick=\"changeViewToView('" + tID + "','" + fID + "')\">Cancel</button>" +
+//              "<input class=\"btn btn-default col-md-2\" onclick=\"submitChanges('" + tID + "','" + initialTableData + "')\" type=\"button\" value=\"Save Changes\"></div>";
+      }
+      else{
+          toastr.error("You're still editing a different building. Please save or cancel before editing another", "Oops!");
+      }
     }
 
     function changeViewToView(table, buttons, modal){
-
+        isEditing = true;
 //        reloadPage(); // TODO TEMPORARY FIX
         console.log("fuck this shit im out ~");
         var tableA = document.getElementById(table);
