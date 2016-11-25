@@ -137,7 +137,7 @@ class Controller extends CI_Controller {
 
     public function submitReservation() {
         /*$reservationData = array(
-            'idnumber' => $this->input->get('idnumber'),
+            'userid' => $this->input->get('userid'),
             'collegeid' => $this->input->get('collegeid'),
             'typeid' => $this->input->get('typeid'),
             'email' => $this->input->get('email'),
@@ -147,7 +147,7 @@ class Controller extends CI_Controller {
         );*/
 
         $reservationData = array(
-            'idnumber' => $this->input->post('idnumber'),
+            'userid' => $this->input->post('userid'),
             'password' => $this->input->post('password'),
             'slots' => $this->input->post('slots'),
             'verificationCode' => "",
@@ -162,7 +162,7 @@ class Controller extends CI_Controller {
             );
         }
         else if ((count($reservationData['slots']) +
-            ($numReservations = $this->numReservations($reservationData['idnumber']))) > $this->getMaxReservations($reservationData['idnumber'], $reservationData['departmentid'])) {
+            ($numReservations = $this->numReservations($reservationData['userid']))) > $this->getMaxReservations($reservationData['userid'], $reservationData['departmentid'])) {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
@@ -177,7 +177,7 @@ class Controller extends CI_Controller {
             $reservationData['verificationCode'] = $this->getVerificationCode();
 
             // Get user's email
-            $userData = $this->student->getUserData($reservationData['idnumber']);
+            $userData = $this->student->getUserData($reservationData['userid']);
 
             if ($this->sendVerificationEmail($userData['email'], $reservationData['verificationCode'])) {
                 $this->student->createReservation($reservationData);
@@ -193,39 +193,6 @@ class Controller extends CI_Controller {
                     'email_status' => 'fail',
                 );
             }
-
-            /*$reservations = $this->getSameReservations($slots);
-            //$reservations = 5;
-            if (count($reservations) > 0) {
-                $data = array(
-                    'status' => 'fail',
-                    'errors' => $errors,
-                    'reservation_status' => 'fail',
-                    'sameReservations_status' => $reservations,
-                );
-            }
-            else {
-                $reservationData['verificationCode'] = $this->getVerificationCode();
-                if ($this->sendVerificationEmail($reservationData['email'], $reservationData['verificationCode'])) {
-                    $this->student->createReservation($reservationData);
-                    $data = array(
-                        'status' => 'success',
-                        'data' => $reservationData,
-                    );
-                }
-
-                else {
-                    $data = array(
-                        'status' => 'fail',
-                        'errors' => $errors,
-                        'email_status' => 'fail',
-                    );
-                }
-                $data = array(
-                    'status' => 'success',
-                    'data' => $reservationData,
-                );
-            }*/
         }
 
         echo json_encode($data);
@@ -241,26 +208,26 @@ class Controller extends CI_Controller {
         $errors = [];
 
         // Check if id number exists
-        if (!$this->student->isValidIDNumber($reservationData['idnumber'])) {
+        if (!$this->student->isValidUserID($reservationData['userid'])) {
             // ID Number was not found
-            $errors[] = "Username";
+            $errors[] = "UserID";
         }
         else if (!$this->student->isValidUser(array(
-            'idnumber' => $reservationData['idnumber'],
+            'userid' => $reservationData['userid'],
             'password' => $reservationData['password']))) {
             // ID Number was found but password does not match
 
-            $errors = "Password";
+            $errors[] = "Password";
         }
 
         /*// Check if data is valid
-        $idNumber = $reservationData['idnumber'];
-        if (strlen($idNumber) > 8 || strlen($idNumber < 8) ||
-            substr($idNumber, 0, 1) != '1') { // Invalid id number
+        $userid = $reservationData['userid'];
+        if (strlen($userid) > 8 || strlen($userid < 8) ||
+            substr($userid, 0, 1) != '1') { // Invalid id number
             $errors[] = "ID Number";
         }
         else { // Check if valid id number start
-            $year = substr($idNumber, 1, 2);
+            $year = substr($userid, 1, 2);
 
             if ($year < "08" || $year > date("y") + "") {
                 $errors[] = "ID Number";

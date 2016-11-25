@@ -325,7 +325,8 @@ VALUES ("Senior High School"),
 
 INSERT INTO `reservation_system`.`users` (`userid`, `last_name`, `first_name`, `middle_name`, `birthdate`,
 	`typeid`, `collegeid`, `email`, `password`)
-VALUES(11428260, "Santos", "Rofi Emmanuelle", "Lectura", "1997-04-19", 2, 2, "rofisantos@dlsu.edu.ph", "password");
+VALUES(11428260, "Santos", "Rofi Emmanuelle", "Lectura", "1997-04-19", 2, 2, "rofisantos@dlsu.edu.ph", "password"),
+  (11425520, "Chan", "Kevin Gray", "Dayao", 1998-01-11, 2, 2, "kevin_gray_chan@dlsu.edu.ph", "password");
        
 INSERT INTO `reservation_system`.`reservations`
 	(`computerid`,  `date`, `userid`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)

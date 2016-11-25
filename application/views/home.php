@@ -889,7 +889,7 @@ $defaultTab = 1;
                                 departmentid: currentDeptID
                             }*/
                             data: {
-                                idnumber: $("#id-number").val(),
+                                userid: $("#id-number").val(),
                                 password: $("#password").val(),
                                 slots: slotsPicked,
                                 departmentid: currentDeptID,
@@ -897,14 +897,20 @@ $defaultTab = 1;
                         })
                             .done(function(result) {
                                 console.log("done");
+                                console.log(result);
                                 if (result['status'] == "fail") {
                                     $("#email_message").css("visibility", "hidden");
-                                    console.log("Count: " + result['count']);
-                                    console.log("Num Reservations: " + result['num']);
-                                    errors = result['errors'];
+                                    var errors = result['errors'];
                                     console.log(errors);
                                     if (errors.length > 0) {
-                                        toast = "You have an error in the following input";
+                                        if (errors[0] == "UserID") {
+                                            toastr.error("ID Number isn't valid!", "Oops!")
+                                        }
+                                        else if (errors[0] == "Password") {
+                                            toastr.error("Your password is incorrect!", "Oops!");
+                                        }
+
+                                        /*toast = "You have an error in the following input";
 
                                         console.log ("NUMBER OF ERRORS: " + errors.length);
 
@@ -919,18 +925,18 @@ $defaultTab = 1;
                                             toast = toast + errors[i] + ", ";
                                         }
                                         toast = toast + errors[errors.length - 1];
-                                        toastr.error(toast, "Submission failed");
+                                        toastr.error(toast, "Submission failed");*/
                                     }
                                     if (result['email_status'] == "fail") {
                                         toastr.error("An error occurred while trying to reserve. Please try again.", "Submission failed");
                                     }
                                     if (result['numReservations_status'] == "fail") {
-                                        toast = "You've already reserved " + result['reserved'] +
+                                        var toast = "You've already reserved " + result['reserved'] +
                                             " slots! You can only have a maximum of " + maxNumberOfSlots + ".";
                                         toastr.error(toast, "Too many reservations");
                                     }
                                     if (result['reservation_status'] == 'fail') {
-                                        toast = "Sorry, but a slot you picked was already selected: ";
+                                        var toast = "Sorry, but a slot you picked was already selected: ";
                                         var reservations = result['sameReservations'];
                                         for (var i = 0; i < reservations.length - 1; i++) {
                                             var message = "[" + reservations[i]['date'] + " " +

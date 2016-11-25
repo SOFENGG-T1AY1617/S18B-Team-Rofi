@@ -195,7 +195,7 @@ class Student_Model extends CI_Model
     function queryOngoingReservationsByStudentID($id) {
         $sql = "SELECT * 
                 FROM reservations 
-                WHERE useridno = ? AND 
+                WHERE userid = ? AND 
                 concat_ws(' ', date, start_restime) >= NOW()";
         return $this->db->query($sql, array($id))->result();
     }
@@ -203,10 +203,10 @@ class Student_Model extends CI_Model
     function createReservation($data) {
         $slots = $data['slots'];
 
-        if ($data['collegeid'] != 0) {
+        /*if ($data['collegeid'] != 0) {
             $insertData = array(
                 'computerid' => '',
-                'useridno' => $data['idnumber'],
+                'userid' => $data['idnumber'],
                 'email' => $data['email'],
                 'date' => '',
                 'start_restime' => '',
@@ -219,7 +219,7 @@ class Student_Model extends CI_Model
         else {
             $insertData = array(
                 'computerid' => '',
-                'useridno' => $data['idnumber'],
+                'userid' => $data['idnumber'],
                 'email' => $data['email'],
                 'date' => '',
                 'start_restime' => '',
@@ -227,7 +227,16 @@ class Student_Model extends CI_Model
                 'typeid' => $data['typeid'],
                 'verificationcode' => $data['verificationCode'],
             );
-        }
+        }*/
+
+        $insertData = array(
+            'computerid' => '',
+            'userid' => $data['userid'],
+            'date' => '',
+            'start_restime' => '',
+            'end_restime' => '',
+            'verificationcode' => $data['verificationCode'],
+        );
 
         foreach($slots as $slot) {
             $insertData['computerid'] = $slot['computerid'];
@@ -293,7 +302,7 @@ class Student_Model extends CI_Model
                                                                                        FROM rooms NATURAL JOIN (SELECT DISTINCT roomid 
                                                                                                                 FROM computers NATURAL JOIN (SELECT DISTINCT computerid
                                                                                                                                              FROM reservations
-                                                                                                                                             WHERE useridno = ? AND 
+                                                                                                                                             WHERE userid = ? AND 
                                                                                                                                              date >= CURRENT_DATE) res ) c ) ro ) d) b";
 
         $slotLimit = $this->db->query($sql, array($id))->result();
@@ -315,15 +324,21 @@ class Student_Model extends CI_Model
         return $this->db->get(TABLE_EMAIL_EXTENSION)->result();
     }
 
-    function isValidIDNumber($idnumber) {
+    function isValidUserID($userid) {
+        $result = $this->db->get_where(TABLE_USERS, array('userid' => $userid));
 
+        return $result->num_rows() == 1;
     }
 
     function isValidUser($userData) {
+        $result = $this->db->get_where(TABLE_USERS, $userData);
 
+        return $result->num_rows() == 1;
     }
 
-    function getUserData($idnumber) {
+    function getUserData($userid) {
+        $result = $this->db->get_where(TABLE_USERS, array('userid' => $userid));
 
+        return $result->row_array();
     }
 }
