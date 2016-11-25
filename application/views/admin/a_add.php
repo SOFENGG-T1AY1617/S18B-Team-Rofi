@@ -106,10 +106,10 @@
 
 
           var buttonsStr =
-              "<span class = \"col-md-2\">"+
+              "<span class = \"col-md-3\">"+
               "<button class=\"btn  btn-danger btn-block col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+bID+"', '"+modal+"')\">Cancel</button>"+
               "</span>"+
-              "<span class = \"col-md-2\">"+
+              "<span class = \"col-md-3\">"+
               "<button class=\"btn  btn-success btn-block col-md-20\" type=\"button\" onclick=\"+submitChanges('"+tID+"')\" >Save Changes</div>"+
               "</span>";
 
@@ -561,13 +561,13 @@ include 'a_navbar.php';
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="collapseListGroupHeading<?=$row->buildingid?>">
                     <h4 class="panel-title clearfix ">
-                        <a href="#collapseListGroup<?=$row->buildingid?>" class="col-md-8" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListGroup<?=$row->buildingid?>">
+                        <a href="#collapseListGroup<?=$row->buildingid?>" class="col-md-6" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListGroup<?=$row->buildingid?>">
                             <?=$row->name?></a>
                         <div id = "<?=$row->buildingid?>_buttons">
-                                <span class = "col-md-2">
+                                <span class = "col-md-3">
                                     <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default btn-block add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">+ Add Rooms</button>
                                 </span>
-                                 <span class = "col-md-2">
+                                 <span class = "col-md-3">
                                     <button class="btn btn-default btn-block" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>_buttons', 'AddNewRoomsModal')">Edit Rooms</button>
                                 </span>
                         </div>

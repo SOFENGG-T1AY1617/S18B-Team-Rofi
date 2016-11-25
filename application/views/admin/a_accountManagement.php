@@ -175,10 +175,10 @@
             funct = "submitAdminChanges";
 
         var buttonsStr =
-        "<span class = \"col-md-2\">"+
+        "<span class = \"col-md-3\">"+
         "<button class=\"btn  btn-danger btn-block col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+bID+"', '"+modal+"')\">Cancel</button>"+
         "</span>"+
-        "<span class = \"col-md-2\">"+
+        "<span class = \"col-md-3\">"+
         "<button class=\"btn  btn-success btn-block col-md-20\" type=\"button\" onclick=\""+funct+"('"+tID+"')\" >Save Changes</div>"+
         "</span>";
 
@@ -336,10 +336,10 @@
         emptyTable(table);
         repopulateTable(table);
 
-        var buttonsStr =  "<span class = \"col-md-2\">"+
+        var buttonsStr =  "<span class = \"col-md-3\">"+
             "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default btn-block add-room-btn\" >+ Add Accounts</button>"+
             "</span>"+
-            "<span class = \"col-md-2\">"+
+            "<span class = \"col-md-3\">"+
             "<button class=\"btn btn-default btn-block\" type=\"button\" onclick=\"changeViewToEdit('"+table+"','"+button+"', '"+modal+"')\">Edit Accounts</button>"+
             "</span>";
 
@@ -833,14 +833,14 @@ include 'a_navbar.php';
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="collapseListGroupHeadingAdmin">
                     <h4 class="panel-title clearfix">
-                        <a role="button" class="col-md-8" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
+                        <a role="button" class="col-md-6" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
                             List of Admins
                         </a>
                         <div id = "admintable_buttons">
-                                <span class = "col-md-2">
+                                <span class = "col-md-3">
                                     <button type ="button"data-toggle="modal" data-target="#AddNewAdminModal" class="btn btn-default btn-block add-room-btn" >+ Add Accounts</button>
                                 </span>
-                                <span class = "col-md-2">
+                                <span class = "col-md-3">
                                     <button class="btn btn-default btn-block" type="button" onclick="changeViewToEdit('admintable','admintable_buttons', 'AddNewAdminModal')">Edit Accounts</button>
                                 </span>
                          </div>
@@ -892,15 +892,15 @@ include 'a_navbar.php';
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="collapseListGroupHeadingMod">
                 <h4 class="panel-title clearfix">
-                    <a role="button" class="col-md-8" data-toggle="collapse" href="#collapseListGroupMod" aria-expanded="true" aria-controls="collapseListGroupMod">
+                    <a role="button" class="col-md-6" data-toggle="collapse" href="#collapseListGroupMod" aria-expanded="true" aria-controls="collapseListGroupMod">
                         List of Moderators
                     </a>
                     <div id = "modtable_buttons">
-                        <span class = "col-md-2">
+                        <span class = "col-md-3">
                             <button type ="button"data-toggle="modal" data-target="#AddNewModeratorModal" class="btn btn-default btn-block  col-md-2"> +Add Moderators</button>
 
                                   </span>
-                        <span class = "col-md-2">
+                        <span class = "col-md-3">
                                <button class="btn btn-default btn-block col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('modtable','modtable_buttons', 'AddNewModeratorModal')">Edit Accounts</button>
                          </span>
                     </div>
