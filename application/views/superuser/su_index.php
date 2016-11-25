@@ -90,19 +90,6 @@ include 'su_navbar.php';
                         <input type="text" class="form-control" id="bldgPrefix" placeholder="Enter the prefix to be used. (ie. G for Gokongwei, SJ for St. Joseph Hall etc...)">
                     </div>-->
 
-                <div>
-                    <label for="Type">Area Type:</label>
-                </div>
-                <div class="btn-group" data-toggle="buttons">
-
-                    <label class="btn btn-default active">
-                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Rooms
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="radio" name="options" id="option2" autocomplete="off"> Floors
-                    </label>
-
-                </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
