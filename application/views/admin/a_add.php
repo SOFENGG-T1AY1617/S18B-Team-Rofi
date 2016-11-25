@@ -73,7 +73,7 @@
   function changeViewToEdit(table, buttons, modal){
         console.log(table);
       if(!isEditing) {
-
+            isEditing = true;
           var tableA = document.getElementById(table);
 
           initialTable = tableA.innerHTML;
