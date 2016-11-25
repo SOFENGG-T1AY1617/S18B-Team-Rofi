@@ -152,3 +152,8 @@ define("ADMIN_MODERATOR_MANAGEMENT", "mod_management");
 define("ADMIN_ADMINISTRATOR_MANAGEMENT", "admin_management");
 define("ADMIN_BUSINESS_RULES", "business_rules");
 define("ADMIN_ACCOUNT_MANAGEMENT", "acc_management");
+
+
+/*SUPERUSER PAGES*/
+define("SU_BLDG", "buildings");
+define("SU_DEPT", "departments");

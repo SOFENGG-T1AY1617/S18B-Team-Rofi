@@ -68,38 +68,38 @@ include 'su_navbar.php';
         <!-- end of panel -->
     </div>
 
-    <!-- Modal -->
-    <div id="AddNewDepartmentModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+<!-- Modal -->
+<div id="AddNewBuildingModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add New Building</h4>
-                </div>
-                <form>
-                    <div class="modal-body clearfix">
-
-                        <div class="form-group">
-                            <label for="deptName">Department Name:</label>
-                            <input type="text" class="form-control" id="deptName" placeholder="Enter the name of the department...">
-                        </div>
-                        <!--<div class="form-group">
-                            <label for="bldgPrefix">Prefix:</label>
-                            <input type="text" class="form-control" id="bldgPrefix" placeholder="Enter the prefix to be used. (ie. G for Gokongwei, SJ for St. Joseph Hall etc...)">
-                        </div>-->
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-success" onclick="submitBuilding()">Confirm</button>
-                    </div>
-                </form>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add New Building</h4>
             </div>
+            <form>
+                <div class="modal-body clearfix">
 
+                    <div class="form-group">
+                        <label for="bldgName">Building Name:</label>
+                        <input type="text" class="form-control" id="bldgName" placeholder="Enter the name of the building...">
+                    </div>
+                    <!--<div class="form-group">
+                        <label for="bldgPrefix">Prefix:</label>
+                        <input type="text" class="form-control" id="bldgPrefix" placeholder="Enter the prefix to be used. (ie. G for Gokongwei, SJ for St. Joseph Hall etc...)">
+                    </div>-->
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="submitBuilding()">Confirm</button>
+                </div>
+            </form>
         </div>
+
     </div>
+</div>
 
 
 

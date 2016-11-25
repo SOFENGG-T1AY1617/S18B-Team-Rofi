@@ -34,10 +34,11 @@
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
-        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
+       // del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
 
 
     }
+
 
     function cancelAddDept(tableID){
         var table = document.getElementById(tableID);
@@ -201,18 +202,17 @@ include 'su_navbar.php';
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Department/s</h4>
+                <h4 class="modal-title">Add Department</h4>
             </div>
             <form>
                 <div class="modal-body clearfix">
 
-                    <button type = "button" class = "btn btn-default btn-block  " onclick = "addDepartment('add_table')">Add Another Department</button>
+                   <!--<button type = "button" class = "btn btn-default btn-block  " onclick = "addDepartment('add_table')">Add Another Department</button>-->
                     <table class="table table-hover" id="add_table" name="">  <!-- TODO: somehow insert table id in name for add ? -->
                         <thead>
                         <tr>
                             <th>Department Name</th>
                             <th>Corresponding Admin</th>
-                            <th></th>
                             <th></th>
                             <th></th>
 
@@ -226,7 +226,6 @@ include 'su_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
-                            <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default clearmod-btn"><i class="material-icons">clear</i></button></td>
 
                         </tr>
                         </tbody>

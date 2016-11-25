@@ -59,9 +59,9 @@ class SuperuserController extends CI_Controller
     public function loadView($viewName) {
 
             switch ($viewName) {
-//                case SU_DEPARTMENT:
-//                    $this->loadDepartmentView();
-//                    break;
+                case SU_DEPT:
+                    $this->loadDepartmentView();
+                    break;
                 default:
                     $this->initSuperuser();
             }

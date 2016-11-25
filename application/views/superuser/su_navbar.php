@@ -20,8 +20,8 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="<?=site_url("superuser/bldg")?>">Buildings</a></li>
-                <li><a href="<?=site_url("superuser/dept")?>">Departments</a></li>
+                <li><a href="<?=site_url("superuser/". SU_BLDG)?>">Buildings</a></li>
+                <li><a href="<?=site_url("superuser/". SU_DEPT)?>">Departments</a></li>
 
             </ul>
 
