@@ -1,6 +1,6 @@
 :root{
-    --disabled: darkred;
-    --enabled: limegreen;
+    --disabled: #ED1C24;
+    --enabled: #61D315;
     --taken: lightgrey;
 }
 
@@ -132,17 +132,23 @@ th:first-child {
 .slotCell.disabled.selectedX,
 .slotCell.disabled.selectedY,
 .slotCell.disabled.selected {
-    -moz-box-shadow:    inset 0 0 0 2px #ffffff;
-    -webkit-box-shadow: inset 0 0 0 2px #ffffff;
-    box-shadow:         inset 0 0 0 2px #ffffff;
+    -moz-box-shadow:    inset 0 0 0 2px #000000;
+    -webkit-box-shadow: inset 0 0 0 2px #000000;
+    box-shadow:         inset 0 0 0 2px #000000;
 }
 
-:not(.taken):not(.selected):not(.disabled).slotCell:hover {
-    background-color: greenyellow;
+.slotCell:hover {
+    opacity: 0.75;
+    -moz-box-shadow:    inset 0 0 0 2px #eeeeee;
+    -webkit-box-shadow: inset 0 0 0 2px #eeeeee;
+    box-shadow:         inset 0 0 0 2px #eeeeee;
 }
 
-:not(.taken):not(.free):not(.disabled).slotCell:hover {
-    background-color: green;
+.slot-hover {
+    opacity: 0.75;
+    -moz-box-shadow:    inset 0 0 0 2px #eeeeee;
+    -webkit-box-shadow: inset 0 0 0 2px #eeeeee;
+    box-shadow:         inset 0 0 0 2px #eeeeee;
 }
 
 .slotDivider {

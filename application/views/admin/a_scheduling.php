@@ -69,7 +69,7 @@ include 'a_navbar.php';
 
         updateTimesHeader(dateSelected == dateToday);
 
-        $(document).on( "click", ".slotCell.enabled:not(.selected)",function() {
+        $(document).on( "click", ".slotCell:not(.selected)",function() {
             selectSlot($(this));
         });
 
@@ -85,6 +85,21 @@ include 'a_navbar.php';
             toggleSlotsVertical($(this));
         });
 
+        $(document).on( "mouseover", ".horizSelect", function () {
+            highlightHorizontal($(this));
+        });
+
+        $(document).on( "mouseover", ".vertSelect", function () {
+            highlightVertical($(this));
+        });
+
+        $(document).on( "mouseleave", ".horizSelect", function () {
+            unhighlightHorizontal($(this));
+        });
+
+        $(document).on( "mouseleave", ".vertSelect", function () {
+            unhighlightVertical($(this));
+        });
 
         $("input[name=optradio]:radio").change(function () {
 
@@ -129,6 +144,56 @@ include 'a_navbar.php';
         });
 
     });
+
+    function highlightHorizontal (cell) {
+        var cellID = cell.attr("id");
+
+        var splittedCellID = cellID.split('_');
+
+        var PCID = splittedCellID[1];
+
+        var jQuerySelector = "[id^='" + PCID + "_']";
+
+        $(jQuerySelector).addClass('slot-hover');
+    }
+
+    function highlightVertical (cell) {
+        var cellID = cell.attr("id");
+
+        var splittedCellID = cellID.split('_');
+
+        var time1 = splittedCellID[1];
+        var time2 = splittedCellID[2];
+
+        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+
+        $(jQuerySelector).addClass('slot-hover');
+    }
+
+    function unhighlightHorizontal (cell) {
+        var cellID = cell.attr("id");
+
+        var splittedCellID = cellID.split('_');
+
+        var PCID = splittedCellID[1];
+
+        var jQuerySelector = "[id^='" + PCID + "_']";
+
+        $(jQuerySelector).removeClass('slot-hover');
+    }
+
+    function unhighlightVertical (cell) {
+        var cellID = cell.attr("id");
+
+        var splittedCellID = cellID.split('_');
+
+        var time1 = splittedCellID[1];
+        var time2 = splittedCellID[2];
+
+        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+
+        $(jQuerySelector).removeClass('slot-hover');
+    }
 
     function enableSlot (slot) {
         if (slot.hasClass('disabled'))
@@ -259,8 +324,11 @@ include 'a_navbar.php';
         var slotID = slot.attr("id");
 
         if (($.inArray(slotID, slotsPicked)) > -1) {
-            var existIndex = slotsPicked.indexOf(slotID);
-            slotsPicked.splice(existIndex, 1);
+
+            if (!slot.hasClass('selectedY')) {
+                var existIndex = slotsPicked.indexOf(slotID);
+                slotsPicked.splice(existIndex, 1);
+            }
 
             if (slot.hasClass('selectedX'))
                 slot.removeClass('selectedX');
@@ -271,8 +339,10 @@ include 'a_navbar.php';
         var slotID = slot.attr("id");
 
         if (($.inArray(slotID, slotsPicked)) > -1) {
-            var existIndex = slotsPicked.indexOf(slotID);
-            slotsPicked.splice(existIndex, 1);
+            if (!slot.hasClass('selectedX')) {
+                var existIndex = slotsPicked.indexOf(slotID);
+                slotsPicked.splice(existIndex, 1);
+            }
 
             if (slot.hasClass('selectedY'))
                 slot.removeClass('selectedY');
