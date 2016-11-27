@@ -77,7 +77,8 @@ $route['admin/addAdmins'] = 'AdminController/addAdmins';
 $route['admin/getModDeptIDFromEmail'] = 'AdminController/getModDeptIDFromEmail';
 $route['admin/updateModerators'] = 'AdminController/updateModerators';
 $route['admin/updateAdmins'] = 'AdminController/updateAdmins';
-
+$route['admin/getBusinessRules'] = 'AdminController/getBusinessRules';
+$route['admin/getRooms'] = 'AdminController/getRoomsByDepartmentID';
 
 $route['admin/(:any)'] = 'AdminController/loadView/$1';
 

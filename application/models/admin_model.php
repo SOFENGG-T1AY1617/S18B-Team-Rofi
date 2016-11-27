@@ -35,13 +35,13 @@ class Admin_Model extends CI_Model
         $startMinute = 0;
         $daysForward = 0;
 
-        if (!$tomorrow)
+        if ($first_hour < $minimum_hour || $first_hour == null) // set to minimum_hour if first_hour is below the minimum_hour or if first_hour is null
+            $first_hour = $minimum_hour;
+
+        if (!$tomorrow && $first_hour != $minimum_hour)
             $startMinute = intval($first_minute / $minute_interval) * $minute_interval; // calculate first_minute to suit current time
         else
             $daysForward++; // plus 1 to day if tomorrow is true
-
-        if ($first_hour < $minimum_hour || $first_hour == null) // set to minimum_hour if first_hour is below the minimum_hour or if first_hour is null
-            $first_hour = $minimum_hour;
 
         for ($hour = $first_hour; $hour < $maximum_hour ; $hour++) {
             for ($minute = $startMinute; $minute < 60; $minute += $minute_interval) {
@@ -116,6 +116,14 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($id))->result();
     }
 
+    function queryRoomsWithDepartmentIDAndBuildingID($id, $bid) {
+        //return $this->db->get(TABLE_ROOMS)->result();
+        $sql = "SELECT * 
+                FROM rooms
+                WHERE departmentid = ? AND buildingid = ?";
+        return $this->db->query($sql, array($id, $bid))->result();
+    }
+
     function queryAllComputers() {
         return $this->db->get(TABLE_COMPUTERS)->result();
     }
@@ -147,6 +155,15 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($id))->result();
     }
 
+    function queryAllComputersAtBuildingIDAndDepartmentID($id, $did) {
+        $sql = "SELECT * 
+             FROM computers NATURAL JOIN 
+              (SELECT roomid, name
+               FROM rooms
+               WHERE buildingid = ? AND department_id = ?) t1";
+        return $this->db->query($sql, array($id, $did))->result();
+    }
+
     function queryComputersAtBuildingIDAndRoomID($bid,$id) {
         $sql = "SELECT * 
              FROM computers NATURAL JOIN 
@@ -159,6 +176,16 @@ class Admin_Model extends CI_Model
     function queryAllBuildings() {
         return $this->db->get(TABLE_BUILDINGS)->result();
     }
+
+    function queryBuildingsByDepartmentID($id) {
+        $sql = "SELECT *
+                FROM buildings NATURAL JOIN (SELECT DISTINCT buildingid
+                            FROM rooms
+                            WHERE departmentid = ?) rooms";
+
+        return $this->db->query($sql, array($id))->result();
+    }
+
     function queryBuildingIDFromBuildingName($name) {
         $sql = "SELECT buildingid
                    FROM buildings
@@ -211,7 +238,14 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($id))->result();
     }
 
+    function queryBusinessRulesByRoomID($id) {
+        $sql = "SELECT *
+                FROM business_rules NATURAL JOIN (SELECT DISTINCT departmentid
+                                                  FROM rooms
+                                                  WHERE roomid = ?) d";
 
+        return $this->db->query($sql, array($id))->result();
+    }
 
     function queryReservationsAtBuildingIDOnDate($id, $date) {
         $sql = "SELECT *

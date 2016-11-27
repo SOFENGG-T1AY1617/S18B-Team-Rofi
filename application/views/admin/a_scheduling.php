@@ -21,53 +21,15 @@ include 'a_navbar.php';
     var request;
     var dateToday = "<?=date("Y-m-d")?>";
     var dateSelected = dateToday;
-    var maxNumberOfSlots = <?php echo $maxNumberOfSlots?>;//TODO select from Settings
+    var interval = 0;
+    var currentDeptID = 0;
 
-    var times_today = <?php
-
-        $tm_today = [];
-
-        foreach ($times_today as $key => $time)
-            $tm_today[] = date("H:i:s", $time);
-
-        echo json_encode($tm_today)
-
-        ?>;
-
-    var times_tomorrow = <?php
-
-        $tm_tomorrow = [];
-
-        foreach ($times_tomorrow as $time)
-            $tm_tomorrow[] = date("H:i:s", $time);
-
-        echo json_encode($tm_tomorrow)
-        ?>;
-
-    var times_today_DISPLAY = <?php
-
-        $tm_today = [];
-
-        foreach ($times_today as $key => $time)
-            $tm_today[] = date("h:i A", $time);
-
-        echo json_encode($tm_today)
-
-        ?>;
-
-    var times_tomorrow_DISPLAY = <?php
-
-        $tm_tomorrow = [];
-
-        foreach ($times_tomorrow as $time)
-            $tm_tomorrow[] = date("h:i A", $time);
-
-        echo json_encode($tm_tomorrow)
-        ?>;;
+    var times_today;
+    var times_tomorrow;
+    var times_today_DISPLAY;
+    var times_tomorrow_DISPLAY;
 
     $(document).ready(function() {
-
-        updateTimesHeader(dateSelected == dateToday);
 
         $(document).on( "click", ".slotCell:not(.selected)",function() {
             selectSlot($(this));
@@ -463,12 +425,11 @@ include 'a_navbar.php';
         // Disabled form elements will not be serialized.
         $inputs.prop("disabled", true);
 
-
         if (buildingid != "") {
             console.log(buildingid);
 
             $.ajax({
-                url: '<?php echo base_url('getRooms') ?>',
+                url: '<?php echo base_url('admin/getRooms') ?>',
                 type: 'GET',
                 dataType: 'json',
                 data: {
@@ -481,15 +442,18 @@ include 'a_navbar.php';
 
                     var out=[];
 
-                    out[0]= '<option value="0" selected >All Rooms</option>';
+                    if (result.length != 0) {
+                        out[0] = '<option value="0" selected >All Rooms</option>';
 
-                    for(i=1;i<=result.length;i++){
-                        out[i]= '<option value="'+result[i-1].roomid+'" >'+result[i-1].name+'</option>';
-                    };
+                        for (i = 1; i <= result.length; i++) {
+                            out[i] = '<option value="' + result[i - 1].roomid + '" >' + result[i - 1].name + '</option>';
+                        }
+                        ;
 
-                    $("#form_room").empty().append(out);
+                        $("#form_room").empty().append(out);
 
-                    selectRoom("0");
+                        selectRoom("0");
+                    }
 
                     numOfRooms = result.length;
 
@@ -536,18 +500,74 @@ include 'a_navbar.php';
         $("#form_room").attr('disabled', false);
 
         if (buildingid!=""&&roomid != "") {
+            var interval;
+
             console.log(buildingid+"-"+roomid);
 
             $.ajax({
-                url: '<?php echo base_url('getComputers') ?>',
+                url: '<?php echo base_url('admin/getBusinessRules') ?>',
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    buildingid: buildingid,
-                    roomid:roomid,
-                    currdate: dateSelected,
+                    roomid: roomid
                 }
             })
+                .done(function(result) {
+                    interval = result[0].interval;
+
+                    if (currentDeptID != result[0].departmentid) {
+                        if (currentDeptID !=0)
+                            toastr.info("The slots have been cleared and limit has been changed.", "Department has changed!");
+                    }
+
+                    currentDeptID = result[0].departmentid;
+                })
+                .fail(function() {
+                    console.log("fail");
+                })
+                .always(function() {
+                    console.log("complete");
+                })
+                .then(function () {
+                    console.log("PROMISE FULFILL");
+
+                    return $.ajax({ // PROCEED TO PROMISE
+                        url: '<?php echo base_url('getTimes') ?>',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            interval: interval
+                        }
+                    })
+                })
+
+                // FOR PROMISE
+                .done (function (result) {
+                    times_today = result['times_today'];
+                    times_tomorrow = result['times_tomorrow'];
+                    times_today_DISPLAY = result['times_today_DISPLAY'];
+                    times_tomorrow_DISPLAY = result['times_tomorrow_DISPLAY'];
+
+                    updateTimesHeader(dateSelected == dateToday);
+                })
+                .fail (function () {
+
+                })
+                .then (function () {
+                    // get computers
+
+                    return $.ajax({
+                        url: '<?php echo base_url('getComputers') ?>',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            buildingid: buildingid,
+                            roomid:roomid,
+                            currdate: dateSelected,
+                        }
+                    })
+                })
+
                 .done(function(result) {
                     console.log(result['date']);
                     console.log(result);
@@ -573,10 +593,13 @@ include 'a_navbar.php';
                     console.log("complete");
                 });
 
+
             /*$.post('application/controllers/ajax/foo', function(data) {
              console.log(data)
              }, 'json');*/
 
+        } else {
+            outputSlots();
         }
 
     }
