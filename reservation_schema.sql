@@ -56,7 +56,7 @@ CREATE TABLE `reservation_system`.`computers` (
   `computerid` INT NOT NULL AUTO_INCREMENT,
   `computerno` INT NOT NULL,
   `roomid` INT NOT NULL,
-  `statusid` INT NOT NULL DEFAULT 0,
+  `statusid` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`computerid`),
   INDEX `roomid_idx` (`roomid` ASC),
   INDEX `statusid_idx` (`statusid` ASC),
