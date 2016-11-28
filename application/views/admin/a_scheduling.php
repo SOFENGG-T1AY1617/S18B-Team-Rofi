@@ -2,6 +2,13 @@
 include 'a_navbar.php';
 ?>
 
+
+<ol class="breadcrumb  col-md-offset-2 col-md-10">
+    <li><a href="#">Admin</a></li>
+    <li><a href="#">Application Settings</a></li>
+    <li class="active">Modify Schedule</li>
+</ol>
+
 <link href="<?=base_url()?>assets/css/admin_reservation_system_style.css" rel="stylesheet">
 
 <script src="<?=base_url()?>assets/js/toastr.min.js"></script>

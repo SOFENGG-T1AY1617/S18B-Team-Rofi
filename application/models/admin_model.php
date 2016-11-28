@@ -193,6 +193,10 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, $name)->result();
 
     }
+    function queryAllRoomTypes(){
+        $sql = "SELECT * FROM area_types";
+        return $this->db->query($sql)->result();
+    }
 
 
     function queryAllRoomsAtBuildingID($id) {

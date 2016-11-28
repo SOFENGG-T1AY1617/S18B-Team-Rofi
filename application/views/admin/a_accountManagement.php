@@ -32,7 +32,7 @@
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
-        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
+        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
 
     }
@@ -58,7 +58,7 @@
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
         cellDept.innerHTML = "<select type='text' class='form-control' placeholder='Enter department'> <option value='0' disabled selected>Choose a Department</option><?php foreach($departments as $dep):?><option value=<?=$dep->departmentid?>><?=$dep->name?></option><?php endforeach;?></select>";
-        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
+        del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
         //cellDept.innerHTML  = "<input type=\"text\" class=\"form-control\" id=\"exampleInputDept\" placeholder =\"Enter department\">";
 
     }
@@ -104,7 +104,10 @@
                 console.log(tableA.rows.length);
                 if( tableA.rows[x].cells[y].id=="DELETECOLUMN")
                 {
-                    tableA.rows[x].cells[y].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+table+"', "+(x)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
+
+                    tableA.rows[x].cells[y].innerHTML =
+                        "<button type =\"button\" onclick=\"clearAccount('"+table+"', "+(x)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
+
                     console.log(tableA.rows[x].cells[y].id);
 
                 }
@@ -149,12 +152,12 @@
 
     var initialModTableData;
 
-    function changeViewToEdit(table, footer, modal){
+    function changeViewToEdit(table, buttons, modal){
         //console.log(table);
         var tableA = document.getElementById(table);
         var rows = tableA.rows;
         var tID = table;
-        var fID = footer;
+        var bID = buttons;
 
         console.log("TABLE ID = "+table);
 
@@ -164,14 +167,24 @@
             initialAdminTableData = getTableDataWithID(tID);
         console.log(initialModTableData);
 
+        var funct;
+
         if(table=="modtable")
-            document.getElementById(footer).innerHTML =
-                "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
-                "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitModeratorChanges('"+tID+"')\" >Save Changes</div>";
+            funct = "submitModeratorChanges";
         else
-            document.getElementById(footer).innerHTML =
-                "<button class=\"btn btn-default col-md-2 col-md-offset-8\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+fID+"', '"+modal+"')\">Cancel</button>"+
-                "<button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"submitAdminChanges('"+tID+"')\" >Save Changes</div>";
+            funct = "submitAdminChanges";
+
+        var buttonsStr =
+        "<span class = \"col-md-3\">"+
+        "<button class=\"btn  btn-danger btn-block col-md-2\" type=\"button\" onclick=\"changeViewToView('"+tID+"','"+bID+"', '"+modal+"')\">Cancel</button>"+
+        "</span>"+
+        "<span class = \"col-md-3\">"+
+        "<button class=\"btn  btn-success btn-block col-md-20\" type=\"button\" onclick=\""+funct+"('"+tID+"')\" >Save Changes</div>"+
+        "</span>";
+
+
+
+        document.getElementById(buttons).innerHTML = buttonsStr;
 
         for(var i = 1; i < rows.length; i++) {
             var cells = rows[i].cells;
@@ -214,7 +227,7 @@
             }
             drop+="</select>";
             cells[3].innerHTML = drop;
-            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\"><i class=\"material-icons\">clear</i></button>";
+            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
             console.log(tID);
 
@@ -276,10 +289,10 @@
 
     }
 
-    function changeViewToView(table, footer, modal){
+    function changeViewToView(table, button, modal){
         console.log(table);
         var tableA = document.getElementById(table);
-        var footerA = document.getElementById(footer);
+        var buttonA = document.getElementById(button);
         var rows = tableA.rows;
         var deleteRows=[];
         var lengthofdel=0;
@@ -322,11 +335,15 @@
 
         emptyTable(table);
         repopulateTable(table);
-        footerA.innerHTML =
 
-                "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default col-md-2 col-md-offset-8\"> "+s+" </button>" +
-                " <button class=\"btn btn-default col-md-2 col-md-offset-0\" type=\"button\" onclick=\"changeViewToEdit('"+tableA.id+"', '"+footerA.id+"','" +modal+"' )\">Edit Accounts</button>";
-        
+        var buttonsStr =  "<span class = \"col-md-3\">"+
+            "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default btn-block add-room-btn\" >+ Add Accounts</button>"+
+            "</span>"+
+            "<span class = \"col-md-3\">"+
+            "<button class=\"btn btn-default btn-block\" type=\"button\" onclick=\"changeViewToEdit('"+table+"','"+button+"', '"+modal+"')\">Edit Accounts</button>"+
+            "</span>";
+
+        buttonA.innerHTML = buttonsStr;
     }
 
 
@@ -802,6 +819,12 @@
 include 'a_navbar.php';
 ?>
 
+
+<ol class="breadcrumb  col-md-offset-2 col-md-10">
+    <li><a href="#">Admin</a></li>
+    <li class="active">Account Management</li>
+</ol>
+
 <?php if($_SESSION['admin_typeid'] == 1): ?>
     <!-- Only show admin panel if user is a superuser -->
     <div id="panels" class = "col-md-offset-2 col-md-8">
@@ -809,10 +832,18 @@ include 'a_navbar.php';
         <div class="panel-group" role="tablist" aria-multiselectable="true">
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="collapseListGroupHeadingAdmin">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
+                    <h4 class="panel-title clearfix">
+                        <a role="button" class="col-md-6" data-toggle="collapse" href="#collapseListGroupAdmin" aria-expanded="true" aria-controls="collapseListGroupAdmin">
                             List of Admins
                         </a>
+                        <div id = "admintable_buttons">
+                                <span class = "col-md-3">
+                                    <button type ="button"data-toggle="modal" data-target="#AddNewAdminModal" class="btn btn-default btn-block add-room-btn" >+ Add Accounts</button>
+                                </span>
+                                <span class = "col-md-3">
+                                    <button class="btn btn-default btn-block" type="button" onclick="changeViewToEdit('admintable','admintable_buttons', 'AddNewAdminModal')">Edit Accounts</button>
+                                </span>
+                         </div>
                     </h4>
                 </div>
                 <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupAdmin" aria-labelledby="collapseListGroupHeadingAdmin" aria-expanded="false">
@@ -842,9 +873,8 @@ include 'a_navbar.php';
                                     </tbody>
                                 </table>
                             </li>
-                            <div class = "panel-footer clearfix" id = "admintable_footer">
-                                <button type ="button"data-toggle="modal" data-target="#AddNewAdminModal" class="btn btn-default col-md-2 col-md-offset-8">Add Admins</button>
-                                <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('admintable','admintable_footer', 'AddNewAdminModal')">Edit Accounts</button>
+                            <div class = "panel-footer clearfix" id = "admintablefooter">
+
                             </div>
                         </form>
                     </ul>
@@ -861,10 +891,20 @@ include 'a_navbar.php';
     <div class="panel-group" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="collapseListGroupHeadingMod">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#collapseListGroupMod" aria-expanded="true" aria-controls="collapseListGroupMod">
+                <h4 class="panel-title clearfix">
+                    <a role="button" class="col-md-6" data-toggle="collapse" href="#collapseListGroupMod" aria-expanded="true" aria-controls="collapseListGroupMod">
                         List of Moderators
-                    </a></h4>
+                    </a>
+                    <div id = "modtable_buttons">
+                        <span class = "col-md-3">
+                            <button type ="button"data-toggle="modal" data-target="#AddNewModeratorModal" class="btn btn-default btn-block  col-md-2"> +Add Moderators</button>
+
+                                  </span>
+                        <span class = "col-md-3">
+                               <button class="btn btn-default btn-block col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('modtable','modtable_buttons', 'AddNewModeratorModal')">Edit Accounts</button>
+                         </span>
+                    </div>
+                </h4>
             </div>
             <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroupMod" aria-labelledby="collapseListGroupHeadingMod" aria-expanded="false">
                 <ul class="list-group">
@@ -895,9 +935,7 @@ include 'a_navbar.php';
                             </table>
                         </li>
                         <div class = "panel-footer clearfix" id = "modtable_footer">
-                            <button type ="button"data-toggle="modal" data-target="#AddNewModeratorModal" class="btn btn-default col-md-2 col-md-offset-8">Add Moderators</button>
-                            <button class="btn btn-default col-md-2 col-md-offset-0" type="button" onclick="changeViewToEdit('modtable','modtable_footer', 'AddNewModeratorModal')">Edit Accounts</button>
-                        </div>
+                                                    </div>
                     </form>
                 </ul>
             </div>
@@ -925,7 +963,7 @@ include 'a_navbar.php';
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
-                            <th>Delete Row</th>
+                            <th>Delete</th>
 
                         </tr>
                         </thead>
@@ -937,7 +975,7 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
 
-                            <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default clearmod-btn"><i class="material-icons">clear</i></button></td>
+                            <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default clearmod-btn">&times;</button></td>
 
                         </tr>
                         </tbody>
@@ -975,7 +1013,7 @@ include 'a_navbar.php';
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Department</th>
-                            <th>Delete Row</th>
+                            <th>Delete</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -993,7 +1031,7 @@ include 'a_navbar.php';
                                     <?php endforeach;?>
                                 </select></td>
 
-                            <td><button type ="button" onclick="deleteRow('add_tableA', 1)" class="btn btn-default clearmod-btn"><i class="material-icons">clear</i></button></td>
+                            <td><button type ="button" onclick="deleteRow('add_tableA', 1)" class="btn btn-default clearmod-btn">&times;</button></td>
 
                         </tr>
                         </tbody>
