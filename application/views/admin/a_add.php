@@ -356,10 +356,9 @@
         //$("#AddNewRoomsModal").hide();
         $('#AddNewRoomsModal').modal('toggle');
     }
-
     function submitBuilding() {
         var buildingName = $('#bldgName').val();
-        var optionsRadios=$('#optionsRadios').val();
+        var optionsRadios= document.querySelector('input[name="optionsRadios"]:checked').value;
         console.log("Adding"+optionsRadios);
 
         if (!buildingName.trim()) {
@@ -689,14 +688,58 @@ include 'a_navbar.php';
                                   <div>
                         <label for="Type">Area Type:</label>
                     </div>
+                    
+
+                    <!--
+
+                    <?php /*
+                     $control = 0;
+                    foreach($roomTypes as $roomTypes):
+                    if($control==0)
+                    {
+                        ?>
+                     <div class="btn-group" data-toggle="buttons">
+
+                        <label class="btn btn-default active">
+                            <input type="radio" name="<?=$roomTypes->area_typeid?>" id="optionsRadios" value="<?=$roomTypes->area_typeid?> autocomplete="off" checked> <?=$roomTypes->type?>
+                        </label>
+
+                    </div>
+                    <?php
+                    }
+                    else
+                    {
+                        ?>
+                        <div class="btn-group" data-toggle="buttons">
+
+                        <label class="btn btn-default">
+                            <input type="radio" name="<?=$roomTypes->area_typeid?>" id="optionsRadios" value="<?=$roomTypes->area_typeid?> autocomplete="off" > <?=$roomTypes->type?>
+                        </label>
+
+
+                        </div>
+                    <?php
+                    $control++;
+                    }
+                    
+                     endforeach;*/?>
+                     -->
+
 
                     <?php 
                      
                     foreach($roomTypes as $roomTypes):?>
                     <div class="radio">
-                        <label><input type="radio" name="<?=$roomTypes->area_typeid?>" id="optionsRadios" value="<?=$roomTypes->area_typeid?>" ><?=$roomTypes->type?></label>
+                        <label><input type="radio" name="optionsRadios" id="optionsRadios<?=$roomTypes->area_typeid?>"+ value="<?=$roomTypes->area_typeid?>" ><?=$roomTypes->type?></label>
+                    <script>          
+
+                    var optionsRadios1= document.getElementById("optionsRadios1"); 
+                    var optionsRadios2= document.getElementById("optionsRadios2"); 
+                    console.log(optionsRadios1);
+                    console.log(optionsRadios2);</script>
                     </div>
                     <?php endforeach;?>
+
                  <!---   <div class="btn-group" data-toggle="buttons">
 
                         <label class="btn btn-default active">
