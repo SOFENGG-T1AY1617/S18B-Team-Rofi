@@ -64,6 +64,7 @@ class AdminController extends CI_Controller
     public function addView(){
 
         $data['buildings'] = $this->admin->queryAllBuildings();
+        $data['roomTypes'] = $this->admin->queryAllRoomTypes();
 
         if($_SESSION['admin_typeid'] == 1)
             $data['rooms'] = $this->admin->queryAllRooms();
@@ -257,7 +258,8 @@ class AdminController extends CI_Controller
 
     public function addBuilding() {
         $buildingData = array(
-            'name' => $this->input->get("buildingName")
+            'name' => $this->input->get("buildingName"),
+            'area_typeid'=>$this->input->get("optionsRadios")
         );
 
         $out =

@@ -359,7 +359,8 @@
 
     function submitBuilding() {
         var buildingName = $('#bldgName').val();
-       // console.log("Adding"+buildingName);
+        var optionsRadios=$('#optionsRadios').val();
+        console.log("Adding"+optionsRadios);
 
         if (!buildingName.trim()) {
             console.log("no input");
@@ -372,7 +373,8 @@
             type: 'GET',
             dataType: 'json',
             data: {
-                buildingName: buildingName
+                buildingName: buildingName,
+                optionsRadios: optionsRadios
             }
         })
             .done(function(result) {
@@ -687,7 +689,15 @@ include 'a_navbar.php';
                                   <div>
                         <label for="Type">Area Type:</label>
                     </div>
-                    <div class="btn-group" data-toggle="buttons">
+
+                    <?php 
+                     
+                    foreach($roomTypes as $roomTypes):?>
+                    <div class="radio">
+                        <label><input type="radio" name="<?=$roomTypes->area_typeid?>" id="optionsRadios" value="<?=$roomTypes->area_typeid?>" ><?=$roomTypes->type?></label>
+                    </div>
+                    <?php endforeach;?>
+                 <!---   <div class="btn-group" data-toggle="buttons">
 
                         <label class="btn btn-default active">
                             <input type="radio" name="options" id="option1" autocomplete="off" checked> Rooms
@@ -696,7 +706,7 @@ include 'a_navbar.php';
                             <input type="radio" name="options" id="option2" autocomplete="off"> Floors
                         </label>
 
-                    </div>
+                    </div>-->
 
                 </div>
                 <div class="modal-footer">
