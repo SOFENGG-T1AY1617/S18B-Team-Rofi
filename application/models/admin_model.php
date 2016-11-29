@@ -194,7 +194,7 @@ class Admin_Model extends CI_Model
 
     }
     function queryAllRoomTypes(){
-        $sql = "SELECT * FROM area_types";
+        $sql = "SELECT area_typeid, type FROM area_types";
         return $this->db->query($sql)->result();
     }
 
