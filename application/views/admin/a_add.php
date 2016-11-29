@@ -692,53 +692,30 @@ include 'a_navbar.php';
                     </div>
                     
 
-                    <!--
-
-                    <?php /*
-                     $control = 0;
-                    foreach($roomTypes as $roomTypes):
-                    if($control==0)
-                    {
-                        ?>
-                     <div class="btn-group" data-toggle="buttons">
-
-                        <label class="btn btn-default active">
-                            <input type="radio" name="<?=$roomTypes->area_typeid?>" id="optionsRadios" value="<?=$roomTypes->area_typeid?> autocomplete="off" checked> <?=$roomTypes->type?>
-                        </label>
-
-                    </div>
-                    <?php
-                    }
-                    else
-                    {
-                        ?>
-                        <div class="btn-group" data-toggle="buttons">
-
-                        <label class="btn btn-default">
-                            <input type="radio" name="<?=$roomTypes->area_typeid?>" id="optionsRadios" value="<?=$roomTypes->area_typeid?> autocomplete="off" > <?=$roomTypes->type?>
-                        </label>
-
-
-                        </div>
-                    <?php
-                    $control++;
-                    }
-                    
-                     endforeach;*/?>
-                     -->
-
 
                     <?php 
-                     
-                    foreach($roomTypes as $roomTypes):?>
+                    $ctr=0;               
+                    foreach($roomTypes as $roomTypes):
+                        if($ctr==0){?>
+
                     <div class="radio">
-                        <label><input type="radio" name="optionsRadios" id="optionsRadios<?=$roomTypes->area_typeid?>"+ value="<?=$roomTypes->area_typeid?>" ><?=$roomTypes->type?></label>
+                        <label class="btn btn-default" ><input type="radio" name="optionsRadios" id="optionsRadios<?=$roomTypes->area_typeid?>"+ value="<?=$roomTypes->area_typeid?>" checked ><?=$roomTypes->type?></label>
+                    
+                    <?php $ctr++;} else {?>
+                    <div class="radio">
+                        <label class="btn btn-default" ><input type="radio" name="optionsRadios" id="optionsRadios<?=$roomTypes->area_typeid?>"+ value="<?=$roomTypes->area_typeid?>"  ><?=$roomTypes->type?></label>
+                    
+
+                    <?php }?>
                     <script>          
 
                     var optionsRadios1= document.getElementById("optionsRadios1"); 
                     var optionsRadios2= document.getElementById("optionsRadios2"); 
                     console.log(optionsRadios1);
                     console.log(optionsRadios2);</script>
+                    
+
+
                     </div>
                     <?php endforeach;?>
 
@@ -752,7 +729,6 @@ include 'a_navbar.php';
                         </label>
 
                     </div>-->
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
