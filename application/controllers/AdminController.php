@@ -39,7 +39,7 @@ class AdminController extends CI_Controller
     public function loadAction($action) {
         $this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
         $this->admin->archiveUnconfirmedReservations();
-        if(!isset($_SESSION['email'])) {
+        if(!isset($_SESSION['email']) && $action != ADMIN_SIGN_IN) {
             $this->signInView("");
         }
         else {
