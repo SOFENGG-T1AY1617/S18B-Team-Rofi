@@ -85,6 +85,10 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
+define("TABLE_AREA_TYPES", "area_types");
+define("COLUMN_AREA_TYPEID", "area_typeid");
+define("COLUMN_TYPE", "type");
+
 define("TABLE_BUILDINGS", "buildings");
 define("COLUMN_BUILDINGID", "buildingid");
 
@@ -104,7 +108,6 @@ define("COLUMN_COLLEGEID", "collegeid");
 
 define("TABLE_TYPES", "types");
 define("COLUMN_TYPEID", "typeid");
-define("COLUMN_TYPE", "type");
 
 define("TABLE_USERS", "users");
 define("COLUMN_USERID", "userid");
