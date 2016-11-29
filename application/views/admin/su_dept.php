@@ -149,22 +149,21 @@ include 'a_navbar.php';
     <button type ="button"data-toggle="modal" data-target="#AddNewDeptModal" class="btn btn-success btn-block">+ Add Department</button>
 </div>
 <div id="panels" class = "col-md-offset-2 col-md-8">
-
-
+    <?php foreach($departments as $dept): ?>
         <div class="panel-group" role="tablist">
             <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="collapseListGroupHeading<?echo 'deptid'?>">
+                <div class="panel-heading" role="tab" id="collapseListGroupHeading<?=$dept->departmentid?>">
                     <h4 class="panel-title clearfix ">
-                        <a href="#collapseListGroup<?echo 'deptid'?>" class="col-md-8" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListGroup<?echo 'deptid'?>">
-                            Department Name</a>
+                        <a href="#collapseListGroup<?=$dept->departmentid?>" class="col-md-8" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListGroup<?=$dept->departmentid?>">
+                            <?=$dept->name?></a>
 
                     </h4>
                 </div>
-                <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroup<?echo 'deptid'?>" aria-labelledby="collapseListGroupHeading<?echo 'deptid'?>" aria-expanded="false">
+                <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroup<?=$dept->departmentid?>" aria-labelledby="collapseListGroupHeading<?=$dept->departmentid?>" aria-expanded="false">
                     <ul class="list-group">
                         <form>
                             <li class="list-group-item">
-                                <table class="table table-hover" id="<?echo 'deptid'?>table">
+                                <table class="table table-hover" id="<?=$dept->departmentid?>table">
                                     <thead>
                                     <tr>
                                         <th>First Name</th>
@@ -173,12 +172,12 @@ include 'a_navbar.php';
                                     </tr>
                                     </thead>
                                     <tbody>
-                                            <tr>
-                                                <td id="fn_1">Admin First Name</td>
-                                                <td id="ln_1">Admin Last Name</td>
-                                                <td id="email_1">admin@insertemail.com</td>
-                                                <td></td>
-                                            </tr>
+                                    <tr>
+                                        <td id="fn_1"><?=$dept->first_name?></td>
+                                        <td id="ln_1"><?=$dept->last_name?></td>
+                                        <td id="email_1"><?=$dept->email?></td>
+                                        <td></td>
+                                    </tr>
                                     </tbody>
 
 
@@ -191,6 +190,7 @@ include 'a_navbar.php';
                 </div>
             </div>
         </div>
+    <?php endforeach;?>
     <!-- end of panel -->
 </div>
 

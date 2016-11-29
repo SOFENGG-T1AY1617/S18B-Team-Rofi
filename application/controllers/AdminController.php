@@ -156,9 +156,10 @@ class AdminController extends CI_Controller
 
     public function loadDepartmentView(){
 
-        $data['administrators'] = $this->admin->queryAllAdministators();
+        /*$data['administrators'] = $this->admin->queryAllAdministators();
 
-        $data['departments'] = $this->admin->queryAllDepartments();
+        $data['departments'] = $this->admin->queryAllDepartments();*/
+        $data['departments'] = $this->admin->queryAllDepartmentsAndAdmins();
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/su_dept', $data); // $this->load->view('admin', $data); set to this if data is set
