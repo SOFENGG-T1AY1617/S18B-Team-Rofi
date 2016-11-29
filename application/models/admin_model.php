@@ -702,4 +702,17 @@ class Admin_Model extends CI_Model
         $this->db->query($sql, array($date, $time));
     }
 
+    function archiveUnconfirmedReservations() {
+        $sql = "call archive_unconfirmed_reservations(?)";
+
+        $this->db->select(COLUMN_CONFIRMATION_EXPIRY);
+        $this->db->from(TABLE_BUSINESS_RULES);
+        $query = $this->db->get();
+
+        foreach($query->result() as $row) {
+            $this->db->query($sql, array($row->confirmation_expiry));
+        }
+
+    }
+
 }

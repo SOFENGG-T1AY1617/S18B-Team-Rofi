@@ -38,6 +38,7 @@ class AdminController extends CI_Controller
 
     public function loadView($viewName) {
         $this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
+        $this->admin->archiveUnconfirmedReservations();
         if(!isset($_SESSION['email'])) {
             $this->signInView("");
         }

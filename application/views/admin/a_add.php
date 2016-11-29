@@ -565,14 +565,16 @@ include 'a_navbar.php';
                     <h4 class="panel-title clearfix ">
                         <a href="#collapseListGroup<?=$row->buildingid?>" class="col-md-6" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListGroup<?=$row->buildingid?>">
                             <?=$row->name?></a>
-                        <div id = "<?=$row->buildingid?>_buttons">
+                        <?php if($_SESSION['admin_typeid'] != 1): ?>
+                            <div id = "<?=$row->buildingid?>_buttons">
                                 <span class = "col-md-3">
                                     <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default btn-block add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">+ Add Rooms</button>
                                 </span>
-                                 <span class = "col-md-3">
+                                <span class = "col-md-3">
                                     <button class="btn btn-default btn-block" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>_buttons', 'AddNewRoomsModal')">Edit Rooms</button>
                                 </span>
-                        </div>
+                            </div>
+                        <?php endif;?>
                     </h4>
                 </div>
                 <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroup<?=$row->buildingid?>" aria-labelledby="collapseListGroupHeading<?=$row->buildingid?>" aria-expanded="false">
