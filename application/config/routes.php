@@ -82,6 +82,9 @@ $route['admin/getRooms'] = 'AdminController/getRoomsByDepartmentID';
 
 $route['admin/(:any)'] = 'AdminController/loadView/$1';
 
+/* MODERATOR ROUTE */
+$route['moderator'] = 'ModeratorController';
+
 /*
  * NOTE
  * You no longer need to add routes for new views.
