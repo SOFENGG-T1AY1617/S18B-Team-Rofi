@@ -97,7 +97,7 @@ class AdminController extends CI_Controller
         else
             $data['moderators'] = $this->admin->queryModeratorsWithDepartmentID($_SESSION['admin_departmentid']);
 
-            $data['departments'] = $this->admin->queryAllDepartments();
+        $data['departments'] = $this->admin->queryAllDepartments();
 
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
@@ -342,7 +342,7 @@ class AdminController extends CI_Controller
         if($out)
             echo json_encode("success");
         else
-          echo json_encode("fail");
+            echo json_encode("fail");
     }
 
     public function addModerators() {
@@ -378,11 +378,11 @@ class AdminController extends CI_Controller
                 $this->admin->deleteModerator($mod['email']);
 
                 $result = array(
-                'result' => "success"
+                    'result' => "success"
                 );
 
                 continue;
-                }
+            }
 
 
 //TODO FIX DELETE PLEASE
@@ -390,14 +390,14 @@ class AdminController extends CI_Controller
             // Check if first name was changed
             if ($data[0] != $mod['first_name']) {
                 // Update firts name
-                    $updateData = array(
-                        'id' => $data[5],
-                        'fName' => $data[0],
-                    );
-                    $this->admin->updateModFirstName($updateData);
-                    $result = array(
-                        'result' => "success",
-                    );
+                $updateData = array(
+                    'id' => $data[5],
+                    'fName' => $data[0],
+                );
+                $this->admin->updateModFirstName($updateData);
+                $result = array(
+                    'result' => "success",
+                );
 
             }
 
@@ -464,15 +464,15 @@ class AdminController extends CI_Controller
 
 
 
-                        if ($data[4] == -1) {
-                            $this->admin->deleteAdmin($admin['email']);
+            if ($data[4] == -1) {
+                $this->admin->deleteAdmin($admin['email']);
 
-                            $result = array(
-                                'result' => "success"
-                            );
+                $result = array(
+                    'result' => "success"
+                );
 
-                            continue;
-                        }
+                continue;
+            }
 
 
 //TODO FIX DELETE PLEASE
@@ -563,7 +563,7 @@ class AdminController extends CI_Controller
 
         echo json_encode($result);
     }
-    
+
     public function addAdmins() {
 
         $adminData = array(
