@@ -296,7 +296,7 @@
         }
 
         $.ajax({
-            url: '<?=base_url('admin/addRoom')?>',
+            url: '<?=base_url('admin/' . ADMIN_ADD_ROOM)?>',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -377,7 +377,7 @@
         }
 
         $.ajax({
-            url: '<?=base_url('admin/addBuilding')?>',
+            url: '<?=base_url('admin/' . SU_ADD_BUILDINGS)?>',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -389,6 +389,7 @@
                 console.log("done");
                 //location.reload(true);
                 if(result=="success"){
+                    toastr.error(buildingName + " was added successfully.", "Success");
                     reloadPage();
                 }
                 else{
@@ -422,7 +423,7 @@
         var changedData = getChangedData(initial, getTableDataWithID(tableID));
 
         $.ajax({
-            url: '<?=base_url('admin/updateRooms')?>',
+            url: '<?=base_url('admin/' . ADMIN_UPDATE_ROOMS)?>',
             type: 'GET',
             dataType: 'json',
             data: {

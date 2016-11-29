@@ -125,7 +125,7 @@
         console.log(business_rulesid);
 
         $.ajax({
-            url: '<?=base_url('admin/updateBusinessRules')?>',
+            url: '<?=base_url('admin/' . ADMIN_UPDATE_BUSINESS_RULES)?>',
             type: 'GET',
             dataType: 'json',
             data: {

@@ -436,7 +436,7 @@ include 'a_navbar.php';
             console.log(buildingid);
 
             $.ajax({
-                url: '<?php echo base_url('admin/getRooms') ?>',
+                url: '<?php echo base_url('admin/' . ADMIN_GET_ROOMS) ?>',
                 type: 'GET',
                 dataType: 'json',
                 data: {
@@ -512,7 +512,7 @@ include 'a_navbar.php';
             console.log(buildingid+"-"+roomid);
 
             $.ajax({
-                url: '<?php echo base_url('admin/getBusinessRules') ?>',
+                url: '<?php echo base_url('admin/' . ADMIN_GET_BUSINESS_RULES) ?>',
                 type: 'GET',
                 dataType: 'json',
                 data: {

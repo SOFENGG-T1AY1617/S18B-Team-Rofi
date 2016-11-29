@@ -142,7 +142,7 @@
 <body>
 
 <?php
-include 'su_navbar.php';
+include 'a_navbar.php';
 ?>
 
 <div class="panel-group clearfix col-md-offset-2 col-md-8" role="tablist">

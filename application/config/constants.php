@@ -161,7 +161,22 @@ define("ADMIN_ADMINISTRATOR_MANAGEMENT", "admin_management");
 define("ADMIN_BUSINESS_RULES", "business_rules");
 define("ADMIN_ACCOUNT_MANAGEMENT", "acc_management");
 
+/* ADMIN ACTIONS */
+define("ADMIN_SIGN_IN", "sign_in");
+define("ADMIN_SIGN_OUT", "sign_out");
+define("ADMIN_ADD_ROOM", "add_room");
+define("ADMIN_ADD_MODERATORS", "add_moderators");
+define("ADMIN_UPDATE_ROOMS", "update_rooms");
+define("ADMIN_UPDATE_BUSINESS_RULES", "update_business_rules");
+define("ADMIN_ADD_ADMINS", "add_admins");
+define("ADMIN_GET_MOD_DEPT_ID_FROM_EMAIL", "get_mod_dept_id_from_email");
+define("ADMIN_UPDATE_MODERATORS", "update_moderators");
+define("ADMIN_UPDATE_ADMINS", "update_admins");
+define("ADMIN_GET_BUSINESS_RULES", "get_business_rules");
+define("ADMIN_GET_ROOMS", "get_rooms");
 
-/*SUPERUSER PAGES*/
-define("SU_BLDG", "buildings");
-define("SU_DEPT", "departments");
+/* SUPER USER PAGES */
+define("SU_DEPARTMENTS", "departments");
+
+/* SUPER USER ACTIONS */
+define("SU_ADD_BUILDINGS", "add_buildings");

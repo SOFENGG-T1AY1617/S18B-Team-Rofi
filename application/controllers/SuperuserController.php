@@ -29,17 +29,17 @@ class SuperuserController extends CI_Controller
           $this->signInView("");
         }*/
 
-        $this->loadView("");
+        $this->loadAction("");
     }
 
     private function initSuperuser(){
 
         $data['buildings'] = $this->admin->queryAllBuildings();
 
-            $data['rooms'] = $this->admin->queryAllRooms();
+        $data['rooms'] = $this->admin->queryAllRooms();
 
         $this->load->view('superuser/su_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('superuser/su_index', $data); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('superuser/su_add', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
 
     }
@@ -56,9 +56,9 @@ class SuperuserController extends CI_Controller
 
     }
 
-    public function loadView($viewName) {
+    public function loadAction($action) {
 
-            switch ($viewName) {
+            switch ($action) {
                 case SU_DEPT:
                     $this->loadDepartmentView();
                     break;

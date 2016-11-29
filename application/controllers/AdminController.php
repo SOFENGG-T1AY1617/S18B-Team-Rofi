@@ -26,7 +26,7 @@ class AdminController extends CI_Controller
     public function index()
     {
         date_default_timezone_set('Asia/Hong_Kong');
-        $this->loadView("");
+        $this->loadAction("");
     }
 
     private function initAdmin() {
@@ -36,14 +36,14 @@ class AdminController extends CI_Controller
 
     }
 
-    public function loadView($viewName) {
+    public function loadAction($action) {
         $this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
         $this->admin->archiveUnconfirmedReservations();
         if(!isset($_SESSION['email'])) {
             $this->signInView("");
         }
         else {
-            switch ($viewName) {
+            switch ($action) {
                 case ADMIN_SCHEDULING:
                     $this->schedulingView();
                     break;
@@ -56,6 +56,55 @@ class AdminController extends CI_Controller
                 case ADMIN_BUSINESS_RULES:
                     $this->ruleView();
                     break;
+
+                // Actions
+                case ADMIN_SIGN_IN:
+                    $this->signIn();
+                    break;
+                case ADMIN_SIGN_OUT:
+                    $this->signOut();
+                    break;
+                case ADMIN_ADD_ROOM:
+                    $this->addRoom();
+                    break;
+                case ADMIN_ADD_MODERATORS:
+                    $this->addModerators();
+                    break;
+                case ADMIN_UPDATE_ROOMS:
+                    $this->updateRooms();
+                    break;
+                case ADMIN_UPDATE_BUSINESS_RULES:
+                    $this->updateBusinessRules();
+                    break;
+                case ADMIN_ADD_ADMINS:
+                    $this->addAdmins();
+                    break;
+                case ADMIN_GET_MOD_DEPT_ID_FROM_EMAIL:
+                    $this->getModDeptIDFromEmail();
+                    break;
+                case ADMIN_UPDATE_MODERATORS:
+                    $this->updateModerators();
+                    break;
+                case ADMIN_UPDATE_ADMINS:
+                    $this->updateAdmins();
+                    break;
+                case ADMIN_GET_BUSINESS_RULES:
+                    $this->getBusinessRules();
+                    break;
+                case ADMIN_GET_ROOMS:
+                    $this->getRoomsByDepartmentID();
+                    break;
+
+                // Super user pages
+                case SU_DEPARTMENTS:
+                    $this->loadDepartmentView();
+                    break;
+
+                // Super user actions
+                case SU_ADD_BUILDINGS:
+                    $this->addBuilding();
+                    break;
+
                 default:
                     $this->initAdmin();
             }
@@ -103,6 +152,18 @@ class AdminController extends CI_Controller
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_accountManagement', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
+    }
+
+    public function loadDepartmentView(){
+
+        $data['administrators'] = $this->admin->queryAllAdministators();
+
+        $data['departments'] = $this->admin->queryAllDepartments();
+
+        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
+        $this->load->view('admin/su_dept', $data); // $this->load->view('admin', $data); set to this if data is set
+        //$this->load->view('template/footer'); // include bootstrap 3 footer
+
     }
 
     public function getBusinessRules() { // roomid
