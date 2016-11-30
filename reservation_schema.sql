@@ -214,8 +214,8 @@ CREATE TABLE `reservation_system`.`archive_reservations` (
 
 CREATE TABLE `reservation_system`.`tag_mod_rooms` (
   `tag_mod_roomsid` INT NOT NULL AUTO_INCREMENT,
-  `moderatorid` INT NOT NULL UNIQUE,
-  `roomid` INT NOT NULL UNIQUE,
+  `moderatorid` INT NOT NULL,
+  `roomid` INT NOT NULL,
   PRIMARY KEY (`tag_mod_roomsid`),
   INDEX `moderatorid_idx` (`moderatorid` ASC),
   INDEX `roomid_idx` (`roomid` ASC),
@@ -376,3 +376,8 @@ INSERT INTO `reservation_system`.`business_rules`
 	(`departmentid`, `interval`, `limit`, `start_time`, `end_time`, `accessibility`, `reservation_expiry`, `confirmation_expiry`)
 VALUES (1, 15, 4, "6:00:00", "20:00:00", 1, 15, 60),
 	   (2, 20, 5, "8:00:00", "18:00:00", 1, 20, 90);
+
+INSERT INTO `reservation_system`.`tag_mod_rooms` (`moderatorid`,`roomid`)
+VALUES (1,1),
+	   (2,2),
+	   (3,4);
