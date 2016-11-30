@@ -84,6 +84,8 @@ $route['admin/(:any)'] = 'AdminController/loadView/$1';
 
 /* MODERATOR ROUTE */
 $route['moderator'] = 'ModeratorController';
+$route['moderator/getRooms'] = 'ModeratorController/getRoomsByBuilding';
+$route['moderator/getBusinessRules'] = 'ModeratorController/getBusinessRules';
 
 /*
  * NOTE

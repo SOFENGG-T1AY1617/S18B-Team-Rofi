@@ -9,7 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="<?=base_url()?>/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?=base_url()?>/assets/css/admin_style.css" rel="stylesheet">
+    <link href="<?=base_url()?>/assets/css/moderator_style.css" rel="stylesheet">
     <link href="<?=base_url()?>/assets/css/toastr.css" rel="stylesheet" />
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,7 +23,8 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="<?=base_url()?>/assets/js/bootstrap.min.js"></script>
     <script src="<?=base_url()?>/assets/js/toastr.min.js"></script>
-    <script src="<?=base_url()?>/assets/js/jquery.numeric.min.js"></script>
+    <script src="<?=base_url()?>/assets/js/floatThread.js"></script>
+
 
 
     <script type="text/javascript">
