@@ -55,8 +55,10 @@ class Analytics_Model extends CI_Model
     }
 
     function queryAllArchiveReservations() {
-        $sql = "SELECT computerid, COUNT(archive_reservationid) as uses
-                      FROM archive_reservations";
+        $sql = "SELECT computerno, uses
+                  FROM computers NATURAL JOIN(
+                  SELECT computerid, COUNT(archive_reservationid) as uses
+                      FROM archive_reservations) t1";
 
         $result = $this->db->query($sql)->result();
         return $result;

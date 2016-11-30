@@ -254,6 +254,11 @@
 include 'a_navbar.php';
 ?>
 
+<ol class="breadcrumb  col-md-offset-2 col-md-10">
+    <li><a href="#">Admin</a></li>
+    <li class="active">Department Management</li>
+</ol>
+
 <div class="panel-group clearfix col-md-offset-2 col-md-8" role="tablist">
     <button type ="button"data-toggle="modal" data-target="#AddNewDeptModal" class="btn btn-success btn-block">+ Add Department</button>
 </div>

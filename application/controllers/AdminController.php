@@ -144,8 +144,10 @@ class AdminController extends CI_Controller
     }
 
     public function reportsView(){
+
+        $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
-        $this->load->view('admin/a_reports'); // $this->load->view('admin', $data); set to this if data is set
+        $this->load->view('admin/a_reports',$data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
