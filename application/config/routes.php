@@ -66,7 +66,7 @@ $route['getTimes'] = 'Controller/getTimes';
 /* ADMIN ROUTE */
 $route['admin'] = 'AdminController';
 
-$route['admin/signIn'] = 'AdminController/signIn';
+/*$route['admin/signIn'] = 'AdminController/signIn';
 $route['admin/signOut'] = 'AdminController/signOut';
 $route['admin/addRoom'] = 'AdminController/addRoom';
 $route['admin/addModerators'] = 'AdminController/addModerators';
@@ -78,9 +78,9 @@ $route['admin/getModDeptIDFromEmail'] = 'AdminController/getModDeptIDFromEmail';
 $route['admin/updateModerators'] = 'AdminController/updateModerators';
 $route['admin/updateAdmins'] = 'AdminController/updateAdmins';
 $route['admin/getBusinessRules'] = 'AdminController/getBusinessRules';
-$route['admin/getRooms'] = 'AdminController/getRoomsByDepartmentID';
+$route['admin/getRooms'] = 'AdminController/getRoomsByDepartmentID';*/
 
-$route['admin/(:any)'] = 'AdminController/loadView/$1';
+$route['admin/(:any)'] = 'AdminController/loadAction/$1';
 
 /* MODERATOR ROUTE */
 $route['moderator'] = 'ModeratorController';
@@ -99,4 +99,11 @@ $route['admin/area_management'] = 'AdminController/addView';
 $route['admin/mod_management'] = 'AdminController/modView';
 $route['admin/admin_management'] = 'AdminController/adminView';
 $route['admin/business_rules'] = 'AdminController/ruleView';*/
+
+/*Superuser - sorry im adding new routes*/
+//$route['superuser'] = 'SuperuserController';
+//$route['superuser/bldg'] = 'SuperuserController';
+//$route['superuser/dept'] = 'SuperuserController/loadDepartmentView';
+$route['superuser'] = 'SuperuserController';
+$route['superuser/(:any)'] = 'SuperuserController/loadAction/$1';
 

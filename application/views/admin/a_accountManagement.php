@@ -474,7 +474,7 @@
         console.log(changedData);
 
         $.ajax({
-            url: '<?=base_url('admin/updateModerators')?>',
+            url: '<?=base_url('admin/' . ADMIN_UPDATE_MODERATORS)?>',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -522,7 +522,7 @@
         }
 
         $.ajax({
-            url: '<?=base_url('admin/addModerators')?>',
+            url: '<?=base_url('admin/' . ADMIN_ADD_MODERATORS)?>',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -653,7 +653,7 @@
         console.log(changedData);
 
         $.ajax({
-            url: '<?=base_url('admin/updateAdmins')?>',
+            url: '<?=base_url('admin/' . ADMIN_UPDATE_ADMINS)?>',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -701,7 +701,7 @@
         }
 
         $.ajax({
-            url: '<?=base_url('admin/addAdmins')?>',
+            url: '<?=base_url('admin/' . ADMIN_ADD_ADMINS)?>',
             type: 'GET',
             dataType: 'json',
             data: {

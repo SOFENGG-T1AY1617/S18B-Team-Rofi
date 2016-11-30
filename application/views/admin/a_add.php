@@ -7,9 +7,13 @@
            $("#add_table").attr("name", buildingid);
            $("#modal-building-name").text($(this).data("buildingname"));
 
+           var type = $(this).data("type");
+
+           $(".area_type").text(type);
+           addRoom('add_table');
+
        });
 
-        addRoom('add_table');
         setInputRules();
 
     });
@@ -39,8 +43,13 @@
         var deleteCol =  row.insertCell(2);
         var i = tableA.rows.length-1;
 
-        cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter name of the room\">";
-        cellNumber.innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" placeholder=\"Enter number of PCs in the room\">";
+        var type = $(".area_type").first().text().toLowerCase();
+        var placeholderName = "Enter name of the " + type;
+        var placeholderPCs = "Enter number of PCs in the " + type;
+        console.log(type);
+
+        cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\""+placeholderName+"\" >";
+        cellNumber.innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" placeholder=\""+placeholderPCs+"\">";
         deleteCol.innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\">&times;</button>"
 
         setInputRules();
@@ -287,7 +296,7 @@
         }
 
         $.ajax({
-            url: '<?=base_url('admin/addRoom')?>',
+            url: '<?=base_url('admin/' . ADMIN_ADD_ROOM)?>',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -368,7 +377,7 @@
         }
 
         $.ajax({
-            url: '<?=base_url('admin/addBuilding')?>',
+            url: '<?=base_url('admin/' . SU_ADD_BUILDINGS)?>',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -380,6 +389,7 @@
                 console.log("done");
                 //location.reload(true);
                 if(result=="success"){
+                    toastr.error(buildingName + " was added successfully.", "Success");
                     reloadPage();
                 }
                 else{
@@ -413,7 +423,7 @@
         var changedData = getChangedData(initial, getTableDataWithID(tableID));
 
         $.ajax({
-            url: '<?=base_url('admin/updateRooms')?>',
+            url: '<?=base_url('admin/' . ADMIN_UPDATE_ROOMS)?>',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -567,10 +577,11 @@ include 'a_navbar.php';
                         <?php if($_SESSION['admin_typeid'] != 1): ?>
                             <div id = "<?=$row->buildingid?>_buttons">
                                 <span class = "col-md-3">
-                                    <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default btn-block add-room-btn" data-buildingname="<?=$row->name?>" id="add-<?=$row->buildingid?>">+ Add Rooms</button>
+                                    <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default btn-block add-room-btn"
+                                            data-buildingname="<?=$row->name?>" data-type="<?=$row->type?>" id="add-<?=$row->buildingid?>">+ Add <?=$row->type?></button>
                                 </span>
                                 <span class = "col-md-3">
-                                    <button class="btn btn-default btn-block" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>_buttons', 'AddNewRoomsModal')">Edit Rooms</button>
+                                    <button class="btn btn-default btn-block" type="button" onclick="changeViewToEdit('<?=$row->buildingid?>table','<?=$row->buildingid?>_buttons', 'AddNewRoomsModal')">Edit <?=$row->type?></button>
                                 </span>
                             </div>
                         <?php endif;?>
@@ -583,7 +594,7 @@ include 'a_navbar.php';
                                 <table class="table table-hover" id="<?=$row->buildingid?>table">
                                     <thead>
                                     <tr>
-                                        <th>Room Name</th>
+                                        <th><?=$row->type?> Name</th>
                                         <th>Number of PCs</th>
                                     </tr>
                                     </thead>
@@ -607,7 +618,7 @@ include 'a_navbar.php';
 
                                 <?php if($i == 0):?>
                                     <div id="norooms_message">
-                                        <h4 style="text-align: center"> NO REGISTERED ROOMS </h4>
+                                        <h4 style="text-align: center"> NO REGISTERED <?=strtoupper($row->type)?>S </h4>
                                     </div>
                                 <?php endif;?>
 
@@ -636,11 +647,11 @@ include 'a_navbar.php';
             <form>
             <div class="modal-body clearfix">
 
-                        <button type = "button" class = "btn btn-default btn-block  " onclick = "addRoom('add_table')">Add Another Room</button>
+                        <button type = "button" class = "btn btn-default btn-block  " onclick = "addRoom('add_table')">Add Another <span class="area_type"></span></button>
                         <table class="table table-hover" id="add_table" name="">
                             <thead>
                             <tr>
-                                <th>Room Name</th>
+                                <th><span class="area_type"></span> Name</th>
                                 <th>Number of PCs</th>
                                 <th>Delete Row</th>
                             </tr>

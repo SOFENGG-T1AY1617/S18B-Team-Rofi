@@ -174,7 +174,13 @@ class Admin_Model extends CI_Model
     }
 
     function queryAllBuildings() {
-        return $this->db->get(TABLE_BUILDINGS)->result();
+        $this->db->select("*");
+        $this->db->from(TABLE_BUILDINGS);
+        $this->db->join(TABLE_AREA_TYPES, TABLE_BUILDINGS . "." . COLUMN_AREA_TYPEID .
+            " = " . TABLE_AREA_TYPES . "." . COLUMN_AREA_TYPEID);
+        $query = $this->db->get();
+        return $query->result();
+        //return $this->db->get(TABLE_BUILDINGS)->result();
     }
 
     function queryBuildingsByDepartmentID($id) {
