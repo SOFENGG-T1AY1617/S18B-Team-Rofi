@@ -485,7 +485,7 @@ class Admin_Model extends CI_Model
         foreach($admins as $admin) {
             $insertAdminData = array(
                 COLUMN_EMAIL => $admin[2],
-                COLUMN_PASSWORD => 'default', // to be set by the admin on email confirmation
+                COLUMN_PASSWORD => 'password', // to be set by the admin on email confirmation
                 COLUMN_FIRST_NAME => $admin[0],
                 COLUMN_LAST_NAME => $admin[1],
                 COLUMN_ADMIN_DEPARTMENTID => $admin[3],
