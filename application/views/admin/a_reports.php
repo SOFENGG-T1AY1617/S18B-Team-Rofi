@@ -84,6 +84,7 @@
                 }
             })
                 .done(function (result) {
+                    $("#output").empty();
                     var out = [];
                     console.log(result);
 
@@ -92,7 +93,7 @@
                     }
 
                     if (out.length > 0)
-                        $("#output").empty().append(out);
+                        $("#output").append(out);
                 })
                 .fail(function () {
                     console.log("fail");

@@ -54,13 +54,14 @@ class Analytics_Model extends CI_Model
         return $this->db->get(TABLE_COMPUTERS)->result();
     }
 
-    function queryAllArchiveReservations() {
+    function queryAllArchiveReservationsAtRoom($roomid) {
         $sql = "SELECT computerno, uses
                   FROM computers NATURAL JOIN(
                   SELECT computerid, COUNT(archive_reservationid) as uses
-                      FROM archive_reservations) t1";
+                      FROM archive_reservations) t1
+                      WHERE roomid = ?";
 
-        $result = $this->db->query($sql)->result();
+        $result = $this->db->query($sql, array($roomid))->result();
         return $result;
     }
 
