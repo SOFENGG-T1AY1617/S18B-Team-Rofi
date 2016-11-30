@@ -56,6 +56,9 @@ class AdminController extends CI_Controller
                 case ADMIN_BUSINESS_RULES:
                     $this->ruleView();
                     break;
+                case ADMIN_REPORTS:
+                    $this->reportsView();
+                    break;
                 default:
                     $this->initAdmin();
             }
@@ -78,6 +81,7 @@ class AdminController extends CI_Controller
         $this->load->view('admin/a_add', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
+
     public function signInView($errorMessage){
         //$data['login'] = $this->admin->queryAllModerators();
 
@@ -85,6 +89,12 @@ class AdminController extends CI_Controller
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/signIn', $data); // $this->load->view('admin', $data); set to this if data is set
+        //$this->load->view('template/footer'); // include bootstrap 3 footer
+    }
+
+    public function reportsView(){
+        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
+        $this->load->view('admin/a_reports'); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
 
@@ -210,6 +220,8 @@ class AdminController extends CI_Controller
         $this->load->view('admin/a_rules', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
     }
+
+
 
     public function signIn() {
         $e = $_POST["adminEmail"];

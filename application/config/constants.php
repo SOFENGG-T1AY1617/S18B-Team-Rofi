@@ -149,6 +149,7 @@ define("COLUMN_ACCESSIBILITY", "accessibility");
 define("COLUMN_RESERVATION_EXPIRY", "reservation_expiry");
 define("COLUMN_CONFIRMATION_EXPIRY", "confirmation_expiry");
 
+define("TABLE_ARCHIVE_RESERVATIONS", "archive_reservations");
 
 /* ADMIN PAGES */
 define("ADMIN_SCHEDULING", "scheduling");
@@ -157,3 +158,4 @@ define("ADMIN_MODERATOR_MANAGEMENT", "mod_management");
 define("ADMIN_ADMINISTRATOR_MANAGEMENT", "admin_management");
 define("ADMIN_BUSINESS_RULES", "business_rules");
 define("ADMIN_ACCOUNT_MANAGEMENT", "acc_management");
+define("ADMIN_REPORTS", "reports");

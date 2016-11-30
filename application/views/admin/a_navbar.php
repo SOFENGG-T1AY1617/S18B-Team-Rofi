@@ -20,7 +20,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li id="overview_button"><a href="<?=site_url("admin")?>">Reports<span class="sr-only"></span></a></li>
+                <li id="overview_button"><a href="<?=site_url("admin/" . ADMIN_REPORTS)?>">Reports<span class="sr-only"></span></a></li>
                 <li><a href="<?=site_url("admin/" . ADMIN_ACCOUNT_MANAGEMENT)?>">Account Management</a></li>
 
 
