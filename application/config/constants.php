@@ -85,6 +85,10 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
+define("TABLE_AREA_TYPES", "area_types");
+define("COLUMN_AREA_TYPEID", "area_typeid");
+define("COLUMN_TYPE", "type");
+
 define("TABLE_BUILDINGS", "buildings");
 define("COLUMN_BUILDINGID", "buildingid");
 
@@ -104,7 +108,6 @@ define("COLUMN_COLLEGEID", "collegeid");
 
 define("TABLE_TYPES", "types");
 define("COLUMN_TYPEID", "typeid");
-define("COLUMN_TYPE", "type");
 
 define("TABLE_USERS", "users");
 define("COLUMN_USERID", "userid");
@@ -148,8 +151,15 @@ define("COLUMN_LIMIT", "limit");
 define("COLUMN_ACCESSIBILITY", "accessibility");
 define("COLUMN_RESERVATION_EXPIRY", "reservation_expiry");
 define("COLUMN_CONFIRMATION_EXPIRY", "confirmation_expiry");
+define("COLUMN_START_TIME", "start_time");
+define("COLUMN_END_TIME", "end_time");
+
 
 define("TABLE_ARCHIVE_RESERVATIONS", "archive_reservations");
+
+define("TABLE_TAG_MOD_ROOMS", "tag_mod_rooms");
+define("COLUMN_TAG_MOD_ROOMSID", "tag_mod_roomsid");
+
 
 /* ADMIN PAGES */
 define("ADMIN_SCHEDULING", "scheduling");
@@ -158,4 +168,26 @@ define("ADMIN_MODERATOR_MANAGEMENT", "mod_management");
 define("ADMIN_ADMINISTRATOR_MANAGEMENT", "admin_management");
 define("ADMIN_BUSINESS_RULES", "business_rules");
 define("ADMIN_ACCOUNT_MANAGEMENT", "acc_management");
+
 define("ADMIN_REPORTS", "reports");
+/* ADMIN ACTIONS */
+define("ADMIN_SIGN_IN", "sign_in");
+define("ADMIN_SIGN_OUT", "sign_out");
+define("ADMIN_ADD_ROOM", "add_room");
+define("ADMIN_ADD_MODERATORS", "add_moderators");
+define("ADMIN_UPDATE_ROOMS", "update_rooms");
+define("ADMIN_UPDATE_BUSINESS_RULES", "update_business_rules");
+define("ADMIN_ADD_ADMINS", "add_admins");
+define("ADMIN_GET_MOD_DEPT_ID_FROM_EMAIL", "get_mod_dept_id_from_email");
+define("ADMIN_UPDATE_MODERATORS", "update_moderators");
+define("ADMIN_UPDATE_ADMINS", "update_admins");
+define("ADMIN_GET_BUSINESS_RULES", "get_business_rules");
+define("ADMIN_GET_ROOMS", "get_rooms");
+
+/* SUPER USER PAGES */
+define("SU_DEPARTMENTS", "departments");
+
+/* SUPER USER ACTIONS */
+define("SU_ADD_BUILDINGS", "add_buildings");
+define("SU_ADD_DEPARTMENT", "add_department");
+

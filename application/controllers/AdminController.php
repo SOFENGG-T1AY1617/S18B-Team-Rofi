@@ -26,7 +26,7 @@ class AdminController extends CI_Controller
     public function index()
     {
         date_default_timezone_set('Asia/Hong_Kong');
-        $this->loadView("");
+        $this->loadAction("");
     }
 
     private function initAdmin() {
@@ -36,14 +36,14 @@ class AdminController extends CI_Controller
 
     }
 
-    public function loadView($viewName) {
+    public function loadAction($action) {
         $this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
         $this->admin->archiveUnconfirmedReservations();
-        if(!isset($_SESSION['email'])) {
+        if(!isset($_SESSION['email']) && $action != ADMIN_SIGN_IN) {
             $this->signInView("");
         }
         else {
-            switch ($viewName) {
+            switch ($action) {
                 case ADMIN_SCHEDULING:
                     $this->schedulingView();
                     break;
@@ -59,6 +59,57 @@ class AdminController extends CI_Controller
                 case ADMIN_REPORTS:
                     $this->reportsView();
                     break;
+                // Actions
+                case ADMIN_SIGN_IN:
+                    $this->signIn();
+                    break;
+                case ADMIN_SIGN_OUT:
+                    $this->signOut();
+                    break;
+                case ADMIN_ADD_ROOM:
+                    $this->addRoom();
+                    break;
+                case ADMIN_ADD_MODERATORS:
+                    $this->addModerators();
+                    break;
+                case ADMIN_UPDATE_ROOMS:
+                    $this->updateRooms();
+                    break;
+                case ADMIN_UPDATE_BUSINESS_RULES:
+                    $this->updateBusinessRules();
+                    break;
+                case ADMIN_ADD_ADMINS:
+                    $this->addAdmins();
+                    break;
+                case ADMIN_GET_MOD_DEPT_ID_FROM_EMAIL:
+                    $this->getModDeptIDFromEmail();
+                    break;
+                case ADMIN_UPDATE_MODERATORS:
+                    $this->updateModerators();
+                    break;
+                case ADMIN_UPDATE_ADMINS:
+                    $this->updateAdmins();
+                    break;
+                case ADMIN_GET_BUSINESS_RULES:
+                    $this->getBusinessRules();
+                    break;
+                case ADMIN_GET_ROOMS:
+                    $this->getRoomsByDepartmentID();
+                    break;
+
+                // Super user pages
+                case SU_DEPARTMENTS:
+                    $this->loadDepartmentView();
+                    break;
+
+                // Super user actions
+                case SU_ADD_BUILDINGS:
+                    $this->addBuilding();
+                    break;
+                case SU_ADD_DEPARTMENT:
+                    $this->addDepartment();
+                    break;
+
                 default:
                     $this->initAdmin();
             }
@@ -107,12 +158,25 @@ class AdminController extends CI_Controller
         else
             $data['moderators'] = $this->admin->queryModeratorsWithDepartmentID($_SESSION['admin_departmentid']);
 
-            $data['departments'] = $this->admin->queryAllDepartments();
+        $data['departments'] = $this->admin->queryAllDepartments();
 
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_accountManagement', $data); // $this->load->view('admin', $data); set to this if data is set
         //$this->load->view('template/footer'); // include bootstrap 3 footer
+    }
+
+    public function loadDepartmentView(){
+
+        /*$data['administrators'] = $this->admin->queryAllAdministators();
+
+        $data['departments'] = $this->admin->queryAllDepartments();*/
+        $data['departments'] = $this->admin->queryAllDepartmentsAndAdmins();
+
+        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
+        $this->load->view('admin/su_dept', $data); // $this->load->view('admin', $data); set to this if data is set
+        //$this->load->view('template/footer'); // include bootstrap 3 footer
+
     }
 
     public function getBusinessRules() { // roomid
@@ -354,7 +418,7 @@ class AdminController extends CI_Controller
         if($out)
             echo json_encode("success");
         else
-          echo json_encode("fail");
+            echo json_encode("fail");
     }
 
     public function addModerators() {
@@ -390,11 +454,11 @@ class AdminController extends CI_Controller
                 $this->admin->deleteModerator($mod['email']);
 
                 $result = array(
-                'result' => "success"
+                    'result' => "success"
                 );
 
                 continue;
-                }
+            }
 
 
 //TODO FIX DELETE PLEASE
@@ -402,14 +466,14 @@ class AdminController extends CI_Controller
             // Check if first name was changed
             if ($data[0] != $mod['first_name']) {
                 // Update firts name
-                    $updateData = array(
-                        'id' => $data[5],
-                        'fName' => $data[0],
-                    );
-                    $this->admin->updateModFirstName($updateData);
-                    $result = array(
-                        'result' => "success",
-                    );
+                $updateData = array(
+                    'id' => $data[5],
+                    'fName' => $data[0],
+                );
+                $this->admin->updateModFirstName($updateData);
+                $result = array(
+                    'result' => "success",
+                );
 
             }
 
@@ -476,15 +540,15 @@ class AdminController extends CI_Controller
 
 
 
-                        if ($data[4] == -1) {
-                            $this->admin->deleteAdmin($admin['email']);
+            if ($data[4] == -1) {
+                $this->admin->deleteAdmin($admin['email']);
 
-                            $result = array(
-                                'result' => "success"
-                            );
+                $result = array(
+                    'result' => "success"
+                );
 
-                            continue;
-                        }
+                continue;
+            }
 
 
 //TODO FIX DELETE PLEASE
@@ -575,7 +639,7 @@ class AdminController extends CI_Controller
 
         echo json_encode($result);
     }
-    
+
     public function addAdmins() {
 
         $adminData = array(
@@ -599,6 +663,72 @@ class AdminController extends CI_Controller
         $result = $this->admin->queryModDeptIDAtEmail($email);
 
         echo intval($result);
+    }
+
+    public function addDepartment() {
+        $departmentData = array(
+            COLUMN_NAME => $this->input->get("departmentName"),
+        );
+
+        $adminData = array(
+            COLUMN_ADMIN_DEPARTMENTID => '',
+            COLUMN_FIRST_NAME => $this->input->get("admin_firstName"),
+            COLUMN_LAST_NAME => $this->input->get("admin_lastName"),
+            COLUMN_EMAIL => $this->input->get("admin_email"),
+            COLUMN_ADMIN_TYPEID => 2,
+            COLUMN_PASSWORD => "password",
+        );
+
+        $businessRulesData = array(
+            COLUMN_DEPARTMENTID => '',
+            COLUMN_INTERVAL => 15,
+            COLUMN_LIMIT => 4,
+            COLUMN_ACCESSIBILITY => 1,
+            COLUMN_RESERVATION_EXPIRY => 15,
+            COLUMN_CONFIRMATION_EXPIRY => 60,
+            COLUMN_START_TIME => '6:00:00',
+            COLUMN_END_TIME => '20:00:00',
+        );
+
+        $errors = $this->validateDepartmentInput($departmentData[COLUMN_NAME], $adminData[COLUMN_EMAIL]);
+
+        if (count($errors) > 0) {
+            $result = array(
+                'result' => 'fail',
+                'errors' => $errors,
+            );
+        }
+        else {
+
+            $this->admin->insertDepartment($departmentData);
+
+            $departmentID = $this->admin->queryLatestDepartmentID();
+
+            $adminData[COLUMN_ADMIN_DEPARTMENTID] = $departmentID;
+            $this->admin->insertAdmin($adminData);
+
+            $businessRulesData[COLUMN_DEPARTMENTID] = $departmentID;
+            $this->admin->insertBusinessRules($businessRulesData);
+
+            $result = array(
+                'result' => 'success',
+            );
+        }
+
+        echo json_encode($result);
+    }
+
+    private function validateDepartmentInput($departmentName, $email) {
+        $errors = [];
+        if ($this->admin->isExistingDepartment($departmentName)) {
+            $errors[] = "department name";
+        }
+
+        if ($this->admin->isExistingAdmin($email)) {
+            $errors[] = "admin email";
+        }
+
+        return $errors;
     }
 }
 

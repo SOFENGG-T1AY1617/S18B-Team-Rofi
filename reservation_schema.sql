@@ -212,6 +212,23 @@ CREATE TABLE `reservation_system`.`archive_reservations` (
   `attendance` INT NOT NULL DEFAULT 0, 
   PRIMARY KEY (`archive_reservationid`));
 
+CREATE TABLE `reservation_system`.`tag_mod_rooms` (
+  `tag_mod_roomsid` INT NOT NULL AUTO_INCREMENT,
+  `moderatorid` INT NOT NULL,
+  `roomid` INT NOT NULL,
+  PRIMARY KEY (`tag_mod_roomsid`),
+  INDEX `moderatorid_idx` (`moderatorid` ASC),
+  INDEX `roomid_idx` (`roomid` ASC),
+  CONSTRAINT `mod_rooms_moderatorid`
+	FOREIGN KEY (`moderatorid`)
+	REFERENCES `reservation_system`.`moderators` (`moderatorid`)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION,
+  CONSTRAINT `mod_rooms_roomid`
+	FOREIGN KEY (`roomid`)
+	REFERENCES `reservation_system`.`rooms` (`roomid`)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION);
 /*dummy data*/
 INSERT INTO `reservation_system`.`email_extension`(`email_extension`)
 VALUES ("dlsu.edu.ph"),
@@ -325,8 +342,8 @@ VALUES ("Senior High School"),
 
 INSERT INTO `reservation_system`.`users` (`userid`, `last_name`, `first_name`, `middle_name`, `birthdate`,
 	`typeid`, `collegeid`, `email`, `password`)
-VALUES(11428260, "Santos", "Rofi Emmanuelle", "Lectura", "1997-04-19", 2, 2, "rofisantos@dlsu.edu.ph", "password"),
-  (11425520, "Chan", "Kevin Gray", "Dayao", 1998-01-11, 2, 2, "kevin_gray_chan@dlsu.edu.ph", "password");
+VALUES(11428260, "Santos", "Rofi Emmanuelle", "Lectura", "1997-04-19", 2, 2, "rofi_santos@dlsu.edu.ph", "password"),
+  (11425520, "Chan", "Kevin Gray", "Dayao", "1998-01-11", 2, 2, "kevin_gray_chan@dlsu.edu.ph", "password");
        
 INSERT INTO `reservation_system`.`reservations`
 	(`computerid`,  `date`, `userid`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)
@@ -359,3 +376,8 @@ INSERT INTO `reservation_system`.`business_rules`
 	(`departmentid`, `interval`, `limit`, `start_time`, `end_time`, `accessibility`, `reservation_expiry`, `confirmation_expiry`)
 VALUES (1, 15, 4, "6:00:00", "20:00:00", 1, 15, 60),
 	   (2, 20, 5, "8:00:00", "18:00:00", 1, 20, 90);
+
+INSERT INTO `reservation_system`.`tag_mod_rooms` (`moderatorid`,`roomid`)
+VALUES (1,1),
+	   (2,2),
+	   (3,4);
