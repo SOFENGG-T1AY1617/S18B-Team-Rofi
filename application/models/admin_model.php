@@ -86,6 +86,21 @@ class Admin_Model extends CI_Model
         return $query->result();
     }
 
+    function queryAllDepartmentsAndAdmins() {
+        $this->db->select('*');
+        $this->db->from(TABLE_DEPARTMENTS);
+        $this->db->join(TABLE_ADMINISTRATORS, COLUMN_DEPARTMENTID . " = " . COLUMN_ADMIN_DEPARTMENTID);
+        $this->db->where(COLUMN_ADMIN_TYPEID . " != ", "1");
+        $this->db->order_by(COLUMN_NAME);
+        $query = $this->db->get();
+        return $query->result();
+        /*$sql = "SELECT *
+                FROM departments INNER JOIN
+                  administrators ON admin_departmentid = departmentid
+                WHERE admin_typeid != 1";
+        return $this->db->query($sql)->result();*/
+    }
+
     function queryModeratorsWithDepartmentID($id) {
         $this->db->select('*');
         $this->db->from(TABLE_MODERATORS);
@@ -719,6 +734,12 @@ class Admin_Model extends CI_Model
             $this->db->query($sql, array($row->confirmation_expiry));
         }
 
+    }
+
+    function queryLatestDepartmentID() {
+        $this->db->select_max(COLUMN_DEPARTMENTID);
+        $result = $this->db->get(TABLE_DEPARTMENTS)->row_array();
+        return $result[COLUMN_DEPARTMENTID];
     }
 
 }
