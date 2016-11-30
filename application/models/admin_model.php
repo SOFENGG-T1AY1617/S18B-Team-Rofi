@@ -736,4 +736,10 @@ class Admin_Model extends CI_Model
 
     }
 
+    function queryLatestDepartmentID() {
+        $this->db->select_max(COLUMN_DEPARTMENTID);
+        $result = $this->db->get(TABLE_DEPARTMENTS)->row_array();
+        return $result[COLUMN_DEPARTMENTID];
+    }
+
 }

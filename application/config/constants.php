@@ -151,6 +151,8 @@ define("COLUMN_LIMIT", "limit");
 define("COLUMN_ACCESSIBILITY", "accessibility");
 define("COLUMN_RESERVATION_EXPIRY", "reservation_expiry");
 define("COLUMN_CONFIRMATION_EXPIRY", "confirmation_expiry");
+define("COLUMN_START_TIME", "start_time");
+define("COLUMN_END_TIME", "end_time");
 
 
 /* ADMIN PAGES */
@@ -180,3 +182,4 @@ define("SU_DEPARTMENTS", "departments");
 
 /* SUPER USER ACTIONS */
 define("SU_ADD_BUILDINGS", "add_buildings");
+define("SU_ADD_DEPARTMENT", "add_department");
