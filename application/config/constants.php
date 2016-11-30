@@ -156,8 +156,6 @@ define("COLUMN_END_TIME", "end_time");
 
 define("TABLE_TAG_MOD_ROOMS", "tag_mod_rooms");
 define("COLUMN_TAG_MOD_ROOMSID", "tag_mod_roomsid");
-define("COLUMN_MODERATORID", "moderatorid");
-define("COLUMN_ROOMID", "roomid");
 
 /* ADMIN PAGES */
 define("ADMIN_SCHEDULING", "scheduling");
