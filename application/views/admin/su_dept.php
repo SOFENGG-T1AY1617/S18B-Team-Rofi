@@ -137,6 +137,115 @@
 
     }
 
+    function getTableData(tableID) {
+        var table = document.getElementById(tableID);
+        var jObject = [];
+        for (var i = 1; i < table.rows.length; i++)
+        {
+            var row = i - 1;
+            // create array within the array - 2nd dimension
+            //jObject[row] = [];
+
+            var valid = true;
+            var columns = [];
+            // columns within the row
+            //for (var j = 0; j < table.rows[i].cells.length; j++)
+            for (var j = 0; j < table.rows[i].cells.length; j++)
+            {
+                //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
+                columns[j] = table.rows[i].cells[j].childNodes[0].value;
+
+                if (!columns[j].trim()) {
+                    valid = false;
+                    return false;
+                }
+            }
+
+            if (valid) {
+                jObject[row] = columns;
+            }
+        }
+        return jObject;
+    }
+
+    function isEmail(email) {
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email);
+    }
+
+    function submitDepartment(tableID) {
+        var tableData = getTableData(tableID);
+
+        if (tableData == false) {
+            toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
+            return;
+        }
+
+        // Validate email
+        var email = tableData[0][3];
+        if (!isEmail(email)) {
+            toastr.error("The email you input is not valid. Please change it and try again.", "Oops!");
+            return;
+        }
+
+        $.ajax({
+            url: '<?=base_url('admin/' . SU_ADD_DEPARTMENT)?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                departmentName: tableData[0][0],
+                admin_firstName: tableData[0][1],
+                admin_lastName: tableData[0][2],
+                admin_email: tableData[0][3],
+            }
+        })
+            .done(function(result) {
+                console.log("done");
+                console.log(result);
+                if (result['result'] == "success") {
+                    toastr.success("Successfully created " + tableData[0][0] + ".", "Success");
+
+                    var delay = 1000;
+                    setTimeout(function() {
+                        reloadPage();
+                    }, delay);
+
+
+                }
+                else {
+                    var errors = result['errors'];
+
+                    var toast = "Sorry, the ";
+                    for (var i = 0; i < errors.length - 1; i++) {
+                        toast = toast + errors[i] + " and ";
+                    }
+
+                    toast = toast + errors[errors.length - 1] + " you entered already exists!";
+                    toastr.error(toast, "Oops!");
+
+                    //reloadPage();
+                }
+
+            })
+            .fail(function(result) {
+                console.log("fail");
+                //console.log(result);
+            })
+            .always(function() {
+                console.log("complete");
+            });
+
+        //$("#AddNewRoomsModal").hide();
+        $('#AddNewDeptModal').modal('toggle');
+    }
+
+    function reloadPage() {
+        <?php
+        // TODO Might be better if it didn't have to reload page. Clear table data then query through database?
+        echo 'window.location = "'. site_url("admin/". SU_DEPARTMENTS) .'";';
+        ?>
+    }
+
 </script>
 </head>
 <body>
@@ -145,26 +254,30 @@
 include 'a_navbar.php';
 ?>
 
+<ol class="breadcrumb  col-md-offset-2 col-md-10">
+    <li><a href="#">Admin</a></li>
+    <li class="active">Department Management</li>
+</ol>
+
 <div class="panel-group clearfix col-md-offset-2 col-md-8" role="tablist">
     <button type ="button"data-toggle="modal" data-target="#AddNewDeptModal" class="btn btn-success btn-block">+ Add Department</button>
 </div>
 <div id="panels" class = "col-md-offset-2 col-md-8">
-
-
+    <?php foreach($departments as $dept): ?>
         <div class="panel-group" role="tablist">
             <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="collapseListGroupHeading<?echo 'deptid'?>">
+                <div class="panel-heading" role="tab" id="collapseListGroupHeading<?=$dept->departmentid?>">
                     <h4 class="panel-title clearfix ">
-                        <a href="#collapseListGroup<?echo 'deptid'?>" class="col-md-8" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListGroup<?echo 'deptid'?>">
-                            Department Name</a>
+                        <a href="#collapseListGroup<?=$dept->departmentid?>" class="col-md-8" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListGroup<?=$dept->departmentid?>">
+                            <?=$dept->name?></a>
 
                     </h4>
                 </div>
-                <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroup<?echo 'deptid'?>" aria-labelledby="collapseListGroupHeading<?echo 'deptid'?>" aria-expanded="false">
+                <div class="panel-collapse collapse in" role="tabpanel" id="collapseListGroup<?=$dept->departmentid?>" aria-labelledby="collapseListGroupHeading<?=$dept->departmentid?>" aria-expanded="false">
                     <ul class="list-group">
                         <form>
                             <li class="list-group-item">
-                                <table class="table table-hover" id="<?echo 'deptid'?>table">
+                                <table class="table table-hover" id="<?=$dept->departmentid?>table">
                                     <thead>
                                     <tr>
                                         <th>First Name</th>
@@ -173,12 +286,12 @@ include 'a_navbar.php';
                                     </tr>
                                     </thead>
                                     <tbody>
-                                            <tr>
-                                                <td id="fn_1">Admin First Name</td>
-                                                <td id="ln_1">Admin Last Name</td>
-                                                <td id="email_1">admin@insertemail.com</td>
-                                                <td></td>
-                                            </tr>
+                                    <tr>
+                                        <td id="fn_1"><?=$dept->first_name?></td>
+                                        <td id="ln_1"><?=$dept->last_name?></td>
+                                        <td id="email_1"><?=$dept->email?></td>
+                                        <td></td>
+                                    </tr>
                                     </tbody>
 
 
@@ -191,6 +304,7 @@ include 'a_navbar.php';
                 </div>
             </div>
         </div>
+    <?php endforeach;?>
     <!-- end of panel -->
 </div>
 
@@ -225,7 +339,7 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter department name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
-                            <td><input type="text" class="form-control" placeholder="Enter email"></td>
+                            <td><input type="email" class="form-control" placeholder="Enter email"></td>
 
                         </tr>
                         </tbody>
@@ -234,7 +348,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddDept('add_table')">Cancel</button>
-                    <button type="button" class="btn btn-success" onclick="submitDept('add_table')">Confirm</button>
+                    <button type="button" class="btn btn-success" onclick="submitDepartment('add_table')">Confirm</button>
                 </div>
             </form>
         </div>

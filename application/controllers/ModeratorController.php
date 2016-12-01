@@ -103,8 +103,6 @@ class ModeratorController extends CI_Controller
     public function getComputers()
     {
         $getData = array(
-            'buildingid' => $this->input->get('buildingid'),
-
             'roomid' => $this->input->get('roomid'),
             'date' => $this->input->get('currdate'),
         );

@@ -151,6 +151,14 @@ define("COLUMN_LIMIT", "limit");
 define("COLUMN_ACCESSIBILITY", "accessibility");
 define("COLUMN_RESERVATION_EXPIRY", "reservation_expiry");
 define("COLUMN_CONFIRMATION_EXPIRY", "confirmation_expiry");
+define("COLUMN_START_TIME", "start_time");
+define("COLUMN_END_TIME", "end_time");
+
+
+define("TABLE_ARCHIVE_RESERVATIONS", "archive_reservations");
+
+define("TABLE_TAG_MOD_ROOMS", "tag_mod_rooms");
+define("COLUMN_TAG_MOD_ROOMSID", "tag_mod_roomsid");
 
 
 /* ADMIN PAGES */
@@ -161,6 +169,7 @@ define("ADMIN_ADMINISTRATOR_MANAGEMENT", "admin_management");
 define("ADMIN_BUSINESS_RULES", "business_rules");
 define("ADMIN_ACCOUNT_MANAGEMENT", "acc_management");
 
+define("ADMIN_REPORTS", "reports");
 /* ADMIN ACTIONS */
 define("ADMIN_SIGN_IN", "sign_in");
 define("ADMIN_SIGN_OUT", "sign_out");
@@ -180,6 +189,7 @@ define("SU_DEPARTMENTS", "departments");
 
 /* SUPER USER ACTIONS */
 define("SU_ADD_BUILDINGS", "add_buildings");
+define("SU_ADD_DEPARTMENT", "add_department");
 
 /* MODERATOR ACTIONS */
 define("MODERATOR_SIGN_IN", "sign_in");
