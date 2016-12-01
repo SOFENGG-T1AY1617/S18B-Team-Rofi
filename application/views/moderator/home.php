@@ -34,136 +34,20 @@
             selectSlot($(this));
         });
 
-        $(document).on( "click", ".slotCell.selected, .slotCell.selectedY, .slotCell.selectedX",function() {
+        $(document).on( "click", ".slotCell.selected",function() {
             deselectSlot($(this));
-        });
-
-        $(document).on( "click", ".horizSelect", function () {
-            toggleSlotsHorizontal($(this));
-        });
-
-        $(document).on( "click", ".vertSelect", function () {
-            toggleSlotsVertical($(this));
-        });
-
-        $(document).on( "mouseover", ".horizSelect", function () {
-            highlightHorizontal($(this));
-        });
-
-        $(document).on( "mouseover", ".vertSelect", function () {
-            highlightVertical($(this));
-        });
-
-        $(document).on( "mouseleave", ".horizSelect", function () {
-            unhighlightHorizontal($(this));
-        });
-
-        $(document).on( "mouseleave", ".vertSelect", function () {
-            unhighlightVertical($(this));
-        });
-
-        $("input[name=optradio]:radio").change(function () {
-
-            var date_selected = $("input[name=optradio]:checked").val();
-            console.log(date_selected);
-
-            if (date_selected == "today") {
-                dateSelected = "<?=date("Y-m-d")?>";
-                $("#text-date").text("<?=date("F d, Y")?>");
-            }
-            else {
-                dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
-                $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
-            }
-
-            updateTimesHeader(date_selected == "today");
-
-            if($("#form_building").val()!=null){
-                selectRoom($("#form_room").val());
-            }
-
-        });
-
-        $("#enable-btn").click(function () {
-            enableSelectedSlots();
-        });
-
-        $("#disable-btn").click(function () {
-            disableSelectedSlots();
-        });
-
-        $("#toggle-btn").click(function () {
-            toggleSelectedSlots();
-        });
-
-        $("#enableAll-btn").click(function () {
-            enableAllSlotsInRoom();
-        });
-
-        $("#disableAll-btn").click(function () {
-            disableAllSlotsInRoom();
         });
 
     });
 
-    function highlightHorizontal (cell) {
-        var cellID = cell.attr("id");
-
-        var splittedCellID = cellID.split('_');
-
-        var PCID = splittedCellID[1];
-
-        var jQuerySelector = "[id^='" + PCID + "_']";
-
-        $(jQuerySelector).addClass('slot-hover');
-    }
-
-    function highlightVertical (cell) {
-        var cellID = cell.attr("id");
-
-        var splittedCellID = cellID.split('_');
-
-        var time1 = splittedCellID[1];
-        var time2 = splittedCellID[2];
-
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
-
-        $(jQuerySelector).addClass('slot-hover');
-    }
-
-    function unhighlightHorizontal (cell) {
-        var cellID = cell.attr("id");
-
-        var splittedCellID = cellID.split('_');
-
-        var PCID = splittedCellID[1];
-
-        var jQuerySelector = "[id^='" + PCID + "_']";
-
-        $(jQuerySelector).removeClass('slot-hover');
-    }
-
-    function unhighlightVertical (cell) {
-        var cellID = cell.attr("id");
-
-        var splittedCellID = cellID.split('_');
-
-        var time1 = splittedCellID[1];
-        var time2 = splittedCellID[2];
-
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
-
-        $(jQuerySelector).removeClass('slot-hover');
-    }
-
-    function enableSlot (slot) {
+    function slotCheckedIn (slot) {
         if (slot.hasClass('disabled'))
             slot.removeClass('disabled');
 
         slot.addClass('enabled');
     }
 
-    function disableSlot (slot) {
+    function slotCheckedOut (slot) {
         if (slot.hasClass('enabled'))
             slot.removeClass('enabled');
 
@@ -171,85 +55,11 @@
         slotsDisabled.push(slot.attr('id'));
     }
 
-    function enableSelectedSlots () {
-        console.log ("enable");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            if (($.inArray(slotsPicked[i], slotsDisabled)) > -1) {
-                var existIndex = slotsDisabled.indexOf(slotsPicked[i]);
-                slotsDisabled.splice(existIndex, 1);
-
-                enableSlot($(jQuerySelector));
-            }
-        }
-    }
-
-    function disableSelectedSlots () {
-        console.log ("disable");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            disableSlot($(jQuerySelector));
-        }
-    }
-
-    function toggleSelectedSlots () {
-        console.log ("toggle");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            if ($(jQuerySelector).hasClass('disabled')) {
-                if (($.inArray(slotsPicked[i], slotsDisabled)) > -1) {
-                    var existIndex = slotsDisabled.indexOf(slotsPicked[i]);
-                    slotsDisabled.splice(existIndex, 1);
-
-                    enableSlot($(jQuerySelector));
-                }
-            } else if ($(jQuerySelector).hasClass('enabled')) {
-                disableSlot($(jQuerySelector));
-            }
-        }
-    }
-
-    function enableAllSlotsInRoom () {
-        console.log ("enable-all");
-
-    }
-
-    function disableAllSlotsInRoom () {
-        console.log ("disable-all");
-
-    }
-
     function selectSlot (slot) {
         if (($.inArray(slot.attr('id'), slotsPicked)) == -1)
             slotsPicked.push(slot.attr("id"));
 
         slot.addClass ('selected');
-    }
-
-    function selectSlotX (slot) {
-        if (($.inArray(slot.attr('id'), slotsPicked)) == -1)
-            slotsPicked.push(slot.attr("id"));
-
-        slot.addClass ('selectedX');
-
-        if (slot.hasClass('selected'))
-            slot.removeClass('selected');
-    }
-
-    function selectSlotY (slot) {
-        if (($.inArray(slot.attr('id'), slotsPicked)) == -1)
-            slotsPicked.push(slot.attr("id"));
-
-        slot.addClass ('selectedY');
-
-        if (slot.hasClass('selected'))
-            slot.removeClass('selected');
     }
 
     function deselectSlot (slot) {
@@ -279,78 +89,6 @@
 
         if ($(removeUseSelectorVert).hasClass('used'))
             $(removeUseSelectorVert).removeClass('used');
-    }
-
-    function deselectSlotX (slot) {
-        var slotID = slot.attr("id");
-
-        if (($.inArray(slotID, slotsPicked)) > -1) {
-
-            if (!slot.hasClass('selectedY')) {
-                var existIndex = slotsPicked.indexOf(slotID);
-                slotsPicked.splice(existIndex, 1);
-            }
-
-            if (slot.hasClass('selectedX'))
-                slot.removeClass('selectedX');
-        }
-    }
-
-    function deselectSlotY (slot) {
-        var slotID = slot.attr("id");
-
-        if (($.inArray(slotID, slotsPicked)) > -1) {
-            if (!slot.hasClass('selectedX')) {
-                var existIndex = slotsPicked.indexOf(slotID);
-                slotsPicked.splice(existIndex, 1);
-            }
-
-            if (slot.hasClass('selectedY'))
-                slot.removeClass('selectedY');
-        }
-    }
-
-    function toggleSlotsVertical (cell) {
-        var cellID = cell.attr("id");
-
-        var splittedCellID = cellID.split('_');
-
-        var time1 = splittedCellID[1];
-        var time2 = splittedCellID[2];
-
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
-
-        $(jQuerySelector).each(function () {
-            selectSlotY($(this));
-        });
-
-        if(cell.hasClass('used')) {
-            $(jQuerySelector).each(function () {
-                deselectSlotY($(this));
-            });
-            cell.removeClass('used');
-        } else
-            cell.addClass('used');
-    }
-
-    function toggleSlotsHorizontal (cell) {
-        var cellID = (cell.attr("id")).split('_');
-
-        var PCID = cellID[1];
-
-        var jQuerySelector = "[id^='" + PCID + "_']";
-
-        $(jQuerySelector).each(function () {
-            selectSlotX($(this));
-        });
-
-        if($(cell).hasClass('used')) {
-            $(jQuerySelector).each(function () {
-                deselectSlotX($(this));
-            });
-            $(cell).removeClass('used');
-        } else
-            $(cell).addClass('used');
     }
 
     function updateTimesHeader(isToday) {
@@ -725,26 +463,8 @@
         <div class = "panel-body">
 
             <div class = "row">
-                <div class = "col-md-3 col-md-offset-1">
-                    <div class = "panel panel-default">
-                        <div class = "panel-body">
-                            <div class="radio">
-                                <div class="radio" id="radio-date" name="form-date">
-                                    <label><input type="radio" id="radio-today" name="optradio" value="today" checked>
-                                        Today
-                                        <div class = "date-font"> (<?=date("F d, Y")?>) </div>
-                                    </label>
-                                    <label><input type="radio" id="radio-tomorrow" name="optradio" value="tomorrow">
-                                        Tomorrow
-                                        <div class = "date-font"> (<?=date("F d, Y", strtotime("tomorrow"))?>) </div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class = "col-md-5">
+                <div class = "col-md-4 col-md-offset-1">
                     <div class = "panel panel-default">
                         <div class = "panel-body">
                             <div class = "form-group col-md-7">
@@ -766,11 +486,20 @@
                     </div>
                 </div>
 
+                <div class = "col-md-6">
+                    <div class = "panel panel-default">
+                        <div class = "panel-body">
+                            <div id = "slots_selected">
+                                Slots Currently Selected:
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
             <div class = "row">
-                <div class = "col-md-8 col-md-offset-1">
+                <div class = "col-md-10 col-md-offset-1">
                     <div id = "slots" class = "panel panel-default">
                         <div class = "panel-body nopadding">
                             <table id = "slotTable" class = "table table-bordered">
@@ -778,18 +507,6 @@
                             </table>
                         </div>
                     </div>
-                </div>
-
-                <div class = "col-md-2">
-
-                    <div id = "slots_selected" class = "panel panel-default">
-
-                        <div  class = "panel-body">
-                            <p id="my_number_of_slots"></p>
-                            <div id = "my_slots"></div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 

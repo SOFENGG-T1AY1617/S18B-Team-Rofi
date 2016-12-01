@@ -159,9 +159,9 @@ class ModeratorController extends CI_Controller
     }
 
     public function initModerator() {
-        $data['buildings'] = $this->moderator->queryAllBuildings();
+        $data['buildings'] = $this->moderator->queryBuildingsByDepartmentID($_SESSION['mod_departmentid']);
 
         $this->load->view('moderator/m_header');
-        $this->load->view('moderator/home');
+        $this->load->view('moderator/home', $data);
     }
 }
