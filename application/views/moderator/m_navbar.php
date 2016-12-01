@@ -14,7 +14,9 @@
                 <!-- ADD CONDITION FOR ADMIN VIEW HERE -->
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">DLSU B)</a>
+            <a class="navbar-brand" href="#">
+                <img class="img-circle" src="http://tinypic.com/evb0ut.jpg" width="40" height="40">
+            </a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
