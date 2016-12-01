@@ -718,6 +718,12 @@
 
 </script>
 
+
+
+<?php
+include 'm_navbar.php';
+?>
+
 <div class = "row col-md-10 col-md-offset-1">
 
     <div class = "panel panel-default">
