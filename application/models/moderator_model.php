@@ -140,7 +140,7 @@ class moderator_model extends CI_Model
     function queryComputersAtRoomID($id) {
         $sql = "SELECT * 
              FROM computers NATURAL JOIN 
-              (SELECT roomid
+              (SELECT roomid, name
                FROM rooms
                WHERE roomid = ?) t1";
         return $this->db->query($sql, array($id))->result();
@@ -326,16 +326,6 @@ class moderator_model extends CI_Model
         return $this->db->insert_id();
     }
 
-    function isExistingRoom($roomName) {
-        $this->db->select('*');
-        $this->db->from(TABLE_ROOMS);
-        $this->db->where(COLUMN_NAME, $roomName);
-        $query = $this->db->get();
-        $result = $query->result();
-
-        return count($result)>=1;
-    }
-
     function isExistingModerator($email) {
         $this->db->select('*');
         $this->db->from(TABLE_MODERATORS);
@@ -344,15 +334,6 @@ class moderator_model extends CI_Model
         $result = $query->result();
 
         return count($result)>=1;
-    }
-
-    function queryRoomAtID($id) {
-        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
-                FROM (SELECT * 
-                      FROM rooms
-                      WHERE roomid = ?) r NATURAL JOIN computers
-                GROUP BY roomid";
-        return $this->db->query($sql, array($id))->row_array();
     }
 
     function getLastComputerIDAtRoomID($id) {
@@ -398,6 +379,16 @@ class moderator_model extends CI_Model
                       FROM Moderators
                       WHERE moderatorid = ?";
         return $this->db->query($sql, array($id))->row_array();
+    }
+
+    function queryRoomIDwithModeratorID ($id) {
+        $sql = "SELECT roomid
+                FROM tag_mod_rooms
+                WHERE moderatorid = ?";
+
+        $roomid = $this->db->query($sql, array($id))->result();
+
+        return $roomid[0]->roomid;
     }
 
     function archivePastReservations($date, $time) {

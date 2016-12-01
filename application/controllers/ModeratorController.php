@@ -38,6 +38,10 @@ class ModeratorController extends CI_Controller
                     $this->signIn();
                     break;
 
+                case MODERATOR_GET_COMPUTERS:
+                    $this->getComputers();
+                    break;
+
                 default:
                     $this->initModerator();
                     break;
@@ -90,16 +94,6 @@ class ModeratorController extends CI_Controller
         echo json_encode($data);
     }
 
-    public function getRoomsByBuilding() {
-        $getData = array(
-            'buildingid' => $this->input->get('buildingid'),
-        );
-
-        $data = $this->moderator->queryRoomsByBuildingID($getData['buildingid']);
-
-        echo json_encode($data);
-    }
-
     public function getComputers()
     {
         $getData = array(
@@ -107,24 +101,14 @@ class ModeratorController extends CI_Controller
             'date' => $this->input->get('currdate'),
         );
 
-        //$date = date("Y-m-d", strtotime($getData['date']));
         $date = $getData['date'];
 
-        if ($getData['roomid'] == 0)
-            $data = array(
-                'computers' => $this->admin->queryAllComputersAtBuildingIDByDepartmentID($getData['buildingid'], $_SESSION['admin_departmentid']),
-                'reservations' => $this->admin->queryReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
-                'date' => $date,
-            );
-        else
-            $data = array(
-                'computers' => $this->admin->queryComputersAtBuildingIDAndRoomID($getData['buildingid'], $getData['roomid']),
-                'reservations' => $this->admin->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
-                'date' => $date,
-            );
-        /*$data = array(
-          'result' => $this->student->queryAllRoomsAtBuildingID($getData['buildingid']),
-        );*/
+        $data = array(
+            'computers' => $this->moderator->queryComputersAtRoomID($getData['roomid']),
+            'reservations' => $this->moderator->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
+            'date' => $date,
+        );
+        
         echo json_encode($data);
     }
 
@@ -157,7 +141,7 @@ class ModeratorController extends CI_Controller
     }
 
     public function initModerator() {
-        $data['buildings'] = $this->moderator->queryBuildingsByDepartmentID($_SESSION['mod_departmentid']);
+        $data['roomid'] = $this->moderator->queryRoomIDwithModeratorID($_SESSION['moderatorid']);
 
         $this->load->view('moderator/m_header');
         $this->load->view('moderator/home', $data);

@@ -193,4 +193,5 @@ define("SU_ADD_DEPARTMENT", "add_department");
 
 /* MODERATOR ACTIONS */
 define("MODERATOR_SIGN_IN", "sign_in");
+define("MODERATOR_GET_COMPUTERS", "get_computers");
 

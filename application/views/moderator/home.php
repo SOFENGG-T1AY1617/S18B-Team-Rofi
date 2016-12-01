@@ -38,6 +38,7 @@
             deselectSlot($(this));
         });
 
+        selectRoom (<?php echo $roomid;?>);
     });
 
     function slotCheckedIn (slot) {
@@ -141,74 +142,6 @@
 
     }
 
-    function selectBuilding(buildingid) {
-
-
-        // Abort any pending request
-        if (request) {
-            request.abort();
-        }
-        // setup some local variables
-        var $form = $(this);
-
-        // Let's select and cache all the fields
-        var $inputs = $form.find("input, select, button, textarea");
-
-        // Serialize the data in the form
-        var serializedData = $form.serialize();
-
-        // Let's disable the inputs for the duration of the Ajax request.
-        // Note: we disable elements AFTER the form data has been serialized.
-        // Disabled form elements will not be serialized.
-        $inputs.prop("disabled", true);
-
-        if (buildingid != "") {
-            console.log(buildingid);
-
-            $.ajax({
-                url: '<?php echo base_url('moderator/getRooms') ?>',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    buildingid: buildingid
-                }
-            })
-                .done(function(result) {
-                    console.log(result);
-                    console.log("done");
-
-                    var out=[];
-
-                    if (result.length != 0) {
-                        //out[0] = '<option value="0" selected >All Rooms</option>';
-
-                        for (i = 1; i <= result.length; i++) {
-                            out[i] = '<option value="' + result[i - 1].roomid + '" >' + result[i - 1].name + '</option>';
-                        }
-                        ;
-
-                        $("#form_room").empty().append(out);
-
-                        selectRoom(result[0].roomid);
-                    }
-
-                    numOfRooms = result.length;
-
-                })
-                .fail(function() {
-                    console.log("fail");
-                })
-                .always(function() {
-                    console.log("complete");
-                });
-
-            /*$.post('application/controllers/ajax/foo', function(data) {
-             console.log(data)
-             }, 'json');*/
-
-        }
-    }
-
     function selectRoom(roomid) {
 
         var buildingid = $("#form_building").val();
@@ -294,13 +227,12 @@
                     // get computers
 
                     return $.ajax({
-                        url: '<?php echo base_url('getComputers') ?>',
+                        url: '<?php echo base_url('moderator/' . MODERATOR_GET_COMPUTERS) ?>',
                         type: 'GET',
                         dataType: 'json',
                         data: {
-                            buildingid: buildingid,
                             roomid:roomid,
-                            currdate: dateSelected,
+                            currdate: dateToday
                         }
                     })
                 })
@@ -470,29 +402,7 @@ include 'm_navbar.php';
 
             <div class = "row">
 
-                <div class = "col-md-4 col-md-offset-1">
-                    <div class = "panel panel-default">
-                        <div class = "panel-body">
-                            <div class = "form-group col-md-7">
-                                Building:
-                                <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
-                                    <option value="" selected disabled>Choose a building...</option>
-                                    <?php foreach($buildings as $row):?>
-                                        <option value="<?=$row->buildingid?>"><?=$row->name?></option>
-                                    <?php endforeach;?>
-                                </select>
-                            </div>
-                            <div class = "form-group col-md-5">
-                                Room:
-                                <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)" disabled=true>
-                                    <option value="" selected></option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class = "col-md-6">
+                <div class = "col-md-10 col-md-offset-1">
                     <div class = "panel panel-default">
                         <div class = "panel-body">
                             <div id = "slots_selected">

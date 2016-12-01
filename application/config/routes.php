@@ -84,7 +84,6 @@ $route['admin/(:any)'] = 'AdminController/loadAction/$1';
 
 /* MODERATOR ROUTE */
 $route['moderator'] = 'ModeratorController';
-$route['moderator/getRooms'] = 'ModeratorController/getRoomsByBuilding';
 $route['moderator/getBusinessRules'] = 'ModeratorController/getBusinessRules';
 
 $route['moderator/(:any)'] = 'ModeratorController/loadAction/$1';
