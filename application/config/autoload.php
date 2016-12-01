@@ -135,4 +135,5 @@ $autoload['language'] = array();
 $autoload['model'] = array(
     'student_model' => 'student',
     'admin_model' => 'admin',
-    'moderator_model' => 'moderator');
+    'moderator_model' => 'moderator',
+    'analytics_model' => 'analytics');

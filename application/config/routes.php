@@ -102,6 +102,11 @@ $route['admin/mod_management'] = 'AdminController/modView';
 $route['admin/admin_management'] = 'AdminController/adminView';
 $route['admin/business_rules'] = 'AdminController/ruleView';*/
 
+
+/* ADMIN ROUTE */
+$route['analytics'] = 'AnalyticsController';
+$route['analytics/test'] = 'AnalyticsController/testFunction';
+
 /*Superuser - sorry im adding new routes*/
 //$route['superuser'] = 'SuperuserController';
 //$route['superuser/bldg'] = 'SuperuserController';
