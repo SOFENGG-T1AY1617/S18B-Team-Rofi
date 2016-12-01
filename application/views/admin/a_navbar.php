@@ -51,8 +51,8 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Modify Account</a></li>
-                        <li role="separator" class="divider"></li>
+                        <!--<li><a href="#">Modify Account</a></li>
+                        <li role="separator" class="divider"></li>-->
                         <li><a href="<?=site_url('admin/' . ADMIN_SIGN_OUT)?>">Sign Out</a></li>
                     </ul>
                 </li>
