@@ -87,6 +87,8 @@ $route['moderator'] = 'ModeratorController';
 $route['moderator/getRooms'] = 'ModeratorController/getRoomsByBuilding';
 $route['moderator/getBusinessRules'] = 'ModeratorController/getBusinessRules';
 
+$route['moderator/(:any)'] = 'ModeratorController/loadAction/$1';
+
 /*
  * NOTE
  * You no longer need to add routes for new views.

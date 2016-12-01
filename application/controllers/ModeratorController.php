@@ -9,9 +9,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class ModeratorController extends CI_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->library('session');
+    }
+
     public function index()
     {
         $this->home();
+    }
+
+    public function home()
+    {
+        date_default_timezone_set('Asia/Hong_Kong');
+
+        $this->loadAction("");
+    }
+
+    public function loadAction($action) {
+
+        if(!isset($_SESSION['email']) && $action != MODERATOR_SIGN_IN) {
+            $this->signInView("");
+        } else {
+            switch ($action) {
+
+                case MODERATOR_SIGN_IN:
+                    $this->signIn();
+                    break;
+
+                default:
+                    $this->initModerator();
+                    break;
+
+            }
+        }
+
     }
 
     public function getBusinessRules() { // roomid
@@ -97,14 +130,38 @@ class ModeratorController extends CI_Controller
         echo json_encode($data);
     }
 
-    public function home()
-    {
+    public function signIn() {
+        $e = $_POST["modEmail"];
+        $p = $_POST["modPassword"];
+        // = $this->input->post('#adminPassword');
 
-        //$maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
+
+
+        if ($this->moderator->isValidUser($e,$p)) {
+            $moderator = $this->moderator->queryModeratorAccount($e);
+            $this->session->set_userdata($moderator);
+            $this->index();
+        }
+        else {
+            $errorMessage = "Invalid email or password.";
+            $this->signInView($errorMessage);
+        }
+    }
+
+    public function signInView($errorMessage){
+        //$data['login'] = $this->admin->queryAllModerators();
+
+        $data['errorMessage'] = $errorMessage;
+
+        $this->load->view('moderator/m_header'); // include bootstrap 3 header -> included in home
+        $this->load->view('moderator/signIn', $data); // $this->load->view('admin', $data); set to this if data is set
+        //$this->load->view('template/footer'); // include bootstrap 3 footer
+    }
+
+    public function initModerator() {
         $data['buildings'] = $this->moderator->queryAllBuildings();
 
-        $this->load->view('moderator/m_header'); // include bootstrap 3 header
-        $this->load->view('moderator/home', $data); // $this->load->view('home', $data); set to this if data is set
-        //$this->load->view('m_footer'); // include bootstrap 3 footer
+        $this->load->view('moderator/m_header');
+        $this->load->view('moderator/home');
     }
 }
