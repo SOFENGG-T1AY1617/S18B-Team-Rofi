@@ -23,7 +23,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="<?=site_url('admin/' . ADMIN_SIGN_OUT)?>">Sign Out</a></li>
+                        <li><a href="<?=site_url('moderator/' . MODERATOR_SIGN_OUT)?>">Sign Out</a></li>
                     
             </ul>
 

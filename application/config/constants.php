@@ -183,4 +183,5 @@ define("SU_ADD_BUILDINGS", "add_buildings");
 
 /* MODERATOR ACTIONS */
 define("MODERATOR_SIGN_IN", "sign_in");
+define("MODERATOR_SIGN_OUT", "sign_out");
 
