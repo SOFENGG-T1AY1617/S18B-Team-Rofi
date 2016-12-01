@@ -180,3 +180,7 @@ define("SU_DEPARTMENTS", "departments");
 
 /* SUPER USER ACTIONS */
 define("SU_ADD_BUILDINGS", "add_buildings");
+
+/* MODERATOR ACTIONS */
+define("MODERATOR_SIGN_IN", "sign_in");
+
