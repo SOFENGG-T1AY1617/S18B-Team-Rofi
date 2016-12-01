@@ -37,11 +37,12 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_SIGN_IN:
                     $this->signIn();
                     break;
-
                 case MODERATOR_GET_COMPUTERS:
                     $this->getComputers();
                     break;
-
+                case MODERATOR_SIGN_OUT:
+                    $this->signOut();
+                    break;
                 default:
                     $this->initModerator();
                     break;
@@ -128,6 +129,12 @@ class ModeratorController extends CI_Controller
             $errorMessage = "Invalid email or password.";
             $this->signInView($errorMessage);
         }
+    }
+
+    public function signOut() {
+        $this->session->sess_destroy();
+        $this->session->unset_userdata('email');
+        $this->index();
     }
 
     public function signInView($errorMessage){
