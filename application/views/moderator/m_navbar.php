@@ -15,7 +15,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">
-                <img class="img-circle" src="http://tinypic.com/evb0ut.jpg" width="40" height="40">
+                <img class="img-rounded" src="https://animo.sys.dlsu.edu.ph/ps/images/OPSE_logo.gif" width="300" height="40" >
             </a>
         </div>
 
