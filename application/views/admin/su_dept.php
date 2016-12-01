@@ -1,10 +1,18 @@
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="<?=base_url()?>assets/js/jquery-3.1.1.min.js"></script>
+<!--<script src="--><?//=base_url()?><!--assets/js/jquery-3.1.1.min.js"></script>-->
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 
 <script xmlns="http://www.w3.org/1999/html">
 
+    $(document).ready(function() {
+        $(document).ajaxStart(function () {
+            $(document.body).css({ 'cursor': 'wait' })
+        });
+        $(document).ajaxComplete(function () {
+            $(document.body).css({ 'cursor': 'default' })
+        });
+    });
 
 
     function addDepartment(table){
@@ -174,6 +182,8 @@
     }
 
     function submitDepartment(tableID) {
+        $('#confirm-add').attr('disabled', true);
+        $("body").css("cursor", "progress");
         var tableData = getTableData(tableID);
 
         if (tableData == false) {
@@ -185,6 +195,7 @@
         var email = tableData[0][3];
         if (!isEmail(email)) {
             toastr.error("The email you input is not valid. Please change it and try again.", "Oops!");
+            $("#confirm-add").attr('disabled', false);
             return;
         }
 
@@ -226,17 +237,19 @@
                     //reloadPage();
                 }
 
+                $('#AddNewDeptModal').modal('toggle');
             })
             .fail(function(result) {
                 console.log("fail");
+                toastr.error("Sorry, the email could not be sent.", "Oops!");
                 //console.log(result);
             })
             .always(function() {
                 console.log("complete");
+                $("#confirm-add").attr('disabled', false);
+                $("body").css("cursor", "default");
             });
 
-        //$("#AddNewRoomsModal").hide();
-        $('#AddNewDeptModal').modal('toggle');
     }
 
     function reloadPage() {
@@ -348,7 +361,7 @@ include 'a_navbar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cancelAddDept('add_table')">Cancel</button>
-                    <button type="button" class="btn btn-success" onclick="submitDepartment('add_table')">Confirm</button>
+                    <button type="button" id="confirm-add" class="btn btn-success" onclick="submitDepartment('add_table')">Confirm</button>
                 </div>
             </form>
         </div>

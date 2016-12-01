@@ -678,7 +678,7 @@ class AdminController extends CI_Controller
             COLUMN_LAST_NAME => $this->input->get("admin_lastName"),
             COLUMN_EMAIL => $this->input->get("admin_email"),
             COLUMN_ADMIN_TYPEID => 2,
-            COLUMN_PASSWORD => "password",
+            COLUMN_PASSWORD => $this->getRandomPassword(),
         );
 
         $businessRulesData = array(
@@ -700,7 +700,7 @@ class AdminController extends CI_Controller
                 'errors' => $errors,
             );
         }
-        else {
+        else if ($this->sendAccountEmail($adminData[COLUMN_FIRST_NAME], $adminData[COLUMN_EMAIL], $adminData[COLUMN_PASSWORD])){
 
             $this->admin->insertDepartment($departmentData);
 
@@ -720,6 +720,17 @@ class AdminController extends CI_Controller
         echo json_encode($result);
     }
 
+    private function getRandomPassword() {
+        $length = 6;
+
+        $this->load->helper('string');
+
+        $password = substr(random_string('sha1'), 0, $length);
+
+        return $password;
+
+    }
+
     private function validateDepartmentInput($departmentName, $email) {
         $errors = [];
         if ($this->admin->isExistingDepartment($departmentName)) {
@@ -731,6 +742,43 @@ class AdminController extends CI_Controller
         }
 
         return $errors;
+    }
+
+    public function sendAccountEmail($name, $email, $password) {
+        $config = array(
+            'protocol'  => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'dlsu.pc.reservation@gmail.com', // Email
+            'smtp_pass' => 'DLSU1234!',
+            'mailtype' => 'html',
+            'charset' => 'iso-8859-1',
+            'wordwrap' => TRUE,
+        );
+
+        $message = "Dear " . $name . ",<br/><br/>
+            Your account has been created with the following password: <br/><strong>". $password .
+            "</strong><br/><br/>Thanks,
+            <br/>DLSU Admin";
+
+
+        $this->load->library('email', $config);
+        $this->email->set_newline("\r\n");
+        $config['mailtype'] = 'html';
+        $this->email->from('dlsu.pc.reservation@gmail.com', "DLSU PC Reservation");
+        $this->email->to($email);
+        $this->email->subject("Your Account Password");
+        $this->email->message($message);
+        //$this->email->send();
+        if($this->email->send())
+        {
+            return true;
+        }
+        else
+        {
+            show_error($this->email->print_debugger());
+            return false;
+        }
     }
 }
 
