@@ -20,7 +20,6 @@
     var request;
     var dateToday = "<?=date("Y-m-d")?>";
     var dateSelected = dateToday;
-    var interval = 0;
     var currentDeptID = 0;
 
     var times_today;
@@ -72,24 +71,7 @@
 
             if (slot.hasClass('selected'))
                 slot.removeClass('selected');
-
-            if (slot.hasClass('selectedY'))
-                slot.removeClass('selectedY');
-
-            if (slot.hasClass('selectedX'))
-                slot.removeClass('selectedX');
         }
-
-        var splittedID = slotID.split("_");
-
-        var removeUseSelectorHoriz = "#PC_" + splittedID[0];
-        var removeUseSelectorVert = "[id = 'TIME" + "_" + splittedID[2] + "_" + splittedID[3] + "']";
-
-        if ($(removeUseSelectorHoriz).hasClass('used'))
-            $(removeUseSelectorHoriz).removeClass('used');
-
-        if ($(removeUseSelectorVert).hasClass('used'))
-            $(removeUseSelectorVert).removeClass('used');
     }
 
     function updateTimesHeader(isToday) {
@@ -114,8 +96,7 @@
 
             th.appendChild(document.createTextNode(currentTimeArray[i]));
 
-            th.setAttribute("id", "TIME_" + currentTimeArrayForIDs[n++] + "_" + currentTimeArrayForIDs[n] );
-            th.className = 'vertSelect';
+            th.setAttribute("id", "TIME_" + currentTimeArrayForIDs[n++] + "_" + currentTimeArrayForIDs[n]);
             timesRow.appendChild(th);
         }
 
@@ -175,7 +156,7 @@
             console.log(buildingid+"-"+roomid);
 
             $.ajax({
-                url: '<?php echo base_url('moderator/getBusinessRules') ?>',
+                url: '<?php echo base_url('moderator/' . MODERATOR_BUSINESS_RULES) ?>',
                 type: 'GET',
                 dataType: 'json',
                 data: {
@@ -328,7 +309,6 @@
                         newPCNoCell.appendChild(document.createTextNode("PC No. " + computers[k].computerno));
 
                         newPCNoCell.setAttribute("id", "PC_" + computers[k].computerid);
-                        newPCNoCell.className += 'horizSelect';
 
                         newTableRow.appendChild(newPCNoCell);
 

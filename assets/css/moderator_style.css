@@ -204,17 +204,3 @@ div.legend.taken{
 .row .clsSlotsBtn-container {
     margin-top: 10px;
 }
-
-.horizSelect:hover, .vertSelect:hover {
-    background-color: #eeeeee;
-    cursor: pointer;
-}
-
-.used {
-    background-color: #dddddd;
-    cursor: pointer;
-}
-
-.used:hover {
-    background-color: #cccccc;
-}
