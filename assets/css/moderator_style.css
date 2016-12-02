@@ -1,0 +1,220 @@
+:root{
+    --disabled: #ED1C24;
+    --enabled: #61D315;
+    --taken: lightgrey;
+}
+
+body {
+    padding-top: 50px;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+
+/* FOR STEPS */
+
+.nav li:hover a { /* OVERRIDE BOOTSTRAP HOVER EFFECT */
+    border: none;
+    background: none;
+    color: black;
+}
+
+.nav li.active {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.nav li.disabled{
+    opacity: 0.4;
+    color: black;
+}
+
+.nav li.disabled a{
+    color: black;
+}
+
+/* END FOR STEPS */
+
+div.date-font {
+    font-size: 11px;
+}
+
+#slots {
+    overflow-x: scroll;
+    height: 400px;
+    max-height: 400px;
+}
+
+#slots_selected {
+    height: auto;
+}
+
+#my_number_of_slots{
+    font-size: 90%;
+}
+
+#my_slots{
+    overflow-y: scroll;
+    height: 150px;
+}
+
+#slotTable{
+    table-layout: fixed;
+    width: auto;
+}
+
+th {
+    font-size: 12px;
+    white-space: nowrap;
+    background-color: white;
+}
+th:first-child {
+    left: 5px
+}
+
+.slotCell {
+    width: 100%;
+    height: 35px;
+}
+
+
+.selectedSlot{
+    font-size: 75%;
+    background-color: mintcream;
+    position: relative;
+    padding: 2px;
+    margin: 2px;
+    transition: opacity 500ms;
+}
+
+.unSelectSlot {
+    background-color: whitesmoke;
+    color: firebrick;
+
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 100%;
+    width: 15%;
+    text-align: center;
+    vertical-align: middle;
+    transition: all 0.3s ease 0s;
+    font-size: 200%
+}
+
+.unSelectSlot:hover{
+    background-color: firebrick;
+    color: whitesmoke;
+
+}
+
+.slotCell.enabled {
+    background-color: var(--enabled);
+}
+
+.slotCell.disabled {
+    background-color: var(--disabled);
+}
+
+.slotCell.enabled.selectedX,
+.slotCell.enabled.selectedY,
+.slotCell.enabled.selected{
+    -moz-box-shadow:    inset 0 0 0 2px #000000;
+    -webkit-box-shadow: inset 0 0 0 2px #000000;
+    box-shadow:         inset 0 0 0 2px #000000;
+}
+
+.slotCell.disabled.selectedX,
+.slotCell.disabled.selectedY,
+.slotCell.disabled.selected {
+    -moz-box-shadow:    inset 0 0 0 2px #000000;
+    -webkit-box-shadow: inset 0 0 0 2px #000000;
+    box-shadow:         inset 0 0 0 2px #000000;
+}
+
+.slotCell:hover {
+    opacity: 0.75;
+    -moz-box-shadow:    inset 0 0 0 2px #eeeeee;
+    -webkit-box-shadow: inset 0 0 0 2px #eeeeee;
+    box-shadow:         inset 0 0 0 2px #eeeeee;
+}
+
+.slot-hover {
+    opacity: 0.75;
+    -moz-box-shadow:    inset 0 0 0 2px #eeeeee;
+    -webkit-box-shadow: inset 0 0 0 2px #eeeeee;
+    box-shadow:         inset 0 0 0 2px #eeeeee;
+}
+
+.slotDivider {
+    background-color: white;
+    width: 49.5%;
+    height: 35px;
+}
+
+#ok-button {
+    margin-top: 30px;
+}
+
+.previous {
+    margin-left: 20px;
+}
+
+div.legend{
+    height: 10px;
+    width: 10px;
+}
+
+div.legend.free{
+    background-color: var(--free);
+}
+
+div.legend.selected{
+    background-color: var(--selected);
+
+}
+
+div.legend.taken{
+    background-color: var(--taken);
+}
+
+.message{
+    position: fixed;
+    top: 40%;
+    left: 40%;
+    height: 90px;
+    width: 160px;
+    background-color: whitesmoke;
+    visibility: hidden;
+    font-size: 150%;
+
+    text-align: center;
+    vertical-align: middle;
+    line-height: 90px;
+
+}
+
+/* CONTROLS */
+
+.row .clsSlotsBtn-container {
+    margin-top: 10px;
+}
+
+.horizSelect:hover, .vertSelect:hover {
+    background-color: #eeeeee;
+    cursor: pointer;
+}
+
+.used {
+    background-color: #dddddd;
+    cursor: pointer;
+}
+
+.used:hover {
+    background-color: #cccccc;
+}

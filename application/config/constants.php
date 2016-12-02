@@ -191,3 +191,8 @@ define("SU_DEPARTMENTS", "departments");
 define("SU_ADD_BUILDINGS", "add_buildings");
 define("SU_ADD_DEPARTMENT", "add_department");
 
+/* MODERATOR ACTIONS */
+define("MODERATOR_SIGN_IN", "sign_in");
+define("MODERATOR_GET_COMPUTERS", "get_computers");
+define("MODERATOR_SIGN_OUT", "sign_out");
+
