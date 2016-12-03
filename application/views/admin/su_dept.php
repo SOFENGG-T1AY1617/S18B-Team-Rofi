@@ -182,8 +182,8 @@
     }
 
     function submitDepartment(tableID) {
-        $('#confirm-add').attr('disabled', true);
-        $("body").css("cursor", "progress");
+        /*$('#confirm-add').attr('disabled', true);
+        $("body").css("cursor", "progress");*/
         var tableData = getTableData(tableID);
 
         if (tableData == false) {
@@ -195,9 +195,12 @@
         var email = tableData[0][3];
         if (!isEmail(email)) {
             toastr.error("The email you input is not valid. Please change it and try again.", "Oops!");
-            $("#confirm-add").attr('disabled', false);
+            //$("#confirm-add").attr('disabled', false);
             return;
         }
+
+        $('#confirm-add').attr('disabled', true);
+        $("body").css("cursor", "progress");
 
         $.ajax({
             url: '<?=base_url('admin/' . SU_ADD_DEPARTMENT)?>',
@@ -237,7 +240,7 @@
                     //reloadPage();
                 }
 
-                $('#AddNewDeptModal').modal('toggle');
+                //$('#AddNewDeptModal').modal('toggle');
             })
             .fail(function(result) {
                 console.log("fail");
