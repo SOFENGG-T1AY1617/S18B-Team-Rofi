@@ -74,6 +74,16 @@
         }
     }
 
+    function updateSelectedSlots () { // for the upper part
+        var slotContainerID = "#slots_selected";
+
+        $(slotContainerID).empty();
+
+        for (var i = 0; i < slotsPicked.length; i++)
+            $(slotContainerID).append(slotsPicked[i]);
+
+    }
+
     function updateTimesHeader(isToday) {
 
         var slotTable = $('#slotTable');
@@ -340,7 +350,7 @@
 
                                 var currentSlotID = "#" + strID;
 
-                                if (($.inArray(clickableSlot1.getAttribute("id"), slotsDisabled)) > -1) {
+                                if (computers[k].statusid == <?php echo PC_DISABLED ?>) {
                                     clickableSlot1.className = clickableSlot1.className + " disabled";
                                 } else {
                                     clickableSlot1.className = clickableSlot1.className + " enabled";
