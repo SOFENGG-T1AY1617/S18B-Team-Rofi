@@ -588,7 +588,7 @@
                 console.log("complete");
             });
 
-        $("#AddNewModeratorModal").modal("toggle");
+        //$("#AddNewModeratorModal").modal("toggle");
     }
 
     function getAdminChangedData(newTableData) {
