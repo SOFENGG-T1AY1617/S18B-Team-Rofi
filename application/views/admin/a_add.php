@@ -1,22 +1,23 @@
 <script xmlns="http://www.w3.org/1999/html">
     $(document).ready(function() {
-       $(".add-room-btn").click(function() {
-           var buildingid = $(this).attr("id");
-           buildingid = buildingid.split("-")[1];
-           //console.log("Building id: " + buildingid);
-           $("#add_table").attr("name", buildingid);
-           $("#modal-building-name").text($(this).data("buildingname"));
-
-           var type = $(this).data("type");
-
-           $(".area_type").text(type);
-           addRoom('add_table');
-
-       });
-
         setInputRules();
 
     });
+
+    function initAddRoomModal(button) {
+        var buildingid = button;
+        buildingid = buildingid.split("-")[1];
+        //console.log("Building id: " + buildingid);
+        $("#add_table").attr("name", buildingid);
+        var buttona = document.getElementById(button);
+        $("#modal-building-name").text($(buttona).data("buildingname"));
+
+        var type = $(buttona).data("type");
+
+        $(".area_type").text(type);
+        cancelAddRoom('add_table');
+
+    };
 
     function setInputRules() {
         $('input[type=number]').numeric();
@@ -135,54 +136,13 @@
     }
 
     function changeViewToView(table, buttons, modal){
-        isEditing = true;
+
 //        reloadPage(); // TODO TEMPORARY FIX
-        console.log("fuck this shit im out ~");
+
         var tableA = document.getElementById(table);
         var buttonsA = document.getElementById(buttons);
 
-//        var rows = tableA.rows;
-
-//        var deleteRows=[];
-//            var lengthofdel=0;
-//
-//        for(var i = 1; i < rows.length; i++){
-//            var cells = rows[i].cells;
-//
-//            var curName = cells[0].getElementsByTagName("input")[0].value;
-//            var curNum = cells[1].getElementsByTagName("input")[0].value;
-//
-//            cells[2].innerHTML = "";
-//
-//            if(curName != "" && curNum != ""){
-//                cells[0].innerHTML = curName;
-//                cells[1].innerHTML = curNum;
-//            }
-//            else{
-//                console.log(i);
-//                deleteRows[lengthofdel] = i;
-//                lengthofdel ++;
-//            }
-//
-//
-//        }
-//
-//        for(var i=lengthofdel-1; i >= 0 ; i--){
-//            tableA.deleteRow(deleteRows[i]);
-//        }
-
-      //
-
-            tableA.innerHTML = initialTable;
-//        var buttonsStr =  "<span class = \"col-md-2\">"+
-//            "<button type =\"button\"data-toggle=\"modal\" data-target=\"#"+modal+"\" class=\"btn btn-default btn-block add-room-btn\" >+ Add Rooms</button>"+
-//            "</span>"+
-//            "<span class = \"col-md-2\">"+
-//            "<button class=\"btn btn-default btn-block\" type=\"button\" onclick=\"changeViewToEdit('"+table+"','"+buttons+"','"+modal+"')\">Edit Rooms</button>"+
-//            "</span>";
-
-
-
+        tableA.innerHTML = initialTable;
         buttonsA.innerHTML = initialButtons;
         isEditing = false;
     }
@@ -577,7 +537,7 @@ include 'a_navbar.php';
                         <?php if($_SESSION['admin_typeid'] != 1): ?>
                             <div id = "<?=$row->buildingid?>_buttons">
                                 <span class = "col-md-3">
-                                    <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default btn-block add-room-btn"
+                                    <button type ="button"data-toggle="modal" data-target="#AddNewRoomsModal" class="btn btn-default btn-block add-room-btn" onclick="initAddRoomModal('add-<?=$row->buildingid?>')"
                                             data-buildingname="<?=$row->name?>" data-type="<?=$row->type?>" id="add-<?=$row->buildingid?>">+ Add <?=$row->type?></button>
                                 </span>
                                 <span class = "col-md-3">
