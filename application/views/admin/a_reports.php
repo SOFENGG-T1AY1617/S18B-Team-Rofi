@@ -42,7 +42,7 @@
                     if (out.length > 0)
                         $("#form_room").append(out);
 
-                    selectRoom(firstRoomID);
+                    getData(firstRoomID);
 
                     numOfRooms = result.length;
 
@@ -61,7 +61,7 @@
         }
     }
 
-    function selectRoom(roomid) {
+    function getData(roomid) {
 
         //updateTimesHeader(dateSelected == dateToday);
 
@@ -76,11 +76,12 @@
             console.log(buildingid + "-" + roomid);
 
             $.ajax({
-                url: '<?php echo base_url('analytics/test') ?>',
+                url: '<?php echo base_url('analytics/getData') ?>',
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    roomid: roomid
+                    roomid: roomid,
+                    dateType: $("#radio-date").val()
                 }
             })
                 .done(function (result) {
@@ -89,7 +90,7 @@
                     console.log(result);
 
                     for(var i=0;i<result.length;i++){
-                        out[0]="<li>ComputerNo: "+result[i]['computerno']+" Used "+result[i]['uses']+" times</li>"
+                        out[i]="<li>ComputerNo: "+result[i]['computerno']+" Used "+result[i]['uses']+" times</li>"
                     }
 
                     if (out.length > 0)
@@ -108,6 +109,8 @@
 
 
     }
+
+
 </script>
 
 <link href="<?=base_url()?>/assets/css/admin_add_style.css" rel="stylesheet">
@@ -149,9 +152,19 @@ include 'a_navbar.php';
                         </div>
                         <div class = "form-group col-md-5">
                             Room:
-                            <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)" disabled=true>
+                            <select class="form-control" id="form_room" name="form-room" onchange="getData(this.value)" disabled=true>
                                 <option value="" selected></option>
                             </select>
+                        </div>
+                        <div class="radio form-group col-md-5">
+                            <div class="radio" id="radio-date" name="form-date">
+                                <label><input type="radio" id="radio-today" name="optradio" value="today" checked>
+                                    Today
+                                </label>
+                                <label><input type="radio" id="radio-weekly" name="optradio" value="weekly">
+                                    Weekly
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
