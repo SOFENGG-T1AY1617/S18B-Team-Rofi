@@ -15,6 +15,14 @@ class Analytics_Model extends CI_Model
         $this->load->database();
     }
 
+    public function getMinimumHour() { // TODO parameter must be department ID
+        return 6; // TODO retrieve value depending on department
+    }
+
+    public function getMaximumHour() { // TODO parameter must be department ID
+        return 20; // TODO retrieve value depending on department
+    }
+
     public function getTimes($first_hour, $first_minute, $minute_interval, $minimum_hour, $maximum_hour, $tomorrow) {
         $times = array();
         $startMinute = 0;
@@ -54,6 +62,26 @@ class Analytics_Model extends CI_Model
         return $this->db->get(TABLE_COMPUTERS)->result();
     }
 
+    function queryComputersAtRoomID($id) {
+        $sql = "SELECT * 
+             FROM computers NATURAL JOIN 
+              (SELECT roomid
+               FROM rooms
+               WHERE roomid = ?) t1";
+        return $this->db->query($sql, array($id))->result();
+    }
+
+    function queryAllArchiveReservationsAtRoomByTime($roomid) {
+        $sql = "SELECT start_restime as 'time', COUNT(start_restime) as uses
+                FROM archive_reservations NATURAL JOIN( SELECT computerid
+                                                        FROM computers
+                                                        WHERE roomid = ?) t1
+                GROUP BY time";
+
+        $result = $this->db->query($sql, array($roomid))->result();
+        return $result;
+    }
+
     function queryAllArchiveReservationsAtRoom($roomid) {
         $sql = "SELECT computerno, uses
                   FROM computers NATURAL JOIN(
@@ -74,4 +102,14 @@ class Analytics_Model extends CI_Model
                WHERE name = ?) t1";
         return $this->db->query($sql, array($name))->result();
     }
+
+    function queryIntervalsAtRoomID($id) {
+        $sql = "SELECT business_rules.interval as 'interval'
+                FROM business_rules NATURAL JOIN (SELECT DISTINCT departmentid
+                                                  FROM rooms
+                                                  WHERE roomid = ?) d";
+
+        return $this->db->query($sql, array($id))->row_array();
+    }
+
 }
