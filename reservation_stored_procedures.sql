@@ -64,12 +64,15 @@ USE `reservation_system`$$
 CREATE PROCEDURE `archive_unconfirmed_reservations` (IN confirmation_limit TIME)
 BEGIN
 	INSERT INTO `reservation_system`.`archive_reservations`
-	(`computerid`, `userid`, `date`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)
-	SELECT `computerid`, `userid`, `date`, `start_restime`, `end_restime`, `verificationcode`, `attendance`
-	FROM `reservation_system`.`reservations`
-	WHERE TIMEDIFF(NOW(), `reservations`.`time_reserved`) >= confirmation_limit;
+	(`computerno`, `room_name`, `userid`, `date`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)
+	SELECT computer.`computerno`, room.`name`,`userid`, `date`, `start_restime`, 
+		   `end_restime`, `verificationcode`, `attendance`
+	FROM `reservation_system`.`reservations` reservation, 
+		 `reservation_system`.`rooms` room, `reservation_system`.`computers` computer
+	WHERE TIMEDIFF(NOW(), reservation.`time_reserved`) >= confirmation_limit
+		  AND reservation.computerid = computer.computerid AND room.roomid = computer.roomid;
     DELETE FROM `reservation_system`.`reservations`
-    WHERE TIMEDIFF(NOW(), `reservations`.`time_reserved`) >= confirmation_limit;
+    WHERE TIMEDIFF(NOW(), `time_reserved`) >= confirmation_limit;
 END$$
 
 DELIMITER ;

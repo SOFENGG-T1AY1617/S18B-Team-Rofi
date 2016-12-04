@@ -156,7 +156,7 @@ define("COLUMN_END_TIME", "end_time");
 
 
 define("TABLE_ARCHIVE_RESERVATIONS", "archive_reservations");
-define("COLUMN_ROOM_NAME", "room_name")
+define("COLUMN_ROOM_NAME", "room_name");
 
 define("TABLE_TAG_MOD_ROOMS", "tag_mod_rooms");
 define("COLUMN_TAG_MOD_ROOMSID", "tag_mod_roomsid");
