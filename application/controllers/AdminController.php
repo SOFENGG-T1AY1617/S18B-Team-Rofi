@@ -445,31 +445,29 @@ class AdminController extends CI_Controller
     public function updateModerators()
     {
 
+        $result = null;
         $changedData = $this->input->get("changedData");
 
         foreach ($changedData as $data) {
             // Query room data
-            $mod = $this->admin->queryModeratorAtID($data[5]);
+            $mod = $this->admin->queryModeratorAtID($data[4]);
 
 
-            if ($data[4] == -1) {
-                $this->admin->deleteModerator($mod['email']);
+            if ($data[2] == -1) {
+                $this->admin->deleteModerator($mod['moderatorid']);
 
                 $result = array(
                     'result' => "success"
                 );
 
-                continue;
+                //continue;
             }
-
-
-//TODO FIX DELETE PLEASE
 
             // Check if first name was changed
             if ($data[0] != $mod['first_name']) {
                 // Update firts name
                 $updateData = array(
-                    'id' => $data[5],
+                    'id' => $mod['moderatorid'],
                     'fName' => $data[0],
                 );
                 $this->admin->updateModFirstName($updateData);
@@ -482,7 +480,7 @@ class AdminController extends CI_Controller
             if ($data[1] != $mod['last_name']) {
                 // Update last name
                 $updateData = array(
-                    'id' => $data[5],
+                    'id' => $mod['moderatorid'],
                     'lName' => $data[1],
                 );
                 $this->admin->updateModLastName($updateData);
@@ -495,7 +493,7 @@ class AdminController extends CI_Controller
             if ($data[3] != $mod['mod_departmentid']) {
                 // Update departmentid
                 $updateData = array(
-                    'id' => $data[5],
+                    'id' => $mod['moderatorid'],
                     'dept' => $data[3],
                 );
                 $this->admin->updateModDepartment($updateData);
@@ -514,7 +512,7 @@ class AdminController extends CI_Controller
                 } else {
                     // Update room name
                     $updateData = array(
-                        'id' => $data[5],
+                        'id' => $mod['moderatorid'],
                         'email' => $data[2],
                     );
                     $this->admin->updateModEmail($updateData);
