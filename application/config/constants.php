@@ -84,6 +84,10 @@ defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
+/* FOR PC STATUS */
+define("PC_ENABLED", 1);
+define("PC_DISABLED", 2);
+define("PC_TAKEN", 3);
 
 define("TABLE_AREA_TYPES", "area_types");
 define("COLUMN_AREA_TYPEID", "area_typeid");
@@ -195,4 +199,5 @@ define("SU_ADD_DEPARTMENT", "add_department");
 define("MODERATOR_SIGN_IN", "sign_in");
 define("MODERATOR_GET_COMPUTERS", "get_computers");
 define("MODERATOR_SIGN_OUT", "sign_out");
+define("MODERATOR_BUSINESS_RULES", "getBusinessRules");
 

@@ -4,10 +4,6 @@
     --taken: lightgrey;
 }
 
-body {
-    padding-top: 50px;
-}
-
 .nopadding {
     padding: 0 !important;
     margin: 0 !important;
@@ -203,18 +199,4 @@ div.legend.taken{
 
 .row .clsSlotsBtn-container {
     margin-top: 10px;
-}
-
-.horizSelect:hover, .vertSelect:hover {
-    background-color: #eeeeee;
-    cursor: pointer;
-}
-
-.used {
-    background-color: #dddddd;
-    cursor: pointer;
-}
-
-.used:hover {
-    background-color: #cccccc;
 }
