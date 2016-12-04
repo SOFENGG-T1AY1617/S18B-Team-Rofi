@@ -371,7 +371,7 @@
                 }
             }
 
-            columns[4] = table.rows[i].cells[4].childNodes[0].value;
+            columns[3] = table.rows[i].cells[3].childNodes[0].value;
 
             if (valid) {
                 jObject[row] = columns;
