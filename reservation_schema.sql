@@ -202,7 +202,8 @@ CREATE TABLE `reservation_system`.`email_extension`(
 
 CREATE TABLE `reservation_system`.`archive_reservations` (
   `archive_reservationid` INT NOT NULL AUTO_INCREMENT,
-  `computerid` INT NOT NULL,
+  `computerno` INT NOT NULL,
+  `room_name` VARCHAR(100) NOT NULL,
   `userid` INT NOT NULL,
   `date` DATE NOT NULL,
   `start_restime` TIME NOT NULL,
@@ -354,7 +355,10 @@ VALUES (1, "2016-10-18", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktr
        (1, "2016-10-20", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j211", 1),
 	   (1, "2016-10-20", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j211", 1),
        (1, "2016-11-21", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j212", 1),
-	   (1, "2016-11-21", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j212", 1);
+	   (1, "2016-11-21", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j212", 1),
+	   (11, "2016-11-21", 11428260, "11:00:00", "11:14:59", "45t45y0965134213yktreioet54j212", 1),
+	   (11, "2016-11-21", 11428260, "11:15:00", "11:29:59", "45t45y0965134213yktreioet54j212", 1);
+
 
 INSERT INTO `reservation_system`.`admin_types` (`admin_type`)
 VALUES ("Super Administrator"),
