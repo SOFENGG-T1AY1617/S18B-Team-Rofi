@@ -12,6 +12,10 @@
         $(document).ajaxComplete(function () {
             $(document.body).css({ 'cursor': 'default' })
         });
+
+        $('#AddNewDeptModal').on('hidden.bs.modal', function () {
+            cancelAddDept('add_table');
+        })
     });
 
 
@@ -54,10 +58,18 @@
         var i;
         console.log(rows.length);
         for(i=rows.length-1; i>0; i--){
-            table.deleteRow(i);
+            //table.deleteRow(i);
+
+            for (var j = 0; j < table.rows[i].cells.length; j++)
+            {
+                table.rows[i].cells[j].childNodes[0].value = "";
+
+            }
         }
         console.log(tableID);
-        addDepartment(tableID);
+        //addDepartment(tableID);
+
+
     }
 
     var initialModTableData;
