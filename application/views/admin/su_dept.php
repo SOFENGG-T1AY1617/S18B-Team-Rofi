@@ -12,6 +12,10 @@
         $(document).ajaxComplete(function () {
             $(document.body).css({ 'cursor': 'default' })
         });
+
+        $('#AddNewDeptModal').on('hidden.bs.modal', function () {
+            cancelAddDept('add_table')
+        })
     });
 
 
