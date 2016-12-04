@@ -625,10 +625,15 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($email))->row_array();
     }
 
-    function deleteModerator($email) {
+    function deleteModerator($id) {
         // Delete all computers in room
         // Delete room
-        $this->db->delete(TABLE_MODERATORS, array('email' => $email));
+        $this->db->where(COLUMN_MODERATORID, $id);
+        $this->db->delete(TABLE_TAG_MOD_ROOMS);
+        //$this->db->delete(TABLE_MODERATORS);
+
+        $this->db->where(COLUMN_MODERATORID, $id);
+        $this->db->delete(TABLE_MODERATORS);
     }
 
     function updateModEmail($data) {

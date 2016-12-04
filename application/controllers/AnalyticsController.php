@@ -8,9 +8,11 @@
  */
 class AnalyticsController extends CI_Controller
 {
-    public function testFunction() {
+    public function getData() {
+        $roomid = $this->input->get('roomid');
+        $dateType = $this->input->get('dateType');
 
-        $data = $this->analytics->queryAllArchiveReservationsAtRoom($this->input->get('roomid'));
+        $data = $this->analytics->queryAllArchiveReservationsAtRoom($roomid);
         echo json_encode($data);
     }
 }

@@ -12,6 +12,10 @@
         $(document).ajaxComplete(function () {
             $(document.body).css({ 'cursor': 'default' })
         });
+
+        $('#AddNewDeptModal').on('hidden.bs.modal', function () {
+            cancelAddDept('add_table');
+        })
     });
 
 
@@ -54,10 +58,18 @@
         var i;
         console.log(rows.length);
         for(i=rows.length-1; i>0; i--){
-            table.deleteRow(i);
+            //table.deleteRow(i);
+
+            for (var j = 0; j < table.rows[i].cells.length; j++)
+            {
+                table.rows[i].cells[j].childNodes[0].value = "";
+
+            }
         }
         console.log(tableID);
-        addDepartment(tableID);
+        //addDepartment(tableID);
+
+
     }
 
     var initialModTableData;
@@ -182,8 +194,8 @@
     }
 
     function submitDepartment(tableID) {
-        $('#confirm-add').attr('disabled', true);
-        $("body").css("cursor", "progress");
+        /*$('#confirm-add').attr('disabled', true);
+        $("body").css("cursor", "progress");*/
         var tableData = getTableData(tableID);
 
         if (tableData == false) {
@@ -195,9 +207,12 @@
         var email = tableData[0][3];
         if (!isEmail(email)) {
             toastr.error("The email you input is not valid. Please change it and try again.", "Oops!");
-            $("#confirm-add").attr('disabled', false);
+            //$("#confirm-add").attr('disabled', false);
             return;
         }
+
+        $('#confirm-add').attr('disabled', true);
+        $("body").css("cursor", "progress");
 
         $.ajax({
             url: '<?=base_url('admin/' . SU_ADD_DEPARTMENT)?>',
@@ -237,7 +252,7 @@
                     //reloadPage();
                 }
 
-                $('#AddNewDeptModal').modal('toggle');
+                //$('#AddNewDeptModal').modal('toggle');
             })
             .fail(function(result) {
                 console.log("fail");

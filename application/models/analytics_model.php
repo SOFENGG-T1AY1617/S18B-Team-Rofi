@@ -58,7 +58,8 @@ class Analytics_Model extends CI_Model
         $sql = "SELECT computerno, uses
                   FROM computers NATURAL JOIN(
                   SELECT computerid, COUNT(archive_reservationid) as uses
-                      FROM archive_reservations) t1
+                      FROM archive_reservations
+                      GROUP BY computerid) t1
                       WHERE roomid = ?";
 
         $result = $this->db->query($sql, array($roomid))->result();

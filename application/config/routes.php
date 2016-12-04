@@ -104,7 +104,7 @@ $route['admin/business_rules'] = 'AdminController/ruleView';*/
 
 /* ADMIN ROUTE */
 $route['analytics'] = 'AnalyticsController';
-$route['analytics/test'] = 'AnalyticsController/testFunction';
+$route['analytics/getData'] = 'AnalyticsController/getData';
 
 /*Superuser - sorry im adding new routes*/
 //$route['superuser'] = 'SuperuserController';

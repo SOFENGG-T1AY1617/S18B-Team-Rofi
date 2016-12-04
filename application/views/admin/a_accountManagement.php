@@ -79,13 +79,13 @@
         //console.log($(tableA));
         rowNum = parseInt(rowNum);
        // console.log(table_ID);
-        var tableID = tableA.rows[rowNum].cells[4].childNodes[0];
+        var tableID = tableA.rows[rowNum].cells[2].childNodes[0];
        // console.log(table.rows[rowNum].cells[0]);
         console.log(tableID);
         $(tableID).parents('tr').hide();
-        $(tableID).val("-1");
+        $(tableID).attr("value", "-1");
 
-        console.log($(tableID).val());
+        console.log(tableID);
 
         //tableA.deleteRow(rowNum);
     }
@@ -211,9 +211,9 @@
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curFNameID+"\"value=\"" + curFName + "\">";
             cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curLNameID+"\" value=\"" + curLName + "\">";
             cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curEmailID+"\" value=\"" + curEmail + "\">";
-            var drop = "<select type='text' id=\""+curDeptID+"\" class='form-control' placeholder='Enter department'>";
+            /* var drop = "<select type='text' id=\""+curDeptID+"\" class='form-control' placeholder='Enter department'>";
 
-            var deps = <?php echo json_encode($departments); ?>;
+            var deps = ;
 
 
             for(var j = 0; j<deps.length; j++)
@@ -226,7 +226,7 @@
                 drop+=">"+deps[j].name+"</option>"
             }
             drop+="</select>";
-            cells[3].innerHTML = drop;
+            cells[3].innerHTML = drop; */
             cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
             console.log(tID);
@@ -302,16 +302,16 @@
             var curFName = cells[0].getElementsByTagName("input")[0].value;
             var curLName = cells[1].getElementsByTagName("input")[0].value;
             var curEmail = cells[2].getElementsByTagName("input")[0].value;
-            var curDept = cells[3].getElementsByTagName("select")[0].value;
+            //var curDept = cells[3].getElementsByTagName("select")[0].value;
 
 
             cells[4].innerHTML = "";
 
-            if(curLName != "" && curFName != "" && curEmail != "" && curDept !=""){
+            if(curLName != "" && curFName != "" && curEmail != ""){
                 cells[0].innerHTML = curFName;
                 cells[1].innerHTML = curLName;
                 cells[2].innerHTML = curEmail;
-                cells[3].innerHTML = curDept;
+                cells[3].innerHTML = <?php echo $_SESSION['admin_departmentid'] ?>;
             }
             else{
                 console.log(i);
@@ -359,7 +359,7 @@
             var valid = true;
             var columns = [];
             // columns within the row
-            for (var j = 0; j < table.rows[i].cells.length-1; j++)
+            for (var j = 0; j < table.rows[i].cells.length-2; j++)
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
@@ -371,7 +371,8 @@
                 }
             }
 
-            columns[4] = table.rows[i].cells[4].childNodes[0].value;
+            columns[2] = table.rows[i].cells[2].childNodes[0].value;
+            columns[3] = <?php echo $_SESSION['admin_departmentid']; ?>
 
             if (valid) {
                 jObject[row] = columns;
@@ -449,11 +450,11 @@
                 initialModTableData[i][1] != newTableData[i][1] ||
                 initialModTableData[i][2] != newTableData[i][2] ||
                // initialModTableData[i][4] != newTableData[i][4]
-                inDeptID != newTableData[i][3]||newTableData[i][4]==-1
+                newTableData[i][4]==-1
             ) {
                 for(var k = 0; k<mods.length; k++){
                     if(initialModTableData[i][2]==mods[k]['email']){
-                        newTableData[i][5] = mods[k]['moderatorid'];
+                        newTableData[i][4] = parseInt(mods[k]['moderatorid']);
                             console.log("HERE: " + mods[k]['moderatorid']);
                     }
                 }
@@ -471,6 +472,8 @@
     function submitModeratorChanges(tableID) {
         var changedData = getModChangedData(getTableData(tableID));
 
+        console.log("asdfasddffsadf");
+
         console.log(changedData);
 
         $.ajax({
@@ -486,10 +489,6 @@
                 console.log(result);
 
                 if (result['result'] == "success") {
-
-                    /*$(window).load(function(){
-                     toastr.success("Changes were made successfully.", "Success");
-                     });*/
                     toastr.success("Changes were made successfully.", "Success");
                     var delay = 1000;
                     setTimeout(function() {
@@ -588,7 +587,7 @@
                 console.log("complete");
             });
 
-        $("#AddNewModeratorModal").modal("toggle");
+        //$("#AddNewModeratorModal").modal("toggle");
     }
 
     function getAdminChangedData(newTableData) {
