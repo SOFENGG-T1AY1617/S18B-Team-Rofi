@@ -43,6 +43,9 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_SIGN_OUT:
                     $this->signOut();
                     break;
+                case MODERATOR_DECODE_SLOTS:
+                    $this->decodeSlots();
+                    break;
                 default:
                     $this->initModerator();
                     break;
@@ -92,6 +95,29 @@ class ModeratorController extends CI_Controller
         foreach ($times_tomorrow as $time)
             $data['times_tomorrow_DISPLAY'][] = date("h:i A", $time);
 
+        echo json_encode($data);
+    }
+
+    public function decodeSlots(){
+        $slots = $this->input->get('slots');
+        $data = [];
+
+
+        foreach ($slots as $slot) {
+            $arr = explode('_', $slot);
+
+            $roomName = $this->moderator->queryRoomAndCompNoAtComputerID($arr[0]);
+
+            $date = date('M', mktime(0, 0, 0, explode('-',$arr[1])[1], 10))." ".explode('-',$arr[1])[2].", ".explode('-',$arr[1])[0];
+            $timeStart = date('h:iA',mktime(explode(':',$arr[2])[0],explode(':',$arr[2])[1]));
+            $timeEnd =  date('h:iA',mktime(explode(':',$arr[3])[0],explode(':',$arr[3])[1]));//;
+
+            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $date, 'start' => $timeStart, 'end' => $timeEnd);
+            array_push($data, $arr2);
+        }
+        /*$data = array(
+          'result' => $this->student->queryAllRoomsAtBuildingID($getData['buildingid']),
+        );*/
         echo json_encode($data);
     }
 

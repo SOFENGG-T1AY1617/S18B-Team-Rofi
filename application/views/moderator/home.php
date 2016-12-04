@@ -21,6 +21,7 @@
     var dateToday = "<?=date("Y-m-d")?>";
     var dateSelected = dateToday;
     var currentDeptID = 0;
+    var roomName;
 
     var times_today;
     var times_tomorrow;
@@ -60,6 +61,8 @@
             slotsPicked.push(slot.attr("id"));
 
         slot.addClass ('selected');
+
+        updateSelectedSlots();
     }
 
     function deselectSlot (slot) {
@@ -72,15 +75,49 @@
             if (slot.hasClass('selected'))
                 slot.removeClass('selected');
         }
+
+        updateSelectedSlots();
     }
 
     function updateSelectedSlots () { // for the upper part
         var slotContainerID = "#slots_selected";
 
-        $(slotContainerID).empty();
+        $.ajax({
+            url: '<?php echo base_url('moderator/' . MODERATOR_DECODE_SLOTS) ?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                slots: slotsPicked
+            }
+        })
+            .done(function(result) {
+                $(slotContainerID).empty();
 
-        for (var i = 0; i < slotsPicked.length; i++)
-            $(slotContainerID).append(slotsPicked[i]);
+                for (var i = 0; i < result.length; i++) {
+                    $(slotContainerID).append(
+                        "<div>" +
+                        "<span class = 'col-md-1'>X</span>" +
+                        "<span class = 'col-md-1'>" + result[i].roomName + "</span>" +
+                        "<span class = 'col-md-2'>Pc No. " + result[i].compNo + "</span>" +
+                        "<span class = 'col-md-4'>someone@gmail.com</span>" +
+                        "<span class = 'col-md-1 text-center'>" + result[i].start + "</span>" +
+                        "<span class = 'col-md-1 text-center'> - </span>" +
+                        "<span class = 'col-md-1 text-center'>" + result[i].end + "</span>" +
+                        "<span class = 'col-md-offset-1'></span>" +
+                        "</div>"
+                    );
+                }
+
+            })
+            .fail(function() {
+                $(slotContainerID).empty();
+                console.log("fail");
+
+            })
+            .always(function() {
+
+                console.log("complete");
+            });
 
     }
 
@@ -302,7 +339,7 @@
                 var roomTitleRow = document.createElement("tr");
                 var roomTitleCell = document.createElement("th");
 
-                roomTitleCell.appendChild(document.createTextNode("Room: " + roomNames[i]));
+                roomTitleCell.appendChild(document.createTextNode("Room: " + (roomName = roomNames[i])));
                 roomTitleCell.setAttribute("colspan", currentTimeArray.length + 1);
 
                 roomTitleRow.appendChild(roomTitleCell);
@@ -341,6 +378,7 @@
 
                             if (!taken) {
                                 var computerID = computers[k].computerid;
+                                var computerNo = computers[k].computerno;
 
                                 var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
 
@@ -394,9 +432,12 @@ include 'm_navbar.php';
 
                 <div class = "col-md-10 col-md-offset-1">
                     <div class = "panel panel-default">
+                        <div class = "panel-heading">
+                            Slots Currently Selected:
+
+                        </div>
                         <div class = "panel-body">
                             <div id = "slots_selected">
-                                Slots Currently Selected:
                             </div>
                         </div>
                     </div>

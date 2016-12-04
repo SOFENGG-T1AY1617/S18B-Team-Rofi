@@ -200,3 +200,9 @@ div.legend.taken{
 .row .clsSlotsBtn-container {
     margin-top: 10px;
 }
+
+#slots_selected {
+    height: 200px;
+    min-height: 200px;
+    overflow-y: scroll;
+}

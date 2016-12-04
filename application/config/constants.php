@@ -200,4 +200,5 @@ define("MODERATOR_SIGN_IN", "sign_in");
 define("MODERATOR_GET_COMPUTERS", "get_computers");
 define("MODERATOR_SIGN_OUT", "sign_out");
 define("MODERATOR_BUSINESS_RULES", "getBusinessRules");
+define("MODERATOR_DECODE_SLOTS", "decodeSlots");
 

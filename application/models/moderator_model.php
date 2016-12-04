@@ -60,49 +60,13 @@ class moderator_model extends CI_Model
         return $times;
     }
 
-    function queryAllAdministators() {
-        $this->db->select('*');
-        $this->db->from(TABLE_ADMINISTRATORS);
-        $this->db->join(TABLE_DEPARTMENTS, 'admin_departmentid = departmentid');
-        $this->db->where(COLUMN_ADMIN_TYPEID . " != ", '1');
-        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    function queryAllModerators() {
-        $this->db->select('*');
-        $this->db->from(TABLE_MODERATORS);
-        $this->db->join(TABLE_DEPARTMENTS, 'mod_departmentid = departmentid');
-        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    function queryAllDepartments() {
-        $this->db->select('*');
-        $this->db->from(TABLE_DEPARTMENTS);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    function queryModeratorsWithDepartmentID($id) {
-        $this->db->select('*');
-        $this->db->from(TABLE_MODERATORS);
-        $this->db->join(TABLE_DEPARTMENTS, 'mod_departmentid = departmentid');
-        $this->db->where(COLUMN_MOD_DEPARTMENTID, $id);
-        $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    function queryAllRooms() {
-        //return $this->db->get(TABLE_ROOMS)->result();
-        $sql = "SELECT rooms.roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
-                FROM rooms LEFT JOIN computers ON rooms.roomid = computers.roomid
-                GROUP BY rooms.roomid
-                ORDER BY name";
-        return $this->db->query($sql)->result();
+    function queryRoomAndCompNoAtComputerID($id){
+        $sql = "SELECT name, computerno
+                FROM rooms NATURAL JOIN 
+                  (SELECT roomid, computerno
+                   FROM computers
+                   WHERE computerid = ?) b";
+        return $this->db->query($sql, array($id))->result();
     }
 
     function queryRoomsWithDepartmentID($id) {
