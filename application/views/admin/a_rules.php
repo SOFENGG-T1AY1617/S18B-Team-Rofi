@@ -26,10 +26,14 @@
         }, false);
     }
     var initialTable;
+    var initialFooter;
     function changeViewToEdit(table, footer){
         console.log(footer);
         var tableA = document.getElementById(table);
+        var footerA = document.getElementById(footer);
+
         initialTable = tableA.innerHTML;
+        initialFooter=footerA.innerHTML;
         var rows = tableA.rows;
         //var tID = table.id;
         //var fID = footer.id;
@@ -105,11 +109,15 @@
     }
 
     function changeViewToView(table, footer){
+        var content = document.getElementById(table);
+        var content2 = document.getElementById(footer);
+        console.log(content);
+                console.log(content2);
 
         document.getElementById(table).innerHTML = initialTable;
-
-        document.getElementById(footer).innerHTML =
-            " <button class=\"btn btn-default col-md-3 col-md-offset-9\" type=\"button\" onclick=\"changeViewToEdit("+table+", "+footer+")\">Edit Information</button>";
+        
+        document.getElementById(footer).innerHTML = initialFooter;
+       //     " <button class=\"btn btn-default col-md-3 col-md-offset-9\" type=\"button\" onclick=\"changeViewToEdit("+table+", "+footer+")\">Edit Information</button>";
 
     }
 
