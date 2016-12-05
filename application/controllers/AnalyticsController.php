@@ -14,14 +14,24 @@ class AnalyticsController extends CI_Controller
 
 
 
+
+
         $times = [];
-        $reservations = $this->analytics->queryAllArchiveReservationsAtRoom($roomid);
-        $reservationsTime = $this->analytics->queryAllArchiveReservationsAtRoomByTime($roomid);
-        $computers = $this->analytics->queryComputersAtRoomID($roomid);
-        $times = $this->getTimes($roomid);
+        if($dateType == "today"){
+
+            $reservations = $this->analytics->queryAllArchiveReservationsAtRoom($roomid,date("Y-m-d"),0);
+            $reservationsTime = $this->analytics->queryAllArchiveReservationsAtRoomByTime($roomid,date("Y-m-d"),0);
+            $computers = $this->analytics->queryComputersAtRoomID($roomid);
+            $times = $this->getTimes($roomid);
+        }
+        else{
+            $reservations = $this->analytics->queryAllArchiveReservationsAtRoom($roomid,date("Y-m-d"),7);
+            $reservationsTime = $this->analytics->queryAllArchiveReservationsAtRoomByDay($roomid,date("Y-m-d"),7);
+            $computers = $this->analytics->queryComputersAtRoomID($roomid);
+            $times = $this->getDates(7);
+        }
 
         $data = ["computers"=>$computers, "reservations"=>$reservations,"times"=>$times, "reservationsTime" =>$reservationsTime];
-
 
 
         echo json_encode($data);
@@ -38,7 +48,6 @@ class AnalyticsController extends CI_Controller
 
 
         $currentMinute = date("i");
-
 
         $times_today = $this->analytics->getTimes(null, $currentMinute, $getData['interval'], $this->analytics->getMinimumHour(), $this->analytics->getMaximumHour(), false);
 
@@ -58,6 +67,16 @@ class AnalyticsController extends CI_Controller
 
         return $data;
 
+    }
+
+    public function getDates($daysAgo){
+        $data['times_today'] = null;
+        $data['times_today_DISPLAY'] = null;
+        for($i = 0; $i<$daysAgo;$i++){
+            $data['times_today'][]=date('Y-m-d',time()-86400*($i-1));
+            $data['times_today_DISPLAY'][]=date('D M d',time()-86400*($i-1));
+        }
+        return $data;
     }
 
 

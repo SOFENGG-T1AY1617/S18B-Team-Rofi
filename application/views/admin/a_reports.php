@@ -72,11 +72,15 @@
 
 
         $("#form_room").attr('disabled', false);
+        $("#radio-today").attr('disabled', false);
+        $("#radio-weekly").attr('disabled', false);
 
         if (buildingid!=""&&roomid != "") {
             var interval;
 
             console.log(buildingid + "-" + roomid);
+
+            var dateType = $('input[name=optradio]:checked').val();
 
             $.ajax({
                 url: '<?php echo base_url('analytics/getData') ?>',
@@ -84,22 +88,13 @@
                 dataType: 'json',
                 data: {
                     roomid: roomid,
-                    dateType: $("#radio-date").val()
+                    dateType: dateType
                 }
             })
                 .done(function (result) {
                     $("#output").empty();
                     var out = [];
                     console.log(result);
-
-                    for(var i=0;i<result.length;i++){
-                        out[i]="<li>ComputerNo: "+result[i]['computerno']+" Used "+result[i]['uses']+" times</li>"
-                    }
-
-                    if (out.length > 0)
-                        $("#output").append(out);
-
-
 
                     updateGraphs(result);
                 })
@@ -134,7 +129,7 @@
             data1[i]={'uses':uses,"time":timesDisplay[i]};
         }
 
-        //console.log(data1);
+
 
         $('#graph1').empty();
         new Morris.Bar({
@@ -190,10 +185,7 @@
             postUnits:" Uses",
             xLabelAngle: 45
         });
-
     }
-
-
 
 </script>
 
@@ -242,10 +234,10 @@ include 'a_navbar.php';
                         </div>
                         <div class="radio form-group col-md-5">
                             <div class="radio" id="radio-date" name="form-date">
-                                <label><input type="radio" id="radio-today" name="optradio" value="today" checked>
+                                <label><input type="radio" id="radio-today" onchange="getData($('#form_room').val())" name="optradio" value="today" checked disabled="true">
                                     Today
                                 </label>
-                                <label><input type="radio" id="radio-weekly" name="optradio" value="weekly">
+                                <label><input type="radio" id="radio-weekly" onchange="getData($('#form_room').val())" name="optradio" value="weekly" disabled="true">
                                     Weekly
                                 </label>
                             </div>

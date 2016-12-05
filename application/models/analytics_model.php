@@ -71,26 +71,40 @@ class Analytics_Model extends CI_Model
         return $this->db->query($sql, array($id))->result();
     }
 
-    function queryAllArchiveReservationsAtRoomByTime($roomid) {
+    function queryAllArchiveReservationsAtRoomByTime($roomid,$date,$interval) {
         $sql = "SELECT start_restime as 'time', COUNT(start_restime) as uses
                 FROM archive_reservations NATURAL JOIN( SELECT computerid
                                                         FROM computers
                                                         WHERE roomid = ?) t1
+                WHERE date >= DATE_SUB(?,INTERVAL ? DAY) 
                 GROUP BY time";
 
-        $result = $this->db->query($sql, array($roomid))->result();
+        $result = $this->db->query($sql, array($roomid,$date,$interval))->result();
         return $result;
     }
 
-    function queryAllArchiveReservationsAtRoom($roomid) {
+    function queryAllArchiveReservationsAtRoomByDay($roomid,$date,$interval) {
+        $sql = "SELECT date as 'time', COUNT(start_restime) as uses
+                FROM archive_reservations NATURAL JOIN( SELECT computerid
+                                                        FROM computers
+                                                        WHERE roomid = ?) t1
+                WHERE date >= DATE_SUB(?,INTERVAL ? DAY) 
+                GROUP BY time";
+
+        $result = $this->db->query($sql, array($roomid,$date,$interval))->result();
+        return $result;
+    }
+
+    function queryAllArchiveReservationsAtRoom($roomid,$date,$interval) {
         $sql = "SELECT computerno, uses
                   FROM computers NATURAL JOIN(
                   SELECT computerid, COUNT(archive_reservationid) as uses
                       FROM archive_reservations
+                      WHERE date >= DATE_SUB(?,INTERVAL ? DAY) 
                       GROUP BY computerid) t1
                       WHERE roomid = ?";
 
-        $result = $this->db->query($sql, array($roomid))->result();
+        $result = $this->db->query($sql, array($date,$interval,$roomid))->result();
         return $result;
     }
 
