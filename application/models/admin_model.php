@@ -574,6 +574,7 @@ class Admin_Model extends CI_Model
     function deleteRoom($roomid) {
         // Delete all computers in room
         $this->removeAllComputersFromRoom($roomid);
+        $this->removeRoomAssignment($roomid);
 
         // Delete room
         $this->db->delete(TABLE_ROOMS, array('roomid' => $roomid));
@@ -581,6 +582,10 @@ class Admin_Model extends CI_Model
 
     function removeAllComputersFromRoom($roomid) {
         $this->db->delete(TABLE_COMPUTERS, array('roomid' => $roomid));
+    }
+
+    function removeRoomAssignment($roomid) {
+        $this->db->delete(TABLE_TAG_MOD_ROOMS, array(COLUMN_TAG_MOD_ROOMSID => $roomid));
     }
 
     function insertBuilding($data) {
