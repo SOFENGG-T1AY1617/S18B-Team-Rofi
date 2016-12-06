@@ -670,11 +670,11 @@ include 'a_navbar.php';
                         if($ctr==0){?>
 
                     <div class="radio">
-                        <label class="btn btn-default" ><input type="radio" name="optionsRadios" id="optionsRadios<?=$roomTypes->area_typeid?>"+ value="<?=$roomTypes->area_typeid?>" checked ><?=$roomTypes->type?></label>
+                        <label ><input type="radio" name="optionsRadios" id="optionsRadios<?=$roomTypes->area_typeid?>"+ value="<?=$roomTypes->area_typeid?>" checked ><?=$roomTypes->type?></label>
                     
                     <?php $ctr++;} else {?>
                     <div class="radio">
-                        <label class="btn btn-default" ><input type="radio" name="optionsRadios" id="optionsRadios<?=$roomTypes->area_typeid?>"+ value="<?=$roomTypes->area_typeid?>"  ><?=$roomTypes->type?></label>
+                        <label ><input type="radio" name="optionsRadios" id="optionsRadios<?=$roomTypes->area_typeid?>"+ value="<?=$roomTypes->area_typeid?>"  ><?=$roomTypes->type?></label>
                     
 
                     <?php }?>
