@@ -30,13 +30,41 @@
 
     $(document).ready(function() {
 
-        $(document).on( "click", ".slotCell:not(.selected)",function() {
+        $(document).on( "click", ".slotCell:not(.selected):not(.enabled):not(.disabled)",function() {
             selectSlot($(this));
         });
 
-        $(document).on( "click", ".slotCell.selected",function() {
+        $(document).on( "click", ".slotCell.selected:not(.enabled):not(.disabled)",function() {
             deselectSlot($(this));
         });
+
+        $("#markPresent").click( function() {
+            /*$.ajax({
+                url: '<?php //echo base_url('moderator/' . MODERATOR_UPDATE_RESERVATIONS) ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    slots: slotsPicked
+                }
+            })
+                .done(function(result) {
+
+
+                })
+                .fail(function() {
+                    $(slotContainerID).empty();
+                    console.log("fail");
+
+                })
+                .always(function() {
+
+                    console.log("complete");
+                });*/
+        } );
+
+        $("#markAbsent").click( function() {
+
+        } );
 
         selectRoom (<?php echo $roomid;?>);
     });
@@ -376,17 +404,18 @@
                             var chosenTime1 = currentTimeArray[n++];
                             var chosenTime2 = currentTimeArray[n];
 
+                            var computerID = computers[k].computerid;
+                            var computerNo = computers[k].computerno;
+
+                            var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
+
+                            clickableSlot1.setAttribute("id", strID);
+
+                            clickableSlot1.className = "slotCell pull-left";
+
+                            var currentSlotID = "#" + strID;
+
                             if (!taken) {
-                                var computerID = computers[k].computerid;
-                                var computerNo = computers[k].computerno;
-
-                                var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
-
-                                clickableSlot1.setAttribute("id", strID);
-
-                                clickableSlot1.className = "slotCell pull-left";
-
-                                var currentSlotID = "#" + strID;
 
                                 if (computers[k].statusid == <?php echo PC_DISABLED ?>) {
                                     clickableSlot1.className = clickableSlot1.className + " disabled";
@@ -398,6 +427,8 @@
                                     clickableSlot1.className = clickableSlot1.className + " selected";
                                 }
 
+                            } else {
+                                clickableSlot1.className = clickableSlot1.className + " reserved";
                             }
 
                             slotCell.appendChild(clickableSlot1);
@@ -455,6 +486,15 @@ include 'm_navbar.php';
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-md-offset-8 col-md-3" >
+                    <button id = "markPresent" class = "btn btn-success">Mark Present</button>
+                    <button id = "markAbsent" class = "btn btn-danger">Mark Absent</button>
+                </div>
+
             </div>
 
             </div>

@@ -237,9 +237,9 @@ class moderator_model extends CI_Model
         return $result->computerno;
     }
 
-    function updateRoomName($room) {
-        $this->db->where(COLUMN_ROOMID, $room['roomid']);
-        $this->db->update(TABLE_ROOMS, array('name' => $room['name']));
+    function updateAttendance($attendance, $reservationid) {
+        $this->db->where(COLUMN_RESERVATIONID, $reservationid);
+        $this->db->update(TABLE_RESERVATIONS, array(COLUMN_ATTENDANCE => $attendance));
     }
 
     function queryModDeptIDAtEmail($email){

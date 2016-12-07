@@ -46,6 +46,9 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_DECODE_SLOTS:
                     $this->decodeSlots();
                     break;
+                case MODERATOR_UPDATE_RESERVATIONS:
+                    $this->updateReservations();
+                    break;
                 default:
                     $this->initModerator();
                     break;
@@ -137,6 +140,17 @@ class ModeratorController extends CI_Controller
         );
         
         echo json_encode($data);
+    }
+
+    public function markPresentReservations() {
+        $slots = $this->input->get('slots');
+
+        foreach ($slots as $slot) {
+            //$this -> moderator -> updateReservationStatus ($getData['verified'], $getData['reservationid']);
+            //$this -> moderator -> updateRe
+        }
+
+
     }
 
     public function signIn() {

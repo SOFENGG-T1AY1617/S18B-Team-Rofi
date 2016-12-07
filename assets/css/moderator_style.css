@@ -1,7 +1,7 @@
 :root{
     --disabled: #ED1C24;
-    --enabled: #61D315;
-    --taken: lightgrey;
+    --enabled: limegreen;
+    --taken: dodgerblue;
 }
 
 .nopadding {
@@ -110,34 +110,30 @@ th:first-child {
 }
 
 .slotCell.enabled {
+    opacity: 0.50;
     background-color: var(--enabled);
 }
 
 .slotCell.disabled {
+    opacity: 0.50;
     background-color: var(--disabled);
 }
 
-.slotCell.enabled.selectedX,
-.slotCell.enabled.selectedY,
-.slotCell.enabled.selected{
-    -moz-box-shadow:    inset 0 0 0 2px #000000;
-    -webkit-box-shadow: inset 0 0 0 2px #000000;
-    box-shadow:         inset 0 0 0 2px #000000;
+.slotCell.reserved {
+    background-color: var(--taken);
 }
 
-.slotCell.disabled.selectedX,
-.slotCell.disabled.selectedY,
-.slotCell.disabled.selected {
-    -moz-box-shadow:    inset 0 0 0 2px #000000;
-    -webkit-box-shadow: inset 0 0 0 2px #000000;
-    box-shadow:         inset 0 0 0 2px #000000;
-}
-
-.slotCell:hover {
+.slotCell.reserved:hover {
     opacity: 0.75;
     -moz-box-shadow:    inset 0 0 0 2px #eeeeee;
     -webkit-box-shadow: inset 0 0 0 2px #eeeeee;
     box-shadow:         inset 0 0 0 2px #eeeeee;
+}
+
+.slotCell.reserved.selected {
+    -moz-box-shadow:    inset 0 0 0 2px #000000;
+    -webkit-box-shadow: inset 0 0 0 2px #000000;
+    box-shadow:         inset 0 0 0 2px #000000;
 }
 
 .slot-hover {
@@ -202,7 +198,7 @@ div.legend.taken{
 }
 
 #slots_selected {
-    height: 200px;
-    min-height: 200px;
+    height: 80px;
+    min-height: 80px;
     overflow-y: scroll;
 }
