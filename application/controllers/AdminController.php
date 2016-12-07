@@ -154,13 +154,25 @@ class AdminController extends CI_Controller
     public function accView(){
         $data['administrators'] = $this->admin->queryAllAdministators();
 
+        $data['departments'] = $this->admin->queryAllDepartments();
+        $data['rooms'] = $this->admin->queryRoomsWithDepartmentID($_SESSION['admin_departmentid']);
+        $modRooms = $this->admin->queryAllTagModRoom();
 
         if($_SESSION['admin_typeid'] == 1)
             $data['moderators'] = $this->admin->queryAllModerators();
-        else
+        else {
             $data['moderators'] = $this->admin->queryModeratorsWithDepartmentID($_SESSION['admin_departmentid']);
 
-        $data['departments'] = $this->admin->queryAllDepartments();
+            foreach($modRooms as $tag){
+                foreach ($data['moderators'] as $mod)
+                    if($tag->moderatorid == $mod->moderatorid){
+                        $mod['room'] = $tag->roomid;
+                    }
+            }
+        }
+
+
+
 
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home

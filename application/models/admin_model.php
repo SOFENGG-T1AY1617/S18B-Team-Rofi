@@ -238,6 +238,11 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($name))->result();
     }
 
+    function queryAllTagModRoom(){
+        $sql = "SELECT * FROM tag_mod_room";
+        return $this->db->query($sql)->result();
+    }
+
     function queryColleges() {
         return $this->db->get(TABLE_COLLEGES)->result();
     }
