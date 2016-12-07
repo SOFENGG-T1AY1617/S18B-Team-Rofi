@@ -5,6 +5,18 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 
+<style>
+    .graphlabel{
+        text-align: center;
+        padding-top: 10px;
+    }
+
+    .row{
+        position:fixed;
+    }
+
+</style>
+
 <script xmlns="http://www.w3.org/1999/html">
 
     function selectBuilding(buildingid) {
@@ -107,7 +119,13 @@
                 .then(function () {
 
                 })
+
+            $("#lgraph1").html("Computer Use over Time");
+            $("#lgraph2").html("Computer Use per Computer");
+
         }
+
+
     }
 
     function updateGraphs(result) {
@@ -213,11 +231,18 @@ include 'a_navbar.php';
     <li class="active">Reports</li>
 </ol>
 
-        <div class = "row">
-            <div class = "col-md-5">
+<div class="clearfix col-md-7 col-md-offset-2">
+    <label id="lgraph1" class="graphlabel col-md-12"></label>
+    <div id="graph1" class="graph"></div>
+    <label id="lgraph2" class="graphlabel col-md-12"></label>
+    <div id="graph2" class="graph"></div>
+</div>
+
+        <div class = "row col-md-offset-9 col-md-3">
+            <div class = "">
                 <div class = "panel panel-default">
                     <div class = "panel-body">
-                        <div class = "form-group col-md-7">
+                        <div class = "form-group col-md-12">
                             Building:
                             <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
                                 <option value="" selected disabled>Choose a building...</option>
@@ -226,7 +251,7 @@ include 'a_navbar.php';
                                 <?php endforeach;?>
                             </select>
                         </div>
-                        <div class = "form-group col-md-5">
+                        <div class = "form-group col-md-12">
                             Room:
                             <select class="form-control" id="form_room" name="form-room" onchange="getData(this.value)" disabled=true>
                                 <option value="" selected></option>
@@ -246,8 +271,6 @@ include 'a_navbar.php';
                 </div>
             </div>
         </div>
-        <div id="graph1" class="graph"></div>
-        <div id="graph2" class="graph"></div>
 
 </body>
 </html>

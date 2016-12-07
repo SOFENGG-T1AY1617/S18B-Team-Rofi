@@ -2,6 +2,13 @@
 <link href="<?=base_url()?>/assets/css/clockpicker.css" rel="stylesheet">
 <script src="<?=base_url()?>/assets/js/clockpicker.js"></script>
 
+<style>
+    .timeinput{
+        display:inline-block!important;
+        width:100px!important;
+    }
+</style>
+
 <script xmlns="http://www.w3.org/1999/html">
 
     $(document).ready(function(){
@@ -45,24 +52,18 @@
 
         cells0[1].innerHTML = "<div class=\"clearfix\">"+
             "<div class=\"col-md-2\"><label>START : </label></div>"+
-            "<div class=\"input-group clockpicker\">"+
-            "<input type=\"text\" class=\"form-control\" value=\"08:00\">"+
-            "<span class=\"input-group-addon\">"+
-            "<span class=\"glyphicon glyphicon-time\"></span>"+
-            "</span>"+
+            "<div class=\"input-group clockpicker col-md-8\">"+
+            "<input type=\"number\" class=\"form-control timeinput\"> "+ ":"+ " <input type=\"number\" class=\"form-control timeinput\" >" +
             "</div>"+
             "<div class=\"col-md-2\"><label>END : </label></div>"+
-            "<div class=\"input-group clockpicker\">"+
-            "<input type=\"text\" class=\"form-control\" value=\"20:00\">"+
-            "<span class=\"input-group-addon\">"+
-            "<span class=\"glyphicon glyphicon-time\"></span>"+
-            "</span>"+
-            "</div>";
+            "<div class=\"input-group clockpicker col-md-8\">"+
+            "<input type=\"number\" class=\"form-control timeinput\"> "+
+            ":" + " <input type=\"number\" class=\"form-control timeinput\" >" +"</div>";
 
         var cells1 = rows[1].cells;
         var curIDTI = $(cells1[1]).attr("id");
         var curSettingTI = $(cells1[1]).data("value");
-        cells1[1].innerHTML = "<div class= \"input-group\">" +
+        cells1[1].innerHTML = "<div class= \"input-group col-md-3\">" +
             "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDTI+ "\" value=\""+curSettingTI+ "\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
@@ -70,7 +71,7 @@
         var cells2 = rows[2].cells;
         var curIDTL = $(cells2[1]).attr("id");
         var curSettingTL = $(cells2[1]).data("value");
-        cells2[1].innerHTML = "<div class= \"input-group\">" +
+        cells2[1].innerHTML = "<div class= \"input-group col-md-3\">" +
             "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDTL+ "\" value=\""+curSettingTL+"\">" +
             "<div class=\"input-group-addon \">timeslots</div>" +
             "</div>";
@@ -78,7 +79,7 @@
         var cells3 = rows[3].cells;
         var curIDRA = $(cells3[1]).attr("id");
         var curSettingRA = $(cells3[1]).data("value");
-        cells3[1].innerHTML = "<div class= \"input-group\">" +
+        cells3[1].innerHTML = "<div class= \"input-group col-md-3\">" +
             "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDRA+ "\" value=\""+curSettingRA+ "\">" +
             "<div class=\"input-group-addon \">days</div>" +
             "</div>";
@@ -86,7 +87,7 @@
         var cells4 = rows[4].cells;
         var curIDRE = $(cells4[1]).attr("id");
         var curSettingRE = $(cells4[1]).data("value");
-        cells4[1].innerHTML = "<div class= \"input-group\">" +
+        cells4[1].innerHTML = "<div class= \"input-group col-md-3\">" +
             "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDRE+ "\" value=\""+curSettingRE+"\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
@@ -94,7 +95,7 @@
         var cells5 = rows[5].cells;
         var curIDCE = $(cells5[1]).attr("id");
         var curSettingCE = $(cells5[1]).data("value");
-        cells5[1].innerHTML = "<div class= \"input-group\">" +
+        cells5[1].innerHTML = "<div class= \"input-group col-md-3\">" +
             "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\""+curIDCE+ "\" value=\""+curSettingCE+"\">" +
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
