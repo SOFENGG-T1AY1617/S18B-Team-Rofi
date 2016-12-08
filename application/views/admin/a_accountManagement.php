@@ -153,10 +153,12 @@
     }
 
     var initialModTableData;
+    var initialModTable;
 
     function changeViewToEdit(table, buttons, modal){
         //console.log(table);
         var tableA = document.getElementById(table);
+        initialModTable = tableA.innerHTML;
         var rows = tableA.rows;
         var tID = table;
         var bID = buttons;
@@ -261,7 +263,7 @@
         /*Insert DB extraction Codes Here*/
         var tableA=document.getElementById(table);
 
-        var out = "<thead> <tr> <th>First Name</th><th>Last Name</th><th>Email</th><th>Department</th><th></th></tr></thead><tbody>";
+        var out = "<th>First Name</th><th>Last Name</th><th>Email</th>        <th>Department</th>        <th>Area Assignment </th>        <th></th>";
 
 
         if(table=="admintable")
@@ -294,6 +296,8 @@
 
     function changeViewToView(table, button, modal){
         console.log(table);
+
+
         var tableA = document.getElementById(table);
         var buttonA = document.getElementById(button);
         var rows = tableA.rows;
@@ -305,7 +309,7 @@
             var curFName = cells[0].getElementsByTagName("input")[0].value;
             var curLName = cells[1].getElementsByTagName("input")[0].value;
             var curEmail = cells[2].getElementsByTagName("input")[0].value;
-            var curAreaAssign = cells[4].getElementsByTagName("input")[0].; /* something */
+            var curAreaAssign = cells[4].getElementsByTagName("select")[0].value;
             //var curDept = cells[3].getElementsByTagName("select")[0].value;
 
 
