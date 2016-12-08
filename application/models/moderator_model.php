@@ -276,6 +276,16 @@ class moderator_model extends CI_Model
         return $roomid[0]->roomid;
     }
 
+    function queryUserIDwithReservationID ($id) {
+        $sql = "SELECT userid
+                FROM reservations
+                WHERE reservationid = ?";
+
+        $userid = $this->db->query($sql, array($id))->result();
+
+        return $userid[0]->userid;
+    }
+
     function archivePastReservations($date, $time) {
         $sql = "call archive_past_reservations(?, ?)";
 

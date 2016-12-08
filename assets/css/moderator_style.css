@@ -1,6 +1,6 @@
 :root{
     --disabled: #ED1C24;
-    --enabled: limegreen;
+    --enabled: #ddd;
     --taken: dodgerblue;
 }
 
@@ -201,4 +201,8 @@ div.legend.taken{
     height: 80px;
     min-height: 80px;
     overflow-y: scroll;
+}
+
+#mod_controls_container button{
+    margin-bottom: 15px;
 }

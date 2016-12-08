@@ -39,8 +39,8 @@
         });
 
         $("#markPresent").click( function() {
-            /*$.ajax({
-                url: '<?php //echo base_url('moderator/' . MODERATOR_UPDATE_RESERVATIONS) ?>',
+            $.ajax({
+                url: '<?php echo base_url('moderator/' . MODERATOR_SET_RESERVATIONS_PRESENT) ?>',
                 type: 'GET',
                 dataType: 'json',
                 data: {
@@ -49,21 +49,19 @@
             })
                 .done(function(result) {
 
+                    toastr.success(slotsPicked.length + " reservations were updated!", "Selected reservation/s is/are now present");
 
                 })
                 .fail(function() {
-                    $(slotContainerID).empty();
+
                     console.log("fail");
 
                 })
                 .always(function() {
 
                     console.log("complete");
-                });*/
-        } );
 
-        $("#markAbsent").click( function() {
-
+                });
         } );
 
         selectRoom (<?php echo $roomid;?>);
@@ -127,11 +125,8 @@
                         "<span class = 'col-md-1'>X</span>" +
                         "<span class = 'col-md-1'>" + result[i].roomName + "</span>" +
                         "<span class = 'col-md-2'>Pc No. " + result[i].compNo + "</span>" +
-                        "<span class = 'col-md-4'>someone@gmail.com</span>" +
-                        "<span class = 'col-md-1 text-center'>" + result[i].start + "</span>" +
-                        "<span class = 'col-md-1 text-center'> - </span>" +
-                        "<span class = 'col-md-1 text-center'>" + result[i].end + "</span>" +
-                        "<span class = 'col-md-offset-1'></span>" +
+                        "<span class = 'col-md-4'>" + result[i].userid + "</span>" +
+                        "<span class = 'col-md-4 text-center'>" + result[i].start + " - " + result[i].end + "</span>" +
                         "</div>"
                     );
                 }
@@ -396,9 +391,14 @@
                             slotCell.className = "nopadding";
 
                             var taken = false;
+                            var takenID = 0;
+
                             for (var p = 0; p < reservations.length; p++) {
-                                if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
+                                if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid)) {
                                     taken = true;
+                                    takenID = reservations[p].reservationid;
+                                }
+
                             }
 
                             var chosenTime1 = currentTimeArray[n++];
@@ -429,6 +429,7 @@
 
                             } else {
                                 clickableSlot1.className = clickableSlot1.className + " reserved";
+                                clickableSlot1.setAttribute("id", strID + "_" + takenID);
                             }
 
                             slotCell.appendChild(clickableSlot1);
@@ -461,7 +462,7 @@ include 'm_navbar.php';
 
             <div class = "row">
 
-                <div class = "col-md-10 col-md-offset-1">
+                <div class = "col-md-8 col-md-offset-1">
                     <div class = "panel panel-default">
                         <div class = "panel-heading">
                             Slots Currently Selected:
@@ -472,6 +473,12 @@ include 'm_navbar.php';
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div id = "mod_controls_container" class = "col-md-2">
+                    <button id = "markPresent" class = "btn btn-success col-md-12">Mark Present</button>
+                    <button id = "verifySlot" class = "btn btn-success col-md-12">Verify Slot</button>
+                    <button id = "removeReservation" class = "btn btn-danger col-md-12">Remove</button>
                 </div>
 
             </div>
@@ -486,15 +493,6 @@ include 'm_navbar.php';
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class = "row">
-
-                <div class = "col-md-offset-8 col-md-3" >
-                    <button id = "markPresent" class = "btn btn-success">Mark Present</button>
-                    <button id = "markAbsent" class = "btn btn-danger">Mark Absent</button>
-                </div>
-
             </div>
 
             </div>

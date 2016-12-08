@@ -46,8 +46,8 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_DECODE_SLOTS:
                     $this->decodeSlots();
                     break;
-                case MODERATOR_UPDATE_RESERVATIONS:
-                    $this->updateReservations();
+                case MODERATOR_SET_RESERVATIONS_PRESENT:
+                    $this->markPresentReservations();
                     break;
                 default:
                     $this->initModerator();
@@ -113,9 +113,11 @@ class ModeratorController extends CI_Controller
 
             $date = date('M', mktime(0, 0, 0, explode('-',$arr[1])[1], 10))." ".explode('-',$arr[1])[2].", ".explode('-',$arr[1])[0];
             $timeStart = date('h:iA',mktime(explode(':',$arr[2])[0],explode(':',$arr[2])[1]));
-            $timeEnd =  date('h:iA',mktime(explode(':',$arr[3])[0],explode(':',$arr[3])[1]));//;
+            $timeEnd =  date('h:iA',mktime(explode(':',$arr[3])[0],explode(':',$arr[3])[1]));
 
-            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $date, 'start' => $timeStart, 'end' => $timeEnd);
+            $idnumber = $this->moderator->queryUserIDwithReservationID($arr[4]);
+
+            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $date, 'start' => $timeStart, 'end' => $timeEnd, 'userid' => $idnumber);
             array_push($data, $arr2);
         }
         /*$data = array(
@@ -146,10 +148,10 @@ class ModeratorController extends CI_Controller
         $slots = $this->input->get('slots');
 
         foreach ($slots as $slot) {
-            //$this -> moderator -> updateReservationStatus ($getData['verified'], $getData['reservationid']);
-            //$this -> moderator -> updateRe
-        }
+            $arr = explode('_', $slot);
 
+            $this->moderator->updateAttendance (1, intval($arr[4]));
+        }
 
     }
 
