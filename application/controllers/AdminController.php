@@ -624,6 +624,8 @@ class AdminController extends CI_Controller
         $id = $this->input->get("business_rulesid");
 
         $updateData = array(
+            'start_time' => $this->input->get("start_time"),
+            'end_time' => $this->input->get("end_time"),
             'interval' => $this->input->get("interval"),
             'limit' => $this->input->get("limit"),
             'accessibility' => $this->input->get("accessibility"),
