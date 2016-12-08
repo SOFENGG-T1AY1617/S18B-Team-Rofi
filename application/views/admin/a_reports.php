@@ -11,9 +11,15 @@
         padding-top: 10px;
     }
 
+    .graphcontainer{
+        paddting-top: 20px;
+        paddting-bottom: 20px;
+    }
+
     .row{
         position:fixed;
     }
+
 
 </style>
 
@@ -58,8 +64,14 @@
                         $("#form_room").append(out);
 
                     getData(firstRoomID);
-
                     numOfRooms = result.length;
+
+                    if(numOfRooms > 0){
+                        $('#topnav').removeClass("col-md-offset-2");
+                        $('#topnav').removeClass("col-md-8");
+                        //$('#topnav').addClass("col-md-offset-10");
+                        $('#topnav').addClass("col-md-2");
+                    }
 
                 })
                 .fail(function() {
@@ -231,46 +243,54 @@ include 'a_navbar.php';
     <li class="active">Reports</li>
 </ol>
 
-<div class="clearfix col-md-7 col-md-offset-2">
-    <label id="lgraph1" class="graphlabel col-md-12"></label>
-    <div id="graph1" class="graph"></div>
-    <label id="lgraph2" class="graphlabel col-md-12"></label>
-    <div id="graph2" class="graph"></div>
-</div>
-
-        <div class = "row col-md-offset-9 col-md-3">
-            <div class = "">
-                <div class = "panel panel-default">
-                    <div class = "panel-body">
-                        <div class = "form-group col-md-12">
-                            Building:
-                            <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
-                                <option value="" selected disabled>Choose a building...</option>
-                                <?php foreach($buildings as $row):?>
-                                    <option value="<?=$row->buildingid?>"><?=$row->name?></option>
-                                <?php endforeach;?>
-                            </select>
-                        </div>
-                        <div class = "form-group col-md-12">
-                            Room:
-                            <select class="form-control" id="form_room" name="form-room" onchange="getData(this.value)" disabled=true>
-                                <option value="" selected></option>
-                            </select>
-                        </div>
-                        <div class="radio form-group col-md-5">
-                            <div class="radio" id="radio-date" name="form-date">
-                                <label><input type="radio" id="radio-today" onchange="getData($('#form_room').val())" name="optradio" value="today" checked disabled="true">
-                                    Today
-                                </label>
-                                <label><input type="radio" id="radio-weekly" onchange="getData($('#form_room').val())" name="optradio" value="weekly" disabled="true">
-                                    Weekly
-                                </label>
-                            </div>
-                        </div>
+<div id = "topnav" class = "row col-md-offset-2 col-md-8">
+    <div class = "">
+        <div class = "panel panel-default">
+            <div class = "panel-body">
+                <div class = "form-group col-md-12">
+                    Building:
+                    <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
+                        <option value="" selected disabled>Choose a building...</option>
+                        <?php foreach($buildings as $row):?>
+                            <option value="<?=$row->buildingid?>"><?=$row->name?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
+                <div class = "form-group col-md-12">
+                    Room:
+                    <select class="form-control" id="form_room" name="form-room" onchange="getData(this.value)" disabled=true>
+                        <option value="" selected></option>
+                    </select>
+                </div>
+                <div class="radio form-group col-md-5">
+                    <div class="radio" id="radio-date" name="form-date">
+                        <label><input type="radio" id="radio-today" onchange="getData($('#form_room').val())" name="optradio" value="today" checked disabled="true">
+                            Today
+                        </label>
+                        <label><input type="radio" id="radio-weekly" onchange="getData($('#form_room').val())" name="optradio" value="weekly" disabled="true">
+                            Weekly
+                        </label>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="clearfix col-md-8 col-md-offset-2">
+    <label id="lgraph1" class="graphlabel"></label>
+
+    <div class="graphcontainer">
+        <div id="graph1" class="graph"></div>
+    </div>
+        
+    <label id="lgraph2" class="graphlabel"></label>
+
+    <div class="graphcontainer">
+        <div id="graph2" class="graph"></div>
+    </div>
+    <br><br>
+</div>
 
 </body>
 </html>
