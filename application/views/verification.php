@@ -27,7 +27,7 @@
                 </div>
                 <div class = "row">
                     <div class = "col-md-3 col-md-offset-5">
-                        <button id = "ok-button" type="button" class="btn btn-success">OK!</button>
+                        <a class="btn btn-success" href="<?=site_url("")?>">OK!</a>
                     </div>
                 </div>
             </div>

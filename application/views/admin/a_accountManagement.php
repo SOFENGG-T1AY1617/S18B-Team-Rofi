@@ -18,7 +18,8 @@
         var cellFName = row.insertCell(0);
         var cellLName = row.insertCell(1);
         var cellEmail = row.insertCell(2);
-        var del         = row.insertCell(3);
+        var cellAreaAssign = row.insertCell(3);
+        var del         = row.insertCell(4);
 
 
         console.log(tableA.rows.length+"Doge");
@@ -32,6 +33,7 @@
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
+        cellAreaAssign.innerHTML = "<select type='text' class='form-control' placeholder='Choose Area'> <option value='0' disabled selected>Choose Area</option></select>";
         del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
 
@@ -199,18 +201,19 @@
             var curLNameID = $(cells[1]).attr("id");
             var curEmailID = $(cells[2]).attr("id");
             var curDeptID = $(cells[3]).attr("id");
-
+            var curAreaAssignID = $(cells[4]).attr("id");
 
             var curFName = cells[0].innerHTML;
             var curLName = cells[1].innerHTML;
             var curEmail = cells[2].innerHTML;
             var curDept = cells[3].innerHTML;
-
+            var curAreaAssign = cells[4].innerHTML;
 
             console.log(curDeptID);
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curFNameID+"\"value=\"" + curFName + "\">";
             cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curLNameID+"\" value=\"" + curLName + "\">";
             cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curEmailID+"\" value=\"" + curEmail + "\">";
+            cells[4].innerHTML = "<select type=\"text\" class=\"form-control\" id=\""+curAreaAssignID+"\" value=\"" + curAreaAssign + "\"></select>";
             /* var drop = "<select type='text' id=\""+curDeptID+"\" class='form-control' placeholder='Enter department'>";
 
             var deps = ;
@@ -227,11 +230,11 @@
             }
             drop+="</select>";
             cells[3].innerHTML = drop; */
-            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
+            cells[5].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
             console.log(tID);
 
-           cells[4].id="DELETECOLUMN";
+           cells[5].id="DELETECOLUMN";
 
 
 
@@ -302,23 +305,24 @@
             var curFName = cells[0].getElementsByTagName("input")[0].value;
             var curLName = cells[1].getElementsByTagName("input")[0].value;
             var curEmail = cells[2].getElementsByTagName("input")[0].value;
+            var curAreaAssign = cells[4].getElementsByTagName("input")[0].; /* something */
             //var curDept = cells[3].getElementsByTagName("select")[0].value;
 
 
-            cells[4].innerHTML = "";
+            cells[5].innerHTML = "";
 
-            if(curLName != "" && curFName != "" && curEmail != ""){
+            if(curLName != "" && curFName != "" && curEmail != "" && curAreaAssign !=""){
                 cells[0].innerHTML = curFName;
                 cells[1].innerHTML = curLName;
                 cells[2].innerHTML = curEmail;
                 cells[3].innerHTML = <?php echo $_SESSION['admin_departmentid'] ?>;
+                cells[4].innerHTML = curAreaAssign;
             }
             else{
                 console.log(i);
                 deleteRows[lengthofdel] = i;
                 lengthofdel ++;
             }
-
 
         }
 
@@ -916,6 +920,7 @@ include 'a_navbar.php';
                                         <th>Last Name</th>
                                         <th>Email</th>
                                         <th>Department</th>
+                                        <th>Area Assignment </th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -927,6 +932,7 @@ include 'a_navbar.php';
                                             <td><?=$mod->last_name?></td>
                                             <td><?=$mod->email?></td>
                                             <td><?=$mod->name?></td>
+                                            <td>ASSIGNED ROOM</td>
                                             <td></td>
                                         </tr>
                                     <?php endforeach;?>
@@ -964,6 +970,7 @@ include 'a_navbar.php';
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
+                            <th>Area Assignment </th>
                             <th>Delete</th>
 
                         </tr>
@@ -975,7 +982,11 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
-
+                            <td><select type='text' class='form-control' placeholder='Choose Area'><option value='0' disabled selected>Choose Area</option>
+                                    <!-- TODO: change this option to some sort of php loop -->
+                                    <!-- when you add another row in the function, you'll need to copy the innerHTML of this select statement probably.-->
+                                </select>
+                            </td>
                             <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default clearmod-btn">&times;</button></td>
 
                         </tr>

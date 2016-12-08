@@ -326,7 +326,7 @@ class Controller extends CI_Controller {
         else {
             $data = array(
                 'result' => "fail",
-                'message' => "Sorry, unable to verify your email.",
+                'message' => "Sorry, unable to verify your reservation. Your slot has expired.",
             );
         }
         //echo json_encode($data);

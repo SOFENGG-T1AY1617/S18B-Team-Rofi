@@ -122,10 +122,10 @@ class Admin_Model extends CI_Model
 
     function queryRoomsWithDepartmentID($id) {
         //return $this->db->get(TABLE_ROOMS)->result();
-        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
+        $sql = "SELECT r.roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
                 FROM (SELECT * 
                       FROM rooms
-                      WHERE departmentid = ?) r NATURAL JOIN computers
+                      WHERE departmentid = ?) r LEFT JOIN computers ON r.roomid = computers.roomid
                 GROUP BY roomid
                 ORDER BY name";
         return $this->db->query($sql, array($id))->result();
@@ -579,6 +579,7 @@ class Admin_Model extends CI_Model
     function deleteRoom($roomid) {
         // Delete all computers in room
         $this->removeAllComputersFromRoom($roomid);
+        $this->removeRoomAssignment($roomid);
 
         // Delete room
         $this->db->delete(TABLE_ROOMS, array('roomid' => $roomid));
@@ -586,6 +587,10 @@ class Admin_Model extends CI_Model
 
     function removeAllComputersFromRoom($roomid) {
         $this->db->delete(TABLE_COMPUTERS, array('roomid' => $roomid));
+    }
+
+    function removeRoomAssignment($roomid) {
+        $this->db->delete(TABLE_TAG_MOD_ROOMS, array(COLUMN_TAG_MOD_ROOMSID => $roomid));
     }
 
     function insertBuilding($data) {
