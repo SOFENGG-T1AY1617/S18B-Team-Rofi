@@ -283,7 +283,7 @@ include 'a_navbar.php';
 ?>
 
 <ol class="breadcrumb  col-md-offset-2 col-md-10">
-    <li><a href="#">Admin</a></li>
+    <li>Admin</li>
     <li class="active">Department Management</li>
 </ol>
 

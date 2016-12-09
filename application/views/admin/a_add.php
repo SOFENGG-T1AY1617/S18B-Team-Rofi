@@ -514,8 +514,8 @@ include 'a_navbar.php';
 ?>
 
 <ol class="breadcrumb  col-md-offset-2 col-md-5">
-    <li><a href="#">Admin</a></li>
-    <li><a href="#">Application Settings</a></li>
+    <li>Admin</li>
+    <li>Application Settings</li>
     <li class="active">Manage Buildings</li>
 </ol>
 
