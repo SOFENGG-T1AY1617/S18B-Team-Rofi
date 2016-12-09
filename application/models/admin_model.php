@@ -573,8 +573,7 @@ class Admin_Model extends CI_Model
 
     function deleteRoom($roomid) {
         // Delete all computers in room
-        $this->removeAllComputersFromRoom($roomid);
-        $this->removeRoomAssignment($roomid);
+        $this->removeRoomAssociations($roomid);
 
         // Delete room
         $this->db->delete(TABLE_ROOMS, array('roomid' => $roomid));
@@ -752,4 +751,15 @@ class Admin_Model extends CI_Model
         return $result[COLUMN_DEPARTMENTID];
     }
 
+    function removeRoomAssociations($roomid) {
+        $this->removeAllComputersFromRoom($roomid);
+        $this->removeRoomAssignment($roomid);
+        $this->deleteClosedComputers($roomid);
+    }
+
+    function deleteClosedComputers($roomid) {
+        $sql = "call delete_closed_computers(?)";
+
+        $this->db->query($sql, array($roomid));
+    }
 }
