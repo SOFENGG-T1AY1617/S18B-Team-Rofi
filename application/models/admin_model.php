@@ -102,9 +102,10 @@ class Admin_Model extends CI_Model
     }
 
     function queryModeratorsWithDepartmentID($id) {
-        $this->db->select('*');
+        $this->db->select('*, "No Room" as room');
         $this->db->from(TABLE_MODERATORS);
         $this->db->join(TABLE_DEPARTMENTS, 'mod_departmentid = departmentid');
+        //$this->db->join(TABLE_TAG_MOD_ROOMS, 'moderators.moderatorid = tag_mod_rooms.moderatorid');
         $this->db->where(COLUMN_MOD_DEPARTMENTID, $id);
         $this->db->order_by(COLUMN_FIRST_NAME, COLUMN_LAST_NAME);
         $query = $this->db->get();
@@ -130,6 +131,12 @@ class Admin_Model extends CI_Model
                 ORDER BY name";
         return $this->db->query($sql, array($id))->result();
     }
+
+    function queryFreeRoomsWithDepartmentID($id){
+        $sql = "SELECT r.name, r.roomid FROM rooms r WHERE r.departmentid = ? AND !(r.roomid IN (SELECT `roomid` FROM tag_mod_rooms))";
+        return $this->db->query($sql, array($id))->result();
+    }
+
 
     function queryRoomsWithDepartmentIDAndBuildingID($id, $bid) {
         //return $this->db->get(TABLE_ROOMS)->result();
@@ -239,7 +246,7 @@ class Admin_Model extends CI_Model
     }
 
     function queryAllTagModRoom(){
-        $sql = "SELECT * FROM tag_mod_room";
+        $sql = "SELECT * FROM tag_mod_rooms";
         return $this->db->query($sql)->result();
     }
 
@@ -404,9 +411,19 @@ class Admin_Model extends CI_Model
                 'mod_departmentid' => $data['departmentid']
             );
 
+
+
             if(!($this->isExistingModerator($insertModData[COLUMN_EMAIL]))) {
                 $this->db->insert(TABLE_MODERATORS, $insertModData);
                 $numAdded++;
+
+                if(intval($mod[3])!=0){
+                    $insertTagData=array(
+                        'moderatorid' => intval($this->queryModIDAtEmail($mod[2])),
+                        'roomid' => intval($mod[3])
+                    );
+                    $this->db->insert(TABLE_TAG_MOD_ROOMS, $insertTagData);
+                }
             } else {
                 $notAdded[] = $mod[0] . ' ' . $mod[1];
             }
@@ -757,4 +774,13 @@ class Admin_Model extends CI_Model
         return $result[COLUMN_DEPARTMENTID];
     }
 
+    function queryModIDAtEmail($email){
+        $sql = "SELECT moderatorid 
+                      FROM moderators
+                      WHERE email = ?";
+
+        $id = $this->db->query($sql, array($email))->result();
+
+        return $id[0]->moderatorid;
+    }
 }

@@ -158,6 +158,8 @@ class AdminController extends CI_Controller
         $data['rooms'] = $this->admin->queryRoomsWithDepartmentID($_SESSION['admin_departmentid']);
         $modRooms = $this->admin->queryAllTagModRoom();
 
+        $data['freeRooms']= $this->admin->queryFreeRoomsWithDepartmentID($_SESSION['admin_departmentid']);
+
         if($_SESSION['admin_typeid'] == 1)
             $data['moderators'] = $this->admin->queryAllModerators();
         else {
@@ -166,9 +168,13 @@ class AdminController extends CI_Controller
             foreach($modRooms as $tag){
                 foreach ($data['moderators'] as $mod)
                     if($tag->moderatorid == $mod->moderatorid){
-                        $mod['room'] = $tag->roomid;
+                        foreach ($data['rooms'] as $room) {
+                            if($room->roomid == $tag->roomid)
+                            $mod->room = $room->name;
+                        }
                     }
             }
+
         }
 
 
