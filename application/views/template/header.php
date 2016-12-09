@@ -11,6 +11,9 @@
     <link href="<?=base_url()?>assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?=base_url()?>assets/css/reservation_system_style.css" rel="stylesheet">
     <link href="<?=base_url()?>assets/css/toastr.css" rel="stylesheet" />
+    <link href="<?=base_url()?>assets/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
+    <link href="<?=base_url()?>assets/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet"/>
+    <link href="<?=base_url()?>assets/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet"/>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -24,6 +27,7 @@
     <script src="<?=base_url()?>assets/js/bootstrap.min.js"></script>
     <script src="<?=base_url()?>assets/js/toastr.min.js"></script>
     <script src="<?=base_url()?>assets/js/floatThread.js"></script>
+    <script src="<?=base_url()?>assets/jquery-ui/jquery-ui.js"></script>
 
     <script type="text/javascript">
 
