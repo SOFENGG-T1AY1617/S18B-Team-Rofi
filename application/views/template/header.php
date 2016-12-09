@@ -27,7 +27,7 @@
     <script src="<?=base_url()?>assets/js/bootstrap.min.js"></script>
     <script src="<?=base_url()?>assets/js/toastr.min.js"></script>
     <script src="<?=base_url()?>assets/js/floatThread.js"></script>
-    <script src="<?=base_url()?>assets/jquery-ui/jquery-ui.js"></script>
+    <script src="<?=base_url()?>assets/jquery-ui/jquery-ui.min.js"></script>
 
     <script type="text/javascript">
 

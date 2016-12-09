@@ -99,6 +99,12 @@ $defaultTab = 1;
 
                 $(document).ready(function() {
 
+                    $( function() {
+                        $( "#datepicker" ).datepicker({
+                            minDate: 0,
+                            maxDate: 7
+                        });
+                    } );
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
                         if (slotsPicked == 0) {
                             toastr.info("You must choose up to "+maxNumberOfSlots+" slots before proceeding.", "Info");
@@ -716,6 +722,7 @@ $defaultTab = 1;
             </script>
 <!--Step 1-->
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
+                <input type="text" id="datepicker">
 
                 <div class = "row">
                     <div class = "col-md-3 col-md-offset-1">
