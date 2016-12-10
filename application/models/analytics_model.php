@@ -73,9 +73,9 @@ class Analytics_Model extends CI_Model
 
     function queryAllArchiveReservationsAtRoomByTime($roomid,$date,$interval) {
         $sql = "SELECT start_restime as 'time', COUNT(start_restime) as uses
-                FROM archive_reservations NATURAL JOIN( SELECT computerid
-                                                        FROM computers
-                                                        WHERE roomid = ?) t1
+                FROM archive_reservations NATURAL JOIN( SELECT name room_name
+                                                              from rooms
+                                                              where roomid = ?) t1
                 WHERE date >= DATE_SUB(?,INTERVAL ? DAY) 
                 GROUP BY time";
 
@@ -85,9 +85,9 @@ class Analytics_Model extends CI_Model
 
     function queryAllArchiveReservationsAtRoomByDay($roomid,$date,$interval) {
         $sql = "SELECT date as 'time', COUNT(start_restime) as uses
-                FROM archive_reservations NATURAL JOIN( SELECT computerid
-                                                        FROM computers
-                                                        WHERE roomid = ?) t1
+                FROM archive_reservations NATURAL JOIN( SELECT name room_name
+                                                          from rooms
+                                                          where roomid = ?) t1
                 WHERE date >= DATE_SUB(?,INTERVAL ? DAY) 
                 GROUP BY time";
 
@@ -96,15 +96,15 @@ class Analytics_Model extends CI_Model
     }
 
     function queryAllArchiveReservationsAtRoom($roomid,$date,$interval) {
-        $sql = "SELECT computerno, uses
-                  FROM computers NATURAL JOIN(
-                  SELECT computerid, COUNT(archive_reservationid) as uses
-                      FROM archive_reservations
+        $sql = "SELECT computerno, COUNT(archive_reservationid) as uses, room_name
+                      FROM archive_reservations NATURAL JOIN(
+                      SELECT name room_name
+                      from rooms
+                      where roomid = ? ) t1
                       WHERE date >= DATE_SUB(?,INTERVAL ? DAY) 
-                      GROUP BY computerid) t1
-                      WHERE roomid = ?";
+                      GROUP BY computerno";
 
-        $result = $this->db->query($sql, array($date,$interval,$roomid))->result();
+        $result = $this->db->query($sql, array($roomid,$date,$interval))->result();
         return $result;
     }
 

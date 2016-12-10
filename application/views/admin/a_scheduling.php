@@ -4,8 +4,8 @@ include 'a_navbar.php';
 
 
 <ol class="breadcrumb  col-md-offset-2 col-md-10">
-    <li>Admin</li>
-    <li>Application Settings</li>
+    <li><a href="#">Admin</a></li>
+    <li><a href="#">Application Settings</a></li>
     <li class="active">Modify Schedule</li>
 </ol>
 

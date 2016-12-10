@@ -30,7 +30,10 @@ class AdminController extends CI_Controller
     }
 
     private function initAdmin() {
-        $this->reportsView();
+        $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
+        $this->load->view('admin/home'); // $this->load->view('admin', $data); set to this if data is set
+        //$this->load->view('template/footer'); // include bootstrap 3 footer
+
     }
 
     public function loadAction($action) {
@@ -151,13 +154,31 @@ class AdminController extends CI_Controller
     public function accView(){
         $data['administrators'] = $this->admin->queryAllAdministators();
 
+        $data['departments'] = $this->admin->queryAllDepartments();
+        $data['rooms'] = $this->admin->queryRoomsWithDepartmentID($_SESSION['admin_departmentid']);
+        $modRooms = $this->admin->queryAllTagModRoom();
+
+        $data['freeRooms']= $this->admin->queryFreeRoomsWithDepartmentID($_SESSION['admin_departmentid']);
 
         if($_SESSION['admin_typeid'] == 1)
             $data['moderators'] = $this->admin->queryAllModerators();
-        else
+        else {
             $data['moderators'] = $this->admin->queryModeratorsWithDepartmentID($_SESSION['admin_departmentid']);
 
-        $data['departments'] = $this->admin->queryAllDepartments();
+            foreach($modRooms as $tag){
+                foreach ($data['moderators'] as $mod)
+                    if($tag->moderatorid == $mod->moderatorid){
+                        foreach ($data['rooms'] as $room) {
+                            if($room->roomid == $tag->roomid)
+                            $mod->room = $room->name;
+                        }
+                    }
+            }
+
+        }
+
+
+
 
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
@@ -621,8 +642,6 @@ class AdminController extends CI_Controller
         $id = $this->input->get("business_rulesid");
 
         $updateData = array(
-            'start_time' => $this->input->get("start_time"),
-            'end_time' => $this->input->get("end_time"),
             'interval' => $this->input->get("interval"),
             'limit' => $this->input->get("limit"),
             'accessibility' => $this->input->get("accessibility"),

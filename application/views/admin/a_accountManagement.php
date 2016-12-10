@@ -33,7 +33,7 @@
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
-        cellAreaAssign.innerHTML = "<select type='text' class='form-control' placeholder='Choose Area'> <option value='0' disabled selected>Choose Area</option></select>";
+        cellAreaAssign.innerHTML = "<select type='text' class='form-control' placeholder='Choose Area'><option value='0' selected>None</option><?php foreach($freeRooms as $room):?><option value=<?=$room->roomid?> ><?=$room->name?></option><?php endforeach;?></select>";
         del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
 
@@ -153,12 +153,10 @@
     }
 
     var initialModTableData;
-    var initialModTable;
 
     function changeViewToEdit(table, buttons, modal){
         //console.log(table);
         var tableA = document.getElementById(table);
-        initialModTable = tableA.innerHTML;
         var rows = tableA.rows;
         var tID = table;
         var bID = buttons;
@@ -263,7 +261,7 @@
         /*Insert DB extraction Codes Here*/
         var tableA=document.getElementById(table);
 
-        var out = "<th>First Name</th><th>Last Name</th><th>Email</th>        <th>Department</th>        <th>Area Assignment </th>        <th></th>";
+        var out = "<thead> <tr> <th>First Name</th><th>Last Name</th><th>Email</th><th>Department</th><th></th></tr></thead><tbody>";
 
 
         if(table=="admintable")
@@ -296,8 +294,6 @@
 
     function changeViewToView(table, button, modal){
         console.log(table);
-
-
         var tableA = document.getElementById(table);
         var buttonA = document.getElementById(button);
         var rows = tableA.rows;
@@ -309,7 +305,7 @@
             var curFName = cells[0].getElementsByTagName("input")[0].value;
             var curLName = cells[1].getElementsByTagName("input")[0].value;
             var curEmail = cells[2].getElementsByTagName("input")[0].value;
-            var curAreaAssign = cells[4].getElementsByTagName("select")[0].value;
+            var curAreaAssign = cells[4].getElementsByTagName("input")[0].value; /* something */
             //var curDept = cells[3].getElementsByTagName("select")[0].value;
 
 
@@ -380,7 +376,9 @@
             }
 
             columns[2] = table.rows[i].cells[2].childNodes[0].value;
-            columns[3] = <?php echo $_SESSION['admin_departmentid']; ?>
+            columns[3] = table.rows[i].cells[3].childNodes[0].value;
+
+            console.log(columns[3]);
 
             if (valid) {
                 jObject[row] = columns;
@@ -429,6 +427,9 @@
         return jObject;
     }
 
+    var mods2 = <?php echo json_encode($moderators); ?>;
+
+    console.log(mods2);
     function getModChangedData(newTableData) {
         var changedData = [];
         var changedDataIndex = 0;
@@ -828,7 +829,7 @@ include 'a_navbar.php';
 
 
 <ol class="breadcrumb  col-md-offset-2 col-md-10">
-    <li>Admin</li>
+    <li><a href="#">Admin</a></li>
     <li class="active">Account Management</li>
 </ol>
 
@@ -930,13 +931,14 @@ include 'a_navbar.php';
                                     </thead>
                                     <tbody>
 
+
                                     <?php foreach($moderators as $mod):?>
                                         <tr>
                                             <td><?=$mod->first_name?></td>
                                             <td><?=$mod->last_name?></td>
                                             <td><?=$mod->email?></td>
                                             <td><?=$mod->name?></td>
-                                            <td>ASSIGNED ROOM</td>
+                                            <td><?=$mod->room?></td>
                                             <td></td>
                                         </tr>
                                     <?php endforeach;?>
@@ -986,7 +988,10 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
-                            <td><select type='text' class='form-control' placeholder='Choose Area'><option value='0' disabled selected>Choose Area</option>
+                            <td><select type='text' class='form-control' placeholder='Choose Area'><option value='0' selected>None</option>
+                                    <?php foreach($freeRooms as $room):?>
+                                        <option value=<?=$room->roomid?> ><?=$room->name?></option>
+                                    <?php endforeach;?>
                                     <!-- TODO: change this option to some sort of php loop -->
                                     <!-- when you add another row in the function, you'll need to copy the innerHTML of this select statement probably.-->
                                 </select>
