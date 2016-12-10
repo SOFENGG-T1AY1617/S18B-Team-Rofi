@@ -7,6 +7,10 @@
         display:inline-block!important;
         width:100px!important;
     }
+    .selTime{
+        padding-right: 5px;
+        padding-left: 0px;
+    }
 </style>
 
 <script xmlns="http://www.w3.org/1999/html">
@@ -61,17 +65,28 @@
         var endTime = $("#endTime").text().replace("PM", "").trim();
         var endTimeHour = endTime.split(":")[0];
         var endTimeMinute = endTime.split(":")[1];
-        
+
+        var strHour = "";
+
+        for(var i=0; i<24; i++){
+            strHour += "<option value ='"+i+"'>"+i+"</option>";
+        }
+
+        var strMin = "";
+
+        for(var m=0; m<60; m++){
+            strMin += "<option value ='"+m+"'>"+m+"</option>";
+        }
+
         cells0[1].innerHTML = "<div class=\"clearfix\">"+
             "<div class=\"col-md-2\"><label>START : </label></div>"+
-            "<div class=\"input-group clockpicker col-md-8\">"+
-            "<input id=\"startTimeHourInput\" type=\"number\" class=\"form-control timeinput\" value=\""+startTimeHour+"\"> "+
-                ":"+ " <input id=\"startTimeMinuteInput\" type=\"number\" class=\"form-control timeinput\" value=\""+startTimeMinute+"\">" +
-            "<label>AM</label></div>"+
+            "<div class=\"input-group col-md-4\">"+
+            "<div class=\"col-md-6 selTime\"><select id=\"startTimeHourInput\"  class='form-control'>" + "<option value=\"\" disabled selected hidden>HH</option>"+ strHour +
+            "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"startTimeMinuteInput\" class='form-control'>"+ "<option value= \"\"disabled selected hidden>MM</option>" + strMin + "</select></div></div>" +
             "<div class=\"col-md-2\"><label>END : </label></div>"+
-            "<div class=\"input-group clockpicker col-md-8\">"+
-            "<input id=\"endTimeHourInput\" type=\"number\" class=\"form-control timeinput\" value=\""+endTimeHour+"\"> "+
-                ":" + " <input id=\"endTimeMinuteInput\" type=\"number\" class=\"form-control timeinput\" value=\""+endTimeMinute+"\">" +"<label>PM</label></div>";
+            "<div class=\"input-group col-md-4\">"+
+            "<div class=\"col-md-6 selTime\"><select id=\"endTimeHourInput\"  class='form-control'>" + "<option value=\"\" disabled selected hidden>HH</option>"+ strHour +
+            "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"endTimeMinuteInput\" class='form-control'>"+ "<option value=\"\" disabled selected hidden>MM</option>" + strMin + "</select></div></div>";
 
         var cells1 = rows[1].cells;
         var curIDTI = $(cells1[1]).attr("id");
@@ -225,7 +240,7 @@
         var startTime = $("#startTimeHourInput").val() + ":" + $("#startTimeMinuteInput").val() + ":00";
         tableData[0] = startTime;
 
-        var endTime = ($("#endTimeHourInput").val() * 1 + 12) + ":" + $("#endTimeMinuteInput").val() + ":00";
+        var endTime = ($("#endTimeHourInput").val()) + ":" + $("#endTimeMinuteInput").val() + ":00";
         tableData[1] = endTime;
 
         tableData[2] = $("#timeslotIntervalInput").val();
