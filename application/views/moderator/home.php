@@ -58,6 +58,8 @@
                         for (var i = 0; i < slotsPicked.length; i++)
                             markSlotPresent($("[id = '" + slotsPicked[i] + "']"));
 
+                        updateSelectedSlots();
+
                     })
                     .fail(function () {
 
@@ -92,6 +94,7 @@
                         verifySlot($("[id = '"+ slotsPicked[i] +"']"));
 
                     updatePresentButton();
+                    updateSelectedSlots();
 
                 })
                 .fail(function() {
@@ -252,9 +255,9 @@
                         colorStatus = "green";
 
                         if (result[i].attendance == 1)
-                            verifStatus += " & Checked-In";
+                            verifStatus += " & Present";
                         else
-                            verifStatus += " & Not Checked-In";
+                            verifStatus += " & Absent";
 
                     } else {
                         verifStatus = "Unverified";
@@ -435,8 +438,8 @@
                     console.log(result);
                     console.log("done");
 
-                    queriedComputers = result['computers'];
-                    queriedReservations = result['reservations'];
+                    var queriedComputers = result['computers'];
+                    var queriedReservations = result['reservations'];
 
                     for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
                         computers[i]=queriedComputers[i];
@@ -445,6 +448,8 @@
                     for(i=0;i<queriedReservations.length;i++){ // retrieve all reservations from result
                         reservations[i]=queriedReservations[i];
                     }
+
+                    console.log(reservations);
 
                     outputSlots();
                 })
