@@ -417,13 +417,7 @@ class Admin_Model extends CI_Model
                 $this->db->insert(TABLE_MODERATORS, $insertModData);
                 $numAdded++;
 
-                if(intval($mod[3])!=0&&!$this->isExistingTagModRoomByRoomID(intval($mod[3]))){
-                    $insertTagData=array(
-                        'moderatorid' => intval($this->queryModIDAtEmail($mod[2])),
-                        'roomid' => intval($mod[3])
-                    );
-                    $this->db->insert(TABLE_TAG_MOD_ROOMS, $insertTagData);
-                }
+                $this->insertTagModRoom($mod);
             } else {
                 $notAdded[] = $mod[0] . ' ' . $mod[1];
             }
@@ -791,6 +785,42 @@ class Admin_Model extends CI_Model
         $result = $query->result();
 
         return count($result)>=1;
+    }
+    function isExistingTagModRoomByModID($modid) {
+        $this->db->select('*');
+        $this->db->from(TABLE_TAG_MOD_ROOMS);
+        $this->db->where(COLUMN_MODERATORID, $modid);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+
+    function insertTagModRoom($mod){
+        if(intval($mod[4])!=0&&!$this->isExistingTagModRoomByRoomID(intval($mod[4]))){
+            $insertTagData=array(
+                'moderatorid' => intval($this->queryModIDAtEmail($mod[2])),
+                'roomid' => intval($mod[4])
+            );
+            $this->db->insert(TABLE_TAG_MOD_ROOMS, $insertTagData);
+        }
+    }
+
+    function insertTagModRoomAtModIDAndRoomID($modID,$roomID){
+            $insertTagData=array(
+                'moderatorid' => intval($modID),
+                'roomid' => intval($roomID)
+            );
+            $this->db->insert(TABLE_TAG_MOD_ROOMS, $insertTagData);
+
+    }
+
+    function deleteTagModRoomsByModID($id) {
+        // Delete all computers in room
+        // Delete room
+        $this->db->where(COLUMN_MODERATORID, $id);
+        $this->db->delete(TABLE_TAG_MOD_ROOMS);
+        //$this->db->delete(TABLE_MODERATORS);
     }
 
 }

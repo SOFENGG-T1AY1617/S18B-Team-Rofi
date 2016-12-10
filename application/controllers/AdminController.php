@@ -468,7 +468,7 @@ class AdminController extends CI_Controller
 
         foreach ($changedData as $data) {
             // Query room data
-            $mod = $this->admin->queryModeratorAtID($data[4]);
+            $mod = $this->admin->queryModeratorAtID($data[6]);
 
 
             if ($data[2] == -1) {
@@ -508,18 +508,35 @@ class AdminController extends CI_Controller
 
             }
 
-            if ($data[3] != $mod['mod_departmentid']) {
+            if ($data[4] == 0) {
                 // Update departmentid
-                $updateData = array(
-                    'id' => $mod['moderatorid'],
-                    'dept' => $data[3],
-                );
-                $this->admin->updateModDepartment($updateData);
-                $result = array(
-                    'result' => "success",
-                );
+                if ($this->admin->isExistingTagModRoomByModID($mod['moderatorid'])) {
+                    $this->admin->deleteTagModRoomsByModID($mod['moderatorid']);
+                    $result = array(
+                        'result' => "success",
+                    );
+                }
 
+            }else{
+                if ($this->admin->isExistingTagModRoomByModID($mod['moderatorid']) && !$this->admin->isExistingTagModRoomByRoomID($data[4])){
+                    $this->admin->deleteTagModRoomsByModID($mod['moderatorid']);
+                    $this->admin->insertTagModRoomAtModIDAndRoomID($mod['moderatorid'],$data[4]);
+                    $result = array(
+                        'result' => "success",
+                    );
+                }
+                else if(!$this->admin->isExistingTagModRoomByRoomID($data[4])){
+                    $this->admin->insertTagModRoomAtModIDAndRoomID($mod['moderatorid'],$data[4]);
+                    $result = array(
+                        'result' => "success",
+                    );
+                }
+                else
+                    $result = array(
+                        'result' => "room_invalid",
+                    );
             }
+
 
             if ($data[2] != $mod['email']) {
                 if ($this->admin->isExistingModerator($data[2])) {
