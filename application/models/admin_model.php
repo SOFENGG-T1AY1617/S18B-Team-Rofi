@@ -417,7 +417,7 @@ class Admin_Model extends CI_Model
                 $this->db->insert(TABLE_MODERATORS, $insertModData);
                 $numAdded++;
 
-                if(intval($mod[3])!=0){
+                if(intval($mod[3])!=0&&!$this->isExistingTagModRoomByRoomID(intval($mod[3]))){
                     $insertTagData=array(
                         'moderatorid' => intval($this->queryModIDAtEmail($mod[2])),
                         'roomid' => intval($mod[3])
@@ -783,4 +783,14 @@ class Admin_Model extends CI_Model
 
         return $id[0]->moderatorid;
     }
+    function isExistingTagModRoomByRoomID($roomid) {
+        $this->db->select('*');
+        $this->db->from(TABLE_TAG_MOD_ROOMS);
+        $this->db->where(COLUMN_ROOMID, $roomid);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+
 }
