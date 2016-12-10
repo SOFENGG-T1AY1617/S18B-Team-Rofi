@@ -516,6 +516,14 @@
     function submitModeratorChanges(tableID) {
         var changedData = getModChangedData(getTableDataMod(tableID));
 
+        for(var i = 0; i<changedData.length; i++)
+            if(changedData[i][2]!=-1)
+                if (!isEmail(changedData[i][2])) {
+                    toastr.error("The email you input is not valid. Please change it and try again.", "Oops!");
+                    //$("#confirm-add").attr('disabled', false);
+                    return;
+                }
+
         console.log(changedData);
         if(changedData.length>0) {
             $.ajax({
@@ -561,6 +569,11 @@
             toastr.error("No changes were made.", "Oops!");
     }
 
+    function isEmail(email) {
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email);
+    }
+
     function submitModerator() {
         var tableID = $("#add_table").attr("id");
         var tableData = getTableDataMod(tableID);
@@ -570,6 +583,15 @@
             toastr.error("An input field is empty. Please fill it and try again.", "Oops!");
             return;
         }
+
+        for(var i = 0; i<tableData.length; i++)
+            if (!isEmail(tableData[i][2])) {
+                toastr.error("The email you input is not valid. Please change it and try again.", "Oops!");
+                //$("#confirm-add").attr('disabled', false);
+                return;
+            }
+
+
 
         $.ajax({
             url: '<?=base_url('admin/' . ADMIN_ADD_MODERATORS)?>',
@@ -744,6 +766,9 @@
         var tableID = $("#add_tableA").attr("id");
         var tableData = getTableData(tableID);
         console.log(tableData);
+
+
+
 
         if (tableData == false) {
             toastr.error("An input field is empty or a department for admin/s is not set. Please fill it and try again.", "Oops!");
