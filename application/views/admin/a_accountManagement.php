@@ -18,10 +18,12 @@
         var cellFName = row.insertCell(0);
         var cellLName = row.insertCell(1);
         var cellEmail = row.insertCell(2);
-        var del         = row.insertCell(3);
+        var cellDept = row.insertCell(3);
+        var cellAreaAssign = row.insertCell(4);
+        var del         = row.insertCell(5);
 
 
-        console.log(tableA.rows.length+"Doge");
+        console.log(tableA.rows.length);
         cellFName.id= "C0R"
         cellLName.id= "C1R"
         cellEmail.id= "C2R"         
@@ -32,6 +34,8 @@
         cellFName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter first name\">";
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
+        cellDept.innerHTML = "<?php echo $departments[0]->name ?>";
+        cellAreaAssign.innerHTML = "<select type='text' class='form-control' placeholder='Choose Area'><option value='0' selected>No Room</option><?php foreach($freeRooms as $room):?><option value=<?=$room->roomid?> ><?=$room->name?></option><?php endforeach;?></select>";
         del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
 
@@ -194,44 +198,60 @@
             cells[1].id= "C1R"+i;
             cells[2].id= "C2R"+i;
             cells[3].id= "C3R"+i;
+            cells[4].id= "C4R"+i;
 
             var curFNameID = $(cells[0]).attr("id");
             var curLNameID = $(cells[1]).attr("id");
             var curEmailID = $(cells[2]).attr("id");
             var curDeptID = $(cells[3]).attr("id");
+            var curAreaAssignID = $(cells[4]).attr("id");
+
 
 
             var curFName = cells[0].innerHTML;
             var curLName = cells[1].innerHTML;
             var curEmail = cells[2].innerHTML;
             var curDept = cells[3].innerHTML;
-
+            var curAreaAssign = cells[4].innerHTML;
 
             console.log(curDeptID);
             cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curFNameID+"\"value=\"" + curFName + "\">";
             cells[1].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curLNameID+"\" value=\"" + curLName + "\">";
             cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curEmailID+"\" value=\"" + curEmail + "\">";
-            /* var drop = "<select type='text' id=\""+curDeptID+"\" class='form-control' placeholder='Enter department'>";
-
-            var deps = ;
 
 
-            for(var j = 0; j<deps.length; j++)
+            var drop = "<select type='text' class='form-control' id='"+curAreaAssignID+"'>";
+
+            drop+="<option value='0'>No Room</option>";
+
+            var rooms = <?php echo json_encode($rooms); ?>;
+
+
+            for(var j = 0; j<rooms.length; j++)
             {
-                drop+="<option value='" +deps[j].departmentid +"' ";
-                if(deps[j].name==curDept) {
 
-                    drop+=" selected ";
+                if(rooms[j].name==curAreaAssign) {
+
+                    drop+="<option value='"+rooms[j].roomid+"' selected >"+rooms[j].name+"</option>"
                 }
-                drop+=">"+deps[j].name+"</option>"
+            }
+
+            var freeRooms = <?php echo json_encode($freeRooms); ?>;
+
+            console.log("WOW")
+            console.log(freeRooms);
+            for(var j = 0; j<freeRooms.length; j++)
+            {
+                drop+="<option value='"+freeRooms[j].roomid+"'>"+freeRooms[j].name+"</option>"
             }
             drop+="</select>";
-            cells[3].innerHTML = drop; */
-            cells[4].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
+
+            cells[4].innerHTML = drop;
+            cells[5].innerHTML = "<button type =\"button\" onclick=\"clearAccount('"+tID+"', "+(i)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
             console.log(tID);
 
-           cells[4].id="DELETECOLUMN";
+           cells[5].id="DELETECOLUMN";
 
 
 
@@ -290,6 +310,7 @@
     }
 
     function changeViewToView(table, button, modal){
+        reloadPage();//TODO Erroring
         console.log(table);
         var tableA = document.getElementById(table);
         var buttonA = document.getElementById(button);
@@ -302,23 +323,24 @@
             var curFName = cells[0].getElementsByTagName("input")[0].value;
             var curLName = cells[1].getElementsByTagName("input")[0].value;
             var curEmail = cells[2].getElementsByTagName("input")[0].value;
+            var curAreaAssign = cells[4].getElementsByTagName("input")[0].value; /* something */
             //var curDept = cells[3].getElementsByTagName("select")[0].value;
 
 
-            cells[4].innerHTML = "";
+            cells[5].innerHTML = "";
 
-            if(curLName != "" && curFName != "" && curEmail != ""){
+            if(curLName != "" && curFName != "" && curEmail != "" && curAreaAssign !=""){
                 cells[0].innerHTML = curFName;
                 cells[1].innerHTML = curLName;
                 cells[2].innerHTML = curEmail;
                 cells[3].innerHTML = <?php echo $_SESSION['admin_departmentid'] ?>;
+                cells[4].innerHTML = curAreaAssign;
             }
             else{
                 console.log(i);
                 deleteRows[lengthofdel] = i;
                 lengthofdel ++;
             }
-
 
         }
 
@@ -347,7 +369,7 @@
     }
 
 
-    function getTableData(tableID) {
+    function getTableDataMod(tableID) {
         var table = document.getElementById(tableID);
         var jObject = [];
         for (var i = 1; i < table.rows.length; i++)
@@ -359,7 +381,7 @@
             var valid = true;
             var columns = [];
             // columns within the row
-            for (var j = 0; j < table.rows[i].cells.length-2; j++)
+            for (var j = 0; j < 3;j++)//table.rows[i].cells.length-1; j++)
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j] = table.rows[i].cells[j].childNodes[0].value;
@@ -371,8 +393,11 @@
                 }
             }
 
-            columns[2] = table.rows[i].cells[2].childNodes[0].value;
-            columns[3] = <?php echo $_SESSION['admin_departmentid']; ?>
+            //columns[2] = table.rows[i].cells[2].childNodes[0].value;
+            //columns[3] = table.rows[i].cells[3].childNodes[0].value;
+            columns[4] = table.rows[i].cells[4].childNodes[0].value;
+
+            console.log(columns[4]);
 
             if (valid) {
                 jObject[row] = columns;
@@ -400,7 +425,7 @@
 
             columns[0] = table.rows[i].cells[0].childNodes[0].data;
             console.log(columns[0]);
-            for (var j = 0; j < 3; j++)
+            for (var j = 0; j < 4; j++)
             {
                 //jObject[row][j] = table.rows[i].cells[j].childNodes[0].value;
                 columns[j + 1] = table.rows[i].cells[j+1].childNodes[0].data;
@@ -421,6 +446,9 @@
         return jObject;
     }
 
+    var mods2 = <?php echo json_encode($moderators); ?>;
+
+    console.log(mods2);
     function getModChangedData(newTableData) {
         var changedData = [];
         var changedDataIndex = 0;
@@ -430,12 +458,15 @@
 
         var dept = <?php echo json_encode($departments); ?>;
         var mods = <?php echo json_encode($moderators); ?>;
+        var rooms = <?php echo json_encode($rooms); ?>;
 
-        console.log(mods);
+        console.log("ROOMS")
+        console.log(rooms);
 
         for (var i = 0; i < initialModTableData.length; i++) {
 
 
+            /*
             var inDeptID;
             for(var j = 0; j<dept.length; j++)
             {
@@ -445,16 +476,29 @@
                   //  console.log(dept[j].departmentid+" CHECK "+ initialModTableData[i][3]);
                 }
             }
+            */
+
+            var inRoomID='0';
+            for(var j = 0; j<rooms.length; j++)
+            {
+                //  console.log(dept[j].departmentid+" CHECK "+ initialModTableData[i][3]);
+                if(rooms[j].name == initialModTableData[i][4]) {
+                    inRoomID=rooms[j].roomid;
+                    //  console.log(dept[j].departmentid+" CHECK "+ initialModTableData[i][3]);
+                }
+            }
+
+
 
             if (initialModTableData[i][0] != newTableData[i][0] ||
                 initialModTableData[i][1] != newTableData[i][1] ||
                 initialModTableData[i][2] != newTableData[i][2] ||
-               // initialModTableData[i][4] != newTableData[i][4]
-                newTableData[i][4]==-1
+                inRoomID != newTableData[i][4]
+                //newTableData[i][4]==-1
             ) {
                 for(var k = 0; k<mods.length; k++){
                     if(initialModTableData[i][2]==mods[k]['email']){
-                        newTableData[i][4] = parseInt(mods[k]['moderatorid']);
+                        newTableData[i][6] = parseInt(mods[k]['moderatorid']);
                             console.log("HERE: " + mods[k]['moderatorid']);
                     }
                 }
@@ -470,49 +514,56 @@
     }
 
     function submitModeratorChanges(tableID) {
-        var changedData = getModChangedData(getTableData(tableID));
-
-        console.log("asdfasddffsadf");
+        var changedData = getModChangedData(getTableDataMod(tableID));
 
         console.log(changedData);
+        if(changedData.length>0) {
+            $.ajax({
+                url: '<?=base_url('admin/' . ADMIN_UPDATE_MODERATORS)?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    changedData: changedData
+                }
+            })
+                .done(function (result) {
+                    console.log("done");
+                    console.log(result);
 
-        $.ajax({
-            url: '<?=base_url('admin/' . ADMIN_UPDATE_MODERATORS)?>',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                changedData: changedData
-            }
-        })
-            .done(function(result) {
-                console.log("done");
-                console.log(result);
+                    if (result['result'] == "success") {
+                        toastr.success("Changes were made successfully.", "Success");
+                        var delay = 1000;
+                        setTimeout(function () {
+                            reloadPage();
+                        }, delay);
 
-                if (result['result'] == "success") {
-                    toastr.success("Changes were made successfully.", "Success");
-                    var delay = 1000;
-                    setTimeout(function() {
+
+                    }else if (result['result'] == "room_invalid") {
+                        toastr.error("Room is already Taken.", "Oops");
+                        var delay = 1000;
+                        setTimeout(function () {
+                            reloadPage();
+                        }, delay);
+                    }
+                    else {
                         reloadPage();
-                    }, delay);
-
-
-                }
-                else {
-                    reloadPage();
-                }
-            })
-            .fail(function(result) {
-                console.log("fail");
-                console.log(result);
-            })
-            .always(function() {
-                console.log("complete");
-            });
+                    }
+                })
+                .fail(function (result) {
+                    console.log("fail");
+                    console.log(result);
+                })
+                .always(function () {
+                    console.log("complete");
+                });
+        }
+        else
+            toastr.error("No changes were made.", "Oops!");
     }
 
     function submitModerator() {
         var tableID = $("#add_table").attr("id");
-        var tableData = getTableData(tableID);
+        var tableData = getTableDataMod(tableID);
         console.log(tableData);
 
         if (tableData == false) {
@@ -916,10 +967,12 @@ include 'a_navbar.php';
                                         <th>Last Name</th>
                                         <th>Email</th>
                                         <th>Department</th>
+                                        <th>Area Assignment </th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
+
 
                                     <?php foreach($moderators as $mod):?>
                                         <tr>
@@ -927,6 +980,7 @@ include 'a_navbar.php';
                                             <td><?=$mod->last_name?></td>
                                             <td><?=$mod->email?></td>
                                             <td><?=$mod->name?></td>
+                                            <td><?=$mod->room?></td>
                                             <td></td>
                                         </tr>
                                     <?php endforeach;?>
@@ -964,6 +1018,8 @@ include 'a_navbar.php';
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
+                            <th>Department</th>
+                            <th>Area Assignment </th>
                             <th>Delete</th>
 
                         </tr>
@@ -975,7 +1031,15 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter first name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
-
+                            <td><?php echo $departments[0]->name ?></td>
+                            <td><select type='text' class='form-control' placeholder='Choose Area'><option value='0' selected>No Room</option>
+                                    <?php foreach($freeRooms as $room):?>
+                                        <option value=<?=$room->roomid?> ><?=$room->name?></option>
+                                    <?php endforeach;?>
+                                    <!-- TODO: change this option to some sort of php loop -->
+                                    <!-- when you add another row in the function, you'll need to copy the innerHTML of this select statement probably.-->
+                                </select>
+                            </td>
                             <td><button type ="button" onclick="deleteRow('add_table', 1)" class="btn btn-default clearmod-btn">&times;</button></td>
 
                         </tr>
