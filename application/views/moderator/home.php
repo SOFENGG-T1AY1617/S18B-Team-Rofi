@@ -67,6 +67,35 @@
                 });
         } );
 
+        $("#verifySlot").click(function () {
+            $.ajax({
+                url: '<?php echo base_url('moderator/' . MODERATOR_VERIFY_RESERVATION) ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    slots: slotsPicked
+                }
+            })
+                .done(function(result) {
+
+                    toastr.success(slotsPicked.length + " reservations were updated!", "Selected reservation/s is/are now verified");
+
+                    for (var i = 0; i < slotsPicked.length; i++)
+                        markSlotPresent($("[id = '"+ slotsPicked[i] +"']"));
+
+                })
+                .fail(function() {
+
+                    console.log("fail");
+
+                })
+                .always(function() {
+
+                    console.log("complete");
+
+                });
+        });
+
         selectRoom (<?php echo $roomid;?>);
     });
 
@@ -119,7 +148,7 @@
                 for (var i = 0; i < result.length; i++) {
                     $(slotContainerID).append(
                         "<div>" +
-                        "<span class = 'col-md-1'>X</span>" +
+                        "<span class = 'col-md-1 delete-button'>X</span>" +
                         "<span class = 'col-md-1'>" + result[i].roomName + "</span>" +
                         "<span class = 'col-md-2'>Pc No. " + result[i].compNo + "</span>" +
                         "<span class = 'col-md-4'>" + result[i].userid + "</span>" +

@@ -49,6 +49,9 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_SET_RESERVATIONS_PRESENT:
                     $this->markPresentReservations();
                     break;
+                case MODERATOR_VERIFY_RESERVATION:
+                    $this->verifyReservations();
+                    break;
                 default:
                     $this->initModerator();
                     break;
@@ -151,6 +154,38 @@ class ModeratorController extends CI_Controller
             $arr = explode('_', $slot);
 
             $this->moderator->updateAttendance (1, intval($arr[4]));
+        }
+
+        $result = array(
+            'result' => "success"
+        );
+
+        echo json_encode($result);
+    }
+
+    public function verifyReservations() {
+        $slots = $this->input->get('slots');
+
+        foreach ($slots as $slot) {
+            $arr = explode ('_', $slot);
+
+            $this->moderator->updateVerification(1, intval($arr[4]));
+        }
+
+        $result = array(
+            'result' => "success"
+        );
+
+        echo json_encode($result);
+    }
+
+    public function removeReservations() {
+        $slots = $this->input->get('slots');
+
+        foreach ($slots as $slot) {
+            $arr = explode ('_', $slot);
+
+            $this->moderator->removeReservation(intval($arr[4]));
         }
 
         $result = array(

@@ -199,6 +199,7 @@ class moderator_model extends CI_Model
 
         return count($result)>=1;
     }
+
     function updateAttendance($attendance, $reservationid) {
         $this->db->where(COLUMN_RESERVATIONID, $reservationid);
         $this->db->update(TABLE_RESERVATIONS, array(COLUMN_ATTENDANCE => $attendance));
@@ -207,6 +208,12 @@ class moderator_model extends CI_Model
     function updateVerification($verification, $reservationid) {
         $this->db->where(COLUMN_RESERVATIONID, $reservationid);
         $this->db->update(TABLE_RESERVATIONS, array(COLUMN_VERIFIED => $verification));
+    }
+
+    function removeReservation($reservationid) {
+
+
+        $this->db->delete(TABLE_COMPUTERS, array(COLUMN_RESERVATIONID => $reservationid));
     }
 
     function queryModDeptIDAtEmail($email){

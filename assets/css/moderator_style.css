@@ -215,3 +215,13 @@ div.legend.taken{
 #mod_controls_container button{
     margin-bottom: 15px;
 }
+
+.delete-button {
+    font-weight: bold;
+    color: white;
+    background-color: darkred;
+}
+
+.delete-button:hover {
+    background-color: red;
+}
