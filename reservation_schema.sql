@@ -511,7 +511,7 @@ BEGIN
 	WHERE reservation.reservationid = reserveid
 		  AND reservation.computerid = computer.computerid AND room.roomid = computer.roomid;
     DELETE FROM `reservation_system`.`reservations`
-    WHERE reservation.reservationid = reserveid;
+    WHERE reservationid = reserveid;
 END$$
 
 DELIMITER ;
