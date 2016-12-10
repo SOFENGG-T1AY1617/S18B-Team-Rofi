@@ -161,6 +161,10 @@ define("COLUMN_ROOM_NAME", "room_name");
 define("TABLE_TAG_MOD_ROOMS", "tag_mod_rooms");
 define("COLUMN_TAG_MOD_ROOMSID", "tag_mod_roomsid");
 
+define("TABLE_CLOSED_PCS","closed_pcs");
+define("COLUMN_CLOSED_PCSID","closed_pcsid");
+define("COLUMN_START_DATETIME","start_datetime");
+define("COLUMN_END_DATETIME","end_datetime");
 
 /* ADMIN PAGES */
 define("ADMIN_SCHEDULING", "scheduling");
