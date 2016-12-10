@@ -208,5 +208,6 @@ define("MODERATOR_BUSINESS_RULES", "getBusinessRules");
 define("MODERATOR_DECODE_SLOTS", "decodeSlots");
 define("MODERATOR_SET_RESERVATIONS_PRESENT", "setReservationsPresent");
 define("MODERATOR_VERIFY_RESERVATION", "verifyReservation");
+define("MODERATOR_REMOVE_RESERVATION", "removeReservation");
 define("MODERATOR_GET_TIMES", "getTimes");
 

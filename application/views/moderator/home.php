@@ -27,11 +27,11 @@
 
     $(document).ready(function() {
 
-        $(document).on( "click", ".slotCell:not(.selected):not(.enabled):not(.disabled)",function() {
+        $(document).on( "click", ".slotCell.reserved",function() {
             selectSlot($(this));
         });
 
-        $(document).on( "click", ".slotCell.selected:not(.enabled):not(.disabled)",function() {
+        $(document).on( "click", ".slotCell.reserved.selected",function() {
             deselectSlot($(this));
         });
 
@@ -84,7 +84,39 @@
                     toastr.success(slotsPicked.length + " reservations were updated!", "Selected reservation/s is/are now verified");
 
                     for (var i = 0; i < slotsPicked.length; i++)
-                        markSlotPresent($("[id = '"+ slotsPicked[i] +"']"));
+                        verifySlot($("[id = '"+ slotsPicked[i] +"']"));
+
+                })
+                .fail(function() {
+
+                    console.log("fail");
+
+                })
+                .always(function() {
+
+                    console.log("complete");
+
+                });
+        });
+
+        $("#removeReservation").click(function () {
+            $.ajax({
+                url: '<?php echo base_url('moderator/' . MODERATOR_REMOVE_RESERVATION) ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    slots: slotsPicked
+                }
+            })
+                .done(function(result) {
+
+                    toastr.success(slotsPicked.length + " reservations were removed!", "Selected reservation/s is/are removed");
+
+                    for (var i = 0; i < slotsPicked.length; i++)
+                        removeReservation($("[id = '"+ slotsPicked[i] +"']"));
+
+                    slotsPicked = [];
+
 
                 })
                 .fail(function() {
@@ -104,11 +136,24 @@
 
     function markSlotPresent (slot) {
 
-
-        console.log(slot.attr('id'));
-
         if (!slot.hasClass('present'))
             slot.addClass('present');
+
+    }
+
+    function verifySlot (slot) {
+
+        if (!slot.hasClass('verified'))
+            slot.addClass('verified');
+
+    }
+
+    function removeReservation (slot) {
+
+        slot.removeClass('present');
+        slot.removeClass('verified');
+        slot.removeClass('reserved');
+
     }
 
     function selectSlot (slot) {
@@ -155,7 +200,7 @@
                         "<span class = 'col-md-1'>" + result[i].roomName + "</span>" +
                         "<span class = 'col-md-2'>Pc No. " + result[i].compNo + "</span>" +
                         "<span class = 'col-md-4'>" + result[i].userid + "</span>" +
-                        "<span class = 'col-md-4 text-center'>" + result[i].start + " - " + result[i].end + "</span>" +
+                        "<span class = 'col-md-4 text-center pull-right'>" + result[i].start + " - " + result[i].end + "</span>" +
                         "</div>"
                     );
                 }
@@ -173,7 +218,7 @@
 
     }
 
-    function updateTimesHeader(isToday) {
+    function updateTimesHeader() {
 
         var slotTable = $('#slotTable');
 
@@ -294,11 +339,9 @@
                 // FOR PROMISE
                 .done (function (result) {
                     times_today = result['times_today'];
-                    times_tomorrow = result['times_tomorrow'];
                     times_today_DISPLAY = result['times_today_DISPLAY'];
-                    times_tomorrow_DISPLAY = result['times_tomorrow_DISPLAY'];
 
-                    updateTimesHeader(dateSelected == dateToday);
+                    updateTimesHeader();
                 })
                 .fail (function () {
 
@@ -442,21 +485,17 @@
 
                             clickableSlot1.className = "slotCell pull-left";
 
-                            var currentSlotID = "#" + strID;
-
-                            if (!taken) {
-
-                                if (computers[k].status == 'Disabled') {
-                                    clickableSlot1.className = clickableSlot1.className + " disabled";
-                                } else {
-                                    clickableSlot1.className = clickableSlot1.className + " enabled";
-                                }
-
-                                if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1) {
-                                    clickableSlot1.className = clickableSlot1.className + " selected";
-                                }
-
+                            if (computers[k].status == 'Disabled') {
+                                clickableSlot1.className = clickableSlot1.className + " disabled";
                             } else {
+                                clickableSlot1.className = clickableSlot1.className + " enabled";
+                            }
+
+                            if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1) {
+                                clickableSlot1.className = clickableSlot1.className + " selected";
+                            }
+
+                            if (taken){
                                 clickableSlot1.className = clickableSlot1.className + " reserved";
                                 clickableSlot1.setAttribute("id", strID + "_" + corresReservation.reservationid);
 

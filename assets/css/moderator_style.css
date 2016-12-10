@@ -120,7 +120,8 @@ th:first-child {
     background-color: var(--disabled);
 }
 
-.slotCell.reserved {
+.slotCell.enabled.reserved,
+.slotCell.disabled.reserved{
     background-color: var(--unverified);
 }
 

@@ -212,8 +212,10 @@ class moderator_model extends CI_Model
 
     function removeReservation($reservationid) {
 
+        $this->archiveReservationID($reservationid);
 
-        $this->db->delete(TABLE_COMPUTERS, array(COLUMN_RESERVATIONID => $reservationid));
+        $this->db->delete(TABLE_RESERVATIONS, array(COLUMN_RESERVATIONID => $reservationid));
+
     }
 
     function queryModDeptIDAtEmail($email){
@@ -277,5 +279,11 @@ class moderator_model extends CI_Model
             $this->db->query($sql, array($row->confirmation_expiry));
         }
 
+    }
+
+    function archiveReservationID($reservationid) {
+        $sql = "call archive_reservation(?)";
+
+        $this->db->query($sql, array($reservationid));
     }
 }

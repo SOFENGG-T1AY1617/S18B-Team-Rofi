@@ -55,6 +55,9 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_VERIFY_RESERVATION:
                     $this->verifyReservations();
                     break;
+                case MODERATOR_REMOVE_RESERVATION:
+                    $this->removeReservations();
+                    break;
                 default:
                     $this->initModerator();
                     break;
@@ -75,7 +78,7 @@ class ModeratorController extends CI_Controller
     }
 
     public function getTimes () {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+        date_default_timezone_set('America/New_York'); // set to Hong Kong's/Philippines' Timezone
 
         $getData = array(
             'interval' => $this->input->get('interval'),
