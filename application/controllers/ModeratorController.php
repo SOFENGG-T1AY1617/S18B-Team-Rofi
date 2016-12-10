@@ -153,6 +153,11 @@ class ModeratorController extends CI_Controller
             $this->moderator->updateAttendance (1, intval($arr[4]));
         }
 
+        $result = array(
+            'result' => "success"
+        );
+
+        echo json_encode($result);
     }
 
     public function signIn() {

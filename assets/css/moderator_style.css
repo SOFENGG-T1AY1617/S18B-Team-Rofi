@@ -1,7 +1,9 @@
 :root{
     --disabled: #ED1C24;
     --enabled: #ddd;
-    --taken: dodgerblue;
+    --verified: limegreen;
+    --unverified: orange;
+    --present: darkgreen;
 }
 
 .nopadding {
@@ -120,7 +122,15 @@ th:first-child {
 }
 
 .slotCell.reserved {
-    background-color: var(--taken);
+    background-color: var(--unverified);
+}
+
+.slotCell.reserved.verified {
+    background-color: var(--verified);
+}
+
+.slotCell.reserved.present {
+    background-color: var(--present);
 }
 
 .slotCell.reserved:hover {

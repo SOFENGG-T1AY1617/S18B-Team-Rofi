@@ -69,25 +69,6 @@ class moderator_model extends CI_Model
         return $this->db->query($sql, array($id))->result();
     }
 
-    function queryRoomsWithDepartmentID($id) {
-        //return $this->db->get(TABLE_ROOMS)->result();
-        $sql = "SELECT roomid, name, buildingid, departmentid, COUNT(computerid) as capacity
-                FROM (SELECT * 
-                      FROM rooms
-                      WHERE departmentid = ?) r NATURAL JOIN computers
-                GROUP BY roomid
-                ORDER BY name";
-        return $this->db->query($sql, array($id))->result();
-    }
-
-    function queryRoomsByBuildingID($id) {
-        //return $this->db->get(TABLE_ROOMS)->result();
-        $sql = "SELECT * 
-                FROM rooms
-                WHERE buildingid = ?";
-        return $this->db->query($sql, array($id))->result();
-    }
-
     function queryAllComputers() {
         return $this->db->get(TABLE_COMPUTERS)->result();
     }
@@ -103,10 +84,12 @@ class moderator_model extends CI_Model
 
     function queryComputersAtRoomID($id) {
         $sql = "SELECT * 
-             FROM computers NATURAL JOIN 
+             FROM (computers NATURAL JOIN 
               (SELECT roomid, name
                FROM rooms
-               WHERE roomid = ?) t1";
+               WHERE roomid = ?) t1) NATURAL JOIN (SELECT *
+                                                  FROM computer_status) s 
+                                                  ORDER BY computerno";
         return $this->db->query($sql, array($id))->result();
     }
 
@@ -207,10 +190,6 @@ class moderator_model extends CI_Model
         return $query->row_array();
     }
 
-    function queryLatestRoomID() {
-        return $this->db->insert_id();
-    }
-
     function isExistingModerator($email) {
         $this->db->select('*');
         $this->db->from(TABLE_MODERATORS);
@@ -220,26 +199,14 @@ class moderator_model extends CI_Model
 
         return count($result)>=1;
     }
-
-    function getLastComputerIDAtRoomID($id) {
-        $this->db->select_max(COLUMN_COMPUTERID);
-        $this->db->from(TABLE_COMPUTERS);
-        $this->db->where(COLUMN_ROOMID, $id);
-        $result = $this->db->get()->row();
-        return $result->computerid;
-    }
-
-    function getLastComputerNoAtRoomID($id) {
-        $this->db->select_max(COLUMN_COMPUTERNO);
-        $this->db->from(TABLE_COMPUTERS);
-        $this->db->where(COLUMN_ROOMID, $id);
-        $result = $this->db->get()->row();
-        return $result->computerno;
-    }
-
     function updateAttendance($attendance, $reservationid) {
         $this->db->where(COLUMN_RESERVATIONID, $reservationid);
         $this->db->update(TABLE_RESERVATIONS, array(COLUMN_ATTENDANCE => $attendance));
+    }
+
+    function updateVerification($verification, $reservationid) {
+        $this->db->where(COLUMN_RESERVATIONID, $reservationid);
+        $this->db->update(TABLE_RESERVATIONS, array(COLUMN_VERIFIED => $verification));
     }
 
     function queryModDeptIDAtEmail($email){

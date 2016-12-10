@@ -51,6 +51,9 @@
 
                     toastr.success(slotsPicked.length + " reservations were updated!", "Selected reservation/s is/are now present");
 
+                    for (var i = 0; i < slotsPicked.length; i++)
+                        markSlotPresent($("[id = '"+ slotsPicked[i] +"']"));
+
                 })
                 .fail(function() {
 
@@ -67,19 +70,13 @@
         selectRoom (<?php echo $roomid;?>);
     });
 
-    function slotCheckedIn (slot) {
-        if (slot.hasClass('disabled'))
-            slot.removeClass('disabled');
+    function markSlotPresent (slot) {
 
-        slot.addClass('enabled');
-    }
 
-    function slotCheckedOut (slot) {
-        if (slot.hasClass('enabled'))
-            slot.removeClass('enabled');
+        console.log(slot.attr('id'));
 
-        slot.addClass('disabled');
-        slotsDisabled.push(slot.attr('id'));
+        if (!slot.hasClass('present'))
+            slot.addClass('present');
     }
 
     function selectSlot (slot) {
@@ -391,14 +388,14 @@
                             slotCell.className = "nopadding";
 
                             var taken = false;
-                            var takenID = 0;
+                            var corresReservation = null;
 
                             for (var p = 0; p < reservations.length; p++) {
                                 if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid)) {
                                     taken = true;
-                                    takenID = reservations[p].reservationid;
+                                    corresReservation = reservations[p];
+                                    break;
                                 }
-
                             }
 
                             var chosenTime1 = currentTimeArray[n++];
@@ -417,7 +414,7 @@
 
                             if (!taken) {
 
-                                if (computers[k].statusid == <?php echo PC_DISABLED ?>) {
+                                if (computers[k].status == 'Disabled') {
                                     clickableSlot1.className = clickableSlot1.className + " disabled";
                                 } else {
                                     clickableSlot1.className = clickableSlot1.className + " enabled";
@@ -429,7 +426,13 @@
 
                             } else {
                                 clickableSlot1.className = clickableSlot1.className + " reserved";
-                                clickableSlot1.setAttribute("id", strID + "_" + takenID);
+                                clickableSlot1.setAttribute("id", strID + "_" + corresReservation.reservationid);
+
+                                if (corresReservation.<?php echo COLUMN_ATTENDANCE; ?> == 1)
+                                    clickableSlot1.className = clickableSlot1.className + " present";
+                                else if (corresReservation.<?php echo COLUMN_VERIFIED; ?> == 1)
+                                    clickableSlot1.className = clickableSlot1.className + " verified";
+
                             }
 
                             slotCell.appendChild(clickableSlot1);
