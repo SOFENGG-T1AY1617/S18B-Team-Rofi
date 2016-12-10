@@ -101,26 +101,26 @@ $defaultTab = 1;
 
                     $( function() {
                         $( "#datepicker" ).datepicker({
+                            constrainInput: true,
+                            altField: "#selectedDate",
+                            altFormat: "yy-mm-dd",
+                            dateFormat: "MM d, yy",
                             minDate: 0,
-                            maxDate: 7
+                            maxDate: 6,
+                            onSelect: function(date) {
+
+                                if($("#form_building").val()!=null){
+                                    selectRoom($("#form_room").val());
+                                }
+                            }
                         });
-                    } );
+                    });
+
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function() {
                         if (slotsPicked == 0) {
                             toastr.info("You must choose up to "+maxNumberOfSlots+" slots before proceeding.", "Info");
                         } else {
                             nextStep(<?php echo $stepNo ?>);
-                        }
-
-                        var date_selected = $("input[name=optradio]:checked").val();
-                        console.log(date_selected);
-                        if (date_selected == "today") {
-                            dateSelected = "<?=date("Y-m-d")?>";
-                            //$("#text-date").text("<?=date("F d, Y")?>");
-                        }
-                        else {
-                            dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
-                            //$("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
                         }
 
                         if(slotsPicked!=null){
@@ -201,27 +201,6 @@ $defaultTab = 1;
 
                         console.log(slotsPicked);
                         updateSelectedSlots();
-                    });
-
-
-                    $("input[name=optradio]:radio").change(function () {
-
-                        var date_selected = $("input[name=optradio]:checked").val();
-                        console.log(date_selected);
-
-                        if (date_selected == "today") {
-                            dateSelected = "<?=date("Y-m-d")?>";
-                            $("#text-date").text("<?=date("F d, Y")?>");
-                        }
-                        else {
-                            dateSelected = "<?=date("Y-m-d", strtotime("tomorrow"))?>";
-                            $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
-                        }
-
-                        if($("#form_building").val()!=null){
-                            selectRoom($("#form_room").val());
-                        }
-
                     });
 
                 });
@@ -450,6 +429,9 @@ $defaultTab = 1;
                 }
 
                 function selectRoom(roomid) {
+
+                    dateSelected = $("#selectedDate").val();
+                    console.log(dateSelected);
                     
                     //updateTimesHeader(dateSelected == dateToday);
 
@@ -722,24 +704,30 @@ $defaultTab = 1;
             </script>
 <!--Step 1-->
             <div id = "tab_1_<?php echo $stepNo ?>" class="tab-pane fade in <?php echo ($tab == $stepNo) ? 'active' : ''; ?>">
-                <input type="text" id="datepicker">
+
 
                 <div class = "row">
                     <div class = "col-md-3 col-md-offset-1">
                         <div class = "panel panel-default">
                             <div class = "panel-body">
-                                <div class="radio">
+                                <!--<div class="radio">
                                     <div class="radio" id="radio-date" name="form-date">
                                         <label><input type="radio" id="radio-today" name="optradio" value="today" checked>
                                             Today
-                                            <div class = "date-font"> (<?=date("F d, Y")?>) </div>
+                                            <div class = "date-font"> (<?/*=date("F d, Y")*/?>) </div>
                                         </label>
                                         <label><input type="radio" id="radio-tomorrow" name="optradio" value="tomorrow">
                                             Tomorrow
-                                            <div class = "date-font"> (<?=date("F d, Y", strtotime("tomorrow"))?>) </div>
+                                            <div class = "date-font"> (<?/*=date("F d, Y", strtotime("tomorrow"))*/?>) </div>
                                         </label>
                                     </div>
+                                </div>-->
+                                <div>
+                                    <label>Date: </label> <br>
+                                    <input type="text" id="datepicker" placeholder="Select date..." value="<?=date("F d, Y")?>">
                                 </div>
+
+                                <input type="hidden" id="selectedDate" value="<?=date("Y-m-d")?>">
                             </div>
                         </div>
                     </div>
@@ -748,7 +736,7 @@ $defaultTab = 1;
                         <div class = "panel panel-default">
                             <div class = "panel-body">
                                 <div class = "form-group col-md-7">
-                                    Building:
+                                    <label>Building:</label>
                                     <select class="form-control" id="form_building" name="form-building" onchange="selectBuilding(this.value)">
                                         <option value="" selected disabled>Choose a building...</option>
                                         <?php foreach($buildings as $row):?>
@@ -757,7 +745,7 @@ $defaultTab = 1;
                                     </select>
                                 </div>
                                 <div class = "form-group col-md-5">
-                                    Room:
+                                    <label>Room:</label>
                                     <select class="form-control" id="form_room" name="form-room" onchange="selectRoom(this.value)" disabled=true>
                                         <option value="" selected></option>
                                     </select>
