@@ -477,81 +477,80 @@ class AdminController extends CI_Controller
                 );
 
                 //continue;
-            }
+            }else {
 
-            // Check if first name was changed
-            if ($data[0] != $mod['first_name']) {
-                // Update firts name
-                $updateData = array(
-                    'id' => $mod['moderatorid'],
-                    'fName' => $data[0],
-                );
-                $this->admin->updateModFirstName($updateData);
-                $result = array(
-                    'result' => "success",
-                );
-
-            }
-
-            if ($data[1] != $mod['last_name']) {
-                // Update last name
-                $updateData = array(
-                    'id' => $mod['moderatorid'],
-                    'lName' => $data[1],
-                );
-                $this->admin->updateModLastName($updateData);
-                $result = array(
-                    'result' => "success",
-                );
-
-            }
-
-            if ($data[4] == 0) {
-                // Update departmentid
-                if ($this->admin->isExistingTagModRoomByModID($mod['moderatorid'])) {
-                    $this->admin->deleteTagModRoomsByModID($mod['moderatorid']);
-                    $result = array(
-                        'result' => "success",
-                    );
-                }
-
-            }else{
-                if ($this->admin->isExistingTagModRoomByModID($mod['moderatorid']) && !$this->admin->isExistingTagModRoomByRoomID($data[4])){
-                    $this->admin->deleteTagModRoomsByModID($mod['moderatorid']);
-                    $this->admin->insertTagModRoomAtModIDAndRoomID($mod['moderatorid'],$data[4]);
-                    $result = array(
-                        'result' => "success",
-                    );
-                }
-                else if(!$this->admin->isExistingTagModRoomByRoomID($data[4])){
-                    $this->admin->insertTagModRoomAtModIDAndRoomID($mod['moderatorid'],$data[4]);
-                    $result = array(
-                        'result' => "success",
-                    );
-                }
-                else
-                    $result = array(
-                        'result' => "room_invalid",
-                    );
-            }
-
-
-            if ($data[2] != $mod['email']) {
-                if ($this->admin->isExistingModerator($data[2])) {
-                    // If room name already exists, cannot change
-                    $result = array(
-                        'result' => "name_invalid",
-                    );
-                } else {
-                    // Update room name
+                // Check if first name was changed
+                if ($data[0] != $mod['first_name']) {
+                    // Update firts name
                     $updateData = array(
                         'id' => $mod['moderatorid'],
-                        'email' => $data[2],
+                        'fName' => $data[0],
                     );
-                    $this->admin->updateModEmail($updateData);
+                    $this->admin->updateModFirstName($updateData);
                     $result = array(
                         'result' => "success",
                     );
+
+                }
+
+                if ($data[1] != $mod['last_name']) {
+                    // Update last name
+                    $updateData = array(
+                        'id' => $mod['moderatorid'],
+                        'lName' => $data[1],
+                    );
+                    $this->admin->updateModLastName($updateData);
+                    $result = array(
+                        'result' => "success",
+                    );
+
+                }
+
+                if ($data[4] == 0) {
+                    // Update departmentid
+                    if ($this->admin->isExistingTagModRoomByModID($mod['moderatorid'])) {
+                        $this->admin->deleteTagModRoomsByModID($mod['moderatorid']);
+                        $result = array(
+                            'result' => "success",
+                        );
+                    }
+
+                } else {
+                    if ($this->admin->isExistingTagModRoomByModID($mod['moderatorid']) && !$this->admin->isExistingTagModRoomByRoomID($data[4])) {
+                        $this->admin->deleteTagModRoomsByModID($mod['moderatorid']);
+                        $this->admin->insertTagModRoomAtModIDAndRoomID($mod['moderatorid'], $data[4]);
+                        $result = array(
+                            'result' => "success",
+                        );
+                    } else if (!$this->admin->isExistingTagModRoomByRoomID($data[4])) {
+                        $this->admin->insertTagModRoomAtModIDAndRoomID($mod['moderatorid'], $data[4]);
+                        $result = array(
+                            'result' => "success",
+                        );
+                    } else
+                        $result = array(
+                            'result' => "room_invalid",
+                        );
+                }
+
+
+                if ($data[2] != $mod['email']) {
+                    if ($this->admin->isExistingModerator($data[2])) {
+                        // If room name already exists, cannot change
+                        $result = array(
+                            'result' => "name_invalid",
+                        );
+                    } else {
+                        // Update room name
+                        $updateData = array(
+                            'id' => $mod['moderatorid'],
+                            'email' => $data[2],
+                        );
+                        $this->admin->updateModEmail($updateData);
+                        $result = array(
+                            'result' => "success",
+                        );
+                    }
                 }
             }
 
