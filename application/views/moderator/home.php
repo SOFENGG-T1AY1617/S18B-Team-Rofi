@@ -599,6 +599,69 @@
 include 'm_navbar.php';
 ?>
 
+<div id="removeMessage" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Prompt Message</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove the selected slots?</p>
+            </div>
+            <div class="modal-footer">
+                <button id = "removeReservation" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="verifyMessage" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Prompt Message</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to verify the selected slots?</p>
+            </div>
+            <div class="modal-footer">
+                <button id = "verifySlot" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="presentMessage" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Prompt Message</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to mark the selected slots present or checked in?</p>
+            </div>
+            <div class="modal-footer">
+                <button id = "markPresent" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <div class = "row col-md-10 col-md-offset-1">
 
     <div class = "panel panel-default">
@@ -621,9 +684,9 @@ include 'm_navbar.php';
                 </div>
 
                 <div id = "mod_controls_container" class = "col-md-2">
-                    <button id = "markPresent" class = "btn btn-success col-md-12">Mark Present</button>
-                    <button id = "verifySlot" class = "btn btn-success col-md-12">Verify Slot</button>
-                    <button id = "removeReservation" class = "btn btn-danger col-md-12">Remove</button>
+                    <button class = "btn btn-success col-md-12" data-toggle="modal" data-target="#presentMessage">Mark Present</button>
+                    <button class = "btn btn-success col-md-12" data-toggle="modal" data-target="#verifyMessage">Verify Slots</button>
+                    <button class = "btn btn-danger col-md-12" data-toggle="modal" data-target="#removeMessage">Remove</button>
                 </div>
 
             </div>
