@@ -80,36 +80,16 @@ th:first-child {
     height: 35px;
 }
 
-
-.selectedSlot{
-    font-size: 75%;
-    background-color: mintcream;
-    position: relative;
-    padding: 2px;
-    margin: 2px;
-    transition: opacity 500ms;
-}
-
-.unSelectSlot {
-    background-color: whitesmoke;
-    color: firebrick;
-
-    cursor: pointer;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    height: 100%;
-    width: 15%;
-    text-align: center;
-    vertical-align: middle;
-    transition: all 0.3s ease 0s;
-    font-size: 200%
-}
-
 .unSelectSlot:hover{
     background-color: firebrick;
     color: whitesmoke;
 
+}
+
+.slotRow {
+    background-color: mintcream;
+    height: 24px;
+    padding: 2px;
 }
 
 .slotCell.enabled {
@@ -226,4 +206,14 @@ div.legend.taken{
 
 .delete-button:hover {
     background-color: red;
+}
+
+span.red {
+    font-weight: bold;
+    color: red;
+}
+
+span.green {
+    font-weight: bold;
+    color: green;
 }

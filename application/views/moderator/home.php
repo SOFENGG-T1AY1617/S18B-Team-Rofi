@@ -243,13 +243,24 @@
             .done(function(result) {
                 $(slotContainerID).empty();
 
+                var verifStatus = null;
+                var colorStatus = null;
+
                 for (var i = 0; i < result.length; i++) {
+                    if (result[i].verified == 1) {
+                        verifStatus = "Verified";
+                        colorStatus = "green";
+                    } else {
+                        verifStatus = "Unverified";
+                        colorStatus = "red";
+                    }
+
                     $(slotContainerID).append(
-                        "<div>" +
+                        "<div class = 'slotRow'>" +
                         "<span id = " + slotsPicked[i] + " class = 'col-md-1 delete-button text-center'>X</span>" +
                         "<span class = 'col-md-1'>" + result[i].roomName + "</span>" +
                         "<span class = 'col-md-2'>Pc No. " + result[i].compNo + "</span>" +
-                        "<span class = 'col-md-4'>" + result[i].userid + "</span>" +
+                        "<span class = 'col-md-4'>" + result[i].userid + " : <span class = '" + colorStatus + "'>" + verifStatus + "</span> </span>" +
                         "<span class = 'col-md-4 text-center pull-right'>" + result[i].start + " - " + result[i].end + "</span>" +
                         "</div>"
                     );
