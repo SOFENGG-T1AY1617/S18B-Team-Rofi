@@ -220,6 +220,7 @@ div.legend.taken{
     font-weight: bold;
     color: white;
     background-color: darkred;
+    cursor: pointer;
 }
 
 .delete-button:hover {

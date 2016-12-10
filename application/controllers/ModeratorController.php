@@ -37,6 +37,9 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_SIGN_IN:
                     $this->signIn();
                     break;
+                case MODERATOR_GET_TIMES:
+                    $this->getTimes();
+                    break;
                 case MODERATOR_GET_COMPUTERS:
                     $this->getComputers();
                     break;
@@ -72,7 +75,7 @@ class ModeratorController extends CI_Controller
     }
 
     public function getTimes () {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+        date_default_timezone_set('America/New_York'); // set to Hong Kong's/Philippines' Timezone
 
         $getData = array(
             'interval' => $this->input->get('interval'),
@@ -82,24 +85,15 @@ class ModeratorController extends CI_Controller
         $currentMinute = date("i");
 
         $times_today = $this->admin->getTimes($currentHour, $currentMinute, $getData['interval'], $this->admin->getMinimumHour(), $this->admin->getMaximumHour(), false);
-        $times_tomorrow = $this->admin->getTimes(null, $currentMinute, $getData['interval'], $this->admin->getMinimumHour(), $this->admin->getMaximumHour(), true);
 
         $data['times_today'] = null;
-        $data['times_tomorrow'] = null;
         $data['times_today_DISPLAY'] = null;
-        $data['times_tomorrow_DISPLAY'] = null;
 
         foreach ($times_today as $time)
             $data['times_today'][] = date("H:i:s", $time);
 
-        foreach ($times_tomorrow as $time)
-            $data['times_tomorrow'][] = date("H:i:s", $time);
-
         foreach ($times_today as $time)
             $data['times_today_DISPLAY'][] = date("h:i A", $time);
-
-        foreach ($times_tomorrow as $time)
-            $data['times_tomorrow_DISPLAY'][] = date("h:i A", $time);
 
         echo json_encode($data);
     }

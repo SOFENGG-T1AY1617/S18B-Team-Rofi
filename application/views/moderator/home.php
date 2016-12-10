@@ -14,7 +14,6 @@
 <script>
 
     var slotsPicked = [];
-    var slotsDisabled = [];
     var computers = [];
     var reservations = [];
     var request;
@@ -24,9 +23,7 @@
     var roomName;
 
     var times_today;
-    var times_tomorrow;
     var times_today_DISPLAY;
-    var times_tomorrow_DISPLAY;
 
     $(document).ready(function() {
 
@@ -36,6 +33,12 @@
 
         $(document).on( "click", ".slotCell.selected:not(.enabled):not(.disabled)",function() {
             deselectSlot($(this));
+        });
+
+        $(document).on( "click", ".delete-button",function() {
+            var slotID = $(this).attr('id');
+
+            deselectSlot($("[id = '" + slotID + "']"));
         });
 
         $("#markPresent").click( function() {
@@ -148,7 +151,7 @@
                 for (var i = 0; i < result.length; i++) {
                     $(slotContainerID).append(
                         "<div>" +
-                        "<span class = 'col-md-1 delete-button'>X</span>" +
+                        "<span id = " + slotsPicked[i] + " class = 'col-md-1 delete-button text-center'>X</span>" +
                         "<span class = 'col-md-1'>" + result[i].roomName + "</span>" +
                         "<span class = 'col-md-2'>Pc No. " + result[i].compNo + "</span>" +
                         "<span class = 'col-md-4'>" + result[i].userid + "</span>" +
@@ -176,8 +179,8 @@
 
         slotTable.floatThead('destroy');
 
-        var currentTimeArray = (isToday ? times_today_DISPLAY : times_tomorrow_DISPLAY);
-        var currentTimeArrayForIDs = (isToday ? times_today : times_tomorrow);
+        var currentTimeArray = times_today_DISPLAY;
+        var currentTimeArrayForIDs = times_today;
 
         var timesRow = document.createElement("tr");
         var PCNumbersTH = document.createElement("th");
@@ -279,7 +282,7 @@
                     console.log("PROMISE FULFILL");
 
                     return $.ajax({ // PROCEED TO PROMISE
-                        url: '<?php echo base_url('getTimes') ?>',
+                        url: '<?php echo base_url('moderator/' . MODERATOR_GET_TIMES) ?>',
                         type: 'GET',
                         dataType: 'json',
                         data: {
