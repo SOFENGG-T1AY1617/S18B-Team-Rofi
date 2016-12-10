@@ -58,6 +58,8 @@
                         for (var i = 0; i < slotsPicked.length; i++)
                             markSlotPresent($("[id = '" + slotsPicked[i] + "']"));
 
+                        updateSelectedSlots();
+
                     })
                     .fail(function () {
 
@@ -92,6 +94,7 @@
                         verifySlot($("[id = '"+ slotsPicked[i] +"']"));
 
                     updatePresentButton();
+                    updateSelectedSlots();
 
                 })
                 .fail(function() {
@@ -243,13 +246,30 @@
             .done(function(result) {
                 $(slotContainerID).empty();
 
+                var verifStatus = null;
+                var colorStatus = null;
+
                 for (var i = 0; i < result.length; i++) {
+                    if (result[i].verified == 1) {
+                        verifStatus = "Verified";
+                        colorStatus = "green";
+
+                        if (result[i].attendance == 1)
+                            verifStatus += " & Present";
+                        else
+                            verifStatus += " & Absent";
+
+                    } else {
+                        verifStatus = "Unverified";
+                        colorStatus = "red";
+                    }
+
                     $(slotContainerID).append(
-                        "<div>" +
+                        "<div class = 'slotRow'>" +
                         "<span id = " + slotsPicked[i] + " class = 'col-md-1 delete-button text-center'>X</span>" +
                         "<span class = 'col-md-1'>" + result[i].roomName + "</span>" +
                         "<span class = 'col-md-2'>Pc No. " + result[i].compNo + "</span>" +
-                        "<span class = 'col-md-4'>" + result[i].userid + "</span>" +
+                        "<span class = 'col-md-4'>" + result[i].userid + " : <span class = '" + colorStatus + "'>" + verifStatus + "</span> </span>" +
                         "<span class = 'col-md-4 text-center pull-right'>" + result[i].start + " - " + result[i].end + "</span>" +
                         "</div>"
                     );
@@ -418,8 +438,8 @@
                     console.log(result);
                     console.log("done");
 
-                    queriedComputers = result['computers'];
-                    queriedReservations = result['reservations'];
+                    var queriedComputers = result['computers'];
+                    var queriedReservations = result['reservations'];
 
                     for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
                         computers[i]=queriedComputers[i];
@@ -428,6 +448,8 @@
                     for(i=0;i<queriedReservations.length;i++){ // retrieve all reservations from result
                         reservations[i]=queriedReservations[i];
                     }
+
+                    console.log(reservations);
 
                     outputSlots();
                 })
@@ -582,6 +604,69 @@
 include 'm_navbar.php';
 ?>
 
+<div id="removeMessage" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Prompt Message</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove the selected slots?</p>
+            </div>
+            <div class="modal-footer">
+                <button id = "removeReservation" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="verifyMessage" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Prompt Message</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to verify the selected slots?</p>
+            </div>
+            <div class="modal-footer">
+                <button id = "verifySlot" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="presentMessage" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Prompt Message</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to mark the selected slots present or checked in?</p>
+            </div>
+            <div class="modal-footer">
+                <button id = "markPresent" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <div class = "row col-md-10 col-md-offset-1">
 
     <div class = "panel panel-default">
@@ -604,9 +689,9 @@ include 'm_navbar.php';
                 </div>
 
                 <div id = "mod_controls_container" class = "col-md-2">
-                    <button id = "markPresent" class = "btn btn-success col-md-12">Mark Present</button>
-                    <button id = "verifySlot" class = "btn btn-success col-md-12">Verify Slot</button>
-                    <button id = "removeReservation" class = "btn btn-danger col-md-12">Remove</button>
+                    <button class = "btn btn-success col-md-12" data-toggle="modal" data-target="#presentMessage">Mark Present</button>
+                    <button class = "btn btn-success col-md-12" data-toggle="modal" data-target="#verifyMessage">Verify Slots</button>
+                    <button class = "btn btn-danger col-md-12" data-toggle="modal" data-target="#removeMessage">Remove</button>
                 </div>
 
             </div>

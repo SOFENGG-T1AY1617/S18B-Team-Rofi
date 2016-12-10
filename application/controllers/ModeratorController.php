@@ -115,9 +115,10 @@ class ModeratorController extends CI_Controller
             $timeStart = date('h:iA',mktime(explode(':',$arr[2])[0],explode(':',$arr[2])[1]));
             $timeEnd =  date('h:iA',mktime(explode(':',$arr[3])[0],explode(':',$arr[3])[1]));
 
-            $idnumber = $this->moderator->queryUserIDwithReservationID($arr[4]);
+            $details = $this->moderator->queryReservationDetailswithReservationID($arr[4]);
 
-            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $date, 'start' => $timeStart, 'end' => $timeEnd, 'userid' => $idnumber);
+            $arr2 = array('id' => $slot,'roomName' => $roomName[0]->name, 'compNo' => $roomName[0]->computerno, 'date' => $date, 'start' => $timeStart,
+                'end' => $timeEnd, 'userid' => $details[0]->userid, 'verified' => $details[0]->verified, 'attendance' => $details[0]->attendance);
             array_push($data, $arr2);
         }
         /*$data = array(
