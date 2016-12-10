@@ -1,10 +1,11 @@
 :root{
-    --disabled: #ED1C24;
-    --enabled: #ddd;
-    --verified: limegreen;
-    --unverified: orange;
-    --present: darkgreen;
+    --disabled: #DDD;
+    --enabled: #80CBC4;
+    --verified: #8B3C4A;
+    --unverified: #C0CA33;
+    --present: #4CAF50;
 }
+
 
 .nopadding {
     padding: 0 !important;
@@ -112,12 +113,10 @@ th:first-child {
 }
 
 .slotCell.enabled {
-    opacity: 0.50;
     background-color: var(--enabled);
 }
 
 .slotCell.disabled {
-    opacity: 0.50;
     background-color: var(--disabled);
 }
 
