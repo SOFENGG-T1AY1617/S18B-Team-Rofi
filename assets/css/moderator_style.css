@@ -1,7 +1,7 @@
 :root{
     --disabled: #DDD;
     --enabled: #80CBC4;
-    --verified: #8B3C4A;
+    --verified: #8BC34A;
     --unverified: #C0CA33;
     --present: #4CAF50;
 }

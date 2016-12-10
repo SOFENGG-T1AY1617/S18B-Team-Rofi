@@ -42,32 +42,37 @@
         });
 
         $("#markPresent").click( function() {
-            $.ajax({
-                url: '<?php echo base_url('moderator/' . MODERATOR_SET_RESERVATIONS_PRESENT) ?>',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    slots: slotsPicked
-                }
-            })
-                .done(function(result) {
-
-                    toastr.success(slotsPicked.length + " reservations were updated!", "Selected reservation/s is/are now present");
-
-                    for (var i = 0; i < slotsPicked.length; i++)
-                        markSlotPresent($("[id = '"+ slotsPicked[i] +"']"));
-
+            if (!existsAnUnverifiedSelectedSlot()) {
+                $.ajax({
+                    url: '<?php echo base_url('moderator/' . MODERATOR_SET_RESERVATIONS_PRESENT) ?>',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        slots: slotsPicked
+                    }
                 })
-                .fail(function() {
+                    .done(function (result) {
 
-                    console.log("fail");
+                        toastr.success(slotsPicked.length + " reservations were updated!", "Selected reservation/s is/are now present");
 
-                })
-                .always(function() {
+                        for (var i = 0; i < slotsPicked.length; i++)
+                            markSlotPresent($("[id = '" + slotsPicked[i] + "']"));
 
-                    console.log("complete");
+                    })
+                    .fail(function () {
 
-                });
+                        console.log("fail");
+
+                    })
+                    .always(function () {
+
+                        console.log("complete");
+
+                    });
+            } else {
+                toastr.error("One or more of the selected slots is/are still unverified", "Oops!");
+            }
+
         } );
 
         $("#verifySlot").click(function () {
@@ -85,6 +90,8 @@
 
                     for (var i = 0; i < slotsPicked.length; i++)
                         verifySlot($("[id = '"+ slotsPicked[i] +"']"));
+
+                    updatePresentButton();
 
                 })
                 .fail(function() {
@@ -116,6 +123,9 @@
                         removeReservation($("[id = '"+ slotsPicked[i] +"']"));
 
                     slotsPicked = [];
+
+                    updateSelectedSlots();
+                    updatePresentButton();
 
 
                 })
@@ -156,12 +166,31 @@
 
     }
 
+    function disablePresentButton () {
+        var presentButton = $("#markPresent");
+
+        if (!presentButton.hasClass('disabled')) {
+            console.log("DISABLED PRESENT");
+            presentButton.addClass('disabled');
+        }
+    }
+
+    function enablePresentButton () {
+        var presentButton = $("#markPresent");
+
+        if (presentButton.hasClass('disabled')) {
+            console.log("ENABLED PRESENT");
+            presentButton.removeClass('disabled');
+        }
+    }
+
     function selectSlot (slot) {
         if (($.inArray(slot.attr('id'), slotsPicked)) == -1)
             slotsPicked.push(slot.attr("id"));
 
         slot.addClass ('selected');
 
+        updatePresentButton();
         updateSelectedSlots();
     }
 
@@ -176,7 +205,28 @@
                 slot.removeClass('selected');
         }
 
+        updatePresentButton();
         updateSelectedSlots();
+    }
+
+    function updatePresentButton () {
+        if (existsAnUnverifiedSelectedSlot())
+            disablePresentButton();
+        else
+            enablePresentButton()
+    }
+
+    function existsAnUnverifiedSelectedSlot () {
+        var exists = false;
+
+        for (var i = 0; i < slotsPicked.length; i++) {
+            exists = !($("[id = '" + slotsPicked[i] + "']").hasClass('verified'));
+
+            if (exists)
+                return exists;
+        }
+
+        return exists;
     }
 
     function updateSelectedSlots () { // for the upper part
@@ -204,6 +254,9 @@
                         "</div>"
                     );
                 }
+
+                if (slotsPicked.length == 0)
+                    $(slotContainerID).empty();
 
             })
             .fail(function() {
@@ -501,7 +554,8 @@
 
                                 if (corresReservation.<?php echo COLUMN_ATTENDANCE; ?> == 1)
                                     clickableSlot1.className = clickableSlot1.className + " present";
-                                else if (corresReservation.<?php echo COLUMN_VERIFIED; ?> == 1)
+
+                                if (corresReservation.<?php echo COLUMN_VERIFIED; ?> == 1)
                                     clickableSlot1.className = clickableSlot1.className + " verified";
 
                             }
