@@ -250,6 +250,12 @@
                     if (result[i].verified == 1) {
                         verifStatus = "Verified";
                         colorStatus = "green";
+
+                        if (result[i].attendance == 1)
+                            verifStatus += " & Checked-In";
+                        else
+                            verifStatus += " & Not Checked-In";
+
                     } else {
                         verifStatus = "Unverified";
                         colorStatus = "red";

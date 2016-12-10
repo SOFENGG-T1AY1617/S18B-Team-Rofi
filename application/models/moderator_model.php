@@ -253,7 +253,7 @@ class moderator_model extends CI_Model
     }
 
     function queryReservationDetailswithReservationID ($id) {
-        $sql = "SELECT userid, verified
+        $sql = "SELECT userid, verified, attendance
                 FROM reservations
                 WHERE reservationid = ?";
 
