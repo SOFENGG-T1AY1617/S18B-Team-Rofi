@@ -310,6 +310,7 @@
     }
 
     function changeViewToView(table, button, modal){
+        reloadPage();//TODO Erroring
         console.log(table);
         var tableA = document.getElementById(table);
         var buttonA = document.getElementById(button);
