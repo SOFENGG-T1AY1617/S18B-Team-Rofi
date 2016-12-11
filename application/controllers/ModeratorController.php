@@ -87,7 +87,7 @@ class ModeratorController extends CI_Controller
         $currentHour = date("H");
         $currentMinute = date("i");
 
-        $times_today = $this->admin->getTimes($currentHour, $currentMinute, $getData['interval'], $this->admin->getMinimumHour(), $this->admin->getMaximumHour(), false);
+        $times_today = $this->moderator->getTimes($currentHour, $currentMinute, $getData['interval'], $this->admin->getMinimumHour(), $this->admin->getMaximumHour(), false);
 
         $data['times_today'] = null;
         $data['times_today_DISPLAY'] = null;

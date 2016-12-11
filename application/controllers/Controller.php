@@ -26,6 +26,8 @@ class Controller extends CI_Controller {
 	public function home()
     {
 
+        date_default_timezone_set('Asia/Hong_Kong');
+
         //$maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
         $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $data['colleges'] = $this->student->queryColleges();
