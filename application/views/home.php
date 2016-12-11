@@ -86,11 +86,14 @@ $defaultTab = 1;
                 var slotsPicked = [];
                 var computers = [];
                 var reservations = [];
+                var disabledSlots = [];
                 var request;
                 var dateToday = "<?=date("Y-m-d")?>";
                 var dateSelected = dateToday;
                 var maxNumberOfSlots = 0;
                 var currentDeptID = 0;
+
+                var currentTime = "<?=date("H:m:s"); ?>";
 
                 var times_today;
                 var times_tomorrow;
@@ -539,6 +542,7 @@ $defaultTab = 1;
                                     buildingid: buildingid,
                                     roomid:roomid,
                                     currdate: dateSelected,
+                                    currtime: currentTime
                                 }
                             })
                         })
@@ -550,6 +554,7 @@ $defaultTab = 1;
 
                                 queriedComputers = result['computers'];
                                 queriedReservations = result['reservations'];
+                                queriedDisabledSlots = result['disabledslots'];
 
                                 for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
                                     computers[i]=queriedComputers[i];
@@ -557,6 +562,10 @@ $defaultTab = 1;
 
                                 for(i=0;i<queriedReservations.length;i++){ // retrieve all reservations from result
                                     reservations[i]=queriedReservations[i];
+                                }
+
+                                for (i = 0; i < queriedDisabledSlots.length; i++) {
+                                    disabledSlots[i] = queriedDisabledSlots[i];
                                 }
 
                                 outputSlots();
@@ -653,15 +662,26 @@ $defaultTab = 1;
                                             slotCell.className = "nopadding";
 
                                             var taken = false;
+                                            var isDisabled = false;
+
                                             for (var p = 0; p < reservations.length; p++) {
                                                 if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
                                                     taken = true;
                                             }
 
+                                            for (var q = 0; q < disabledSlots.length; q++) {
+                                                if ((disabledSlots[q].start_time == currentTimeArray[n]) && (disabledSlots[q].computerid == computers[k].computerid)) {
+                                                    isDisabled = true;
+                                                    break;
+                                                }
+                                            }
+
                                             var chosenTime1 = currentTimeArray[n++];
                                             var chosenTime2 = currentTimeArray[n];
 
-                                            if (!taken) {
+                                            if (taken || isDisabled) {
+                                                clickableSlot1.className = "slotCell pull-left taken";
+                                            } else {
                                                 var computerID = computers[k].computerid;
 
                                                 var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
@@ -672,15 +692,6 @@ $defaultTab = 1;
                                                     clickableSlot1.className = "slotCell pull-left selected";
                                                 else
                                                     clickableSlot1.className = "slotCell pull-left free";
-                                            } else {
-                                                clickableSlot1.className = "slotCell pull-left taken";
-                                            }
-
-                                            for (var x in slotsPicked) {
-                                                if (slotsPicked[x].includes(chosenTime1) && slotsPicked[x].includes(chosenTime2) && !(($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1)) {
-                                                    disableSlotObject(clickableSlot1);
-                                                }
-
                                             }
 
                                             slotCell.appendChild(clickableSlot1);
@@ -801,7 +812,7 @@ $defaultTab = 1;
                                 <div class="legend selected pull-left"></div>Selected
                             </li>
                             <li class="previous pull-left">
-                                <div class="legend taken pull-left"></div>Taken
+                                <div class="legend taken pull-left"></div>Taken / Disabled
                             </li>
 
 
