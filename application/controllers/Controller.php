@@ -320,12 +320,14 @@ class Controller extends CI_Controller {
         if ($numResult > 0) {
             $data = array(
                 'result' => "success",
+                'numResult' => $numResult,
                 'message' => "Reservation confirmed successfully!",
             );
         }
         else {
             $data = array(
                 'result' => "fail",
+                'numResult' => $numResult,
                 'message' => "Sorry, unable to verify your reservation. Your slot has expired.",
             );
         }
