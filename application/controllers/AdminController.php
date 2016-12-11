@@ -517,7 +517,7 @@ class AdminController extends CI_Controller
                         );
                     }
 
-                } else {
+                } else if(!$this->admin->isExistingTagModRoomByModIDAndRoomID($mod['moderatorid'],$data[4])){
                     if ($this->admin->isExistingTagModRoomByModID($mod['moderatorid']) && !$this->admin->isExistingTagModRoomByRoomID($data[4])) {
                         $this->admin->deleteTagModRoomsByModID($mod['moderatorid']);
                         $this->admin->insertTagModRoomAtModIDAndRoomID($mod['moderatorid'], $data[4]);

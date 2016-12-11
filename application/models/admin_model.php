@@ -786,10 +786,20 @@ class Admin_Model extends CI_Model
 
         return count($result)>=1;
     }
-    function isExistingTagModRoomByModID($modid) {
+    function isExistingTagModRoomByModID($modID) {
         $this->db->select('*');
         $this->db->from(TABLE_TAG_MOD_ROOMS);
-        $this->db->where(COLUMN_MODERATORID, $modid);
+        $this->db->where(COLUMN_MODERATORID, $modID);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+    function isExistingTagModRoomByModIDAndRoomID($modID,$roomID) {
+        $this->db->select('*');
+        $this->db->from(TABLE_TAG_MOD_ROOMS);
+        $this->db->where(COLUMN_MODERATORID, $modID);
+        $this->db->where(COLUMN_ROOMID, $roomID);
         $query = $this->db->get();
         $result = $query->result();
 
@@ -820,6 +830,7 @@ class Admin_Model extends CI_Model
         // Delete room
         $this->db->where(COLUMN_MODERATORID, $id);
         $this->db->delete(TABLE_TAG_MOD_ROOMS);
+
         //$this->db->delete(TABLE_MODERATORS);
     }
 
