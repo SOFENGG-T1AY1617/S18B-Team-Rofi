@@ -16,9 +16,13 @@
     var slotsPicked = [];
     var computers = [];
     var reservations = [];
+    var disabledSlots = [];
     var request;
     var dateToday = "<?=date("Y-m-d")?>";
     var dateSelected = dateToday;
+
+    var currentTime = "<?=date("H:m:s"); ?>";
+
     var currentDeptID = 0;
     var roomName;
 
@@ -516,7 +520,8 @@
                         dataType: 'json',
                         data: {
                             roomid:roomid,
-                            currdate: dateToday
+                            currdate: dateToday,
+                            currtime: currentTime
                         }
                     })
                 })
@@ -528,6 +533,7 @@
 
                     var queriedComputers = result['computers'];
                     var queriedReservations = result['reservations'];
+                    var queriedDisabledSlots = result['disabledslots'];
 
                     for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
                         computers[i]=queriedComputers[i];
@@ -535,6 +541,10 @@
 
                     for(i=0;i<queriedReservations.length;i++){ // retrieve all reservations from result
                         reservations[i]=queriedReservations[i];
+                    }
+
+                    for (i = 0; i < queriedDisabledSlots.length; i++) {
+                        disabledSlots[i] = queriedDisabledSlots[i];
                     }
 
                     console.log(reservations);
@@ -627,11 +637,19 @@
 
                             var taken = false;
                             var corresReservation = null;
+                            var isDisabled = false;
 
                             for (var p = 0; p < reservations.length; p++) {
                                 if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid)) {
                                     taken = true;
                                     corresReservation = reservations[p];
+                                    break;
+                                }
+                            }
+
+                            for (var q = 0; q < disabledSlots.length; q++) {
+                                if ((disabledSlots[q].start_time == currentTimeArray[n]) && (disabledSlots[q].computerid == computers[k].computerid)) {
+                                    isDisabled = true;
                                     break;
                                 }
                             }
@@ -648,7 +666,7 @@
 
                             clickableSlot1.className = "slotCell pull-left";
 
-                            if (computers[k].status == 'Disabled') {
+                            if (isDisabled) {
                                 clickableSlot1.className = clickableSlot1.className + " disabled";
                             } else {
                                 clickableSlot1.className = clickableSlot1.className + " enabled";

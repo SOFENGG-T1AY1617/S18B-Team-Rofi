@@ -84,12 +84,10 @@ class moderator_model extends CI_Model
 
     function queryComputersAtRoomID($id) {
         $sql = "SELECT * 
-             FROM (computers NATURAL JOIN 
+             FROM computers NATURAL JOIN 
               (SELECT roomid, name
                FROM rooms
-               WHERE roomid = ?) t1) NATURAL JOIN (SELECT *
-                                                  FROM computer_status) s 
-                                                  ORDER BY computerno";
+               WHERE roomid = ?) t1";
         return $this->db->query($sql, array($id))->result();
     }
 
@@ -142,6 +140,19 @@ class moderator_model extends CI_Model
                    FROM rooms
                    WHERE roomid = ?) ro";
         return $this->db->query($sql, array($date, $id))->result();
+    }
+
+    function queryDisabledSlotsAtRoomIDOnDateTime($id, $date, $time) {
+        $sql = "SELECT *
+                FROM (SELECT * 
+                      FROM disabled_slots
+                      WHERE ? + ? < date_time_duration) d NATURAL JOIN 
+                      computers NATURAL JOIN 
+                      (SELECT roomid
+                      FROM rooms
+                      WHERE roomid = ?) ro";
+
+        return $this->db->query($sql, array($date, $time, $id))->result();
     }
 
     function hasOngoingReservations($id) {

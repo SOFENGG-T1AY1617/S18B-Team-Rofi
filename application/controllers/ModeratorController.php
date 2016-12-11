@@ -22,7 +22,7 @@ class ModeratorController extends CI_Controller
 
     public function home()
     {
-        date_default_timezone_set('Asia/Hong_Kong');
+        date_default_timezone_set('America/New_York');
 
         $this->loadAction("");
     }
@@ -78,7 +78,7 @@ class ModeratorController extends CI_Controller
     }
 
     public function getTimes () {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+        date_default_timezone_set('America/New_York'); // set to Hong Kong's/Philippines' Timezone
 
         $getData = array(
             'interval' => $this->input->get('interval'),
@@ -132,13 +132,16 @@ class ModeratorController extends CI_Controller
         $getData = array(
             'roomid' => $this->input->get('roomid'),
             'date' => $this->input->get('currdate'),
+            'time' => $this->input->get('currtime')
         );
 
         $date = $getData['date'];
+        $time = $getData['time'];
 
         $data = array(
             'computers' => $this->moderator->queryComputersAtRoomID($getData['roomid']),
             'reservations' => $this->moderator->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
+            'disabledslots' => $this->moderator->queryDisabledSlotsAtRoomIDOnDateTime($getData['roomid'], $date, $time),
             'date' => $date,
         );
         

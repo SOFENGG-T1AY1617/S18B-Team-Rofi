@@ -220,10 +220,11 @@ CREATE TABLE `reservation_system`.`tag_mod_rooms` (
 	ON UPDATE NO ACTION);
 
 CREATE TABLE `reservation_system`.`disabled_slots` (
-  `disabled_slotsid` INT NOT NULL AUTO_INCREMENT,
+  `disabled_slotid` INT NOT NULL AUTO_INCREMENT,
   `computerid` INT NOT NULL,
-  `start_datetime` DATETIME NOT NULL,
-  `end_datetime` DATETIME NOT NULL,
+  `start_time` TIME NOT NULL,
+  `end_time` TIME NOT NULL,
+  `date_time_duration` DATETIME NOT NULL,
   PRIMARY KEY (`disabled_slotsid`),
   INDEX `disabledcomputer_idx` (`computerid` ASC),
   CONSTRAINT `closed_computerid`
@@ -383,14 +384,14 @@ VALUES (1,1),
 	   (2,2),
 	   (3,4);
 
-INSERT INTO `reservation_system`.`disabled_slots` (`computerid`, `start_datetime`, `end_datetime`)
-VALUES (1, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
-	   (2, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
-	   (3, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
-	   (11, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
-	   (12, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
-	   (13, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
-	   (21, "2016-12-10 12:00:00", "2016-12-10 12:15:00");
+INSERT INTO `reservation_system`.`disabled_slots` (`computerid`, `start_time`, `end_time`, `date_time_duration`)
+VALUES (1, "12:00:00", "12:15:00", "2016-12-12 12:15:00"),
+	   (2, "12:00:00", "12:15:00", "2016-12-12 12:15:00"),
+	   (3, "12:00:00", "12:15:00", "2016-12-12 12:15:00"),
+	   (11, "12:00:00", "12:15:00", "2016-12-12 12:15:00"),
+	   (12, "12:00:00", "12:15:00", "2016-12-12 12:15:00"),
+	   (13, "12:00:00", "12:15:00", "2016-12-12 12:15:00"),
+	   (21, "12:00:00", "12:15:00", "2016-12-12 12:15:00");
 
 
 /*STORED PROCEDURES*/
