@@ -985,7 +985,7 @@ $defaultTab = 1;
 
                 });
 
-
+/**
                 function hunt(){
                     $('#egg').html( "<b>Project Manager:</b> Rofi Santos <br> <b>Development Team:</b> Kevin Chan, Patrick Tobias "+
                         " & Vincent Ortega II<br> <b>Analysts:</b>  Benson Polican, "+
@@ -995,6 +995,11 @@ $defaultTab = 1;
                     $('#egg').width('100%');
                 }
 
+
+ <div class="easter" id="egg" onclick="hunt()">//place this somewhere
+
+ </div>
+ *//
 
             </script>
 
@@ -1187,9 +1192,7 @@ $defaultTab = 1;
             </div>
 
 
-            <div class="easter" id="egg" onclick="hunt()">
 
-            </div>
         </div> <!-- EOF -->
 
     </div>
