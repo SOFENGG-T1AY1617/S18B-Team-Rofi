@@ -192,6 +192,8 @@ define("ADMIN_UPDATE_MODERATORS", "update_moderators");
 define("ADMIN_UPDATE_ADMINS", "update_admins");
 define("ADMIN_GET_BUSINESS_RULES", "get_business_rules");
 define("ADMIN_GET_ROOMS", "get_rooms");
+define("ADMIN_GET_TIMES", "get_times");
+define("ADMIN_GET_COMPUTERS", "get_computers");
 
 /* SUPER USER PAGES */
 define("SU_DEPARTMENTS", "departments");

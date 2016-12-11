@@ -22,14 +22,19 @@ include 'a_navbar.php';
 
 <script>
     var slotsPicked = [];
-    var slotsDisabled = [];
+    var slotsDisabled = []; // for GUI
     var computers = [];
     var reservations = [];
+
+    var disabledslots = []; // for backend
+
     var request;
     var dateToday = "<?=date("Y-m-d")?>";
     var dateSelected = dateToday;
     var interval = 0;
     var currentDeptID = 0;
+
+    var currentTime = "<?=date("H:m:s"); ?>";
 
     var times_today;
     var times_tomorrow;
@@ -564,13 +569,14 @@ include 'a_navbar.php';
                     // get computers
 
                     return $.ajax({
-                        url: '<?php echo base_url('getComputers') ?>',
+                        url: '<?php echo base_url('admin/' . ADMIN_GET_COMPUTERS) ?>',
                         type: 'GET',
                         dataType: 'json',
                         data: {
                             buildingid: buildingid,
                             roomid:roomid,
                             currdate: dateSelected,
+                            currtime: currentTime
                         }
                     })
                 })
@@ -582,6 +588,7 @@ include 'a_navbar.php';
 
                     queriedComputers = result['computers'];
                     queriedReservations = result['reservations'];
+                    queriedDisabledSlots = result['disabledslots'];
 
                     for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
                         computers[i]=queriedComputers[i];
@@ -589,6 +596,10 @@ include 'a_navbar.php';
 
                     for(i=0;i<queriedReservations.length;i++){ // retrieve all reservations from result
                         reservations[i]=queriedReservations[i];
+                    }
+
+                    for(i=0;i<queriedDisabledSlots.length;i++){ // retrieve all reservations from result
+                        disabledslots[i]=queriedDisabledSlots[i];
                     }
 
                     outputSlots();
@@ -679,35 +690,47 @@ include 'a_navbar.php';
                             slotCell.className = "nopadding";
 
                             var taken = false;
+                            var isDisabled = false;
+
                             for (var p = 0; p < reservations.length; p++) {
                                 if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
                                     taken = true;
                             }
 
+                            for (var q = 0; q < disabledSlots.length; q++) {
+                                if ((disabledSlots[q].start_time == currentTimeArray[n]) && (disabledSlots[q].computerid == computers[k].computerid)) {
+                                    isDisabled = true;
+                                    break;
+                                }
+                            }
+
                             var chosenTime1 = currentTimeArray[n++];
                             var chosenTime2 = currentTimeArray[n];
 
+                            var computerID = computers[k].computerid;
+
+                            var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
+
+                            clickableSlot1.setAttribute("id", strID);
+
+                            clickableSlot1.className = "slotCell pull-left";
+
+                            var currentSlotID = "#" + strID;
+
                             if (!taken) {
-                                var computerID = computers[k].computerid;
 
-                                var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
-
-                                clickableSlot1.setAttribute("id", strID);
-
-                                clickableSlot1.className = "slotCell pull-left";
-
-                                var currentSlotID = "#" + strID;
-
-                                if (($.inArray(clickableSlot1.getAttribute("id"), slotsDisabled)) > -1) {
+                                if (isDisabled) {
                                     clickableSlot1.className = clickableSlot1.className + " disabled";
                                 } else {
                                     clickableSlot1.className = clickableSlot1.className + " enabled";
                                 }
 
-                                if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1) {
-                                    clickableSlot1.className = clickableSlot1.className + " selected";
-                                }
+                            } else {
+                                clickableSlot1.className = clickableSlot1.className + " taken";
+                            }
 
+                            if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1) {
+                                clickableSlot1.className = clickableSlot1.className + " selected";
                             }
 
                             slotCell.appendChild(clickableSlot1);

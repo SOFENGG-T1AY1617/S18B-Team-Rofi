@@ -94,6 +94,12 @@ class AdminController extends CI_Controller
                 case ADMIN_GET_ROOMS:
                     $this->getRoomsByDepartmentID();
                     break;
+                case ADMIN_GET_TIMES:
+                    $this->getTimes();
+                    break;
+                case ADMIN_GET_COMPUTERS:
+                    $this->getComputers();
+                    break;
 
                 // Super user pages
                 case SU_DEPARTMENTS:
@@ -262,21 +268,25 @@ class AdminController extends CI_Controller
 
             'roomid' => $this->input->get('roomid'),
             'date' => $this->input->get('currdate'),
+            'time' => $this->input->get('currtime')
         );
 
         //$date = date("Y-m-d", strtotime($getData['date']));
         $date = $getData['date'];
+        $time = $getData['time'];
 
         if ($getData['roomid'] == 0)
             $data = array(
                 'computers' => $this->admin->queryAllComputersAtBuildingIDByDepartmentID($getData['buildingid'], $_SESSION['admin_departmentid']),
                 'reservations' => $this->admin->queryReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
+                'disabledslots' => $this->moderator->queryDisabledSlotsAtBuildingIDOnDateTime($getData['buildingid'], $date, $time),
                 'date' => $date,
             );
         else
             $data = array(
                 'computers' => $this->admin->queryComputersAtBuildingIDAndRoomID($getData['buildingid'], $getData['roomid']),
                 'reservations' => $this->admin->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
+                'disabledslots' => $this->moderator->queryDisabledSlotsAtRoomIDOnDateTime($getData['roomid'], $date, $time),
                 'date' => $date,
             );
         /*$data = array(

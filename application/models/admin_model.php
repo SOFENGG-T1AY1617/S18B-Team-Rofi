@@ -309,6 +309,34 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
+    function queryDisabledSlotsAtRoomIDOnDateTime($id, $date, $time) {
+        $sql = "SELECT *
+                FROM (SELECT * 
+                      FROM disabled_slots
+                      WHERE ? + ' ' + ? < date_time_duration) d NATURAL JOIN 
+                      computers NATURAL JOIN 
+                      (SELECT roomid
+                      FROM rooms
+                      WHERE roomid = ?) ro";
+
+        return $this->db->query($sql, array($date, $time, $id))->result();
+    }
+
+    function queryDisabledSlotsAtBuildingIDOnDateTime($id, $date, $time) {
+
+        $sql = "SELECT *
+                FROM rooms r NATURAL JOIN 
+                  (SELECT buildingid
+                   FROM  buildings
+                   WHERE buildingid = ?) b NATURAL JOIN 
+                  computers NATURAL JOIN 
+                  (SELECT * 
+                      FROM disabled_slots
+                      WHERE ? + ' ' + ? < date_time_duration) d";
+
+        return $this->db->query($sql, array($id, $date, $time))->result();
+    }
+
     function hasOngoingReservations($id) {
         $sql = "SELECT *
                 FROM (SELECT *
