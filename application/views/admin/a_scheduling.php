@@ -827,6 +827,84 @@ include 'a_navbar.php';
     }
 </script>
 
+<div id="disableModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Disabling Selected Slots</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label>Specify the duration of the disability:</label>
+                    <div class = "row">
+
+                        <div class = "col-md-2 col-md-offset-1">
+                            <div class="form-group">
+                                <small><label for="startHour">Start Hour:</label></small>
+                                <select class="form-control" id="startHour">
+                                    <?php
+                                    for ($i = 0; $i < 24; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2">
+                            <div class = "form-group">
+                                <small><label for="startHour">Start Min:</label></small>
+                                <select class="form-control" id="startMinute">
+                                    <?php
+                                    for ($i = 0; $i < 60; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2 col-md-offset-2">
+                            <div class="form-group">
+                                <small><label for="startHour">End Hour:</label></small>
+                                <select class="form-control" id="endHour">
+                                    <?php
+                                    for ($i = 0; $i < 24; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2">
+                            <div class = "form-group">
+                                <small><label for="startHour">End Min:</label></small>
+                                <select class="form-control" id="endMinute">
+                                    <?php
+                                    for ($i = 0; $i < 60; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <div class = "container">
 
     <div class = "col-md-12">
@@ -881,7 +959,7 @@ include 'a_navbar.php';
                         </div>
 
                         <div class = "row clsSlotsBtn-container">
-                            <button id = "disableAll-btn" class = "btn btn-danger btn-block">Disable all slots in room</button>
+                            <button id = "" class = "btn btn-danger btn-block" data-toggle = "modal" data-target = "#disableModal">Disable all slots in room</button>
                         </div>
                     </div>
                 </div>
