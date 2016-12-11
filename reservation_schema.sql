@@ -225,7 +225,7 @@ CREATE TABLE `reservation_system`.`disabled_slots` (
   `start_time` TIME NOT NULL,
   `end_time` TIME NOT NULL,
   `date_time_duration` DATETIME NOT NULL,
-  PRIMARY KEY (`disabled_slotsid`),
+  PRIMARY KEY (`disabled_slotid`),
   INDEX `disabledcomputer_idx` (`computerid` ASC),
   CONSTRAINT `closed_computerid`
 	FOREIGN KEY (`computerid`)
