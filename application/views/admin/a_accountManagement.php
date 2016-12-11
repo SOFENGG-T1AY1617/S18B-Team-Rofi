@@ -546,7 +546,15 @@
                         }, delay);
 
 
-                    }else if (result['result'] == "room_invalid") {
+                    }
+                    else if (result['result'] == "name_invalid") {
+                        toastr.error("The Email is already Taken.", "Oops");
+                        var delay = 1000;
+                        setTimeout(function () {
+                            reloadPage();
+                        }, delay);
+                    }
+                    else if (result['result'] == "room_invalid") {
                         toastr.error("Room is already Taken.", "Oops");
                         var delay = 1000;
                         setTimeout(function () {
