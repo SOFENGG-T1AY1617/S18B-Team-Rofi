@@ -6,11 +6,6 @@ CREATE TABLE `reservation_system`.`departments` (
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`departmentid`));
 
-CREATE TABLE `reservation_system`.`computer_status` (
-  `statusid` INT NOT NULL AUTO_INCREMENT,
-  `status` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`statusid`));
-
 CREATE TABLE `reservation_system`.`attendance` (
   `attendanceid` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(20) NOT NULL,
@@ -56,18 +51,11 @@ CREATE TABLE `reservation_system`.`computers` (
   `computerid` INT NOT NULL AUTO_INCREMENT,
   `computerno` INT NOT NULL,
   `roomid` INT NOT NULL,
-  `statusid` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`computerid`),
   INDEX `roomid_idx` (`roomid` ASC),
-  INDEX `statusid_idx` (`statusid` ASC),
   CONSTRAINT `roomid`
     FOREIGN KEY (`roomid`)
     REFERENCES `reservation_system`.`rooms` (`roomid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `statusid`
-    FOREIGN KEY (`statusid`)
-    REFERENCES `reservation_system`.`computer_status` (`statusid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -231,13 +219,13 @@ CREATE TABLE `reservation_system`.`tag_mod_rooms` (
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION);
 
-CREATE TABLE `reservation_system`.`closed_pcs` (
-  `closed_pcsid` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE `reservation_system`.`disabled_slots` (
+  `disabled_slotsid` INT NOT NULL AUTO_INCREMENT,
   `computerid` INT NOT NULL,
   `start_datetime` DATETIME NOT NULL,
   `end_datetime` DATETIME NOT NULL,
-  PRIMARY KEY (`closed_pcsid`),
-  INDEX `computerid_idx` (`computerid` ASC),
+  PRIMARY KEY (`disabled_slotsid`),
+  INDEX `disabledcomputer_idx` (`computerid` ASC),
   CONSTRAINT `closed_computerid`
 	FOREIGN KEY (`computerid`)
 	REFERENCES `reservation_system`.`computers` (`computerid`)
@@ -252,11 +240,6 @@ VALUES ("dlsu.edu.ph"),
 INSERT INTO `reservation_system`.`area_types` (`type`)
 VALUES ("Room"),
 	   ("Floor");
-
-INSERT INTO `reservation_system`.`computer_status` (`status`)
-VALUES ("Enabled"),
-	   ("Disabled"),
-       ("Taken");
 
 INSERT INTO `reservation_system`.`buildings` (`name`, `area_typeid`)
 VALUES ("Gokongwei Hall", 1),
@@ -276,67 +259,67 @@ VALUES ("G202A", 1, 1),
 	   ("7F", 2, 2),
 	   ("8F", 2, 2);
 
-INSERT INTO `reservation_system`.`computers` (`computerno`, `roomid`, `statusid`)
-VALUES (1, 1, 1),
-	   (2, 1, 2),
-	   (3, 1, 1),
-	   (4, 1, 2),
-	   (5, 1, 1),
-	   (6, 1, 2),
-	   (7, 1, 1),
-	   (8, 1, 2),
-	   (9, 1, 1),
-	   (10, 1, 2),
-	   (1, 2, 1),
-	   (2, 2, 2),
-	   (3, 2, 1),
-	   (4, 2, 2),
-	   (5, 2, 1),
-	   (6, 2, 2),
-	   (7, 2, 1),
-	   (8, 2, 2),
-	   (9, 2, 1),
-	   (10, 2, 2),
-	   (1, 3, 1),
-	   (2, 3, 2),
-	   (3, 3, 1),
-	   (4, 3, 2),
-	   (5, 3, 1),
-	   (6, 3, 2),
-	   (7, 3, 1),
-	   (8, 3, 2),
-	   (9, 3, 1),
-	   (10, 3, 2),
-	   (1, 4, 1),
-	   (2, 4, 2),
-	   (3, 4, 1),
-	   (4, 4, 2),
-	   (5, 4, 1),
-	   (6, 4, 2),
-	   (7, 4, 1),
-	   (8, 4, 2),
-	   (9, 4, 1),
-	   (10, 4, 2),
-	   (1, 5, 1),
-	   (2, 5, 2),
-	   (3, 5, 1),
-	   (4, 5, 2),
-	   (5, 5, 1),
-	   (6, 5, 2),
-	   (7, 5, 1),
-	   (8, 5, 2),
-	   (9, 5, 1),
-	   (10, 5, 2),
-	   (1, 6, 1),
-	   (2, 6, 2),
-	   (3, 6, 1),
-	   (4, 6, 2),
-	   (5, 6, 1),
-	   (6, 6, 2),
-	   (7, 6, 1),
-	   (8, 6, 2),
-	   (9, 6, 1),
-	   (10, 6, 2);
+INSERT INTO `reservation_system`.`computers` (`computerno`, `roomid`)
+VALUES (1, 1),
+	   (2, 1),
+	   (3, 1),
+	   (4, 1),
+	   (5, 1),
+	   (6, 1),
+	   (7, 1),
+	   (8, 1),
+	   (9, 1),
+	   (10, 1),
+	   (1, 2),
+	   (2, 2),
+	   (3, 2),
+	   (4, 2),
+	   (5, 2),
+	   (6, 2),
+	   (7, 2),
+	   (8, 2),
+	   (9, 2),
+	   (10, 2),
+	   (1, 3),
+	   (2, 3),
+	   (3, 3),
+	   (4, 3),
+	   (5, 3),
+	   (6, 3),
+	   (7, 3),
+	   (8, 3),
+	   (9, 3),
+	   (10, 3),
+	   (1, 4),
+	   (2, 4),
+	   (3, 4),
+	   (4, 4),
+	   (5, 4),
+	   (6, 4),
+	   (7, 4),
+	   (8, 4),
+	   (9, 4),
+	   (10, 4),
+	   (1, 5),
+	   (2, 5),
+	   (3, 5),
+	   (4, 5),
+	   (5, 5),
+	   (6, 5),
+	   (7, 5),
+	   (8, 5),
+	   (9, 5),
+	   (10, 5),
+	   (1, 6),
+	   (2, 6),
+	   (3, 6),
+	   (4, 6),
+	   (5, 6),
+	   (6, 6),
+	   (7, 6),
+	   (8, 6),
+	   (9, 6),
+	   (10, 6);
 
 INSERT INTO `reservation_system`.`colleges` (`name`)
 VALUES ("Ramon V. Del Rosario College of Business"),
@@ -400,14 +383,14 @@ VALUES (1,1),
 	   (2,2),
 	   (3,4);
 
-INSERT INTO `reservation_system`.`closed_pcs` (`computerid`, `start_datetime`, `end_datetime`)
-VALUES (1, "2016-12-10 12:00:00", "2016-12-10 13:00:00"),
-	   (2, "2016-12-10 12:00:00", "2016-12-10 13:00:00"),
-	   (3, "2016-12-10 12:00:00", "2016-12-10 13:00:00"),
-	   (11, "2016-12-10 12:00:00", "2016-12-10 13:00:00"),
-	   (12, "2016-12-10 12:00:00", "2016-12-10 13:00:00"),
-	   (13, "2016-12-10 12:00:00", "2016-12-10 13:00:00"),
-	   (21, "2016-12-10 12:00:00", "2016-12-10 13:00:00");
+INSERT INTO `reservation_system`.`disabled_slots` (`computerid`, `start_datetime`, `end_datetime`)
+VALUES (1, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
+	   (2, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
+	   (3, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
+	   (11, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
+	   (12, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
+	   (13, "2016-12-10 12:00:00", "2016-12-10 12:15:00"),
+	   (21, "2016-12-10 12:00:00", "2016-12-10 12:15:00");
 
 
 /*STORED PROCEDURES*/
