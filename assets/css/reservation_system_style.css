@@ -15,10 +15,13 @@ body {
 
 /* FOR STEPS */
 
+
+
 .nav li:hover a { /* OVERRIDE BOOTSTRAP HOVER EFFECT */
     border: none;
     background: none;
     color: black;
+    cursor: default;
 }
 
 .nav li.active {
@@ -26,10 +29,23 @@ body {
     font-weight: bold;
 }
 
+.nav li.active:hover{
+    cursor: default;
+}
+
 .nav li.disabled{
     opacity: 0.4;
     color: black;
 }
+
+.nav li.disabled:hover{
+    cursor: default;
+}
+
+.nav li.disabled:hover a{
+    cursor: default;
+}
+
 
 .nav li.disabled a{
     color: black;
