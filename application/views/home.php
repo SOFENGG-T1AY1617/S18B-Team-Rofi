@@ -811,9 +811,12 @@ $defaultTab = 1;
                         </ul>
                     </div>
 
+
                 </div>
 
+
             </div>
+
 <!--End of Step 1-->
 
             <?php
@@ -972,6 +975,15 @@ $defaultTab = 1;
                 });
 
 
+                function hunt(){
+                    $('#egg').html( "<b>Project Manager:</b> Rofi Santos <br> <b>Development Team:</b> Kevin Chan, Patrick Tobias "+
+                        " & Vincent Ortega II<br> <b>Analysts:</b>  Benson Polican, "+
+                        "Dionne Ong & Luisa Gilig<br> <b>Quality Assurance:</b> Migo Dancel, Maverick Ng & Ralph Ryan Ganal");
+                    console.log("LOL");
+                    $('#egg').height('auto');
+                    $('#egg').width('100%');
+                }
+
 
             </script>
 
@@ -1069,6 +1081,7 @@ $defaultTab = 1;
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class ="row">
@@ -1162,6 +1175,10 @@ $defaultTab = 1;
                 <div class="message child">Processing...</div>
             </div>
 
+
+            <div class="easter" id="egg" onclick="hunt()">
+
+            </div>
         </div> <!-- EOF -->
 
     </div>

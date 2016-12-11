@@ -227,3 +227,13 @@ div.legend.taken{
     text-align: center;
     vertical-align: middle;
 }
+
+.easter{
+    position: fixed;
+    height: 50px;
+    width: 50px;
+    left: 0;
+    bottom: 0;
+
+    visible:hidden;
+}
