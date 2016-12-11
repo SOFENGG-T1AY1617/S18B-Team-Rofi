@@ -272,7 +272,8 @@ class Student_Model extends CI_Model
     function verifyReservation($verificationCode) {
         $sql = "UPDATE reservations SET verified = 1 
                   WHERE verificationcode = ?";
-        return $this->db->query($sql, array($verificationCode));
+        $this->db->query($sql, array($verificationCode));
+        return $this->db->affected_rows();
     }
 
     function querySameReservations($reservations) {

@@ -87,7 +87,7 @@ class ModeratorController extends CI_Controller
         $currentHour = date("H");
         $currentMinute = date("i");
 
-        $times_today = $this->admin->getTimes($currentHour, $currentMinute, $getData['interval'], $this->admin->getMinimumHour(), $this->admin->getMaximumHour(), false);
+        $times_today = $this->moderator->getTimes($currentHour, $currentMinute, $getData['interval'], $this->admin->getMinimumHour(), $this->admin->getMaximumHour(), false);
 
         $data['times_today'] = null;
         $data['times_today_DISPLAY'] = null;
@@ -148,14 +148,23 @@ class ModeratorController extends CI_Controller
     public function markPresentReservations() {
         $slots = $this->input->get('slots');
 
+        $updated = 0;
+
         foreach ($slots as $slot) {
             $arr = explode('_', $slot);
 
-            $this->moderator->updateAttendance (1, intval($arr[4]));
+            $attendance = $this->moderator->queryAttendance (intval($arr[4]));
+
+            if ($attendance == 0) {
+                $this->moderator->updateAttendance(1, intval($arr[4]));
+                $updated++;
+            }
+
         }
 
         $result = array(
-            'result' => "success"
+            'result' => "success",
+            'updated' => $updated
         );
 
         echo json_encode($result);
@@ -164,14 +173,22 @@ class ModeratorController extends CI_Controller
     public function verifyReservations() {
         $slots = $this->input->get('slots');
 
+        $updated = 0;
+
         foreach ($slots as $slot) {
             $arr = explode ('_', $slot);
 
-            $this->moderator->updateVerification(1, intval($arr[4]));
+            $verified = $this->moderator->queryVerification (intval($arr[4]));
+
+            if ($verified == 0) {
+                $this->moderator->updateVerification(1, intval($arr[4]));
+                $updated++;
+            }
         }
 
         $result = array(
-            'result' => "success"
+            'result' => "success",
+            'updated' => $updated
         );
 
         echo json_encode($result);

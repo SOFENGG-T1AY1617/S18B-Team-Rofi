@@ -42,42 +42,89 @@
         });
 
         $("#markPresent").click( function() {
-            if (!existsAnUnverifiedSelectedSlot()) {
-                $.ajax({
-                    url: '<?php echo base_url('moderator/' . MODERATOR_SET_RESERVATIONS_PRESENT) ?>',
-                    type: 'GET',
-                    dataType: 'json',
-                    data: {
-                        slots: slotsPicked
-                    }
-                })
-                    .done(function (result) {
-
-                        toastr.success(slotsPicked.length + " reservations were updated!", "Selected reservation/s is/are now present");
-
-                        for (var i = 0; i < slotsPicked.length; i++)
-                            markSlotPresent($("[id = '" + slotsPicked[i] + "']"));
-
-                        updateSelectedSlots();
-
-                    })
-                    .fail(function () {
-
-                        console.log("fail");
-
-                    })
-                    .always(function () {
-
-                        console.log("complete");
-
-                    });
-            } else {
-                toastr.error("One or more of the selected slots is/are still unverified", "Oops!");
-            }
-
+            markSlotsPresent();
         } );
 
         $("#verifySlot").click(function () {
+            verifySlots();
+        });
+
+        $("#removeReservation").click(function () {
+            removeReservations();
+        });
+
+        $("#presentButton").click (function() {
+
+            if (slotsPicked.length == 0)
+                toastr.info("You must select slots before performing actions.", "Hold on!");
+            else if ($(this).hasClass('disabled'))
+                toastr.error("One or more of the selected slots is/are still unverified", "Oops!");
+
+        });
+
+        $("#verifyButton").click (function() {
+
+            if (slotsPicked.length == 0)
+                toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        });
+
+        $("#removeButton").click (function() {
+
+            if (slotsPicked.length == 0)
+                toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        });
+
+        selectRoom (<?php echo $roomid;?>);
+        updateAllButtons();
+    });
+
+    function markSlotsPresent () {
+        if (slotsPicked.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else if (!existsAnUnverifiedSelectedSlot()) {
+            $.ajax({
+                url: '<?php echo base_url('moderator/' . MODERATOR_SET_RESERVATIONS_PRESENT) ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    slots: slotsPicked
+                }
+            })
+                .done(function (result) {
+
+                    toastr.success(result.updated + " reservations were updated!", result.updated + " reservation/s is/are now present");
+
+                    for (var i = 0; i < slotsPicked.length; i++)
+                        GUImarkSlotPresent($("[id = '" + slotsPicked[i] + "']"));
+
+                    updateSelectedSlots();
+
+                })
+                .fail(function () {
+
+                    console.log("fail");
+
+                })
+                .always(function () {
+
+                    console.log("complete");
+
+                });
+        } else {
+            toastr.error("One or more of the selected slots is/are still unverified", "Oops!");
+        }
+    }
+
+    function verifySlots () {
+        if (slotsPicked.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else {
             $.ajax({
                 url: '<?php echo base_url('moderator/' . MODERATOR_VERIFY_RESERVATION) ?>',
                 type: 'GET',
@@ -86,30 +133,37 @@
                     slots: slotsPicked
                 }
             })
-                .done(function(result) {
+                .done(function (result) {
 
-                    toastr.success(slotsPicked.length + " reservations were updated!", "Selected reservation/s is/are now verified");
+                    toastr.success(result['updated'] + " reservations were updated!", result['updated'] + " reservation/s is/are now verified");
 
                     for (var i = 0; i < slotsPicked.length; i++)
-                        verifySlot($("[id = '"+ slotsPicked[i] +"']"));
+                        GUIverifySlot($("[id = '" + slotsPicked[i] + "']"));
 
-                    updatePresentButton();
                     updateSelectedSlots();
 
                 })
-                .fail(function() {
+                .fail(function () {
+
+                    toastr.error("Slots were not updated.", "Oops!");
 
                     console.log("fail");
 
                 })
-                .always(function() {
+                .always(function () {
 
                     console.log("complete");
 
                 });
-        });
+        }
+    }
 
-        $("#removeReservation").click(function () {
+    function removeReservations () {
+        if (slotsPicked.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else {
             $.ajax({
                 url: '<?php echo base_url('moderator/' . MODERATOR_REMOVE_RESERVATION) ?>',
                 type: 'GET',
@@ -118,50 +172,50 @@
                     slots: slotsPicked
                 }
             })
-                .done(function(result) {
+                .done(function (result) {
 
                     toastr.success(slotsPicked.length + " reservations were removed!", "Selected reservation/s is/are removed");
 
                     for (var i = 0; i < slotsPicked.length; i++)
-                        removeReservation($("[id = '"+ slotsPicked[i] +"']"));
+                        GUIremoveReservation($("[id = '" + slotsPicked[i] + "']"));
 
                     slotsPicked = [];
 
                     updateSelectedSlots();
-                    updatePresentButton();
+                    updateAllButtons();
 
 
                 })
-                .fail(function() {
+                .fail(function () {
+
+                    toastr.error("Slots were not updated.", "Oops!");
 
                     console.log("fail");
 
                 })
-                .always(function() {
+                .always(function () {
 
                     console.log("complete");
 
                 });
-        });
+        }
+    }
 
-        selectRoom (<?php echo $roomid;?>);
-    });
-
-    function markSlotPresent (slot) {
+    function GUImarkSlotPresent (slot) {
 
         if (!slot.hasClass('present'))
             slot.addClass('present');
 
     }
 
-    function verifySlot (slot) {
+    function GUIverifySlot (slot) {
 
         if (!slot.hasClass('verified'))
             slot.addClass('verified');
 
     }
 
-    function removeReservation (slot) {
+    function GUIremoveReservation (slot) {
 
         slot.removeClass('present');
         slot.removeClass('verified');
@@ -169,22 +223,26 @@
 
     }
 
-    function disablePresentButton () {
-        var presentButton = $("#markPresent");
+    function disableButton (button) {
 
-        if (!presentButton.hasClass('disabled')) {
+        if (!button.hasClass('disabled')) {
             console.log("DISABLED PRESENT");
-            presentButton.addClass('disabled');
+            button.addClass('disabled');
+
+            button.attr('data-toggle', '');
         }
+
     }
 
-    function enablePresentButton () {
-        var presentButton = $("#markPresent");
+    function enableButton (button) {
 
-        if (presentButton.hasClass('disabled')) {
+        if (button.hasClass('disabled')) {
             console.log("ENABLED PRESENT");
-            presentButton.removeClass('disabled');
+            button.removeClass('disabled');
+
+            button.attr('data-toggle', 'modal');
         }
+
     }
 
     function selectSlot (slot) {
@@ -193,7 +251,7 @@
 
         slot.addClass ('selected');
 
-        updatePresentButton();
+        updateAllButtons();
         updateSelectedSlots();
     }
 
@@ -208,15 +266,45 @@
                 slot.removeClass('selected');
         }
 
-        updatePresentButton();
+        updateAllButtons();
         updateSelectedSlots();
     }
 
     function updatePresentButton () {
-        if (existsAnUnverifiedSelectedSlot())
-            disablePresentButton();
+        var presentButton = $("#presentButton");
+
+        if (existsAnUnverifiedSelectedSlot() || slotsPicked.length == 0)
+            disableButton(presentButton);
         else
-            enablePresentButton()
+            enableButton(presentButton);
+    }
+
+    function updateVerifyButton () {
+        var verifyButton = $("#verifyButton");
+
+        if (slotsPicked.length == 0) {
+            disableButton(verifyButton);
+        } else {
+            enableButton(verifyButton);
+        }
+
+    }
+
+    function updateRemoveButton () {
+        var removeButton = $("#removeButton");
+
+        if (slotsPicked.length == 0) {
+            disableButton(removeButton);
+        } else {
+            enableButton(removeButton);
+        }
+
+    }
+
+    function updateAllButtons () {
+        updatePresentButton();
+        updateVerifyButton();
+        updateRemoveButton();
     }
 
     function existsAnUnverifiedSelectedSlot () {
@@ -255,9 +343,9 @@
                         colorStatus = "green";
 
                         if (result[i].attendance == 1)
-                            verifStatus += " & Present";
+                            verifStatus += " & Claimed";
                         else
-                            verifStatus += " & Absent";
+                            verifStatus += " & Unclaimed";
 
                     } else {
                         verifStatus = "Unverified";
@@ -689,9 +777,9 @@ include 'm_navbar.php';
                 </div>
 
                 <div id = "mod_controls_container" class = "col-md-2">
-                    <button class = "btn btn-success col-md-12" data-toggle="modal" data-target="#presentMessage">Mark Present</button>
-                    <button class = "btn btn-success col-md-12" data-toggle="modal" data-target="#verifyMessage">Verify Slots</button>
-                    <button class = "btn btn-danger col-md-12" data-toggle="modal" data-target="#removeMessage">Remove</button>
+                    <button id = "presentButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#presentMessage">Mark Present</button>
+                    <button id = "verifyButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#verifyMessage">Verify Slots</button>
+                    <button id = "removeButton" class = "btn btn-danger col-md-12" data-toggle="modal" data-target="#removeMessage">Remove</button>
                 </div>
 
             </div>

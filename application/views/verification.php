@@ -11,6 +11,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var message = "<?=$message?>";
+        console.log("<?=$numResult?>");
         console.log(message)
         $("#result-text").text(message);
     });

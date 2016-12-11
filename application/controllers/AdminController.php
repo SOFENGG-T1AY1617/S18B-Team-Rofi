@@ -658,9 +658,11 @@ class AdminController extends CI_Controller
         $updateData = array(
             'interval' => $this->input->get("interval"),
             'limit' => $this->input->get("limit"),
-            'accessibility' => $this->input->get("accessibility"),
+            //'accessibility' => $this->input->get("accessibility"),
             'reservation_expiry' => $this->input->get("reservation_expiry"),
             'confirmation_expiry' => $this->input->get("confirmation_expiry"),
+            'start_time' => $this->input->get("start_time"),
+            'end_time' => $this->input->get("end_time"),
         );
 
         $this->admin->updateBusinessRules($id, $updateData);

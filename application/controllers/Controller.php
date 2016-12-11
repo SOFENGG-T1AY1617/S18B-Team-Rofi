@@ -26,6 +26,8 @@ class Controller extends CI_Controller {
 	public function home()
     {
 
+        date_default_timezone_set('Asia/Hong_Kong');
+
         //$maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
         $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $data['colleges'] = $this->student->queryColleges();
@@ -320,12 +322,14 @@ class Controller extends CI_Controller {
         if ($numResult > 0) {
             $data = array(
                 'result' => "success",
+                'numResult' => $numResult,
                 'message' => "Reservation confirmed successfully!",
             );
         }
         else {
             $data = array(
                 'result' => "fail",
+                'numResult' => $numResult,
                 'message' => "Sorry, unable to verify your reservation. Your slot has expired.",
             );
         }
