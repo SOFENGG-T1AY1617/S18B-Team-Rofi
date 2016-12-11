@@ -6,11 +6,6 @@ CREATE TABLE `reservation_system`.`departments` (
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`departmentid`));
 
-CREATE TABLE `reservation_system`.`attendance` (
-  `attendanceid` INT NOT NULL AUTO_INCREMENT,
-  `type` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`attendanceid`));
-
 CREATE TABLE `reservation_system`.`area_types` (
   `area_typeid` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(20) NOT NULL,
@@ -102,13 +97,19 @@ CREATE TABLE `reservation_system`.`reservations` (
   `end_restime` TIME NOT NULL,
   `verified` BIT NOT NULL DEFAULT 0,
   `verificationcode` VARCHAR(40) NOT NULL,
-  `attendance` INT NOT NULL DEFAULT 0,
+  `attendance` BIT NOT NULL DEFAULT 0,
   `time_reserved` DATETIME DEFAULT NULL,
   PRIMARY KEY (`reservationid`),
   INDEX `computerid_idx` (`computerid` ASC),
+  INDEX `userid_idx` (`userid` ASC),
   CONSTRAINT `computerid`
     FOREIGN KEY (`computerid`)
     REFERENCES `reservation_system`.`computers` (`computerid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `userid`
+    FOREIGN KEY (`userid`)
+    REFERENCES `reservation_system`.`users` (`userid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -183,11 +184,6 @@ CREATE TABLE `reservation_system`.`business_rules` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `reservation_system`.`email_extension`(
-  `email_extensionid` INT NOT NULL AUTO_INCREMENT,
-  `email_extension` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`email_extensionid`));
-
 CREATE TABLE `reservation_system`.`archive_reservations` (
   `archive_reservationid` INT NOT NULL AUTO_INCREMENT,
   `computerno` INT NOT NULL,
@@ -234,10 +230,6 @@ CREATE TABLE `reservation_system`.`disabled_slots` (
 	ON UPDATE NO ACTION);
 
 /*dummy data*/
-INSERT INTO `reservation_system`.`email_extension`(`email_extension`)
-VALUES ("dlsu.edu.ph"),
-	   ("delasalle.ph");
-
 INSERT INTO `reservation_system`.`area_types` (`type`)
 VALUES ("Room"),
 	   ("Floor");
