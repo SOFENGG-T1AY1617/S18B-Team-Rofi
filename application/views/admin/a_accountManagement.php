@@ -35,7 +35,7 @@
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
         cellDept.innerHTML = "<?php echo $departments[0]->name ?>";
-        cellAreaAssign.innerHTML = "<select type='text' class='form-control' placeholder='Choose Area'><option value='0' selected>No Room</option><?php foreach($freeRooms as $room):?><option value=<?=$room->roomid?> ><?=$room->name?></option><?php endforeach;?></select>";
+        cellAreaAssign.innerHTML = "<select type='text' class='form-control' placeholder='Choose Area' onchange=\"changeAreaMod('add_table')\"><option value='0' selected>No Room</option><?php foreach($freeRooms as $room):?><option value=<?=$room->roomid?> ><?=$room->name?></option><?php endforeach;?></select>";
         del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
 
@@ -220,7 +220,7 @@
             cells[2].innerHTML = "<input type=\"text\" class=\"form-control\" id=\""+curEmailID+"\" value=\"" + curEmail + "\">";
 
 
-            var drop = "<select type='text' class='form-control' id='"+curAreaAssignID+"'>";
+            var drop = "<select type='text' class='form-control' id='"+curAreaAssignID+"'  onchange='changeAreaMod(\"modtable\")'>";
 
             drop+="<option value='0'>No Room</option>";
 
@@ -516,13 +516,25 @@
     function submitModeratorChanges(tableID) {
         var changedData = getModChangedData(getTableDataMod(tableID));
 
-        for(var i = 0; i<changedData.length; i++)
-            if(changedData[i][2]!=-1)
+        for(var i = 0; i<changedData.length; i++) {
+            if (changedData[i][2] != -1)
                 if (!isEmail(changedData[i][2])) {
                     toastr.error("The email you input is not valid. Please change it and try again.", "Oops!");
                     //$("#confirm-add").attr('disabled', false);
                     return;
+            }
+            else if(changedData[i][4]!=0){
+                    for(var j = 0; j<changedData.length; j++){
+                        if(i!=j&&changedData[i][4]==changedData[j][4]){
+                            toastr.error("You cannot have 2 or more Moderators in the same room.", "Oops!");
+                            //$("#confirm-add").attr('disabled', false);
+                            return;
+                        }
+                    }
                 }
+
+
+        }
 
         console.log(changedData);
         if(changedData.length>0) {
@@ -597,6 +609,15 @@
                 toastr.error("The email you input is not valid. Please change it and try again.", "Oops!");
                 //$("#confirm-add").attr('disabled', false);
                 return;
+            }
+            else if(tableData[i][4]!=0){
+                for(var j = 0; j<tableData.length; j++){
+                    if(i!=j&&tableData[i][4]==tableData[j][4]){
+                        toastr.error("You cannot have 2 or more Moderators in the same room.", "Oops!");
+                        //$("#confirm-add").attr('disabled', false);
+                        return;
+                    }
+                }
             }
 
 
@@ -882,6 +903,25 @@
         ?>
     }
 
+    function changeAreaMod(tableID){
+
+        console.log(tableID);
+        var tableData = getTableDataMod(tableID);
+
+
+
+        for(var i = 0; i<tableData.length; i++)
+            if(tableData[i][4]!=0){
+                for(var j = 0; j<tableData.length; j++){
+                    if(i!=j&&tableData[i][4]==tableData[j][4]){
+                        toastr.error("You cannot have 2 or more Moderators in the same room.", "Oops!");
+                        //$("#confirm-add").attr('disabled', false);
+                        return;
+                    }
+                }
+            }
+    }
+
 </script>
 
 <link href="<?=base_url()?>/assets/css/admin_add_style.css" rel="stylesheet">
@@ -1065,7 +1105,7 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
                             <td><?php echo $departments[0]->name ?></td>
-                            <td><select type='text' class='form-control' placeholder='Choose Area'><option value='0' selected>No Room</option>
+                            <td><select type='text' class='form-control' placeholder='Choose Area' onchange="changeAreaMod('add_table')"><option value='0' selected>No Room</option>
                                     <?php foreach($freeRooms as $room):?>
                                         <option value=<?=$room->roomid?> ><?=$room->name?></option>
                                     <?php endforeach;?>

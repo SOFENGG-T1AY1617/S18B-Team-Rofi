@@ -823,4 +823,9 @@ class Admin_Model extends CI_Model
         //$this->db->delete(TABLE_MODERATORS);
     }
 
+    function queryTakenRoomsWithDepartmentID($id){
+        $sql = "SELECT r.name, r.roomid FROM rooms r WHERE r.departmentid = ? AND (r.roomid IN (SELECT `roomid` FROM tag_mod_rooms))";
+        return $this->db->query($sql, array($id))->result();
+    }
+
 }
