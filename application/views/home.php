@@ -985,21 +985,14 @@ $defaultTab = 1;
 
                 });
 
-/**
+
                 function hunt(){
-                    $('#egg').html( "<b>Project Manager:</b> Rofi Santos <br> <b>Development Team:</b> Kevin Chan, Patrick Tobias "+
+                    toastr.success( "<b>Project Manager:</b> Rofi Santos <br> <b>Development Team:</b> Kevin Chan, Patrick Tobias "+
                         " & Vincent Ortega II<br> <b>Analysts:</b>  Benson Polican, "+
-                        "Dionne Ong & Luisa Gilig<br> <b>Quality Assurance:</b> Migo Dancel, Maverick Ng & Ralph Ryan Ganal");
-                    console.log("LOL");
-                    $('#egg').height('auto');
-                    $('#egg').width('100%');
+                        "Dionne Ong & Luisa Gilig<br> <b>Quality Assurance:</b> Migo Dancel, Maverick Ng & Ralph Ryan Ganal", "Project Team");
+
                 }
 
-
- <div class="easter" id="egg" onclick="hunt()">//place this somewhere
-
- </div>
- *//
 
             </script>
 
@@ -1192,7 +1185,9 @@ $defaultTab = 1;
             </div>
 
 
+            <div class="easter" id="egg" onclick="hunt()">
 
+            </div>
         </div> <!-- EOF -->
 
     </div>
