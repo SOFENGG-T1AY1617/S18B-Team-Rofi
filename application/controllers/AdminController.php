@@ -158,6 +158,8 @@ class AdminController extends CI_Controller
 
         $data['freeRooms']= $this->admin->queryFreeRoomsWithDepartmentID($_SESSION['admin_departmentid']);
 
+       // $data['takenRooms']= $this->admin->queryTakenRoomsWithDepartmentID($_SESSION['admin_departmentid']);
+
         if($_SESSION['admin_typeid'] == 1)
             $data['moderators'] = $this->admin->queryAllModerators();
         else {
