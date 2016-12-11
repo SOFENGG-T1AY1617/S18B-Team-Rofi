@@ -200,6 +200,26 @@ class moderator_model extends CI_Model
         return count($result)>=1;
     }
 
+    function queryAttendance($reservationid) {
+        $sql = "SELECT " . COLUMN_ATTENDANCE . " " .
+            "FROM " . TABLE_RESERVATIONS . " " .
+            "WHERE " . COLUMN_RESERVATIONID . " = ?;";
+
+        $attendance = $this->db->query($sql, array($reservationid))->result();
+
+        return intval ($attendance[0]->attendance);
+    }
+
+    function queryVerification($reservationid) {
+        $sql = "SELECT " . COLUMN_VERIFIED . " " .
+            "FROM " . TABLE_RESERVATIONS . " " .
+            "WHERE " . COLUMN_RESERVATIONID . " = ?;";
+
+        $verification = $this->db->query($sql, array($reservationid))->result();
+
+        return intval ($verification[0]->verified);
+    }
+
     function updateAttendance($attendance, $reservationid) {
         $this->db->where(COLUMN_RESERVATIONID, $reservationid);
         $this->db->update(TABLE_RESERVATIONS, array(COLUMN_ATTENDANCE => $attendance));
