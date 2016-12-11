@@ -11,7 +11,6 @@ include 'a_navbar.php';
 
 <link href="<?=base_url()?>assets/css/admin_reservation_system_style.css" rel="stylesheet">
 
-<script src="<?=base_url()?>assets/js/toastr.min.js"></script>
 <script src="<?=base_url()?>assets/js/floatThread.js"></script>
 
 <style>
@@ -26,7 +25,7 @@ include 'a_navbar.php';
     var computers = [];
     var reservations = [];
 
-    var disabledslots = []; // for backend
+    var disabledSlots = []; // for backend
 
     var request;
     var dateToday = "<?=date("Y-m-d")?>";
@@ -98,11 +97,11 @@ include 'a_navbar.php';
         });
 
         $("#enable-btn").click(function () {
-            enableSelectedSlots();
+            enableSlots();
         });
 
         $("#disable-btn").click(function () {
-            disableSelectedSlots();
+            disableSlots();
         });
 
         $("#toggle-btn").click(function () {
@@ -118,6 +117,82 @@ include 'a_navbar.php';
         });
 
     });
+
+    function disableSlots () {
+        if (slotsPicked.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else {
+            $.ajax({
+                url: '<?php echo base_url('admin/' . ADMIN_DISABLE_SLOTS) ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    slots: slotsPicked
+                }
+            })
+                .done(function (result) {
+
+                    toastr.success(result['updated'] + " slots were updated!", result['updated'] + " slot/s is/are now disabled");
+
+                    disableSelectedSlots();
+
+                    //updateSelectedSlots();
+
+                })
+                .fail(function () {
+
+                    toastr.error("Slots were not updated.", "Oops!");
+
+                    console.log("fail");
+
+                })
+                .always(function () {
+
+                    console.log("complete");
+
+                });
+        }
+    }
+
+    function enableSlots () {
+        if (slotsPicked.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else {
+            $.ajax({
+                url: '<?php echo base_url('admin/' . ADMIN_ENABLE_SLOTS) ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    slots: slotsPicked
+                }
+            })
+                .done(function (result) {
+
+                    toastr.success(result['updated'] + " reservations were updated!", result['updated'] + " reservation/s is/are now enabled");
+
+                    enableSelectedSlots();
+
+                    //updateSelectedSlots();
+
+                })
+                .fail(function () {
+
+                    toastr.error("Slots were not updated.", "Oops!");
+
+                    console.log("fail");
+
+                })
+                .always(function () {
+
+                    console.log("complete");
+
+                });
+        }
+    }
 
     function highlightHorizontal (cell) {
         var cellID = cell.attr("id");
@@ -139,7 +214,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).addClass('slot-hover');
     }
@@ -164,7 +239,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).removeClass('slot-hover');
     }
@@ -331,7 +406,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).each(function () {
             selectSlotY($(this));
@@ -544,7 +619,7 @@ include 'a_navbar.php';
                     console.log("PROMISE FULFILL");
 
                     return $.ajax({ // PROCEED TO PROMISE
-                        url: '<?php echo base_url('getTimes') ?>',
+                        url: '<?php echo base_url('admin/' . ADMIN_GET_TIMES) ?>',
                         type: 'GET',
                         dataType: 'json',
                         data: {
@@ -599,7 +674,7 @@ include 'a_navbar.php';
                     }
 
                     for(i=0;i<queriedDisabledSlots.length;i++){ // retrieve all reservations from result
-                        disabledslots[i]=queriedDisabledSlots[i];
+                        disabledSlots[i]=queriedDisabledSlots[i];
                     }
 
                     outputSlots();
@@ -692,6 +767,8 @@ include 'a_navbar.php';
                             var taken = false;
                             var isDisabled = false;
 
+                            var corresDisabled = null;
+
                             for (var p = 0; p < reservations.length; p++) {
                                 if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
                                     taken = true;
@@ -700,6 +777,7 @@ include 'a_navbar.php';
                             for (var q = 0; q < disabledSlots.length; q++) {
                                 if ((disabledSlots[q].start_time == currentTimeArray[n]) && (disabledSlots[q].computerid == computers[k].computerid)) {
                                     isDisabled = true;
+                                    corresDisabled = disabledSlots[q];
                                     break;
                                 }
                             }
@@ -721,6 +799,7 @@ include 'a_navbar.php';
 
                                 if (isDisabled) {
                                     clickableSlot1.className = clickableSlot1.className + " disabled";
+                                    clickableSlot1.setAttribute("id", strID + "_" + corresDisabled.<?=COLUMN_DISABLED_SLOT_ID?>);
                                 } else {
                                     clickableSlot1.className = clickableSlot1.className + " enabled";
                                 }

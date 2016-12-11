@@ -165,10 +165,11 @@ define("COLUMN_ROOM_NAME", "room_name");
 define("TABLE_TAG_MOD_ROOMS", "tag_mod_rooms");
 define("COLUMN_TAG_MOD_ROOMSID", "tag_mod_roomsid");
 
-define("TABLE_CLOSED_PCS","closed_pcs");
-define("COLUMN_CLOSED_PCSID","closed_pcsid");
-define("COLUMN_START_DATETIME","start_datetime");
-define("COLUMN_END_DATETIME","end_datetime");
+define("TABLE_DISABLED_SLOTS","disabled_slots");
+define("COLUMN_DISABLED_SLOT_ID","disabled_slotid");
+define("COLUMN_START_TIME_D","start_time");
+define("COLUMN_END_TIME_D","end_time");
+define("COLUMN_DATE_TIME_DURATION","end_time");
 
 /* ADMIN PAGES */
 define("ADMIN_SCHEDULING", "scheduling");
@@ -194,6 +195,8 @@ define("ADMIN_GET_BUSINESS_RULES", "get_business_rules");
 define("ADMIN_GET_ROOMS", "get_rooms");
 define("ADMIN_GET_TIMES", "get_times");
 define("ADMIN_GET_COMPUTERS", "get_computers");
+define("ADMIN_DISABLE_SLOTS", "disable_slots");
+define("ADMIN_ENABLE_SLOTS", "enable_slots");
 
 /* SUPER USER PAGES */
 define("SU_DEPARTMENTS", "departments");
