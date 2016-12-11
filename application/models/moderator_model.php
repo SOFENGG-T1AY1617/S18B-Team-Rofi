@@ -146,7 +146,7 @@ class moderator_model extends CI_Model
         $sql = "SELECT *
                 FROM (SELECT * 
                       FROM disabled_slots
-                      WHERE ? + ? < date_time_duration) d NATURAL JOIN 
+                      WHERE ? + ' ' + ? < date_time_duration) d NATURAL JOIN 
                       computers NATURAL JOIN 
                       (SELECT roomid
                       FROM rooms

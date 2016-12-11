@@ -11,7 +11,6 @@ include 'a_navbar.php';
 
 <link href="<?=base_url()?>assets/css/admin_reservation_system_style.css" rel="stylesheet">
 
-<script src="<?=base_url()?>assets/js/toastr.min.js"></script>
 <script src="<?=base_url()?>assets/js/floatThread.js"></script>
 
 <style>
@@ -22,14 +21,19 @@ include 'a_navbar.php';
 
 <script>
     var slotsPicked = [];
-    var slotsDisabled = [];
+    var slotsDisabled = []; // for GUI
     var computers = [];
     var reservations = [];
+
+    var disabledSlots = []; // for backend
+
     var request;
     var dateToday = "<?=date("Y-m-d")?>";
     var dateSelected = dateToday;
     var interval = 0;
     var currentDeptID = 0;
+
+    var currentTime = "<?=date("H:m:s"); ?>";
 
     var times_today;
     var times_tomorrow;
@@ -93,11 +97,11 @@ include 'a_navbar.php';
         });
 
         $("#enable-btn").click(function () {
-            enableSelectedSlots();
+            enableSlots();
         });
 
         $("#disable-btn").click(function () {
-            disableSelectedSlots();
+            disableSlots();
         });
 
         $("#toggle-btn").click(function () {
@@ -113,6 +117,82 @@ include 'a_navbar.php';
         });
 
     });
+
+    function disableSlots () {
+        if (slotsPicked.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else {
+            $.ajax({
+                url: '<?php echo base_url('admin/' . ADMIN_DISABLE_SLOTS) ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    slots: slotsPicked
+                }
+            })
+                .done(function (result) {
+
+                    toastr.success(result['updated'] + " slots were updated!", result['updated'] + " slot/s is/are now disabled");
+
+                    disableSelectedSlots();
+
+                    //updateSelectedSlots();
+
+                })
+                .fail(function () {
+
+                    toastr.error("Slots were not updated.", "Oops!");
+
+                    console.log("fail");
+
+                })
+                .always(function () {
+
+                    console.log("complete");
+
+                });
+        }
+    }
+
+    function enableSlots () {
+        if (slotsPicked.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else {
+            $.ajax({
+                url: '<?php echo base_url('admin/' . ADMIN_ENABLE_SLOTS) ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    slots: slotsPicked
+                }
+            })
+                .done(function (result) {
+
+                    toastr.success(result['updated'] + " reservations were updated!", result['updated'] + " reservation/s is/are now enabled");
+
+                    enableSelectedSlots();
+
+                    //updateSelectedSlots();
+
+                })
+                .fail(function () {
+
+                    toastr.error("Slots were not updated.", "Oops!");
+
+                    console.log("fail");
+
+                })
+                .always(function () {
+
+                    console.log("complete");
+
+                });
+        }
+    }
 
     function highlightHorizontal (cell) {
         var cellID = cell.attr("id");
@@ -134,7 +214,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).addClass('slot-hover');
     }
@@ -159,7 +239,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).removeClass('slot-hover');
     }
@@ -326,7 +406,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).each(function () {
             selectSlotY($(this));
@@ -539,7 +619,7 @@ include 'a_navbar.php';
                     console.log("PROMISE FULFILL");
 
                     return $.ajax({ // PROCEED TO PROMISE
-                        url: '<?php echo base_url('getTimes') ?>',
+                        url: '<?php echo base_url('admin/' . ADMIN_GET_TIMES) ?>',
                         type: 'GET',
                         dataType: 'json',
                         data: {
@@ -564,13 +644,14 @@ include 'a_navbar.php';
                     // get computers
 
                     return $.ajax({
-                        url: '<?php echo base_url('getComputers') ?>',
+                        url: '<?php echo base_url('admin/' . ADMIN_GET_COMPUTERS) ?>',
                         type: 'GET',
                         dataType: 'json',
                         data: {
                             buildingid: buildingid,
                             roomid:roomid,
                             currdate: dateSelected,
+                            currtime: currentTime
                         }
                     })
                 })
@@ -582,6 +663,7 @@ include 'a_navbar.php';
 
                     queriedComputers = result['computers'];
                     queriedReservations = result['reservations'];
+                    queriedDisabledSlots = result['disabledslots'];
 
                     for(i=0;i<queriedComputers.length;i++){ // retrieve all computers from result
                         computers[i]=queriedComputers[i];
@@ -589,6 +671,10 @@ include 'a_navbar.php';
 
                     for(i=0;i<queriedReservations.length;i++){ // retrieve all reservations from result
                         reservations[i]=queriedReservations[i];
+                    }
+
+                    for(i=0;i<queriedDisabledSlots.length;i++){ // retrieve all reservations from result
+                        disabledSlots[i]=queriedDisabledSlots[i];
                     }
 
                     outputSlots();
@@ -679,35 +765,51 @@ include 'a_navbar.php';
                             slotCell.className = "nopadding";
 
                             var taken = false;
+                            var isDisabled = false;
+
+                            var corresDisabled = null;
+
                             for (var p = 0; p < reservations.length; p++) {
                                 if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
                                     taken = true;
                             }
 
+                            for (var q = 0; q < disabledSlots.length; q++) {
+                                if ((disabledSlots[q].start_time == currentTimeArray[n]) && (disabledSlots[q].computerid == computers[k].computerid)) {
+                                    isDisabled = true;
+                                    corresDisabled = disabledSlots[q];
+                                    break;
+                                }
+                            }
+
                             var chosenTime1 = currentTimeArray[n++];
                             var chosenTime2 = currentTimeArray[n];
 
+                            var computerID = computers[k].computerid;
+
+                            var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
+
+                            clickableSlot1.setAttribute("id", strID);
+
+                            clickableSlot1.className = "slotCell pull-left";
+
+                            var currentSlotID = "#" + strID;
+
                             if (!taken) {
-                                var computerID = computers[k].computerid;
 
-                                var strID = computerID + "_" + dateSelected + "_" + chosenTime1 + "_" + chosenTime2;
-
-                                clickableSlot1.setAttribute("id", strID);
-
-                                clickableSlot1.className = "slotCell pull-left";
-
-                                var currentSlotID = "#" + strID;
-
-                                if (($.inArray(clickableSlot1.getAttribute("id"), slotsDisabled)) > -1) {
+                                if (isDisabled) {
                                     clickableSlot1.className = clickableSlot1.className + " disabled";
+                                    clickableSlot1.setAttribute("id", strID + "_" + corresDisabled.<?=COLUMN_DISABLED_SLOT_ID?>);
                                 } else {
                                     clickableSlot1.className = clickableSlot1.className + " enabled";
                                 }
 
-                                if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1) {
-                                    clickableSlot1.className = clickableSlot1.className + " selected";
-                                }
+                            } else {
+                                clickableSlot1.className = clickableSlot1.className + " taken";
+                            }
 
+                            if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1) {
+                                clickableSlot1.className = clickableSlot1.className + " selected";
                             }
 
                             slotCell.appendChild(clickableSlot1);
@@ -724,6 +826,84 @@ include 'a_navbar.php';
         }
     }
 </script>
+
+<div id="disableModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Disabling Selected Slots</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label>Specify the duration of the disability:</label>
+                    <div class = "row">
+
+                        <div class = "col-md-2 col-md-offset-1">
+                            <div class="form-group">
+                                <small><label for="startHour">Start Hour:</label></small>
+                                <select class="form-control" id="startHour">
+                                    <?php
+                                    for ($i = 0; $i < 24; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2">
+                            <div class = "form-group">
+                                <small><label for="startHour">Start Min:</label></small>
+                                <select class="form-control" id="startMinute">
+                                    <?php
+                                    for ($i = 0; $i < 60; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2 col-md-offset-2">
+                            <div class="form-group">
+                                <small><label for="startHour">End Hour:</label></small>
+                                <select class="form-control" id="endHour">
+                                    <?php
+                                    for ($i = 0; $i < 24; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2">
+                            <div class = "form-group">
+                                <small><label for="startHour">End Min:</label></small>
+                                <select class="form-control" id="endMinute">
+                                    <?php
+                                    for ($i = 0; $i < 60; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <div class = "container">
 
@@ -779,7 +959,7 @@ include 'a_navbar.php';
                         </div>
 
                         <div class = "row clsSlotsBtn-container">
-                            <button id = "disableAll-btn" class = "btn btn-danger btn-block">Disable all slots in room</button>
+                            <button id = "" class = "btn btn-danger btn-block" data-toggle = "modal" data-target = "#disableModal">Disable all slots in room</button>
                         </div>
                     </div>
                 </div>

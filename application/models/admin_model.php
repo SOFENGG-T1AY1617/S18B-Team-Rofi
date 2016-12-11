@@ -14,14 +14,6 @@ class Admin_Model extends CI_Model
         $this->load->database();
     }
 
-    public function getMinuteInterval() {
-        return 15; // TODO retrieve from Settings
-    }
-
-    public function getMaxNumberOfSlots() {
-        return 4; // TODO retrieve from Settings
-    }
-
     public function getMinimumHour() { // TODO parameter must be department ID
         return 6; // TODO retrieve value depending on department
     }
@@ -182,7 +174,7 @@ class Admin_Model extends CI_Model
              FROM computers NATURAL JOIN 
               (SELECT roomid, name
                FROM rooms
-               WHERE buildingid = ? AND department_id = ?) t1";
+               WHERE buildingid = ? AND departmentid = ?) t1";
         return $this->db->query($sql, array($id, $did))->result();
     }
 
@@ -307,6 +299,34 @@ class Admin_Model extends CI_Model
                    FROM rooms
                    WHERE roomid = ?) ro";
         return $this->db->query($sql, array($date, $id))->result();
+    }
+
+    function queryDisabledSlotsAtRoomIDOnDateTime($id, $date, $time) {
+        $sql = "SELECT *
+                FROM (SELECT * 
+                      FROM disabled_slots
+                      WHERE ? + ' ' + ? < date_time_duration) d NATURAL JOIN 
+                      computers NATURAL JOIN 
+                      (SELECT roomid
+                      FROM rooms
+                      WHERE roomid = ?) ro";
+
+        return $this->db->query($sql, array($date, $time, $id))->result();
+    }
+
+    function queryDisabledSlotsAtBuildingIDOnDateTime($id, $date, $time) {
+
+        $sql = "SELECT *
+                FROM rooms r NATURAL JOIN 
+                  (SELECT buildingid
+                   FROM  buildings
+                   WHERE buildingid = ?) b NATURAL JOIN 
+                  computers NATURAL JOIN 
+                  (SELECT * 
+                      FROM disabled_slots
+                      WHERE ? + ' ' + ? < date_time_duration) d";
+
+        return $this->db->query($sql, array($id, $date, $time))->result();
     }
 
     function hasOngoingReservations($id) {
@@ -837,6 +857,37 @@ class Admin_Model extends CI_Model
     function queryTakenRoomsWithDepartmentID($id){
         $sql = "SELECT r.name, r.roomid FROM rooms r WHERE r.departmentid = ? AND (r.roomid IN (SELECT `roomid` FROM tag_mod_rooms))";
         return $this->db->query($sql, array($id))->result();
+    }
+
+    function isDisabledSlot ($computerid) {
+        $this->db->select('*');
+        $this->db->from(TABLE_DISABLED_SLOTS);
+        $this->db->where(COLUMN_COMPUTERID, $computerid);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+
+    }
+
+    function disableSlot ($slot, $duration) {
+        $slotArray = explode('_', $slot);
+
+        $disableSlotData = array(
+            COLUMN_COMPUTERID => $slotArray[0],
+            COLUMN_START_TIME_D => $slotArray[1],
+            COLUMN_END_TIME_D => $slotArray[2],
+            COLUMN_DATE_TIME_DURATION => $duration
+        );
+
+        $this->db->insert(TABLE_DISABLED_SLOTS, $disableSlotData);
+    }
+
+    function enableSlotWithDisabledSlotID ($disabledSlotID) {
+
+        $this->db->where(COLUMN_DISABLED_SLOT_ID, $disabledSlotID);
+        $this->db->delete(TABLE_DISABLED_SLOTS);
+
     }
 
 }

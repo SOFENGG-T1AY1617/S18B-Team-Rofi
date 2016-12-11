@@ -94,6 +94,18 @@ class AdminController extends CI_Controller
                 case ADMIN_GET_ROOMS:
                     $this->getRoomsByDepartmentID();
                     break;
+                case ADMIN_GET_TIMES:
+                    $this->getTimes();
+                    break;
+                case ADMIN_GET_COMPUTERS:
+                    $this->getComputers();
+                    break;
+                case ADMIN_ENABLE_SLOTS:
+                    $this->enableSlots();
+                    break;
+                case ADMIN_DISABLE_SLOTS:
+                    $this->disableSlots();
+                    break;
 
                 // Super user pages
                 case SU_DEPARTMENTS:
@@ -213,7 +225,7 @@ class AdminController extends CI_Controller
     }
 
     public function getTimes () {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+        date_default_timezone_set('America/New_York'); // set to Hong Kong's/Philippines' Timezone
 
         $getData = array(
             'interval' => $this->input->get('interval'),
@@ -262,21 +274,25 @@ class AdminController extends CI_Controller
 
             'roomid' => $this->input->get('roomid'),
             'date' => $this->input->get('currdate'),
+            'time' => $this->input->get('currtime')
         );
 
         //$date = date("Y-m-d", strtotime($getData['date']));
         $date = $getData['date'];
+        $time = $getData['time'];
 
         if ($getData['roomid'] == 0)
             $data = array(
-                'computers' => $this->admin->queryAllComputersAtBuildingIDByDepartmentID($getData['buildingid'], $_SESSION['admin_departmentid']),
+                'computers' => $this->admin->queryAllComputersAtBuildingIDAndDepartmentID($getData['buildingid'], $_SESSION['admin_departmentid']),
                 'reservations' => $this->admin->queryReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
+                'disabledslots' => $this->admin->queryDisabledSlotsAtBuildingIDOnDateTime($getData['buildingid'], $date, $time),
                 'date' => $date,
             );
         else
             $data = array(
                 'computers' => $this->admin->queryComputersAtBuildingIDAndRoomID($getData['buildingid'], $getData['roomid']),
                 'reservations' => $this->admin->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
+                'disabledslots' => $this->admin->queryDisabledSlotsAtRoomIDOnDateTime($getData['roomid'], $date, $time),
                 'date' => $date,
             );
         /*$data = array(
@@ -813,6 +829,58 @@ class AdminController extends CI_Controller
             show_error($this->email->print_debugger());
             return false;
         }
+    }
+
+    public function disableSlots () {
+        $slots = $this->input->get('slots');
+        $duration = $this->input->get('duration');
+
+        $updated = 0;
+
+        foreach ($slots as $slot) {
+            $arr = explode('_', $slot);
+
+            $isDisabled = $this->admin->isDisabledSlot (intval($arr[0]));
+
+            if (!$isDisabled) {
+                $this->admin->disableSlot($slot, $duration);
+                $updated++;
+            }
+
+        }
+
+        $result = array(
+            'result' => "success",
+            'updated' => $updated
+        );
+
+        echo json_encode($result);
+    }
+
+    public function enableSlots () {
+
+        $slots = $this->input->get('slots');
+
+        $updated = 0;
+
+        foreach ($slots as $slot) {
+            $arr = explode('_', $slot);
+
+            $isDisabled = $this->admin->isDisabledSlot(intval($arr[0]));
+
+            if ($isDisabled) {
+                $this->admin->enableSlotWithDisabledSlotID(intval($arr[4]));
+                $updated++;
+            }
+
+        }
+
+        $result = array(
+            'result' => "success",
+            'updated' => $updated
+        );
+
+        echo json_encode($result);
     }
 }
 
