@@ -58,35 +58,42 @@
 //        var timeRow = document.getElementById();
 //        console.log($(cells0[1]).data("startTime"));
         //console.log($("#startTime").text());
-        var startTime = $("#startTime").text().replace("AM", "").trim();
+        //var startTime = $("#startTime").text().replace("AM", "").replace("PM", "").trim();
+        var startTime = $("#startTime").data("value");
+        console.log(startTime);
         var startTimeHour = startTime.split(":")[0];
         var startTimeMinute = startTime.split(":")[1];
 
-        var endTime = $("#endTime").text().replace("PM", "").trim();
+        //var endTime = $("#endTime").text().replace("PM", "").replace("AM", "").trim();
+        var endTime = $("#endTime").data("value");
         var endTimeHour = endTime.split(":")[0];
         var endTimeMinute = endTime.split(":")[1];
 
         var strHour = "";
 
         for(var i=0; i<24; i++){
+            if (i < 10)
+                i = "0" + i;
             strHour += "<option value ='"+i+"'>"+i+"</option>";
         }
 
         var strMin = "";
 
         for(var m=0; m<60; m++){
+            if (m < 10)
+                m  = "0" + m;
             strMin += "<option value ='"+m+"'>"+m+"</option>";
         }
 
         cells0[1].innerHTML = "<div class=\"clearfix\">"+
             "<div class=\"col-md-2\"><label>START : </label></div>"+
             "<div class=\"input-group col-md-4\">"+
-            "<div class=\"col-md-6 selTime\"><select id=\"startTimeHourInput\"  class='form-control'>" + "<option value=\"\" disabled selected hidden>HH</option>"+ strHour +
-            "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"startTimeMinuteInput\" class='form-control'>"+ "<option value= \"\"disabled selected hidden>MM</option>" + strMin + "</select></div></div>" +
+            "<div class=\"col-md-6 selTime\"><select id=\"startTimeHourInput\"  class='form-control'>" + "<option value=\""+startTimeHour+ "\" selected hidden>" + startTimeHour + "</option>"+ strHour +
+            "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"startTimeMinuteInput\" class='form-control'>"+ "<option value= \"" + startTimeMinute + "\"selected hidden>" + startTimeMinute + "</option>" + strMin + "</select></div></div>" +
             "<div class=\"col-md-2\"><label>END : </label></div>"+
             "<div class=\"input-group col-md-4\">"+
-            "<div class=\"col-md-6 selTime\"><select id=\"endTimeHourInput\"  class='form-control'>" + "<option value=\"\" disabled selected hidden>HH</option>"+ strHour +
-            "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"endTimeMinuteInput\" class='form-control'>"+ "<option value=\"\" disabled selected hidden>MM</option>" + strMin + "</select></div></div>";
+            "<div class=\"col-md-6 selTime\"><select id=\"endTimeHourInput\"  class='form-control'>" + "<option value=\"" + endTimeHour + "\" selected hidden>" + endTimeHour +"</option>"+ strHour +
+            "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"endTimeMinuteInput\" class='form-control'>"+ "<option value=\"" + endTimeMinute + "\" selected hidden>" + endTimeMinute + "</option>" + strMin + "</select></div></div>";
 
         var cells1 = rows[1].cells;
         var curIDTI = $(cells1[1]).attr("id");
@@ -105,15 +112,15 @@
             "<div class=\"input-group-addon \">timeslots</div>" +
             "</div>";
 
-        var cells3 = rows[3].cells;
+        /*var cells3 = rows[3].cells;
         var curIDRA = $(cells3[1]).attr("id");
         var curSettingRA = $(cells3[1]).data("value");
         cells3[1].innerHTML = "<div class= \"input-group col-md-4\">" +
             "<input type=\"number\" min=\"0\" class=\"form-control input-sm number-input\" id=\"reservationAccessInput\" value=\""+curSettingRA+ "\">" +
             "<div class=\"input-group-addon \">days</div>" +
-            "</div>";
+            "</div>";*/
 
-        var cells4 = rows[4].cells;
+        var cells4 = rows[3].cells;
         var curIDRE = $(cells4[1]).attr("id");
         var curSettingRE = $(cells4[1]).data("value");
         cells4[1].innerHTML = "<div class= \"input-group col-md-4\">" +
@@ -121,7 +128,7 @@
             "<div class=\"input-group-addon \">minutes</div>" +
             "</div>";
 
-        var cells5 = rows[5].cells;
+        var cells5 = rows[4].cells;
         var curIDCE = $(cells5[1]).attr("id");
         var curSettingCE = $(cells5[1]).data("value");
         cells5[1].innerHTML = "<div class= \"input-group col-md-4\">" +
@@ -154,8 +161,12 @@
     function submitChanges(tableID) {
         var newTableData = getTableData(tableID);
 
-        if (newTableData == false) {
+        if (newTableData == 1) {
             toastr.error("Input is lacking, please try again.", "Error");
+            return;
+        }
+        else if (newTableData == 2) {
+            toastr.error("Sorry, start time cannot be greater than or equal to end time.", "Error");
             return;
         }
 
@@ -163,7 +174,6 @@
         console.log(business_rulesid);
 
         console.log(newTableData);
-
 
         $.ajax({
             url: '<?=base_url('admin/' . ADMIN_UPDATE_BUSINESS_RULES)?>',
@@ -175,9 +185,9 @@
                 end_time: newTableData[1],
                 interval: newTableData[2],
                 limit: newTableData[3],
-                accessibility: newTableData[4],
-                reservation_expiry: newTableData[5],
-                confirmation_expiry: newTableData[6],
+                //accessibility: newTableData[4],
+                reservation_expiry: newTableData[4],
+                confirmation_expiry: newTableData[5],
             }
         })
             .done(function(result) {
@@ -236,6 +246,13 @@
         }
         return jObject;*/
         var tableData = [];
+        
+        var startTimeInt = parseInt($("#startTimeHourInput").val()) * 60 + parseInt($("#startTimeMinuteInput").val());
+        var endTimeInt = parseInt($("#endTimeHourInput").val()) * 60 + parseInt($("#endTimeMinuteInput").val());
+
+        if (startTimeInt >= endTimeInt) {
+            return 2;
+        }
 
         var startTime = $("#startTimeHourInput").val() + ":" + $("#startTimeMinuteInput").val() + ":00";
         tableData[0] = startTime;
@@ -245,17 +262,18 @@
 
         tableData[2] = $("#timeslotIntervalInput").val();
         tableData[3] = $("#timeslotLimitInput").val();
-        tableData[4] = $("#reservationAccessInput").val();
-        tableData[5] = $("#reservationExpiryInput").val();
-        tableData[6] = $("#confirmationExpiryInput").val();
+        //tableData[4] = $("#reservationAccessInput").val();
+        tableData[4] = $("#reservationExpiryInput").val();
+        tableData[5] = $("#confirmationExpiryInput").val();
 
 
         for (var i = 0; i < tableData.length; i++) {
             if (tableData[i] == null || tableData[i].trim() == "") {
                 console.log(i);
-                return false;
+                return 1;
             }
         }
+
 
         return tableData;
     }
@@ -294,8 +312,8 @@ include 'a_navbar.php';
 
                                     <tr>
                                         <th scope="row"> Reservation Time </th>
-                                        <td id="reservation_time">The reservation will start from  <strong><u><span id="startTime"><?=date('h:i A', strtotime($rule->start_time))?></span></u></strong>
-                                            to  <strong><u><span id="endTime"><?=date('h:i A', strtotime($rule->end_time))?></span></u></strong>.</td>
+                                        <td id="reservation_time">The reservation will start from  <strong><u><span id="startTime" data-value="<?=$rule->start_time?>"><?=date('h:i A', strtotime($rule->start_time))?></span></u></strong>
+                                            to  <strong><u><span id="endTime" data-value="<?=$rule->end_time?>"><?=date('h:i A', strtotime($rule->end_time))?></span></u></strong>.</td>
                                     </tr>
 
                                     <tr>
@@ -308,10 +326,10 @@ include 'a_navbar.php';
                                         <td id="timeslot_limit" data-value="<?=$rule->limit?>">The user can choose up to <strong><u><?=$rule->limit?></u></strong> timeslots.</td>
                                     </tr>
 
-                                    <tr>
+                                    <!--<tr>
                                         <th scope="row"> Reservation Access </th>
-                                        <td id="reservation_access" data-value="<?=$rule->accessibility?>">The user can reserve <strong><u><?=$rule->accessibility?></u></strong> day/s before the actual reservation date.</td>
-                                    </tr>
+                                        <td id="reservation_access" data-value="<?/*=$rule->accessibility*/?>">The user can reserve <strong><u><?/*=$rule->accessibility*/?></u></strong> day/s before the actual reservation date.</td>
+                                    </tr>-->
 
                                     <tr>
                                         <th scope="row"> Reservation Expiry </th>
