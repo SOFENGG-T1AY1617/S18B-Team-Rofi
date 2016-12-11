@@ -50,7 +50,7 @@
         console.log(type);
 
         cellName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\""+placeholderName+"\" >";
-        cellNumber.innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"exampleInputEmail1\" placeholder=\""+placeholderPCs+"\">";
+        cellNumber.innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" autocomplete=\"off\" id=\"exampleInputEmail1\" placeholder=\""+placeholderPCs+"\">";
         deleteCol.innerHTML = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+i+")\" class=\"btn btn-default\">&times;</button>"
 
         setInputRules();
@@ -100,7 +100,7 @@
               var curNum = cells[1].innerHTML;
 
               cells[0].innerHTML = "<input type=\"text\" class=\"form-control\" id=\"" + curRoomID + "\" value=\"" + curName + "\">";
-              cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" id=\"" + curCapID + "\" value=\"" + curNum + "\">";
+              cells[1].innerHTML = "<input type=\"number\" min=\"0\" class=\"form-control number-input\" autocomplete=\"off\" id=\"" + curCapID + "\" value=\"" + curNum + "\">";
               cells[2].innerHTML = "<button type =\"button\" onclick=\"hideRow(" + curCapID + ")\" class=\"btn btn-default\"><i class=\"material-icons\">clear</i></button>";
 
 
