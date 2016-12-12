@@ -30,7 +30,6 @@ include 'a_navbar.php';
     var request;
     var dateToday = "<?=date("Y-m-d")?>";
     var dateSelected = dateToday;
-    var interval = 0;
     var currentDeptID = 0;
 
     var currentTime = "<?=date("H:m:s"); ?>";
@@ -88,6 +87,7 @@ include 'a_navbar.php';
                 $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
             }
 
+            updateDisplayTimeInModal();
             updateTimesHeader(date_selected == "today");
 
             if($("#form_building").val()!=null){
@@ -116,6 +116,8 @@ include 'a_navbar.php';
             disableAllSlotsInRoom();
         });
 
+        updateDisplayTimeInModal();
+
     });
 
     function disableSlots () {
@@ -129,7 +131,11 @@ include 'a_navbar.php';
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    slots: slotsPicked
+                    slots: slotsPicked,
+                    currentDate: dateSelected,
+                    hour: $("#endHour").val(),
+                    minute: $("#endMinute").val()
+
                 }
             })
                 .done(function (result) {
@@ -192,6 +198,14 @@ include 'a_navbar.php';
 
                 });
         }
+    }
+
+    function updateDisplayTimeInModal () {
+        var currentTimeContainer = $(".currentTimeContainer");
+
+        currentTimeContainer.empty();
+
+        currentTimeContainer.append(dateSelected);
     }
 
     function highlightHorizontal (cell) {
@@ -838,36 +852,10 @@ include 'a_navbar.php';
             </div>
             <div class="modal-body">
                 <form>
-                    <label>Specify the duration of the disability:</label>
+                    <label>Disable slots until: (Selected date: <span class = "currentTimeContainer"></span>)</label>
                     <div class = "row">
 
-                        <div class = "col-md-2 col-md-offset-1">
-                            <div class="form-group">
-                                <small><label for="startHour">Start Hour:</label></small>
-                                <select class="form-control" id="startHour">
-                                    <?php
-                                    for ($i = 0; $i < 24; $i++) {
-                                        echo "<option value=" . $i .">" . $i . "</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class = "col-md-2">
-                            <div class = "form-group">
-                                <small><label for="startHour">Start Min:</label></small>
-                                <select class="form-control" id="startMinute">
-                                    <?php
-                                    for ($i = 0; $i < 60; $i++) {
-                                        echo "<option value=" . $i .">" . $i . "</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class = "col-md-2 col-md-offset-2">
+                        <div class = "col-md-2 col-md-offset-4">
                             <div class="form-group">
                                 <small><label for="startHour">End Hour:</label></small>
                                 <select class="form-control" id="endHour">
@@ -884,6 +872,58 @@ include 'a_navbar.php';
                             <div class = "form-group">
                                 <small><label for="startHour">End Min:</label></small>
                                 <select class="form-control" id="endMinute">
+                                    <?php
+                                    for ($i = 0; $i < 60; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id = "disable-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="disableAllModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Disabling Selected Slots</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label>Disable slots until: (Selected date: <span class = "currentTimeContainer"></span>)</label>
+                    <div class = "row">
+
+                        <div class = "col-md-2 col-md-offset-4">
+                            <div class="form-group">
+                                <small><label for="startHour">End Hour:</label></small>
+                                <select class="form-control" id="endHourAll">
+                                    <?php
+                                    for ($i = 0; $i < 24; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2">
+                            <div class = "form-group">
+                                <small><label for="startHour">End Min:</label></small>
+                                <select class="form-control" id="endMinuteAll">
                                     <?php
                                     for ($i = 0; $i < 60; $i++) {
                                         echo "<option value=" . $i .">" . $i . "</option>";
@@ -959,7 +999,7 @@ include 'a_navbar.php';
                         </div>
 
                         <div class = "row clsSlotsBtn-container">
-                            <button id = "" class = "btn btn-danger btn-block" data-toggle = "modal" data-target = "#disableModal">Disable all slots in room</button>
+                            <button id = "disable-all-modal-btn" class = "btn btn-danger btn-block" data-toggle = "modal" data-target = "#disableAllModal">Disable all slots in room</button>
                         </div>
                     </div>
                 </div>
@@ -982,7 +1022,7 @@ include 'a_navbar.php';
             <div class = "col-md-10 col-md-offset-1">
                 <div class = "col-md-6 col-md-offset-6 text-right">
                     <button id = "enable-btn" class = "btn btn-success">Enable slot(s)</button>
-                    <button id = "disable-btn" class = "btn btn-danger">Disable slot(s)</button>
+                    <button id = "disable-modal-btn" class = "btn btn-danger" data-toggle = "modal" data-target = "#disableModal">Disable slot(s)</button>
                     <button id = "toggle-btn" class = "btn btn-default">Toggle slot(s)</button>
                 </div>
             </div>

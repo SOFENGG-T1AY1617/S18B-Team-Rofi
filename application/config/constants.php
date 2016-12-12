@@ -167,9 +167,7 @@ define("COLUMN_TAG_MOD_ROOMSID", "tag_mod_roomsid");
 
 define("TABLE_DISABLED_SLOTS","disabled_slots");
 define("COLUMN_DISABLED_SLOT_ID","disabled_slotid");
-define("COLUMN_START_TIME_D","start_time");
-define("COLUMN_END_TIME_D","end_time");
-define("COLUMN_DATE_TIME_DURATION","end_time");
+define("COLUMN_DATE_TIME_DURATION","date_time_duration");
 
 /* ADMIN PAGES */
 define("ADMIN_SCHEDULING", "scheduling");

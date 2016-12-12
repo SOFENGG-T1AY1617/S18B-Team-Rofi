@@ -225,7 +225,7 @@ class AdminController extends CI_Controller
     }
 
     public function getTimes () {
-        date_default_timezone_set('America/New_York'); // set to Hong Kong's/Philippines' Timezone
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         $getData = array(
             'interval' => $this->input->get('interval'),
@@ -833,19 +833,22 @@ class AdminController extends CI_Controller
 
     public function disableSlots () {
         $slots = $this->input->get('slots');
-        $duration = $this->input->get('duration');
+        $date = $this->input->get('currentDate');
+        $hour = $this->input->get('hour');
+        $minute = $this->input->get('minute');
 
         $updated = 0;
+        $duration = $hour . ":" . $minute . ":00";
 
         foreach ($slots as $slot) {
             $arr = explode('_', $slot);
 
-            $isDisabled = $this->admin->isDisabledSlot (intval($arr[0]));
+            //$isDisabled = $this->admin->isDisabledSlot (intval($arr[4]));
 
-            if (!$isDisabled) {
-                $this->admin->disableSlot($slot, $duration);
+            //if (!$isDisabled) {
+                $this->admin->disableSlot($slot, $date, $duration);
                 $updated++;
-            }
+            //}
 
         }
 
