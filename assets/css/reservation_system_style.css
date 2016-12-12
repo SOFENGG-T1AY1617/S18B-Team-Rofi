@@ -228,12 +228,4 @@ div.legend.taken{
     vertical-align: middle;
 }
 
-.easter{
-    position: fixed;
-    height: 10px;
-    width: 10px;
-    left: 0;
-    bottom: 0;
 
-    visible:hidden;
-}
