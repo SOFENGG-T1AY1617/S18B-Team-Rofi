@@ -839,24 +839,29 @@ class AdminController extends CI_Controller
         $hour = $this->input->get('hour');
         $minute = $this->input->get('minute');
 
+        $newIDs = [];
+        $updatedIDs = [];
+
         $updated = 0;
         $duration = $hour . ":" . $minute . ":00";
 
         foreach ($slots as $slot) {
             $arr = explode('_', $slot);
 
-            //$isDisabled = $this->admin->isDisabledSlot (intval($arr[4]));
+            if (count($arr) < 5) {
+                $newIDs[] = $this->admin->disableSlot($slot, $date, $duration);
+                $updatedIDs[] = $slot;
 
-            //if (!$isDisabled) {
-                $this->admin->disableSlot($slot, $date, $duration);
                 $updated++;
-            //}
+            }
 
         }
 
         $result = array(
             'result' => "success",
-            'updated' => $updated
+            'updated' => $updated,
+            'newIDs' => $newIDs,
+            'updatedIDs' => $updatedIDs
         );
 
         echo json_encode($result);
@@ -871,9 +876,7 @@ class AdminController extends CI_Controller
         foreach ($slots as $slot) {
             $arr = explode('_', $slot);
 
-            $isDisabled = $this->admin->isDisabledSlot(intval($arr[0]));
-
-            if ($isDisabled) {
+            if (count($arr) > 4) {
                 $this->admin->enableSlotWithDisabledSlotID(intval($arr[4]));
                 $updated++;
             }

@@ -859,11 +859,14 @@ class Admin_Model extends CI_Model
         return $this->db->query($sql, array($id))->result();
     }
 
-    function isDisabledSlot ($computerid) {
+    function isDisabledSlot ($computerid, $start, $end) {
+
         $this->db->select('*');
         $this->db->from(TABLE_DISABLED_SLOTS);
         $this->db->where(COLUMN_COMPUTERID, $computerid);
-        $query = $this->db->get();
+        $this->db->where(COLUMN_START_TIME, $start);
+        $this->db->where(COLUMN_END_TIME, $end);
+        $query = $this->db->get(TABLE_DISABLED_SLOTS);
         $result = $query->result();
 
         return count($result)>=1;
@@ -881,6 +884,8 @@ class Admin_Model extends CI_Model
         );
 
         $this->db->insert(TABLE_DISABLED_SLOTS, $disableSlotData);
+
+        return $this->db->insert_id();
     }
 
     function enableSlotWithDisabledSlotID ($disabledSlotID) {

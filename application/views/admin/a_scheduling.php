@@ -21,7 +21,6 @@ include 'a_navbar.php';
 
 <script>
     var slotsPicked = [];
-    var slotsDisabled = []; // for GUI
     var computers = [];
     var reservations = [];
 
@@ -147,6 +146,19 @@ include 'a_navbar.php';
 
                     disableSelectedSlots();
 
+                    var newIDs = result['newIDs'];
+                    var updatedIDs = result['updatedIDs'];
+
+                    for (var i = 0; i < newIDs.length; i++) {
+                        var currentSlot = $("[id = '" + updatedIDs[i] + "']");
+
+                        currentSlot.attr("id", currentSlot.attr("id") + "_" + newIDs[i]);
+
+                        var existIndex = slotsPicked.indexOf(updatedIDs);
+
+                        slotsPicked[existIndex] = currentSlot.attr("id");
+                    }
+
                     //updateSelectedSlots();
 
                 })
@@ -181,9 +193,19 @@ include 'a_navbar.php';
             })
                 .done(function (result) {
 
-                    toastr.success(result['updated'] + " reservations were updated!", result['updated'] + " reservation/s is/are now enabled");
+                    toastr.success(result['updated'] + " slots were updated!", result['updated'] + " slots/s is/are now enabled");
 
-                    enableSelectedSlots();
+                    for (var i = 0; i < slotsPicked.length; i++) {
+                        var currentSlot = $("[id = '" + slotsPicked[i] + "']");
+
+                        var IDArray = slotsPicked[i].split('_');
+
+                        currentSlot.attr("id", IDArray[0] + "_" + IDArray[1] + "_" + IDArray[2] + "_" + IDArray[3]);
+
+                        enableSlot(currentSlot);
+
+                        slotsPicked[i] = currentSlot.attr("id");
+                    }
 
                     //updateSelectedSlots();
 
@@ -273,7 +295,6 @@ include 'a_navbar.php';
             slot.removeClass('enabled');
 
         slot.addClass('disabled');
-        slotsDisabled.push(slot.attr('id'));
     }
 
     function enableSelectedSlots () {
@@ -282,12 +303,7 @@ include 'a_navbar.php';
         for (var i = 0; i < slotsPicked.length; i++) {
             var jQuerySelector = "[id='" + slotsPicked[i] + "']";
 
-            if (($.inArray(slotsPicked[i], slotsDisabled)) > -1) {
-                var existIndex = slotsDisabled.indexOf(slotsPicked[i]);
-                slotsDisabled.splice(existIndex, 1);
-
-                enableSlot($(jQuerySelector));
-            }
+            enableSlot($(jQuerySelector));
         }
     }
 
@@ -308,12 +324,8 @@ include 'a_navbar.php';
             var jQuerySelector = "[id='" + slotsPicked[i] + "']";
 
             if ($(jQuerySelector).hasClass('disabled')) {
-                if (($.inArray(slotsPicked[i], slotsDisabled)) > -1) {
-                    var existIndex = slotsDisabled.indexOf(slotsPicked[i]);
-                    slotsDisabled.splice(existIndex, 1);
+                enableSlot($(jQuerySelector));
 
-                    enableSlot($(jQuerySelector));
-                }
             } else if ($(jQuerySelector).hasClass('enabled')) {
                 disableSlot($(jQuerySelector));
             }
