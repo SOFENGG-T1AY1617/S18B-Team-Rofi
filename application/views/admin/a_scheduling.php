@@ -103,10 +103,6 @@ include 'a_navbar.php';
             disableSlots();
         });
 
-        $("#toggle-btn").click(function () {
-            toggleSelectedSlots();
-        });
-
         $("#enableAll-btn").click(function () {
             enableAllSlotsInRoom();
         });
@@ -314,21 +310,6 @@ include 'a_navbar.php';
             var jQuerySelector = "[id='" + slotsPicked[i] + "']";
 
             disableSlot($(jQuerySelector));
-        }
-    }
-
-    function toggleSelectedSlots () {
-        console.log ("toggle");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            if ($(jQuerySelector).hasClass('disabled')) {
-                enableSlot($(jQuerySelector));
-
-            } else if ($(jQuerySelector).hasClass('enabled')) {
-                disableSlot($(jQuerySelector));
-            }
         }
     }
 
@@ -1046,7 +1027,6 @@ include 'a_navbar.php';
                 <div class = "col-md-6 col-md-offset-6 text-right">
                     <button id = "enable-btn" class = "btn btn-success">Enable slot(s)</button>
                     <button id = "disable-modal-btn" class = "btn btn-danger" data-toggle = "modal" data-target = "#disableModal">Disable slot(s)</button>
-                    <button id = "toggle-btn" class = "btn btn-default">Toggle slot(s)</button>
                 </div>
             </div>
         </div>
