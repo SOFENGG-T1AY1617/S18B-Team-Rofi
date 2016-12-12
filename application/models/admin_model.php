@@ -305,7 +305,7 @@ class Admin_Model extends CI_Model
         $sql = "SELECT *
                 FROM (SELECT * 
                       FROM disabled_slots
-                      WHERE STR_TO_DATE(CONCAT(?, ' ', ?), '%Y-%m-%d %H:%i:%s') < date_time_duration) d NATURAL JOIN 
+                      WHERE STR_TO_DATE(CONCAT(?, ' ', ?), '%Y-%m-%d %H:%i:%s') <= date_time_duration) d NATURAL JOIN 
                       computers NATURAL JOIN 
                       (SELECT roomid
                       FROM rooms
@@ -324,7 +324,7 @@ class Admin_Model extends CI_Model
                   computers NATURAL JOIN 
                   (SELECT * 
                       FROM disabled_slots
-                      WHERE STR_TO_DATE(CONCAT(?, ' ', ?), '%Y-%m-%d %H:%i:%s') < date_time_duration) d";
+                      WHERE STR_TO_DATE(CONCAT(?, ' ', ?), '%Y-%m-%d %H:%i:%s') <= date_time_duration) d";
 
         return $this->db->query($sql, array($id, $date, $time))->result();
     }
