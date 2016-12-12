@@ -145,12 +145,12 @@ include 'a_navbar.php';
                     var newIDs = result['newIDs'];
                     var updatedIDs = result['updatedIDs'];
 
-                    for (var i = 0; i < newIDs.length; i++) {
+                    for (var i = 0; i < updatedIDs.length; i++) {
                         var currentSlot = $("[id = '" + updatedIDs[i] + "']");
 
                         currentSlot.attr("id", currentSlot.attr("id") + "_" + newIDs[i]);
 
-                        var existIndex = slotsPicked.indexOf(updatedIDs);
+                        var existIndex = slotsPicked.indexOf(updatedIDs[i]);
 
                         slotsPicked[existIndex] = currentSlot.attr("id");
                     }
