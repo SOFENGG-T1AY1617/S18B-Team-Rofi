@@ -679,6 +679,9 @@ include 'a_navbar.php';
                     reservations = [];
                     disabledSlots = [];
 
+
+                    console.log(currentTime);
+
                     console.log(result['date']);
                     console.log(result);
                     console.log("done");
