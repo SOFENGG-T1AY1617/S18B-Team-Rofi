@@ -281,6 +281,9 @@ class AdminController extends CI_Controller
         $date = $getData['date'];
         $time = $getData['time'];
 
+        if ($date != date("Y-m-d"))
+            $time = '00:00:00';
+
         if ($getData['roomid'] == 0)
             $data = array(
                 'computers' => $this->admin->queryAllComputersAtBuildingIDAndDepartmentID($getData['buildingid'], $_SESSION['admin_departmentid']),
@@ -870,6 +873,7 @@ class AdminController extends CI_Controller
     public function enableSlots () {
 
         $slots = $this->input->get('slots');
+        $updatedIDs = [];
 
         $updated = 0;
 
@@ -879,13 +883,15 @@ class AdminController extends CI_Controller
             if (count($arr) > 4) {
                 $this->admin->enableSlotWithDisabledSlotID(intval($arr[4]));
                 $updated++;
+                $updatedIDs[] = $slot;
             }
 
         }
 
         $result = array(
             'result' => "success",
-            'updated' => $updated
+            'updated' => $updated,
+            'updatedIDs' => $updatedIDs
         );
 
         echo json_encode($result);

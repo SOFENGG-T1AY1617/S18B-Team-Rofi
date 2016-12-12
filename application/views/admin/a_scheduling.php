@@ -20,6 +20,7 @@ include 'a_navbar.php';
 </style>
 
 <script>
+    var allSlotsDisplayed = []; // for enabling and disabling all slots
     var slotsPicked = [];
     var computers = [];
     var reservations = [];
@@ -96,128 +97,168 @@ include 'a_navbar.php';
         });
 
         $("#enable-btn").click(function () {
-            enableSlots();
+            enableSlots(slotsPicked);
         });
 
         $("#disable-btn").click(function () {
-            disableSlots();
+            var hour = $("#endHour").val();
+            var minute = $("#endMinute").val();
+
+            disableSlots(slotsPicked, hour, minute);
         });
 
         $("#enableAll-btn").click(function () {
-            enableAllSlotsInRoom();
+            enableSlots(allSlotsDisplayed);
         });
 
         $("#disableAll-btn").click(function () {
-            disableAllSlotsInRoom();
+            var hour = $("#endHourAll").val();
+            var minute = $("#endMinuteAll").val();
+
+            disableSlots(allSlotsDisplayed, hour, minute);
         });
 
         updateDisplayTimeInModal();
 
     });
 
-    function disableSlots () {
-        if (slotsPicked.length == 0) {
+    function disableSlots (slotArray, hour, minute) {
+        if (slotArray.length == 0) {
 
             toastr.info("You must select slots before performing actions.", "Hold on!");
 
         } else {
+            var chunk = 10;
+            var slotsChunk = [];
+            var updatedSlots = 0;
 
-            console.log("Disabling slots on: " + dateSelected);
+            for (var i = 0; i < slotArray.length; i += chunk) {
+                slotsChunk = slotArray.slice(i, i + chunk);
 
-            $.ajax({
-                url: '<?php echo base_url('admin/' . ADMIN_DISABLE_SLOTS) ?>',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    slots: slotsPicked,
-                    currentDate: dateSelected,
-                    hour: $("#endHour").val(),
-                    minute: $("#endMinute").val()
+                $.ajax({
+                    url: '<?php echo base_url('admin/' . ADMIN_DISABLE_SLOTS) ?>',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        slots: slotsChunk,
+                        currentDate: dateSelected,
+                        hour: hour,
+                        minute: minute
 
-                }
-            })
-                .done(function (result) {
-
-                    toastr.success(result['updated'] + " slots were updated!", result['updated'] + " slot/s is/are now disabled");
-
-                    disableSelectedSlots();
-
-                    var newIDs = result['newIDs'];
-                    var updatedIDs = result['updatedIDs'];
-
-                    for (var i = 0; i < updatedIDs.length; i++) {
-                        var currentSlot = $("[id = '" + updatedIDs[i] + "']");
-
-                        currentSlot.attr("id", currentSlot.attr("id") + "_" + newIDs[i]);
-
-                        var existIndex = slotsPicked.indexOf(updatedIDs[i]);
-
-                        slotsPicked[existIndex] = currentSlot.attr("id");
                     }
-
-                    //updateSelectedSlots();
-
                 })
-                .fail(function () {
+                    .done(function (result) {
 
-                    toastr.error("Slots were not updated.", "Oops!");
+                        var newIDs = result['newIDs'];
+                        var updatedIDs = result['updatedIDs'];
 
-                    console.log("fail");
+                        for (var j = 0; j < updatedIDs.length; j++) {
+                            var currentSlot = $("[id = '" + updatedIDs[j] + "']");
 
-                })
-                .always(function () {
+                            currentSlot.attr("id", currentSlot.attr("id") + "_" + newIDs[j]);
 
-                    console.log("complete");
+                            var existIndex = slotArray.indexOf(updatedIDs[j]);
 
-                });
+                            slotArray[existIndex] = currentSlot.attr("id");
+
+                            disableSlot(currentSlot);
+
+                            updatedSlots++;
+
+                            console.log(slotArray);
+                        }
+
+                        //updateSelectedSlots();
+
+                    })
+                    .fail(function () {
+
+                        toastr.error("Slots were not updated.", "Oops!");
+
+                        console.log("fail");
+
+                    })
+                    .always(function () {
+
+                        console.log("complete");
+
+                    })
+                    .then(function () {
+                        toastr.clear();
+                        toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now disabled");
+                    });
+            }
+
         }
+
+        // TODO I DUNNO WHERE TO PUT THE LOADING PERO THIS THE FUNCTION, SAME THING WITH ENABLE DOWN BELOW
+
     }
 
-    function enableSlots () {
-        if (slotsPicked.length == 0) {
+    function enableSlots (slotArray) {
+        if (slotArray.length == 0) {
 
             toastr.info("You must select slots before performing actions.", "Hold on!");
 
         } else {
-            $.ajax({
-                url: '<?php echo base_url('admin/' . ADMIN_ENABLE_SLOTS) ?>',
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    slots: slotsPicked
-                }
-            })
-                .done(function (result) {
+            var chunk = 10;
+            var slotsChunk = [];
+            var updatedSlots = 0;
 
-                    toastr.success(result['updated'] + " slots were updated!", result['updated'] + " slots/s is/are now enabled");
+            for (var i = 0; i < slotArray.length; i += chunk) {
+                slotsChunk = slotArray.slice(i, i + chunk);
 
-                    for (var i = 0; i < slotsPicked.length; i++) {
-                        var currentSlot = $("[id = '" + slotsPicked[i] + "']");
+                console.log(slotsChunk);
 
-                        var IDArray = slotsPicked[i].split('_');
-
-                        currentSlot.attr("id", IDArray[0] + "_" + IDArray[1] + "_" + IDArray[2] + "_" + IDArray[3]);
-
-                        enableSlot(currentSlot);
-
-                        slotsPicked[i] = currentSlot.attr("id");
+                $.ajax({
+                    url: '<?php echo base_url('admin/' . ADMIN_ENABLE_SLOTS) ?>',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        slots: slotsChunk
                     }
-
-                    //updateSelectedSlots();
-
                 })
-                .fail(function () {
+                    .done(function (result) {
 
-                    toastr.error("Slots were not updated.", "Oops!");
+                        var updatedIDs = result['updatedIDs'];
 
-                    console.log("fail");
+                        for (var j = 0; j < updatedIDs.length; j++) {
+                            var currentSlot = $("[id = '" + updatedIDs[j] + "']");
 
-                })
-                .always(function () {
+                            var existIndex = slotArray.indexOf(updatedIDs[j]);
 
-                    console.log("complete");
+                            var IDArray = updatedIDs[j].split('_');
 
-                });
+                            currentSlot.attr("id", IDArray[0] + "_" + IDArray[1] + "_" + IDArray[2] + "_" + IDArray[3]);
+
+                            enableSlot(currentSlot);
+
+                            slotArray[existIndex] = currentSlot.attr("id");
+
+                            updatedSlots++;
+                        }
+
+                        //updateSelectedSlots();
+
+                    })
+                    .fail(function () {
+
+                        toastr.error("Slots were not updated.", "Oops!");
+
+                        console.log("fail");
+
+                    })
+                    .always(function () {
+
+                        console.log("complete");
+
+                    })
+                    .then(function () {
+                        toastr.clear();
+                        toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now enabled");
+
+                    });
+            }
         }
     }
 
@@ -291,36 +332,6 @@ include 'a_navbar.php';
             slot.removeClass('enabled');
 
         slot.addClass('disabled');
-    }
-
-    function enableSelectedSlots () {
-        console.log ("enable");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            enableSlot($(jQuerySelector));
-        }
-    }
-
-    function disableSelectedSlots () {
-        console.log ("disable");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            disableSlot($(jQuerySelector));
-        }
-    }
-
-    function enableAllSlotsInRoom () {
-        console.log ("enable-all");
-
-    }
-
-    function disableAllSlotsInRoom () {
-        console.log ("disable-all");
-
     }
 
     function selectSlot (slot) {
@@ -723,6 +734,7 @@ include 'a_navbar.php';
 
             var roomIDs = [];
             var roomNames = [];
+            allSlotsDisplayed = [];
 
             // index of ID corresponds with index of NAME
 
@@ -829,6 +841,8 @@ include 'a_navbar.php';
                             if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1) {
                                 clickableSlot1.className = clickableSlot1.className + " selected";
                             }
+
+                            allSlotsDisplayed.push(clickableSlot1.getAttribute("id"));
 
                             slotCell.appendChild(clickableSlot1);
 
@@ -941,7 +955,7 @@ include 'a_navbar.php';
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button id = "disableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
         </div>
