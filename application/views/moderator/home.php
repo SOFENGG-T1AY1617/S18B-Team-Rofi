@@ -527,6 +527,11 @@
                 })
 
                 .done(function(result) {
+
+                    computers = [];
+                    reservations = [];
+                    disabledSlots = [];
+
                     console.log(result['date']);
                     console.log(result);
                     console.log("done");

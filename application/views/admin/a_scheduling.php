@@ -126,6 +126,9 @@ include 'a_navbar.php';
             toastr.info("You must select slots before performing actions.", "Hold on!");
 
         } else {
+
+            console.log("Disabling slots on: " + dateSelected);
+
             $.ajax({
                 url: '<?php echo base_url('admin/' . ADMIN_DISABLE_SLOTS) ?>',
                 type: 'GET',
@@ -671,6 +674,11 @@ include 'a_navbar.php';
                 })
 
                 .done(function(result) {
+
+                    computers = [];
+                    reservations = [];
+                    disabledSlots = [];
+
                     console.log(result['date']);
                     console.log(result);
                     console.log("done");

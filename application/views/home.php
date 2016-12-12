@@ -548,6 +548,11 @@ $defaultTab = 1;
                         })
 
                             .done(function(result) {
+
+                                computers = [];
+                                reservations = [];
+                                disabledSlots = [];
+
                                 console.log(result['date']);
                                 console.log(result);
                                 console.log("done");
