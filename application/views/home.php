@@ -806,7 +806,7 @@ $defaultTab = 1;
                             </li>
                             <li class="previous pull-left">
 
-                                <div class="legend free pull-left"></div>Free
+                                <div class="legend free pull-left" onclick="hunt()"></div>Free
                             </li>
                             <li class="previous pull-left">
                                 <div class="legend selected pull-left"></div>Selected
@@ -1185,9 +1185,6 @@ $defaultTab = 1;
             </div>
 
 
-            <div class="easter" id="egg" onclick="hunt()">
-
-            </div>
         </div> <!-- EOF -->
 
     </div>

@@ -35,7 +35,7 @@
         cellLName.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder=\"Enter last name\">";
         cellEmail.innerHTML = "<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" placeholder =\"Enter email\">";
         cellDept.innerHTML = "<?php echo $departments[0]->name ?>";
-        cellAreaAssign.innerHTML = "<select type='text' class='form-control' placeholder='Choose Area' onchange=\"changeAreaMod('add_table')\"><option value='0' selected>No Room</option><?php foreach($freeRooms as $room):?><option value=<?=$room->roomid?> ><?=$room->name?></option><?php endforeach;?></select>";
+        cellAreaAssign.innerHTML = "<select type='text' class='form-control' placeholder='Choose Area' onchange=\"changeAreaMod('add_table')\"><option value='0' selected>No Area</option><?php foreach($freeRooms as $room):?><option value=<?=$room->roomid?> ><?=$room->name?></option><?php endforeach;?></select>";
         del.innerHTML       = "<button type =\"button\" onclick=\"deleteRow('"+table+"', "+(tableA.rows.length-1)+")\" class=\"btn btn-default clearmod-btn\" id=\"DELETECOLUMN\">&times;</button>";
 
 
@@ -222,7 +222,7 @@
 
             var drop = "<select type='text' class='form-control' id='"+curAreaAssignID+"'  onchange='changeAreaMod(\"modtable\")'>";
 
-            drop+="<option value='0'>No Room</option>";
+            drop+="<option value='0'>No Area</option>";
 
             var rooms = <?php echo json_encode($rooms); ?>;
 
@@ -1105,7 +1105,7 @@ include 'a_navbar.php';
                             <td><input type="text" class="form-control" placeholder="Enter last name"></td>
                             <td><input type="text" class="form-control" placeholder="Enter email"></td>
                             <td><?php echo $departments[0]->name ?></td>
-                            <td><select type='text' class='form-control' placeholder='Choose Area' onchange="changeAreaMod('add_table')"><option value='0' selected>No Room</option>
+                            <td><select type='text' class='form-control' placeholder='Choose Area' onchange="changeAreaMod('add_table')"><option value='0' selected>No Area</option>
                                     <?php foreach($freeRooms as $room):?>
                                         <option value=<?=$room->roomid?> ><?=$room->name?></option>
                                     <?php endforeach;?>
