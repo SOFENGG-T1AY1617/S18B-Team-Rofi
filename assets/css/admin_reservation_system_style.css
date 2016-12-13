@@ -184,6 +184,7 @@ div.legend.taken{
     cursor: pointer;
 }
 
+
 .used:hover {
     background-color: #cccccc;
 }
@@ -198,6 +199,9 @@ div.legend.taken{
     visibility: hidden;
     z-index: 1;
     font-size: 300%;
+    opacity: 0.8;
 }
+
+
 
 
