@@ -127,6 +127,9 @@ include 'a_navbar.php';
 
         } else {
             var chunk = 10;
+
+            var isLastChunk = false;
+
             var slotsChunk = [];
             var updatedSlots = 0;
 
@@ -142,13 +145,14 @@ include 'a_navbar.php';
                         currentDate: dateSelected,
                         hour: hour,
                         minute: minute
-
                     }
                 })
                     .done(function (result) {
 
                         var newIDs = result['newIDs'];
                         var updatedIDs = result['updatedIDs'];
+
+                        isLastChunk = updatedIDs[ updatedIDs.length - 1 ] == slotArray[ slotArray.length - 1 ];
 
                         for (var j = 0; j < updatedIDs.length; j++) {
                             var currentSlot = $("[id = '" + updatedIDs[j] + "']");
@@ -166,6 +170,9 @@ include 'a_navbar.php';
                             console.log(slotArray);
                         }
 
+                        if (isLastChunk) // TODO : CLOSE THE LOADING SCREEN AFTER THIS IF STATEMENT
+                            toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now disabled");
+
                         //updateSelectedSlots();
 
                     })
@@ -180,10 +187,6 @@ include 'a_navbar.php';
 
                         console.log("complete");
 
-                    })
-                    .then(function () {
-                        toastr.clear();
-                        toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now disabled");
                     });
             }
 
@@ -203,6 +206,8 @@ include 'a_navbar.php';
             var slotsChunk = [];
             var updatedSlots = 0;
 
+            var isLastChunk = false;
+
             for (var i = 0; i < slotArray.length; i += chunk) {
                 slotsChunk = slotArray.slice(i, i + chunk);
 
@@ -220,6 +225,8 @@ include 'a_navbar.php';
 
                         var updatedIDs = result['updatedIDs'];
 
+                        isLastChunk = updatedIDs[ updatedIDs.length - 1 ] == slotArray[ slotArray.length - 1 ];
+
                         for (var j = 0; j < updatedIDs.length; j++) {
                             var currentSlot = $("[id = '" + updatedIDs[j] + "']");
 
@@ -236,6 +243,9 @@ include 'a_navbar.php';
                             updatedSlots++;
                         }
 
+                        if (isLastChunk) // TODO : CLOSE THE LOADING SCREEN AFTER THIS IF STATEMENT
+                            toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now enabled");
+
                         //updateSelectedSlots();
 
                     })
@@ -249,11 +259,6 @@ include 'a_navbar.php';
                     .always(function () {
 
                         console.log("complete");
-
-                    })
-                    .then(function () {
-                        toastr.clear();
-                        toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now enabled");
 
                     });
             }
