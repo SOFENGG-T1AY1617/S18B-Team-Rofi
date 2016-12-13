@@ -14,7 +14,13 @@
                 <!-- ADD CONDITION FOR ADMIN VIEW HERE -->
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">DLSU B)</a>
+<!--            <a class="navbar-brand" href="#">-->
+
+                <a class="navbar-brand" href="#">
+                    <img class="img-rounded" src="http://static.wixstatic.com/media/4b95eb_bfd6884593d8a5e73f93065af1da8b74.jpg_256" width="30" height="30" >
+                </a>
+
+<!--            </a>-->
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
