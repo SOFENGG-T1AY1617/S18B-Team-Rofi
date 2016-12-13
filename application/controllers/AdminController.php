@@ -9,6 +9,8 @@
 header('Access-Control-Allow-Origin: *');
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+
 class AdminController extends CI_Controller
 {
 
@@ -25,7 +27,6 @@ class AdminController extends CI_Controller
 
     public function index()
     {
-        date_default_timezone_set('Asia/Hong_Kong');
         $this->loadAction("");
     }
 
@@ -34,8 +35,6 @@ class AdminController extends CI_Controller
     }
 
     public function loadAction($action) {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
-
         $this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
         $this->admin->archiveUnconfirmedReservations();
         if(!isset($_SESSION['admin_email']) && $action != ADMIN_SIGN_IN) {
@@ -236,8 +235,6 @@ class AdminController extends CI_Controller
     }
 
     public function getTimes () {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
-
         $times = null;
 
         $getData = array(
@@ -316,8 +313,6 @@ class AdminController extends CI_Controller
     public function schedulingView(){
 
         $data['buildings'] = $this->admin->queryBuildingsByDepartmentID($_SESSION['admin_departmentid']);
-
-        date_default_timezone_set('Asia/Hong_Kong');
 
         $this->load->view('admin/a_header'); // include bootstrap 3 header -> included in home
         $this->load->view('admin/a_scheduling', $data); // $this->load->view('admin', $data); set to this if data is set

@@ -7,6 +7,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Date: 29/11/2016
  * Time: 2:49 PM
  */
+
+date_default_timezone_set('Asia/Hong_Kong');
+
 class ModeratorController extends CI_Controller
 {
     public function __construct()
@@ -22,13 +25,11 @@ class ModeratorController extends CI_Controller
 
     public function home()
     {
-        date_default_timezone_set('Asia/Hong_Kong');
 
         $this->loadAction("");
     }
 
     public function loadAction($action) {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         if(!isset($_SESSION['mod_email']) && $action != MODERATOR_SIGN_IN) {
             $this->signInView("");
@@ -90,7 +91,6 @@ class ModeratorController extends CI_Controller
     }
 
     public function getTimes () {
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         $getData = array(
             'interval' => $this->input->get('interval'),

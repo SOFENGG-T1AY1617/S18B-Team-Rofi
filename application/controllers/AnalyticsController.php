@@ -6,6 +6,9 @@
  * Date: 11/29/2016
  * Time: 15:17
  */
+
+date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+
 class AnalyticsController extends CI_Controller
 {
     public function getData() {
@@ -38,8 +41,6 @@ class AnalyticsController extends CI_Controller
     }
 
     public function getTimes($roomid) {
-
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         $temp= $this->analytics->queryBusinessRulesByRoomID($roomid);
 

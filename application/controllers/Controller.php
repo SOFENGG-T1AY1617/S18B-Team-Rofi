@@ -28,8 +28,6 @@ class Controller extends CI_Controller {
 	public function home()
     {
 
-        date_default_timezone_set('Asia/Hong_Kong');
-
         //$maxNumberOfSlots = $this->student->getMaxNumberOfSlots();
         $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $data['colleges'] = $this->student->queryColleges();
@@ -61,8 +59,6 @@ class Controller extends CI_Controller {
     }
 
     public function getTimes() {
-
-        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         $getData = array(
             'interval' => $this->input->get('interval'),
