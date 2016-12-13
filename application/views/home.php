@@ -717,6 +717,11 @@ $defaultTab = 1;
                                 }
 
                             }
+
+                            for (var r = 0; r < slotsPicked.length; r++) {
+                                disableAllRelativeSlots(slotsPicked[r]);
+                            }
+
                         }else{
 
                             emptyTables();
