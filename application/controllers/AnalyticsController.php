@@ -51,10 +51,13 @@ class AnalyticsController extends CI_Controller
         );
 
 
-        if (date('l', strtotime($getData['date'])) != 'Sunday')
+        if (date('l', strtotime($getData['date'])) != 'Sunday') {
             $times_today = $this->analytics->getTimes($getData['date'], $getData['interval'], $getData['start_time'], $getData['end_time'], false);
+            array_pop($times_today);
+        }
         else
             $times_today = null;
+
 
 
         foreach ($times_today as $time)
@@ -64,6 +67,7 @@ class AnalyticsController extends CI_Controller
 
         foreach ($times_today as $time)
             $data['times_today_DISPLAY'][] = date("h:i A", $time);
+
 
 
         return $data;
