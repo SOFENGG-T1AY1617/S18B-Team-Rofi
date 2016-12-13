@@ -32,7 +32,6 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
-        $data['email_extensions'] = $this->student->queryEmailExtensions();
 
         $data['tab'] = 1; // set to first tab on open
 
@@ -48,7 +47,15 @@ class Controller extends CI_Controller {
 
         $data = $this->student->queryBusinessRulesAtRoomID($getData['roomid']);
 
-        echo json_encode($data);
+        $result = array(
+            'interval' => intval($data[0]->interval),
+            'start_time' => $data[0]->start_time,
+            'end_time' => $data[0]->end_time,
+            'departmentid' => $data[0]->departmentid,
+            'slotlimit' => intval($data[0]->limit)
+        );
+
+        echo json_encode($result);
     }
 
     public function getTimes() {
@@ -57,30 +64,24 @@ class Controller extends CI_Controller {
 
         $getData = array(
             'interval' => $this->input->get('interval'),
+            'starttime' => $this->input->get('start_time'),
+            'endtime' => $this->input->get('end_time'),
+            'date' => $this->input->get('date')
         );
 
-        $currentHour = date("H");
-        $currentMinute = date("i");
+        if (date('l', strtotime($getData['date'])) != 'Sunday')
+            $times = $this->student->getTimes($getData['date'], $getData['interval'], $getData['starttime'], $getData['endtime'], strcmp($getData['date'], date("Y-m-d")) == 0);
+        else
+            $times = null;
 
-        $times_today = $this->student->getTimes($currentHour, $currentMinute, $getData['interval'], $this->student->getMinimumHour(), $this->student->getMaximumHour(), false);
-        $times_tomorrow = $this->student->getTimes(null, $currentMinute, $getData['interval'], $this->student->getMinimumHour(), $this->student->getMaximumHour(), true);
+        $data['times'] = null;
+        $data['times_DISPLAY'] = null;
 
-        $data['times_today'] = null;
-        $data['times_tomorrow'] = null;
-        $data['times_today_DISPLAY'] = null;
-        $data['times_tomorrow_DISPLAY'] = null;
+        foreach ($times as $time)
+            $data['times'][] = date("H:i:s", $time);
 
-        foreach ($times_today as $time)
-            $data['times_today'][] = date("H:i:s", $time);
-
-        foreach ($times_tomorrow as $time)
-            $data['times_tomorrow'][] = date("H:i:s", $time);
-
-        foreach ($times_today as $time)
-            $data['times_today_DISPLAY'][] = date("h:i A", $time);
-
-        foreach ($times_tomorrow as $time)
-            $data['times_tomorrow_DISPLAY'][] = date("h:i A", $time);
+        foreach ($times as $time)
+            $data['times_DISPLAY'][] = date("h:i A", $time);
 
         echo json_encode($data);
 
@@ -111,20 +112,24 @@ class Controller extends CI_Controller {
 
         //$date = date("Y-m-d", strtotime($getData['date']));
         $date = $getData['date'];
-        $time = $getData['time'];
+
+        if (date('Y-m-d', strtotime($getData['date'])) == date("Y-m-d"))
+            $time = $getData['time'];
+        else
+            $time = "00:00:00";
 
         if($getData['roomid']==0)
             $data = array(
                 'computers' => $this->student->queryAllComputersAtBuildingID($getData['buildingid']),
                 'reservations' => $this->student->queryReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
-                'disabledslots' => $this->moderator->queryDisabledSlotsAtBuildingIDOnDateTime($getData['buildingid'], $date, $time),
+                'disabledslots' => $this->student->queryDisabledSlotsAtBuildingIDOnDateTime($getData['buildingid'], $date, $time),
                 'date' => $date,
             );
         else
             $data = array(
                 'computers' => $this->student->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']),
                 'reservations' => $this->student->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
-                'disabledslots' => $this->moderator->queryDisabledSlotsAtRoomIDOnDateTime($getData['roomid'], $date, $time),
+                'disabledslots' => $this->student->queryDisabledSlotsAtRoomIDOnDateTime($getData['roomid'], $date, $time),
                 'date' => $date,
             );
         /*$data = array(

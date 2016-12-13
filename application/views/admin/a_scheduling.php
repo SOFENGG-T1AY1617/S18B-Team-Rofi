@@ -11,7 +11,6 @@ include 'a_navbar.php';
 
 <link href="<?=base_url()?>assets/css/admin_reservation_system_style.css" rel="stylesheet">
 
-<script src="<?=base_url()?>assets/js/toastr.min.js"></script>
 <script src="<?=base_url()?>assets/js/floatThread.js"></script>
 
 <style>
@@ -21,25 +20,22 @@ include 'a_navbar.php';
 </style>
 
 <script>
+    var allSlotsDisplayed = []; // for enabling and disabling all slots
     var slotsPicked = [];
-    var slotsDisabled = []; // for GUI
     var computers = [];
     var reservations = [];
 
-    var disabledslots = []; // for backend
+    var disabledSlots = []; // for backend
 
     var request;
     var dateToday = "<?=date("Y-m-d")?>";
     var dateSelected = dateToday;
-    var interval = 0;
     var currentDeptID = 0;
 
     var currentTime = "<?=date("H:m:s"); ?>";
 
-    var times_today;
-    var times_tomorrow;
-    var times_today_DISPLAY;
-    var times_tomorrow_DISPLAY;
+    var times;
+    var times_DISPLAY;
 
     $(document).ready(function() {
 
@@ -89,7 +85,8 @@ include 'a_navbar.php';
                 $("#text-date").text("<?=date('F d, Y', strtotime('tomorrow'))?>");
             }
 
-            updateTimesHeader(date_selected == "today");
+            updateDisplayTimeInModal();
+            updateTimesHeader();
 
             if($("#form_building").val()!=null){
                 selectRoom($("#form_room").val());
@@ -98,26 +95,198 @@ include 'a_navbar.php';
         });
 
         $("#enable-btn").click(function () {
-            enableSelectedSlots();
+            enableSlots(slotsPicked);
         });
 
         $("#disable-btn").click(function () {
-            disableSelectedSlots();
-        });
+            var hour = $("#endHour").val();
+            var minute = $("#endMinute").val();
 
-        $("#toggle-btn").click(function () {
-            toggleSelectedSlots();
+            disableSlots(slotsPicked, hour, minute);
         });
 
         $("#enableAll-btn").click(function () {
-            enableAllSlotsInRoom();
+            enableSlots(allSlotsDisplayed);
         });
 
         $("#disableAll-btn").click(function () {
-            disableAllSlotsInRoom();
+            var hour = $("#endHourAll").val();
+            var minute = $("#endMinuteAll").val();
+
+            disableSlots(allSlotsDisplayed, hour, minute);
         });
 
+        updateDisplayTimeInModal();
+
     });
+
+    function disableSlots (slotArray, hour, minute) {
+        if (slotArray.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else {
+            var chunk = 10;
+
+            var isLastChunk = false;
+
+            var slotsChunk = [];
+            var updatedSlots = 0;
+
+            $("#processing_message").css("visibility", "visible");
+            $("#tableHead").css("visibility", "hidden");
+            for (var i = 0; i < slotArray.length; i += chunk) {
+                slotsChunk = slotArray.slice(i, i + chunk);
+
+                $.ajax({
+                    url: '<?php echo base_url('admin/' . ADMIN_DISABLE_SLOTS) ?>',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        slots: slotsChunk,
+                        currentDate: dateSelected,
+                        hour: hour,
+                        minute: minute
+                    }
+                })
+                    .done(function (result) {
+
+                        var newIDs = result['newIDs'];
+                        var updatedIDs = result['updatedIDs'];
+
+                        isLastChunk = updatedIDs[ updatedIDs.length - 1 ] == slotArray[ slotArray.length - 1 ];
+
+                        for (var j = 0; j < updatedIDs.length; j++) {
+                            var currentSlot = $("[id = '" + updatedIDs[j] + "']");
+
+                            currentSlot.attr("id", currentSlot.attr("id") + "_" + newIDs[j]);
+
+                            var existIndex = slotArray.indexOf(updatedIDs[j]);
+
+                            slotArray[existIndex] = currentSlot.attr("id");
+
+                            disableSlot(currentSlot);
+
+                            updatedSlots++;
+
+                            console.log(slotArray);
+                        }
+
+                        if (isLastChunk) {
+                            $("#processing_message").css("visibility", "hidden");
+                            $("#tableHead").css("visibility", "visible");
+                            toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now disabled");
+                        }
+
+                        //updateSelectedSlots();
+
+                    })
+                    .fail(function () {
+
+                        toastr.error("Slots were not updated.", "Oops!");
+
+
+                        $("#processing_message").css("visibility", "hidden");
+                        $("#tableHead").css("visibility", "visible");
+                        console.log("fail");
+
+                    })
+                    .always(function () {
+
+                        console.log("complete");
+
+                    });
+            }
+
+        }
+
+
+    }
+
+    function enableSlots (slotArray) {
+        if (slotArray.length == 0) {
+
+            toastr.info("You must select slots before performing actions.", "Hold on!");
+
+        } else {
+            var chunk = 10;
+            var slotsChunk = [];
+            var updatedSlots = 0;
+
+            var isLastChunk = false;
+
+
+            $("#processing_message").css("visibility", "visible");
+            $("#tableHead").css("visibility", "hidden");
+            for (var i = 0; i < slotArray.length; i += chunk) {
+                slotsChunk = slotArray.slice(i, i + chunk);
+
+                console.log(slotsChunk);
+
+                $.ajax({
+                    url: '<?php echo base_url('admin/' . ADMIN_ENABLE_SLOTS) ?>',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        slots: slotsChunk
+                    }
+                })
+                    .done(function (result) {
+
+                        var updatedIDs = result['updatedIDs'];
+
+                        isLastChunk = updatedIDs[ updatedIDs.length - 1 ] == slotArray[ slotArray.length - 1 ];
+
+                        for (var j = 0; j < updatedIDs.length; j++) {
+                            var currentSlot = $("[id = '" + updatedIDs[j] + "']");
+
+                            var existIndex = slotArray.indexOf(updatedIDs[j]);
+
+                            var IDArray = updatedIDs[j].split('_');
+
+                            currentSlot.attr("id", IDArray[0] + "_" + IDArray[1] + "_" + IDArray[2] + "_" + IDArray[3]);
+
+                            enableSlot(currentSlot);
+
+                            slotArray[existIndex] = currentSlot.attr("id");
+
+                            updatedSlots++;
+                        }
+
+                        if (isLastChunk) {
+                            $("#processing_message").css("visibility", "hidden");
+                            $("#tableHead").css("visibility", "visible");
+                            toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now enabled");
+                        }
+
+                        //updateSelectedSlots();
+
+                    })
+                    .fail(function () {
+
+                        toastr.error("Slots were not updated.", "Oops!");
+
+                        $("#processing_message").css("visibility", "hidden");
+                        $("#tableHead").css("visibility", "visible");
+                        console.log("fail");
+
+                    })
+                    .always(function () {
+
+                        console.log("complete");
+
+                    });
+            }
+        }
+    }
+
+    function updateDisplayTimeInModal () {
+        var currentTimeContainer = $(".currentTimeContainer");
+
+        currentTimeContainer.empty();
+
+        currentTimeContainer.append(dateSelected);
+    }
 
     function highlightHorizontal (cell) {
         var cellID = cell.attr("id");
@@ -139,7 +308,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).addClass('slot-hover');
     }
@@ -164,7 +333,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).removeClass('slot-hover');
     }
@@ -181,61 +350,6 @@ include 'a_navbar.php';
             slot.removeClass('enabled');
 
         slot.addClass('disabled');
-        slotsDisabled.push(slot.attr('id'));
-    }
-
-    function enableSelectedSlots () {
-        console.log ("enable");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            if (($.inArray(slotsPicked[i], slotsDisabled)) > -1) {
-                var existIndex = slotsDisabled.indexOf(slotsPicked[i]);
-                slotsDisabled.splice(existIndex, 1);
-
-                enableSlot($(jQuerySelector));
-            }
-        }
-    }
-
-    function disableSelectedSlots () {
-        console.log ("disable");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            disableSlot($(jQuerySelector));
-        }
-    }
-
-    function toggleSelectedSlots () {
-        console.log ("toggle");
-
-        for (var i = 0; i < slotsPicked.length; i++) {
-            var jQuerySelector = "[id='" + slotsPicked[i] + "']";
-
-            if ($(jQuerySelector).hasClass('disabled')) {
-                if (($.inArray(slotsPicked[i], slotsDisabled)) > -1) {
-                    var existIndex = slotsDisabled.indexOf(slotsPicked[i]);
-                    slotsDisabled.splice(existIndex, 1);
-
-                    enableSlot($(jQuerySelector));
-                }
-            } else if ($(jQuerySelector).hasClass('enabled')) {
-                disableSlot($(jQuerySelector));
-            }
-        }
-    }
-
-    function enableAllSlotsInRoom () {
-        console.log ("enable-all");
-
-    }
-
-    function disableAllSlotsInRoom () {
-        console.log ("disable-all");
-
     }
 
     function selectSlot (slot) {
@@ -331,7 +445,7 @@ include 'a_navbar.php';
         var time1 = splittedCellID[1];
         var time2 = splittedCellID[2];
 
-        var jQuerySelector = "[id$='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
+        var jQuerySelector = "[id*='" + time1 + "_" + time2 +"']:not([id = '" + cellID + "'])";
 
         $(jQuerySelector).each(function () {
             selectSlotY($(this));
@@ -366,14 +480,14 @@ include 'a_navbar.php';
             $(cell).addClass('used');
     }
 
-    function updateTimesHeader(isToday) {
+    function updateTimesHeader() {
 
         var slotTable = $('#slotTable');
 
         slotTable.floatThead('destroy');
 
-        var currentTimeArray = (isToday ? times_today_DISPLAY : times_tomorrow_DISPLAY);
-        var currentTimeArrayForIDs = (isToday ? times_today : times_tomorrow);
+        var currentTimeArray = times_DISPLAY;
+        var currentTimeArrayForIDs = times;
 
         var timesRow = document.createElement("tr");
         var PCNumbersTH = document.createElement("th");
@@ -513,6 +627,8 @@ include 'a_navbar.php';
 
         if (buildingid!=""&&roomid != "") {
             var interval;
+            var start_time;
+            var end_time;
 
             console.log(buildingid+"-"+roomid);
 
@@ -525,48 +641,50 @@ include 'a_navbar.php';
                 }
             })
                 .done(function(result) {
-                    interval = result[0].interval;
+                    interval = result['interval'];
+                    start_time = result['start_time'];
+                    end_time = result['end_time'];
 
-                    if (currentDeptID != result[0].departmentid) {
-                        if (currentDeptID !=0)
-                            toastr.info("The slots have been cleared and limit has been changed.", "Department has changed!");
-                    }
+                    console.log("START TIME: " + start_time);
+                    console.log("END TIME: " + end_time);
 
-                    currentDeptID = result[0].departmentid;
+                    currentDeptID = result['departmentid'];
                 })
                 .fail(function() {
-                    console.log("fail");
+                    console.log("get business rules fail");
                 })
                 .always(function() {
                     console.log("complete");
                 })
                 .then(function () {
-                    console.log("PROMISE FULFILL");
+                    console.log("PROMISE FOR TIMES FULFILL");
 
                     return $.ajax({ // PROCEED TO PROMISE
-                        url: '<?php echo base_url('getTimes') ?>',
+                        url: '<?php echo base_url('admin/' . ADMIN_GET_TIMES) ?>',
                         type: 'GET',
                         dataType: 'json',
                         data: {
-                            interval: interval
+                            interval: interval,
+                            start_time: start_time,
+                            end_time: end_time,
+                            date: dateSelected
                         }
                     })
                 })
 
                 // FOR PROMISE
                 .done (function (result) {
-                    times_today = result['times_today'];
-                    times_tomorrow = result['times_tomorrow'];
-                    times_today_DISPLAY = result['times_today_DISPLAY'];
-                    times_tomorrow_DISPLAY = result['times_tomorrow_DISPLAY'];
+                    times = result['times'];
+                    times_DISPLAY = result['times_DISPLAY'];
 
-                    updateTimesHeader(dateSelected == dateToday);
+                    updateTimesHeader();
                 })
                 .fail (function () {
 
                 })
                 .then (function () {
                     // get computers
+                    console.log("PROMISE for COMPUTERS FULFILL");
 
                     return $.ajax({
                         url: '<?php echo base_url('admin/' . ADMIN_GET_COMPUTERS) ?>',
@@ -582,6 +700,13 @@ include 'a_navbar.php';
                 })
 
                 .done(function(result) {
+
+                    computers = [];
+                    reservations = [];
+                    disabledSlots = [];
+
+                    console.log(currentTime);
+
                     console.log(result['date']);
                     console.log(result);
                     console.log("done");
@@ -599,13 +724,13 @@ include 'a_navbar.php';
                     }
 
                     for(i=0;i<queriedDisabledSlots.length;i++){ // retrieve all reservations from result
-                        disabledslots[i]=queriedDisabledSlots[i];
+                        disabledSlots[i]=queriedDisabledSlots[i];
                     }
 
                     outputSlots();
                 })
                 .fail(function() {
-                    console.log("fail");
+                    console.log("failed to get computers");
                 })
                 .always(function() {
                     console.log("complete");
@@ -630,6 +755,7 @@ include 'a_navbar.php';
 
             var roomIDs = [];
             var roomNames = [];
+            allSlotsDisplayed = [];
 
             // index of ID corresponds with index of NAME
 
@@ -654,7 +780,7 @@ include 'a_navbar.php';
              * APPEND <tr> to <table> with ID = slotTable
              */
 
-            var currentTimeArray = (dateSelected == dateToday ? times_today : times_tomorrow);
+            var currentTimeArray = times;
 
             for (var i = 0; i < roomIDs.length; i++) {
                 var roomTitleRow = document.createElement("tr");
@@ -692,6 +818,8 @@ include 'a_navbar.php';
                             var taken = false;
                             var isDisabled = false;
 
+                            var corresDisabled = null;
+
                             for (var p = 0; p < reservations.length; p++) {
                                 if ((reservations[p].start_restime == currentTimeArray[n]) && (reservations[p].date == dateSelected) && (reservations[p].computerid == computers[k].computerid))
                                     taken = true;
@@ -700,6 +828,7 @@ include 'a_navbar.php';
                             for (var q = 0; q < disabledSlots.length; q++) {
                                 if ((disabledSlots[q].start_time == currentTimeArray[n]) && (disabledSlots[q].computerid == computers[k].computerid)) {
                                     isDisabled = true;
+                                    corresDisabled = disabledSlots[q];
                                     break;
                                 }
                             }
@@ -721,6 +850,7 @@ include 'a_navbar.php';
 
                                 if (isDisabled) {
                                     clickableSlot1.className = clickableSlot1.className + " disabled";
+                                    clickableSlot1.setAttribute("id", strID + "_" + corresDisabled.<?=COLUMN_DISABLED_SLOT_ID?>);
                                 } else {
                                     clickableSlot1.className = clickableSlot1.className + " enabled";
                                 }
@@ -732,6 +862,8 @@ include 'a_navbar.php';
                             if (($.inArray(clickableSlot1.getAttribute("id"), slotsPicked)) > -1) {
                                 clickableSlot1.className = clickableSlot1.className + " selected";
                             }
+
+                            allSlotsDisplayed.push(clickableSlot1.getAttribute("id"));
 
                             slotCell.appendChild(clickableSlot1);
 
@@ -747,6 +879,152 @@ include 'a_navbar.php';
         }
     }
 </script>
+
+<div id="disableModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Disabling Selected Slots</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label>Disable slots until: (Selected date: <span class = "currentTimeContainer"></span>)</label>
+                    <div class = "row">
+
+                        <div class = "col-md-2 col-md-offset-4">
+                            <div class="form-group">
+                                <small><label for="startHour">End Hour:</label></small>
+                                <select class="form-control" id="endHour">
+                                    <?php
+                                    for ($i = 0; $i < 24; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2">
+                            <div class = "form-group">
+                                <small><label for="startHour">End Min:</label></small>
+                                <select class="form-control" id="endMinute">
+                                    <?php
+                                    for ($i = 0; $i < 60; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id = "disable-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="disableAllModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Disabling All Slots</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label>Disable slots until: (Selected date: <span class = "currentTimeContainer"></span>)</label>
+                    <div class = "row">
+
+                        <div class = "col-md-2 col-md-offset-4">
+                            <div class="form-group">
+                                <small><label for="startHour">End Hour:</label></small>
+                                <select class="form-control" id="endHourAll">
+                                    <?php
+                                    for ($i = 0; $i < 24; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-2">
+                            <div class = "form-group">
+                                <small><label for="startHour">End Min:</label></small>
+                                <select class="form-control" id="endMinuteAll">
+                                    <?php
+                                    for ($i = 0; $i < 60; $i++) {
+                                        echo "<option value=" . $i .">" . $i . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id = "disableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="enableModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Enabling Selected Slots</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to enable the slots selected?
+            </div>
+            <div class="modal-footer">
+                <button id = "enable-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="enableAllModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Enabling All Slots</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to enable all slots located in the currently selected room?
+            </div>
+            <div class="modal-footer">
+                <button id = "enableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <div class = "container">
 
@@ -798,11 +1076,11 @@ include 'a_navbar.php';
                 <div class = "panel">
                     <div class = "panel-body">
                         <div class = "row opnSlotsBtn-container">
-                            <button id = "enableAll-btn" class = "btn btn-success btn-block">Enable all slots in room</button>
+                            <button id = "enableAll-all-modal-btn" class = "btn btn-success btn-block" data-toggle = "modal" data-target = "#enableAllModal">Enable all slots in room</button>
                         </div>
 
                         <div class = "row clsSlotsBtn-container">
-                            <button id = "disableAll-btn" class = "btn btn-danger btn-block">Disable all slots in room</button>
+                            <button id = "disable-all-modal-btn" class = "btn btn-danger btn-block" data-toggle = "modal" data-target = "#disableAllModal">Disable all slots in room</button>
                         </div>
                     </div>
                 </div>
@@ -824,13 +1102,17 @@ include 'a_navbar.php';
         <div class = "row">
             <div class = "col-md-10 col-md-offset-1">
                 <div class = "col-md-6 col-md-offset-6 text-right">
-                    <button id = "enable-btn" class = "btn btn-success">Enable slot(s)</button>
-                    <button id = "disable-btn" class = "btn btn-danger">Disable slot(s)</button>
-                    <button id = "toggle-btn" class = "btn btn-default">Toggle slot(s)</button>
+                    <button id = "enable-modal-btn" class = "btn btn-success" data-toggle = "modal" data-target = "#enableModal">Enable slot(s)</button>
+                    <button id = "disable-modal-btn" class = "btn btn-danger" data-toggle = "modal" data-target = "#disableModal">Disable slot(s)</button>
                 </div>
             </div>
         </div>
 
     </div>
 
+
+
+</div>
+<div class = "message parent" id = "processing_message">
+    Processing...
 </div>

@@ -37,6 +37,9 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_SIGN_IN:
                     $this->signIn();
                     break;
+                case MODERATOR_MAIN_VIEW:
+                    $this->mainView();
+                    break;
                 case MODERATOR_GET_TIMES:
                     $this->getTimes();
                     break;
@@ -74,7 +77,15 @@ class ModeratorController extends CI_Controller
 
         $data = $this->moderator->queryBusinessRulesByRoomID($getData['roomid']);
 
-        echo json_encode($data);
+        $result = array(
+            'interval' => intval($data[0]->interval),
+            'start_time' => $data[0]->start_time,
+            'end_time' => $data[0]->end_time,
+            'departmentid' => $data[0]->departmentid,
+            'slotlimit' => intval($data[0]->limit)
+        );
+
+        echo json_encode($result);
     }
 
     public function getTimes () {
@@ -82,21 +93,24 @@ class ModeratorController extends CI_Controller
 
         $getData = array(
             'interval' => $this->input->get('interval'),
+            'starttime' => $this->input->get('start_time'),
+            'endtime' => $this->input->get('end_time'),
+            'date' => $this->input->get('date')
         );
 
-        $currentHour = date("H");
-        $currentMinute = date("i");
+        if (date('l', strtotime($getData['date'])) != 'Sunday')
+            $times = $this->moderator->getTimes($getData['date'], $getData['interval'], $getData['starttime'], $getData['endtime'], strcmp($getData['date'], date("Y-m-d")) == 0);
+        else
+            $times = null;
 
-        $times_today = $this->moderator->getTimes($currentHour, $currentMinute, $getData['interval'], $this->admin->getMinimumHour(), $this->admin->getMaximumHour(), false);
+        $data['times'] = null;
+        $data['times_DISPLAY'] = null;
 
-        $data['times_today'] = null;
-        $data['times_today_DISPLAY'] = null;
+        foreach ($times as $time)
+            $data['times'][] = date("H:i:s", $time);
 
-        foreach ($times_today as $time)
-            $data['times_today'][] = date("H:i:s", $time);
-
-        foreach ($times_today as $time)
-            $data['times_today_DISPLAY'][] = date("h:i A", $time);
+        foreach ($times as $time)
+            $data['times_DISPLAY'][] = date("h:i A", $time);
 
         echo json_encode($data);
     }
@@ -136,7 +150,11 @@ class ModeratorController extends CI_Controller
         );
 
         $date = $getData['date'];
-        $time = $getData['time'];
+
+        if (date('Y-m-d', strtotime($getData['date'])) == date("Y-m-d"))
+            $time = $getData['time'];
+        else
+            $time = "00:00:00";
 
         $data = array(
             'computers' => $this->moderator->queryComputersAtRoomID($getData['roomid']),
@@ -258,9 +276,17 @@ class ModeratorController extends CI_Controller
     }
 
     public function initModerator() {
+        redirect('moderator/' . MODERATOR_MAIN_VIEW);
+    }
+
+    public function mainView() {
         $data['roomid'] = $this->moderator->queryRoomIDwithModeratorID($_SESSION['moderatorid']);
 
-        $this->load->view('moderator/m_header');
-        $this->load->view('moderator/home', $data);
+        if ($data['roomid'] != 0) {
+            $this->load->view('moderator/m_header');
+            $this->load->view('moderator/home', $data);
+        } else {
+            $this->signInView("No rooms are assigned to the moderator logging-in.");
+        }
     }
 }

@@ -14,48 +14,58 @@ class Admin_Model extends CI_Model
         $this->load->database();
     }
 
-    public function getMinuteInterval() {
-        return 15; // TODO retrieve from Settings
-    }
-
-    public function getMaxNumberOfSlots() {
-        return 4; // TODO retrieve from Settings
-    }
-
-    public function getMinimumHour() { // TODO parameter must be department ID
-        return 6; // TODO retrieve value depending on department
-    }
-
-    public function getMaximumHour() { // TODO parameter must be department ID
-        return 20; // TODO retrieve value depending on department
-    }
-
-    public function getTimes($first_hour, $first_minute, $minute_interval, $minimum_hour, $maximum_hour, $tomorrow) {
+    public function getTimes($date, $minute_interval, $minimum_time, $maximum_time, $adaptToCurrentTime) {
         $times = array();
         $startMinute = 0;
-        $daysForward = 0;
 
-        if ($first_hour < $minimum_hour || $first_hour == null) // set to minimum_hour if first_hour is below the minimum_hour or if first_hour is null
-            $first_hour = $minimum_hour;
+        $dateArray = explode("-", $date); // Y-m-d
 
-        if (!$tomorrow && $first_hour != $minimum_hour)
-            $startMinute = intval($first_minute / $minute_interval) * $minute_interval; // calculate first_minute to suit current time
-        else
-            $daysForward++; // plus 1 to day if tomorrow is true
+        $minTimeArray = explode(":", $minimum_time);
+        $maxTimeArray = explode(":", $maximum_time);
 
-        for ($hour = $first_hour; $hour < $maximum_hour ; $hour++) {
+        $minimum_hour = null;
+        $minimum_minute = null;
+        $maximum_hour = null;
+        $maximum_minute = null;
+
+        if ($adaptToCurrentTime) {
+
+            $minimum_hour = intval(date("H"));
+            $minimum_minute = intval(date("i"));
+
+        } else {
+
+            $minimum_hour = $minTimeArray[0];
+            $minimum_minute = $minTimeArray[1];
+
+        }
+
+        $maximum_hour = $maxTimeArray[0];
+        $maximum_minute = $maxTimeArray[1];
+
+        if ($adaptToCurrentTime)
+            $startMinute = intval($minimum_minute / $minute_interval) * $minute_interval; // calculate first_minute to suit current time
+
+        for ($hour = $minimum_hour; $hour <= $maximum_hour; $hour++) {
             for ($minute = $startMinute; $minute < 60; $minute += $minute_interval) {
 
-                $time = mktime($hour, $minute, 0, date("m"), date("d") + $daysForward, date("Y"));
+                if ($hour == $maximum_hour) {
 
-                $times[] = $time;
+                    if ($minute <= $maximum_minute)
+                        $times[] = mktime($hour, $minute, 0, $dateArray[1], $dateArray[2], $dateArray[0]);
+
+                } else {
+
+                    $times[] = mktime($hour, $minute, 0, $dateArray[1], $dateArray[2], $dateArray[0]);
+
+                }
 
             }
 
             $startMinute = 0; // reset to 0 to suit the succeeding hours
         }
 
-        $times[] = mktime($hour, 0, 0, date("m"), date("d") + $daysForward, date("Y"));
+        $times[] = mktime($hour, 0, 0, $dateArray[1], $dateArray[2], $dateArray[0]);
 
         return $times;
     }
@@ -182,7 +192,7 @@ class Admin_Model extends CI_Model
              FROM computers NATURAL JOIN 
               (SELECT roomid, name
                FROM rooms
-               WHERE buildingid = ? AND department_id = ?) t1";
+               WHERE buildingid = ? AND departmentid = ?) t1";
         return $this->db->query($sql, array($id, $did))->result();
     }
 
@@ -313,7 +323,7 @@ class Admin_Model extends CI_Model
         $sql = "SELECT *
                 FROM (SELECT * 
                       FROM disabled_slots
-                      WHERE ? + ' ' + ? < date_time_duration) d NATURAL JOIN 
+                      WHERE (STR_TO_DATE(?, '%Y-%m-%d') = CAST(date_time_duration AS DATE)) AND (STR_TO_DATE(?, '%H:%i:%s') <= CAST(date_time_duration AS TIME))) d NATURAL JOIN 
                       computers NATURAL JOIN 
                       (SELECT roomid
                       FROM rooms
@@ -332,7 +342,7 @@ class Admin_Model extends CI_Model
                   computers NATURAL JOIN 
                   (SELECT * 
                       FROM disabled_slots
-                      WHERE ? + ' ' + ? < date_time_duration) d";
+                      WHERE STR_TO_DATE(CONCAT(?, ' ', ?), '%Y-%m-%d %H:%i:%s') <= date_time_duration) d";
 
         return $this->db->query($sql, array($id, $date, $time))->result();
     }
@@ -814,10 +824,20 @@ class Admin_Model extends CI_Model
 
         return count($result)>=1;
     }
-    function isExistingTagModRoomByModID($modid) {
+    function isExistingTagModRoomByModID($modID) {
         $this->db->select('*');
         $this->db->from(TABLE_TAG_MOD_ROOMS);
-        $this->db->where(COLUMN_MODERATORID, $modid);
+        $this->db->where(COLUMN_MODERATORID, $modID);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return count($result)>=1;
+    }
+    function isExistingTagModRoomByModIDAndRoomID($modID,$roomID) {
+        $this->db->select('*');
+        $this->db->from(TABLE_TAG_MOD_ROOMS);
+        $this->db->where(COLUMN_MODERATORID, $modID);
+        $this->db->where(COLUMN_ROOMID, $roomID);
         $query = $this->db->get();
         $result = $query->result();
 
@@ -848,12 +868,49 @@ class Admin_Model extends CI_Model
         // Delete room
         $this->db->where(COLUMN_MODERATORID, $id);
         $this->db->delete(TABLE_TAG_MOD_ROOMS);
+
         //$this->db->delete(TABLE_MODERATORS);
     }
 
     function queryTakenRoomsWithDepartmentID($id){
         $sql = "SELECT r.name, r.roomid FROM rooms r WHERE r.departmentid = ? AND (r.roomid IN (SELECT `roomid` FROM tag_mod_rooms))";
         return $this->db->query($sql, array($id))->result();
+    }
+
+    function isDisabledSlot ($computerid, $start, $end) {
+
+        $this->db->select('*');
+        $this->db->from(TABLE_DISABLED_SLOTS);
+        $this->db->where(COLUMN_COMPUTERID, $computerid);
+        $this->db->where(COLUMN_START_TIME, $start);
+        $this->db->where(COLUMN_END_TIME, $end);
+        $query = $this->db->get(TABLE_DISABLED_SLOTS);
+        $result = $query->result();
+
+        return count($result)>=1;
+
+    }
+
+    function disableSlot ($slot, $date, $duration) {
+        $slotArray = explode('_', $slot);
+
+        $disableSlotData = array(
+            COLUMN_COMPUTERID => $slotArray[0],
+            COLUMN_START_TIME => $slotArray[2],
+            COLUMN_END_TIME => $slotArray[3],
+            COLUMN_DATE_TIME_DURATION => $date . " " . $duration
+        );
+
+        $this->db->insert(TABLE_DISABLED_SLOTS, $disableSlotData);
+
+        return $this->db->insert_id();
+    }
+
+    function enableSlotWithDisabledSlotID ($disabledSlotID) {
+
+        $this->db->where(COLUMN_DISABLED_SLOT_ID, $disabledSlotID);
+        $this->db->delete(TABLE_DISABLED_SLOTS);
+
     }
 
 }

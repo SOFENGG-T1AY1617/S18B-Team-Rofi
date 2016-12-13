@@ -2,7 +2,7 @@
 <body>
 <form class="col-md-4 col-md-offset-4" method="post" action="<?=base_url('moderator/' . MODERATOR_SIGN_IN)?>">
 
-    <img src="http://tinypic.com/evb0ut.jpg">
+    <center><img src="http://tinypic.com/evb0ut.jpg"></center>
 
     <span id="error-message"><?=$errorMessage?></span>
 

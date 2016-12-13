@@ -79,21 +79,27 @@
 
         var strMin = "";
 
-        for(var m=0; m<60; m++){
+        for(var m=0; m<60; m+=5){
+            var minute = m;
             if (m < 10)
-                m  = "0" + m;
-            strMin += "<option value ='"+m+"'>"+m+"</option>";
+                minute  = "0" + m;
+
+            strMin += "<option value ='"+minute+"'>"+minute+"</option>";
         }
 
         cells0[1].innerHTML = "<div class=\"clearfix\">"+
-            "<div class=\"col-md-2\"><label>START : </label></div>"+
-            "<div class=\"input-group col-md-4\">"+
+            "<div class = \"row\">" +
+            "<div class=\"col-md-3\"><label>START : </label></div>"+
+            "<div class=\"form-group col-md-4\">"+
             "<div class=\"col-md-6 selTime\"><select id=\"startTimeHourInput\"  class='form-control'>" + "<option value=\""+startTimeHour+ "\" selected hidden>" + startTimeHour + "</option>"+ strHour +
             "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"startTimeMinuteInput\" class='form-control'>"+ "<option value= \"" + startTimeMinute + "\"selected hidden>" + startTimeMinute + "</option>" + strMin + "</select></div></div>" +
-            "<div class=\"col-md-2\"><label>END : </label></div>"+
-            "<div class=\"input-group col-md-4\">"+
+            "</div>" +
+            "<div class = \"row\">" +
+            "<div class=\"col-md-3\"><label>END : </label></div>"+
+            "<div class=\"form-group col-md-4\">"+
             "<div class=\"col-md-6 selTime\"><select id=\"endTimeHourInput\"  class='form-control'>" + "<option value=\"" + endTimeHour + "\" selected hidden>" + endTimeHour +"</option>"+ strHour +
-            "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"endTimeMinuteInput\" class='form-control'>"+ "<option value=\"" + endTimeMinute + "\" selected hidden>" + endTimeMinute + "</option>" + strMin + "</select></div></div>";
+            "</select></div>" + "<div class=\"col-md-6 selTime\"><select id=\"endTimeMinuteInput\" class='form-control'>"+ "<option value=\"" + endTimeMinute + "\" selected hidden>" + endTimeMinute + "</option>" + strMin + "</select></div></div>" +
+            "</div>";
 
         var cells1 = rows[1].cells;
         var curIDTI = $(cells1[1]).attr("id");

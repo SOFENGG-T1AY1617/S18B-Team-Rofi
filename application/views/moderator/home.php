@@ -26,8 +26,8 @@
     var currentDeptID = 0;
     var roomName;
 
-    var times_today;
-    var times_today_DISPLAY;
+    var times;
+    var times_DISPLAY;
 
     $(document).ready(function() {
 
@@ -389,8 +389,7 @@
 
         slotTable.floatThead('destroy');
 
-        var currentTimeArray = times_today_DISPLAY;
-        var currentTimeArrayForIDs = times_today;
+        var currentTimeArray = times_DISPLAY;
 
         var timesRow = document.createElement("tr");
         var PCNumbersTH = document.createElement("th");
@@ -405,7 +404,6 @@
 
             th.appendChild(document.createTextNode(currentTimeArray[i]));
 
-            th.setAttribute("id", "TIME_" + currentTimeArrayForIDs[n++] + "_" + currentTimeArrayForIDs[n]);
             timesRow.appendChild(th);
         }
 
@@ -461,6 +459,8 @@
 
         if (buildingid!=""&&roomid != "") {
             var interval;
+            var start_time;
+            var end_time;
 
             console.log(buildingid+"-"+roomid);
 
@@ -473,14 +473,11 @@
                 }
             })
                 .done(function(result) {
-                    interval = result[0].interval;
+                    interval = result['interval'];
+                    start_time = result['start_time'];
+                    end_time = result['end_time'];
 
-                    if (currentDeptID != result[0].departmentid) {
-                        if (currentDeptID !=0)
-                            toastr.info("The slots have been cleared and limit has been changed.", "Department has changed!");
-                    }
-
-                    currentDeptID = result[0].departmentid;
+                    currentDeptID = result['departmentid'];
                 })
                 .fail(function() {
                     console.log("fail");
@@ -496,15 +493,18 @@
                         type: 'GET',
                         dataType: 'json',
                         data: {
-                            interval: interval
+                            interval: interval,
+                            start_time: start_time,
+                            end_time: end_time,
+                            date: dateSelected
                         }
                     })
                 })
 
                 // FOR PROMISE
                 .done (function (result) {
-                    times_today = result['times_today'];
-                    times_today_DISPLAY = result['times_today_DISPLAY'];
+                    times = result['times'];
+                    times_DISPLAY = result['times_DISPLAY'];
 
                     updateTimesHeader();
                 })
@@ -527,6 +527,13 @@
                 })
 
                 .done(function(result) {
+
+                    computers = [];
+                    reservations = [];
+                    disabledSlots = [];
+
+                    console.log(currentTime);
+
                     console.log(result['date']);
                     console.log(result);
                     console.log("done");
@@ -601,7 +608,7 @@
              * APPEND <tr> to <table> with ID = slotTable
              */
 
-            var currentTimeArray = (dateSelected == dateToday ? times_today : times_tomorrow);
+            var currentTimeArray = times;
 
             for (var i = 0; i < roomIDs.length; i++) {
                 var roomTitleRow = document.createElement("tr");
@@ -784,7 +791,7 @@ include 'm_navbar.php';
                 <div class = "col-md-8 col-md-offset-1">
                     <div class = "panel panel-default">
                         <div class = "panel-heading">
-                            Slots Currently Selected:
+                            Reservations Currently Selected:
 
                         </div>
                         <div class = "panel-body">
@@ -795,9 +802,11 @@ include 'm_navbar.php';
                 </div>
 
                 <div id = "mod_controls_container" class = "col-md-2">
-                    <button id = "presentButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#presentMessage">Mark Present</button>
-                    <button id = "verifyButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#verifyMessage">Verify Slots</button>
-                    <button id = "removeButton" class = "btn btn-danger col-md-12" data-toggle="modal" data-target="#removeMessage">Remove</button>
+                    <div class = "pull-right">
+                        <button id = "presentButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#presentMessage">Mark Present</button>
+                        <button id = "verifyButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#verifyMessage">Verify Slots</button>
+                        <button id = "removeButton" class = "btn btn-danger col-md-12" data-toggle="modal" data-target="#removeMessage">Remove</button>
+                    </div>
                 </div>
 
             </div>
