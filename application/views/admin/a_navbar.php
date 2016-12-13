@@ -47,7 +47,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Admin <?=$_SESSION['first_name']?>
+                        Admin <?=$_SESSION['admin_first_name']?>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">

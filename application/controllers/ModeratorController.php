@@ -29,7 +29,7 @@ class ModeratorController extends CI_Controller
 
     public function loadAction($action) {
 
-        if(!isset($_SESSION['email']) && $action != MODERATOR_SIGN_IN) {
+        if(!isset($_SESSION['mod_email']) && $action != MODERATOR_SIGN_IN) {
             $this->signInView("");
         } else {
             switch ($action) {
@@ -222,13 +222,23 @@ class ModeratorController extends CI_Controller
 
         if ($this->moderator->isValidUser($e,$p)) {
             $moderator = $this->moderator->queryModeratorAccount($e);
-            $this->session->set_userdata($moderator);
+            //$this->session->set_userdata($moderator);
+            $this->setSession($moderator);
             $this->index();
         }
         else {
             $errorMessage = "Invalid email or password.";
             $this->signInView($errorMessage);
         }
+    }
+    
+    private function setSession($mod) {
+        $_SESSION['moderatorid'] = $mod['moderatorid'];
+        $_SESSION['mod_email'] = $mod['email'];
+        $_SESSION['mod_password'] = $mod['password'];
+        $_SESSION['mod_last_name'] = $mod['last_name'];
+        $_SESSION['mod_first_name'] = $mod['first_name'];
+        $_SESSION['mod_departmentid'] = $mod['mod_departmentid'];
     }
 
     public function signOut() {
