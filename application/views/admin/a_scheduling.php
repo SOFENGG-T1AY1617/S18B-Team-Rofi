@@ -919,7 +919,7 @@ include 'a_navbar.php';
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Disabling Selected Slots</h4>
+                <h4 class="modal-title">Disabling All Slots</h4>
             </div>
             <div class="modal-body">
                 <form>
@@ -957,6 +957,48 @@ include 'a_navbar.php';
             </div>
             <div class="modal-footer">
                 <button id = "disableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="enableModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Disabling Selected Slots</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to enable the slots selected?
+            </div>
+            <div class="modal-footer">
+                <button id = "enable-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="enableAllModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Enabling All Slots</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to enable all slots located in the currently selected room?
+            </div>
+            <div class="modal-footer">
+                <button id = "enableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -1014,7 +1056,7 @@ include 'a_navbar.php';
                 <div class = "panel">
                     <div class = "panel-body">
                         <div class = "row opnSlotsBtn-container">
-                            <button id = "enableAll-btn" class = "btn btn-success btn-block">Enable all slots in room</button>
+                            <button id = "enableAll-all-modal-btn" class = "btn btn-success btn-block" data-toggle = "modal" data-target = "#enableAllModal">Enable all slots in room</button>
                         </div>
 
                         <div class = "row clsSlotsBtn-container">
@@ -1040,7 +1082,7 @@ include 'a_navbar.php';
         <div class = "row">
             <div class = "col-md-10 col-md-offset-1">
                 <div class = "col-md-6 col-md-offset-6 text-right">
-                    <button id = "enable-btn" class = "btn btn-success">Enable slot(s)</button>
+                    <button id = "enable-modal-btn" class = "btn btn-success" data-toggle = "modal" data-target = "#enableModal">Enable slot(s)</button>
                     <button id = "disable-modal-btn" class = "btn btn-danger" data-toggle = "modal" data-target = "#disableModal">Disable slot(s)</button>
                 </div>
             </div>
