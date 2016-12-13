@@ -187,3 +187,17 @@ div.legend.taken{
 .used:hover {
     background-color: #cccccc;
 }
+
+.message.parent{
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    height: 100%;
+    width: 100%;
+    background-color: whitesmoke;
+    visibility: hidden;
+    z-index: 1;
+    font-size: 300%;
+}
+
+

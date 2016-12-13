@@ -133,6 +133,8 @@ include 'a_navbar.php';
             var slotsChunk = [];
             var updatedSlots = 0;
 
+            $("#processing_message").css("visibility", "visible");
+            $("#tableHead").css("visibility", "hidden");
             for (var i = 0; i < slotArray.length; i += chunk) {
                 slotsChunk = slotArray.slice(i, i + chunk);
 
@@ -170,8 +172,11 @@ include 'a_navbar.php';
                             console.log(slotArray);
                         }
 
-                        if (isLastChunk) // TODO : CLOSE THE LOADING SCREEN AFTER THIS IF STATEMENT
+                        if (isLastChunk) {
+                            $("#processing_message").css("visibility", "hidden");
+                            $("#tableHead").css("visibility", "visible");
                             toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now disabled");
+                        }
 
                         //updateSelectedSlots();
 
@@ -180,6 +185,9 @@ include 'a_navbar.php';
 
                         toastr.error("Slots were not updated.", "Oops!");
 
+
+                        $("#processing_message").css("visibility", "hidden");
+                        $("#tableHead").css("visibility", "visible");
                         console.log("fail");
 
                     })
@@ -192,7 +200,6 @@ include 'a_navbar.php';
 
         }
 
-        // TODO I DUNNO WHERE TO PUT THE LOADING PERO THIS THE FUNCTION, SAME THING WITH ENABLE DOWN BELOW
 
     }
 
@@ -208,6 +215,9 @@ include 'a_navbar.php';
 
             var isLastChunk = false;
 
+
+            $("#processing_message").css("visibility", "visible");
+            $("#tableHead").css("visibility", "hidden");
             for (var i = 0; i < slotArray.length; i += chunk) {
                 slotsChunk = slotArray.slice(i, i + chunk);
 
@@ -243,8 +253,11 @@ include 'a_navbar.php';
                             updatedSlots++;
                         }
 
-                        if (isLastChunk) // TODO : CLOSE THE LOADING SCREEN AFTER THIS IF STATEMENT
+                        if (isLastChunk) {
+                            $("#processing_message").css("visibility", "hidden");
+                            $("#tableHead").css("visibility", "visible");
                             toastr.success(updatedSlots + " slots were updated!", updatedSlots + " slot/s is/are now enabled");
+                        }
 
                         //updateSelectedSlots();
 
@@ -253,6 +266,8 @@ include 'a_navbar.php';
 
                         toastr.error("Slots were not updated.", "Oops!");
 
+                        $("#processing_message").css("visibility", "hidden");
+                        $("#tableHead").css("visibility", "visible");
                         console.log("fail");
 
                     })
@@ -1095,4 +1110,9 @@ include 'a_navbar.php';
 
     </div>
 
+
+
+</div>
+<div class = "message parent" id = "processing_message">
+    Processing...
 </div>
