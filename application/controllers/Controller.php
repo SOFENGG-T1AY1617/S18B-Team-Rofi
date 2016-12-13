@@ -69,7 +69,10 @@ class Controller extends CI_Controller {
             'date' => $this->input->get('date')
         );
 
-        $times = $this->student->getTimes($getData['date'], $getData['interval'], $getData['starttime'], $getData['endtime'], strcmp($getData['date'], date("Y-m-d")) == 0);
+        if (date('l', strtotime($getData['date'])) != 'Sunday')
+            $times = $this->student->getTimes($getData['date'], $getData['interval'], $getData['starttime'], $getData['endtime'], strcmp($getData['date'], date("Y-m-d")) == 0);
+        else
+            $times = null;
 
         $data['times'] = null;
         $data['times_DISPLAY'] = null;

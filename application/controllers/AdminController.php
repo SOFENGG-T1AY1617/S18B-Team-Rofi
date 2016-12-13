@@ -237,6 +237,8 @@ class AdminController extends CI_Controller
     public function getTimes () {
         date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
+        $times = null;
+
         $getData = array(
             'interval' => $this->input->get('interval'),
             'starttime' => $this->input->get('start_time'),
@@ -244,7 +246,10 @@ class AdminController extends CI_Controller
             'date' => $this->input->get('date')
         );
 
-        $times = $this->admin->getTimes($getData['date'], $getData['interval'], $getData['starttime'], $getData['endtime'], strcmp($getData['date'], date("Y-m-d")) == 0);
+        if (date('l', strtotime($getData['date'])) != 'Sunday')
+            $times = $this->admin->getTimes($getData['date'], $getData['interval'], $getData['starttime'], $getData['endtime'], strcmp($getData['date'], date("Y-m-d")) == 0);
+        else
+            $times = null;
 
         $data['times'] = null;
         $data['times_DISPLAY'] = null;
