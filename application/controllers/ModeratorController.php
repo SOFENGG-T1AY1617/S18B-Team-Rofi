@@ -37,6 +37,9 @@ class ModeratorController extends CI_Controller
                 case MODERATOR_SIGN_IN:
                     $this->signIn();
                     break;
+                case MODERATOR_MAIN_VIEW:
+                    $this->mainView();
+                    break;
                 case MODERATOR_GET_TIMES:
                     $this->getTimes();
                     break;
@@ -263,6 +266,10 @@ class ModeratorController extends CI_Controller
     }
 
     public function initModerator() {
+        redirect('moderator/' . MODERATOR_MAIN_VIEW);
+    }
+
+    public function mainView() {
         $data['roomid'] = $this->moderator->queryRoomIDwithModeratorID($_SESSION['moderatorid']);
 
         $this->load->view('moderator/m_header');

@@ -30,8 +30,7 @@ class AdminController extends CI_Controller
     }
 
     private function initAdmin() {
-        $this->reportsView();
-
+        redirect('admin/' . ADMIN_REPORTS);
     }
 
     public function loadAction($action) {
