@@ -41,19 +41,20 @@ class AnalyticsController extends CI_Controller
 
         date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
+        $temp= $this->analytics->queryBusinessRulesByRoomID($roomid);
+
         $getData = array(
-            'interval' => intval($this->analytics->queryIntervalsAtRoomID($roomid)['interval'])
+            'interval' => intval($temp[0]->interval),
+            'start_time' => $temp[0]->start_time,
+            'end_time' => $temp[0]->end_time,
+            'date' => date('Y-m-d')
         );
 
 
-
-        $currentMinute = date("i");
-
-        $times_today = $this->analytics->getTimes(null, $currentMinute, $getData['interval'], $this->analytics->getMinimumHour(), $this->analytics->getMaximumHour(), false);
-
-        $data['times_today'] = null;
-
-        $data['times_today_DISPLAY'] = null;
+        if (date('l', strtotime($getData['date'])) != 'Sunday')
+            $times_today = $this->analytics->getTimes($getData['date'], $getData['interval'], $getData['start_time'], $getData['end_time'], false);
+        else
+            $times_today = null;
 
 
         foreach ($times_today as $time)
