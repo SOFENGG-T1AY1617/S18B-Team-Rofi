@@ -32,7 +32,6 @@ class Controller extends CI_Controller {
         $data['buildings'] = $this->student->queryNonEmptyBuildings();
         $data['colleges'] = $this->student->queryColleges();
         $data['types'] = $this->student->queryTypes();
-        $data['email_extensions'] = $this->student->queryEmailExtensions();
 
         $data['tab'] = 1; // set to first tab on open
 
@@ -48,7 +47,15 @@ class Controller extends CI_Controller {
 
         $data = $this->student->queryBusinessRulesAtRoomID($getData['roomid']);
 
-        echo json_encode($data);
+        $result = array(
+            'interval' => intval($data[0]->interval),
+            'start_time' => $data[0]->start_time,
+            'end_time' => $data[0]->end_time,
+            'departmentid' => $data[0]->departmentid,
+            'slotlimit' => intval($data[0]->limit)
+        );
+
+        echo json_encode($result);
     }
 
     public function getTimes() {
@@ -57,30 +64,21 @@ class Controller extends CI_Controller {
 
         $getData = array(
             'interval' => $this->input->get('interval'),
+            'starttime' => $this->input->get('start_time'),
+            'endtime' => $this->input->get('end_time'),
+            'date' => $this->input->get('date')
         );
 
-        $currentHour = date("H");
-        $currentMinute = date("i");
+        $times = $this->student->getTimes($getData['date'], $getData['interval'], $getData['starttime'], $getData['endtime'], strcmp($getData['date'], date("Y-m-d")) == 0);
 
-        $times_today = $this->student->getTimes($currentHour, $currentMinute, $getData['interval'], $this->student->getMinimumHour(), $this->student->getMaximumHour(), false);
-        $times_tomorrow = $this->student->getTimes(null, $currentMinute, $getData['interval'], $this->student->getMinimumHour(), $this->student->getMaximumHour(), true);
+        $data['times'] = null;
+        $data['times_DISPLAY'] = null;
 
-        $data['times_today'] = null;
-        $data['times_tomorrow'] = null;
-        $data['times_today_DISPLAY'] = null;
-        $data['times_tomorrow_DISPLAY'] = null;
+        foreach ($times as $time)
+            $data['times'][] = date("H:i:s", $time);
 
-        foreach ($times_today as $time)
-            $data['times_today'][] = date("H:i:s", $time);
-
-        foreach ($times_tomorrow as $time)
-            $data['times_tomorrow'][] = date("H:i:s", $time);
-
-        foreach ($times_today as $time)
-            $data['times_today_DISPLAY'][] = date("h:i A", $time);
-
-        foreach ($times_tomorrow as $time)
-            $data['times_tomorrow_DISPLAY'][] = date("h:i A", $time);
+        foreach ($times as $time)
+            $data['times_DISPLAY'][] = date("h:i A", $time);
 
         echo json_encode($data);
 

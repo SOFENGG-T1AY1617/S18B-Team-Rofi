@@ -95,10 +95,13 @@ $defaultTab = 1;
 
                 var currentTime = "<?=date("H:m:s"); ?>";
 
-                var times_today;
+                /*var times_today;
                 var times_tomorrow;
                 var times_today_DISPLAY;
-                var times_tomorrow_DISPLAY;
+                var times_tomorrow_DISPLAY;*/
+
+                var times;
+                var times_DISPLAY;
 
                 $(document).ready(function() {
 
@@ -267,13 +270,13 @@ $defaultTab = 1;
 
                 }
 
-                function updateTimesHeader(isToday) {
+                function updateTimesHeader() {
 
                     var slotTable = $('#slotTable');
 
                     slotTable.floatThead('destroy');
 
-                    var currentTimeArray = (isToday ? times_today_DISPLAY : times_tomorrow_DISPLAY);
+                    var currentTimeArray = times_DISPLAY;
 
                     var timesRow = document.createElement("tr");
                     var PCNumbersTH = document.createElement("th");
@@ -477,6 +480,8 @@ $defaultTab = 1;
 
                     if (buildingid!=""&&roomid != "") {
                         var interval;
+                        var start_time;
+                        var end_time;
 
                         console.log(buildingid+"-"+roomid);
 
@@ -489,16 +494,18 @@ $defaultTab = 1;
                             }
                         })
                             .done(function(result) {
-                                interval = result[0].interval;
+                                interval = result['interval'];
+                                start_time = result['start_time'];
+                                end_time = result['end_time'];
 
-                                if (currentDeptID != result[0].departmentid) {
+                                if (currentDeptID != result['departmentid']) {
                                     clearSelectedSlots();
-                                    setSlotLimit(result[0].limit);
+                                    setSlotLimit(result['slotlimit']);
                                     if (currentDeptID !=0)
                                         toastr.info("The slots have been cleared and limit has been changed.", "Department has changed!");
                                 }
 
-                                currentDeptID = result[0].departmentid;
+                                currentDeptID = result['departmentid'];
                             })
                             .fail(function() {
                                 console.log("fail");
@@ -507,28 +514,32 @@ $defaultTab = 1;
                                 console.log("complete");
                             })
                             .then(function () {
-                            console.log("PROMISE FULFILL");
+                            console.log("PROMISE FOR BUSINESS RULES FULFILL");
 
                             return $.ajax({ // PROCEED TO PROMISE
                                 url: '<?php echo base_url('getTimes') ?>',
                                 type: 'GET',
                                 dataType: 'json',
                                 data: {
-                                    interval: interval
+                                    interval: interval,
+                                    start_time: start_time,
+                                    end_time: end_time,
+                                    date: dateSelected
                                 }
                             })
                         })
 
                         // FOR PROMISE
                         .done (function (result) {
-                            times_today = result['times_today'];
-                            times_tomorrow = result['times_tomorrow'];
-                            times_today_DISPLAY = result['times_today_DISPLAY'];
-                            times_tomorrow_DISPLAY = result['times_tomorrow_DISPLAY'];
 
-                            updateTimesHeader(dateSelected == dateToday);
+                            times = result['times'];
+                            times_DISPLAY = result['times_DISPLAY'];
+
+                            updateTimesHeader();
                         })
                         .fail (function () {
+
+                            console.log("getTimes failed");
 
                         })
                         .then (function () {
@@ -625,7 +636,7 @@ $defaultTab = 1;
                          * APPEND <tr> to <table> with ID = slotTable
                          */
 
-                        var currentTimeArray = (dateSelected == dateToday ? times_today : times_tomorrow);
+                        var currentTimeArray = times;
 
                         console.log(currentTimeArray);
                         if(currentTimeArray.length-1>0) {
