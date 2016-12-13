@@ -14,40 +14,58 @@ class Admin_Model extends CI_Model
         $this->load->database();
     }
 
-    public function getMinimumHour() { // TODO parameter must be department ID
-        return 6; // TODO retrieve value depending on department
-    }
-
-    public function getMaximumHour() { // TODO parameter must be department ID
-        return 20; // TODO retrieve value depending on department
-    }
-
-    public function getTimes($first_hour, $first_minute, $minute_interval, $minimum_hour, $maximum_hour, $tomorrow) {
+    public function getTimes($date, $minute_interval, $minimum_time, $maximum_time, $adaptToCurrentTime) {
         $times = array();
         $startMinute = 0;
-        $daysForward = 0;
 
-        if ($first_hour < $minimum_hour || $first_hour == null) // set to minimum_hour if first_hour is below the minimum_hour or if first_hour is null
-            $first_hour = $minimum_hour;
+        $dateArray = explode("-", $date); // Y-m-d
 
-        if (!$tomorrow && $first_hour != $minimum_hour)
-            $startMinute = intval($first_minute / $minute_interval) * $minute_interval; // calculate first_minute to suit current time
-        else
-            $daysForward++; // plus 1 to day if tomorrow is true
+        $minTimeArray = explode(":", $minimum_time);
+        $maxTimeArray = explode(":", $maximum_time);
 
-        for ($hour = $first_hour; $hour < $maximum_hour ; $hour++) {
+        $minimum_hour = null;
+        $minimum_minute = null;
+        $maximum_hour = null;
+        $maximum_minute = null;
+
+        if ($adaptToCurrentTime) {
+
+            $minimum_hour = intval(date("H"));
+            $minimum_minute = intval(date("i"));
+
+        } else {
+
+            $minimum_hour = $minTimeArray[0];
+            $minimum_minute = $minTimeArray[1];
+
+        }
+
+        $maximum_hour = $maxTimeArray[0];
+        $maximum_minute = $maxTimeArray[1];
+
+        if ($adaptToCurrentTime)
+            $startMinute = intval($minimum_minute / $minute_interval) * $minute_interval; // calculate first_minute to suit current time
+
+        for ($hour = $minimum_hour; $hour <= $maximum_hour; $hour++) {
             for ($minute = $startMinute; $minute < 60; $minute += $minute_interval) {
 
-                $time = mktime($hour, $minute, 0, date("m"), date("d") + $daysForward, date("Y"));
+                if ($hour == $maximum_hour) {
 
-                $times[] = $time;
+                    if ($minute <= $maximum_minute)
+                        $times[] = mktime($hour, $minute, 0, $dateArray[1], $dateArray[2], $dateArray[0]);
+
+                } else {
+
+                    $times[] = mktime($hour, $minute, 0, $dateArray[1], $dateArray[2], $dateArray[0]);
+
+                }
 
             }
 
             $startMinute = 0; // reset to 0 to suit the succeeding hours
         }
 
-        $times[] = mktime($hour, 0, 0, date("m"), date("d") + $daysForward, date("Y"));
+        $times[] = mktime($hour, 0, 0, $dateArray[1], $dateArray[2], $dateArray[0]);
 
         return $times;
     }

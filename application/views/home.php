@@ -95,11 +95,6 @@ $defaultTab = 1;
 
                 var currentTime = "<?=date("H:m:s"); ?>";
 
-                /*var times_today;
-                var times_tomorrow;
-                var times_today_DISPLAY;
-                var times_tomorrow_DISPLAY;*/
-
                 var times;
                 var times_DISPLAY;
 

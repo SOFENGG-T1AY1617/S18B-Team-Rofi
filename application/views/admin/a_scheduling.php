@@ -34,10 +34,8 @@ include 'a_navbar.php';
 
     var currentTime = "<?=date("H:m:s"); ?>";
 
-    var times_today;
-    var times_tomorrow;
-    var times_today_DISPLAY;
-    var times_tomorrow_DISPLAY;
+    var times;
+    var times_DISPLAY;
 
     $(document).ready(function() {
 
@@ -88,7 +86,7 @@ include 'a_navbar.php';
             }
 
             updateDisplayTimeInModal();
-            updateTimesHeader(date_selected == "today");
+            updateTimesHeader();
 
             if($("#form_building").val()!=null){
                 selectRoom($("#form_room").val());
@@ -462,14 +460,14 @@ include 'a_navbar.php';
             $(cell).addClass('used');
     }
 
-    function updateTimesHeader(isToday) {
+    function updateTimesHeader() {
 
         var slotTable = $('#slotTable');
 
         slotTable.floatThead('destroy');
 
-        var currentTimeArray = (isToday ? times_today_DISPLAY : times_tomorrow_DISPLAY);
-        var currentTimeArrayForIDs = (isToday ? times_today : times_tomorrow);
+        var currentTimeArray = times_DISPLAY;
+        var currentTimeArrayForIDs = times;
 
         var timesRow = document.createElement("tr");
         var PCNumbersTH = document.createElement("th");
@@ -609,6 +607,8 @@ include 'a_navbar.php';
 
         if (buildingid!=""&&roomid != "") {
             var interval;
+            var start_time;
+            var end_time;
 
             console.log(buildingid+"-"+roomid);
 
@@ -621,48 +621,50 @@ include 'a_navbar.php';
                 }
             })
                 .done(function(result) {
-                    interval = result[0].interval;
+                    interval = result['interval'];
+                    start_time = result['start_time'];
+                    end_time = result['end_time'];
 
-                    if (currentDeptID != result[0].departmentid) {
-                        if (currentDeptID !=0)
-                            toastr.info("The slots have been cleared and limit has been changed.", "Department has changed!");
-                    }
+                    console.log("START TIME: " + start_time);
+                    console.log("END TIME: " + end_time);
 
-                    currentDeptID = result[0].departmentid;
+                    currentDeptID = result['departmentid'];
                 })
                 .fail(function() {
-                    console.log("fail");
+                    console.log("get business rules fail");
                 })
                 .always(function() {
                     console.log("complete");
                 })
                 .then(function () {
-                    console.log("PROMISE FULFILL");
+                    console.log("PROMISE FOR TIMES FULFILL");
 
                     return $.ajax({ // PROCEED TO PROMISE
                         url: '<?php echo base_url('admin/' . ADMIN_GET_TIMES) ?>',
                         type: 'GET',
                         dataType: 'json',
                         data: {
-                            interval: interval
+                            interval: interval,
+                            start_time: start_time,
+                            end_time: end_time,
+                            date: dateSelected
                         }
                     })
                 })
 
                 // FOR PROMISE
                 .done (function (result) {
-                    times_today = result['times_today'];
-                    times_tomorrow = result['times_tomorrow'];
-                    times_today_DISPLAY = result['times_today_DISPLAY'];
-                    times_tomorrow_DISPLAY = result['times_tomorrow_DISPLAY'];
+                    times = result['times'];
+                    times_DISPLAY = result['times_DISPLAY'];
 
-                    updateTimesHeader(dateSelected == dateToday);
+                    updateTimesHeader();
                 })
                 .fail (function () {
 
                 })
                 .then (function () {
                     // get computers
+                    console.log("PROMISE for COMPUTERS FULFILL");
 
                     return $.ajax({
                         url: '<?php echo base_url('admin/' . ADMIN_GET_COMPUTERS) ?>',
@@ -682,7 +684,6 @@ include 'a_navbar.php';
                     computers = [];
                     reservations = [];
                     disabledSlots = [];
-
 
                     console.log(currentTime);
 
@@ -709,7 +710,7 @@ include 'a_navbar.php';
                     outputSlots();
                 })
                 .fail(function() {
-                    console.log("fail");
+                    console.log("failed to get computers");
                 })
                 .always(function() {
                     console.log("complete");
@@ -759,7 +760,7 @@ include 'a_navbar.php';
              * APPEND <tr> to <table> with ID = slotTable
              */
 
-            var currentTimeArray = (dateSelected == dateToday ? times_today : times_tomorrow);
+            var currentTimeArray = times;
 
             for (var i = 0; i < roomIDs.length; i++) {
                 var roomTitleRow = document.createElement("tr");
