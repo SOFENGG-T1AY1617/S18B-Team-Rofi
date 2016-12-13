@@ -145,6 +145,7 @@
                         GUIverifySlot($("[id = '" + slotsPicked[i] + "']"));
 
                     updateSelectedSlots();
+                    updateAllButtons();
 
                 })
                 .fail(function () {
@@ -336,10 +337,12 @@
             }
         })
             .done(function(result) {
-                $(slotContainerID).empty();
 
                 var verifStatus = null;
                 var colorStatus = null;
+                var attendance = null;
+
+                var out = [];
 
                 for (var i = 0; i < result.length; i++) {
                     if (result[i].verified == 1) {
@@ -347,25 +350,31 @@
                         colorStatus = "green";
 
                         if (result[i].attendance == 1)
-                            verifStatus += " & Claimed";
+                            attendance = "[Claimed]";
                         else
-                            verifStatus += " & Unclaimed";
+                            attendance = " [Unclaimed]";
 
                     } else {
                         verifStatus = "Unverified";
                         colorStatus = "red";
                     }
 
-                    $(slotContainerID).append(
-                        "<div class = 'slotRow'>" +
+                    out[i] = ("<div class = 'slotRow'>" +
                         "<span id = " + slotsPicked[i] + " class = 'col-md-1 delete-button text-center'>X</span>" +
                         "<span class = 'col-md-1'>" + result[i].roomName + "</span>" +
                         "<span class = 'col-md-2'>Pc No. " + result[i].compNo + "</span>" +
-                        "<span class = 'col-md-4'>" + result[i].userid + " : <span class = '" + colorStatus + "'>" + verifStatus + "</span> </span>" +
-                        "<span class = 'col-md-4 text-center pull-right'>" + result[i].start + " - " + result[i].end + "</span>" +
-                        "</div>"
-                    );
+                        "<span class = 'col-md-2'>" + result[i].userid + " </span>" +
+                        "<span class = 'col-md-1'> <span class = '" + colorStatus + "'>" + verifStatus + "</span> </span>" +
+                        "<span class = 'col-md-2'> <span class = '" + colorStatus + "'>" + attendance + "</span> </span>" +
+                        "<span class = 'col-md-3 text-center pull-right'>" + result[i].start + " - " + result[i].end + "</span>" +
+                        "</div>");
+
                 }
+
+                if (out.length != slotsPicked.length)
+                    updateSelectedSlots();
+                else
+                    $(slotContainerID).html(out);
 
                 if (slotsPicked.length == 0)
                     $(slotContainerID).empty();
@@ -379,6 +388,9 @@
             .always(function() {
 
                 console.log("complete");
+            })
+            .then(function(result) {
+
             });
 
     }
@@ -738,7 +750,8 @@ include 'm_navbar.php';
     </div>
 </div>
 
-<div id="verifyMessage" class="modal fade" role="dialog">
+<div id="
+Message" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->
