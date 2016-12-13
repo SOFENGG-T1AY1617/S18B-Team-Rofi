@@ -835,6 +835,38 @@ include 'm_navbar.php';
                 </div>
             </div>
 
+            <div class = "row">
+                <div class = "col-md-10 col-md-offset-2">
+
+                    <div id = "legend">
+                        <div class = "row">
+
+                            <div class = "col-md-2">
+                                <div class="legend enabled pull-left"></div> Enabled
+                            </div>
+
+                            <div class = "col-md-2">
+                                <div class="legend unverified pull-left"></div> Unverified
+                            </div>
+
+                            <div class = "col-md-2">
+                                <div class="legend verified pull-left"></div> Verified
+                            </div>
+
+                            <div class = "col-md-2">
+                                <div class="legend present pull-left"></div> Present
+                            </div>
+
+                            <div class = "col-md-2">
+                                <div class="legend disabled pull-left"></div> Disabled
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             </div>
 
         </div>
