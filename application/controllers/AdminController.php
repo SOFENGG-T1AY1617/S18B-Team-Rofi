@@ -36,7 +36,7 @@ class AdminController extends CI_Controller
     public function loadAction($action) {
         $this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
         $this->admin->archiveUnconfirmedReservations();
-        if(!isset($_SESSION['email']) && $action != ADMIN_SIGN_IN) {
+        if(!isset($_SESSION['admin_email']) && $action != ADMIN_SIGN_IN) {
             $this->signInView("");
         }
         else {
@@ -343,13 +343,24 @@ class AdminController extends CI_Controller
 
         if ($this->admin->isValidUser($e,$p)) {
             $admin = $this->admin->queryAdminAccount($e);
-            $this->session->set_userdata($admin);
+            //$this->session->set_userdata($admin);
+            $this->setSession($admin);
             $this->index();
         }
         else {
             $errorMessage = "Invalid email or password.";
             $this->signInView($errorMessage);
         }
+    }
+
+    private function setSession($admin) {
+        $_SESSION['administratorid'] = $admin['administratorid'];
+        $_SESSION['admin_email'] = $admin['email'];
+        $_SESSION['admin_password'] = $admin['password'];
+        $_SESSION['admin_last_name'] = $admin['last_name'];
+        $_SESSION['admin_first_name'] = $admin['first_name'];
+        $_SESSION['admin_departmentid'] = $admin['admin_departmentid'];
+        $_SESSION['admin_typeid'] = $admin['admin_typeid'];
     }
 
     public function signOut() {
