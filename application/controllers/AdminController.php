@@ -34,6 +34,8 @@ class AdminController extends CI_Controller
     }
 
     public function loadAction($action) {
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+
         $this->admin->archivePastReservations(date("Y-m-d"), date("H:i:s"));
         $this->admin->archiveUnconfirmedReservations();
         if(!isset($_SESSION['admin_email']) && $action != ADMIN_SIGN_IN) {
@@ -274,6 +276,7 @@ class AdminController extends CI_Controller
 
     public function getComputers()
     {
+
         $getData = array(
             'buildingid' => $this->input->get('buildingid'),
 
@@ -285,7 +288,7 @@ class AdminController extends CI_Controller
         //$date = date("Y-m-d", strtotime($getData['date']));
         $date = $getData['date'];
 
-        if (date('Y-m-d', strtotime($getData['date'])) == date("Y-m-d"))
+        if (strcmp($getData['date'], date("Y-m-d")."") == 0)
             $time = $getData['time'];
         else
             $time = "00:00:00";

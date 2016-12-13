@@ -1,6 +1,8 @@
 <?php header('Access-Control-Allow-Origin: *');
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
+
 class Controller extends CI_Controller {
 
 	/**
@@ -113,7 +115,7 @@ class Controller extends CI_Controller {
         //$date = date("Y-m-d", strtotime($getData['date']));
         $date = $getData['date'];
 
-        if (date('Y-m-d', strtotime($getData['date'])) == date("Y-m-d"))
+        if (strcmp($getData['date'], date("Y-m-d")."") == 0)
             $time = $getData['time'];
         else
             $time = "00:00:00";

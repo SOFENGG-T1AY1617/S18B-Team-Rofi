@@ -32,7 +32,7 @@ include 'a_navbar.php';
     var dateSelected = dateToday;
     var currentDeptID = 0;
 
-    var currentTime = "<?=date("H:m:s"); ?>";
+    var currentTime = "<?=date("H:i:s"); ?>";
 
     var times;
     var times_DISPLAY;

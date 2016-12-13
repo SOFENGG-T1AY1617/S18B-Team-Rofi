@@ -340,7 +340,7 @@
 
                 var verifStatus = null;
                 var colorStatus = null;
-                var attendance = null;
+                var attendance = "";
 
                 var out = [];
 
@@ -750,8 +750,7 @@ include 'm_navbar.php';
     </div>
 </div>
 
-<div id="
-Message" class="modal fade" role="dialog">
+<div id="verifyMessage" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->

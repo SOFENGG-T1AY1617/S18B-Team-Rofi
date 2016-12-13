@@ -28,6 +28,7 @@ class ModeratorController extends CI_Controller
     }
 
     public function loadAction($action) {
+        date_default_timezone_set('Asia/Hong_Kong'); // set to Hong Kong's/Philippines' Timezone
 
         if(!isset($_SESSION['mod_email']) && $action != MODERATOR_SIGN_IN) {
             $this->signInView("");
