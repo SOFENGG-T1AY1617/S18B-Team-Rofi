@@ -291,7 +291,10 @@ class moderator_model extends CI_Model
 
         $roomid = $this->db->query($sql, array($id))->result();
 
-        return $roomid[0]->roomid;
+        if (!empty($roomid))
+            return $roomid[0]->roomid;
+        else
+            return 0;
     }
 
     function queryReservationDetailswithReservationID ($id) {

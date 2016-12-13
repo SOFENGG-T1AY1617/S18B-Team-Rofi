@@ -272,7 +272,11 @@ class ModeratorController extends CI_Controller
     public function mainView() {
         $data['roomid'] = $this->moderator->queryRoomIDwithModeratorID($_SESSION['moderatorid']);
 
-        $this->load->view('moderator/m_header');
-        $this->load->view('moderator/home', $data);
+        if ($data['roomid'] != 0) {
+            $this->load->view('moderator/m_header');
+            $this->load->view('moderator/home', $data);
+        } else {
+            $this->signInView("No rooms are assigned to the moderator logging-in.");
+        }
     }
 }
