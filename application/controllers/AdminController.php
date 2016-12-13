@@ -285,10 +285,11 @@ class AdminController extends CI_Controller
 
         //$date = date("Y-m-d", strtotime($getData['date']));
         $date = $getData['date'];
-        $time = $getData['time'];
 
-        if ($date != date("Y-m-d"))
-            $time = '00:00:00';
+        if (date('Y-m-d', strtotime($getData['date'])) == date("Y-m-d"))
+            $time = $getData['time'];
+        else
+            $time = "00:00:00";
 
         if ($getData['roomid'] == 0)
             $data = array(

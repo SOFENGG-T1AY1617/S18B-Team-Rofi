@@ -147,7 +147,11 @@ class ModeratorController extends CI_Controller
         );
 
         $date = $getData['date'];
-        $time = $getData['time'];
+
+        if (date('Y-m-d', strtotime($getData['date'])) == date("Y-m-d"))
+            $time = $getData['time'];
+        else
+            $time = "00:00:00";
 
         $data = array(
             'computers' => $this->moderator->queryComputersAtRoomID($getData['roomid']),

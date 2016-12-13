@@ -112,20 +112,24 @@ class Controller extends CI_Controller {
 
         //$date = date("Y-m-d", strtotime($getData['date']));
         $date = $getData['date'];
-        $time = $getData['time'];
+
+        if (date('Y-m-d', strtotime($getData['date'])) == date("Y-m-d"))
+            $time = $getData['time'];
+        else
+            $time = "00:00:00";
 
         if($getData['roomid']==0)
             $data = array(
                 'computers' => $this->student->queryAllComputersAtBuildingID($getData['buildingid']),
                 'reservations' => $this->student->queryReservationsAtBuildingIDOnDate($getData['buildingid'], $date),
-                'disabledslots' => $this->moderator->queryDisabledSlotsAtBuildingIDOnDateTime($getData['buildingid'], $date, $time),
+                'disabledslots' => $this->student->queryDisabledSlotsAtBuildingIDOnDateTime($getData['buildingid'], $date, $time),
                 'date' => $date,
             );
         else
             $data = array(
                 'computers' => $this->student->queryComputersAtBuildingIDAndRoomID($getData['buildingid'],$getData['roomid']),
                 'reservations' => $this->student->queryReservationsAtRoomIDOnDate($getData['roomid'], $date),
-                'disabledslots' => $this->moderator->queryDisabledSlotsAtRoomIDOnDateTime($getData['roomid'], $date, $time),
+                'disabledslots' => $this->student->queryDisabledSlotsAtRoomIDOnDateTime($getData['roomid'], $date, $time),
                 'date' => $date,
             );
         /*$data = array(
