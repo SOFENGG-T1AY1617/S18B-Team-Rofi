@@ -32,8 +32,13 @@ class Student_Model extends CI_Model
 
         if ($adaptToCurrentTime) {
 
-            $minimum_hour = intval(date("H"));
-            $minimum_minute = intval(date("i"));
+            if (intval(date("H")) < intval($minTimeArray[0])) {
+                $minimum_hour = $minTimeArray[0];
+                $minimum_minute = $minTimeArray[1];
+            } else {
+                $minimum_hour = intval(date("H"));
+                $minimum_minute = intval(date("i"));
+            }
 
         } else {
 
