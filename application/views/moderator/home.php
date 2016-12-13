@@ -389,7 +389,7 @@
 
         slotTable.floatThead('destroy');
 
-        var currentTimeArray = times;
+        var currentTimeArray = times_DISPLAY;
 
         var timesRow = document.createElement("tr");
         var PCNumbersTH = document.createElement("th");
@@ -791,7 +791,7 @@ include 'm_navbar.php';
                 <div class = "col-md-8 col-md-offset-1">
                     <div class = "panel panel-default">
                         <div class = "panel-heading">
-                            Slots Currently Selected:
+                            Reservations Currently Selected:
 
                         </div>
                         <div class = "panel-body">
@@ -802,9 +802,11 @@ include 'm_navbar.php';
                 </div>
 
                 <div id = "mod_controls_container" class = "col-md-2">
-                    <button id = "presentButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#presentMessage">Mark Present</button>
-                    <button id = "verifyButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#verifyMessage">Verify Slots</button>
-                    <button id = "removeButton" class = "btn btn-danger col-md-12" data-toggle="modal" data-target="#removeMessage">Remove</button>
+                    <div class = "pull-right">
+                        <button id = "presentButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#presentMessage">Mark Present</button>
+                        <button id = "verifyButton" class = "btn btn-success col-md-12" data-toggle="modal" data-target="#verifyMessage">Verify Slots</button>
+                        <button id = "removeButton" class = "btn btn-danger col-md-12" data-toggle="modal" data-target="#removeMessage">Remove</button>
+                    </div>
                 </div>
 
             </div>
