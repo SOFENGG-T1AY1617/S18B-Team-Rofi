@@ -151,6 +151,8 @@ include 'a_navbar.php';
                 })
                     .done(function (result) {
 
+                        updatedSlots += result['updated'];
+
                         var newIDs = result['newIDs'];
                         var updatedIDs = result['updatedIDs'];
 
@@ -166,8 +168,6 @@ include 'a_navbar.php';
                             slotArray[existIndex] = currentSlot.attr("id");
 
                             disableSlot(currentSlot);
-
-                            updatedSlots++;
 
                             console.log(slotArray);
                         }
@@ -221,8 +221,6 @@ include 'a_navbar.php';
             for (var i = 0; i < slotArray.length; i += chunk) {
                 slotsChunk = slotArray.slice(i, i + chunk);
 
-                console.log(slotsChunk);
-
                 $.ajax({
                     url: '<?php echo base_url('admin/' . ADMIN_ENABLE_SLOTS) ?>',
                     type: 'GET',
@@ -232,6 +230,8 @@ include 'a_navbar.php';
                     }
                 })
                     .done(function (result) {
+
+                        updatedSlots+=result['updated'];
 
                         var updatedIDs = result['updatedIDs'];
 
@@ -250,7 +250,6 @@ include 'a_navbar.php';
 
                             slotArray[existIndex] = currentSlot.attr("id");
 
-                            updatedSlots++;
                         }
 
                         if (isLastChunk) {

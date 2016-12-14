@@ -868,10 +868,11 @@ class AdminController extends CI_Controller
 
             if (count($arr) < 5) {
                 $newIDs[] = $this->admin->disableSlot($slot, $date, $duration);
-                $updatedIDs[] = $slot;
 
                 $updated++;
             }
+
+            $updatedIDs[] = $slot;
 
         }
 
@@ -898,8 +899,9 @@ class AdminController extends CI_Controller
             if (count($arr) > 4) {
                 $this->admin->enableSlotWithDisabledSlotID(intval($arr[4]));
                 $updated++;
-                $updatedIDs[] = $slot;
             }
+
+            $updatedIDs[] = $slot;
 
         }
 
