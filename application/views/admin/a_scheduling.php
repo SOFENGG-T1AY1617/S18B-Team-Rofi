@@ -1110,8 +1110,8 @@ include 'a_navbar.php';
                 </form>
             </div>
             <div class="modal-footer">
-                <button id = "disable-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id = "disable-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
             </div>
         </div>
 
@@ -1162,8 +1162,8 @@ include 'a_navbar.php';
                 </form>
             </div>
             <div class="modal-footer">
-                <button id = "disableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id = "disableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
             </div>
         </div>
 
@@ -1183,8 +1183,8 @@ include 'a_navbar.php';
                 Are you sure you want to enable the slots selected?
             </div>
             <div class="modal-footer">
-                <button id = "enable-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id = "enable-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
             </div>
         </div>
 
@@ -1204,8 +1204,8 @@ include 'a_navbar.php';
                 Are you sure you want to enable all slots located in the currently selected room?
             </div>
             <div class="modal-footer">
-                <button id = "enableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id = "enableAll-btn" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
             </div>
         </div>
 

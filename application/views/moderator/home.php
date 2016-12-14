@@ -742,8 +742,8 @@ include 'm_navbar.php';
                 <p>Are you sure you want to remove the selected slots?</p>
             </div>
             <div class="modal-footer">
-                <button id = "removeReservation" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <button id = "removeReservation" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
             </div>
         </div>
 
@@ -763,8 +763,8 @@ include 'm_navbar.php';
                 <p>Are you sure you want to verify the selected slots?</p>
             </div>
             <div class="modal-footer">
-                <button id = "verifySlot" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <button id = "verifySlot" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
             </div>
         </div>
 
@@ -784,8 +784,8 @@ include 'm_navbar.php';
                 <p>Are you sure you want to mark the selected slots present or checked in?</p>
             </div>
             <div class="modal-footer">
-                <button id = "markPresent" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <button id = "markPresent" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
             </div>
         </div>
 
