@@ -62,27 +62,66 @@
             if (slotsPicked.length == 0)
                 toastr.info("You must select slots before performing actions.", "Hold on!");
             else if ($(this).hasClass('disabled'))
-                toastr.error("One or more of the selected slots is/are still unverified", "Oops!");
+                toastr.error("There are no reservations selected. Please select reservations to perform this action.", "Oops!");
 
         });
 
         $("#verifyButton").click (function() {
 
             if (slotsPicked.length == 0)
-                toastr.info("You must select slots before performing actions.", "Hold on!");
+                toastr.info("There are no reservations selected. Please select reservations to perform this action.", "Hold on!");
 
         });
 
         $("#removeButton").click (function() {
 
             if (slotsPicked.length == 0)
-                toastr.info("You must select slots before performing actions.", "Hold on!");
+                toastr.info("There are no reservations selected. Please select reservations to perform this action.", "Hold on!");
 
         });
 
         selectRoom (<?php echo $roomid;?>);
         updateAllButtons();
     });
+
+    function hasOnlyVerified(slotArray) {
+
+        var count = 0;
+
+        for (var i = 0; i < slotArray.length; i++) {
+
+            var currentSlot = $("[id = '" + slotArray[i] + "']");
+
+            if (currentSlot.hasClass("verified"))
+                count++;
+
+        }
+
+        if (slotArray.length != 0)
+            return slotArray.length == count;
+        else
+            return false;
+
+    }
+
+    function hasOnlyPresent(slotArray) {
+
+        var count = 0;
+
+        for (var i = 0; i < slotArray.length; i++) {
+
+            var currentSlot = $("[id = '" + slotArray[i] + "']");
+
+            if (currentSlot.hasClass("present"))
+                count++;
+
+        }
+
+        if (slotArray.length != 0)
+            return slotArray.length == count;
+        else
+            return false;
+    }
 
     function markSlotsPresent () {
         if (slotsPicked.length == 0) {
@@ -106,6 +145,7 @@
                         GUImarkSlotPresent($("[id = '" + slotsPicked[i] + "']"));
 
                     updateSelectedSlots();
+                    updateAllButtons();
 
                 })
                 .fail(function () {
@@ -278,17 +318,44 @@
     function updatePresentButton () {
         var presentButton = $("#presentButton");
 
-        if (existsAnUnverifiedSelectedSlot() || slotsPicked.length == 0)
+        presentButton.unbind();
+
+        if (existsAnUnverifiedSelectedSlot() || hasOnlyPresent(slotsPicked) || slotsPicked.length == 0) {
             disableButton(presentButton);
-        else
+
+            if (hasOnlyPresent(slotsPicked) || existsAnUnverifiedSelectedSlot()) {
+                presentButton.click(function() {
+                    toastr.info("All reservations selected are either claimed or are still unverified.", "Hold on!");
+                });
+            } else if (slotsPicked.length == 0){
+                presentButton.click(function() {
+                    toastr.info("There are no reservations selected. Please select reservations to perform this action.", "Hold on!");
+                });
+            }
+
+
+        } else
             enableButton(presentButton);
     }
 
     function updateVerifyButton () {
         var verifyButton = $("#verifyButton");
 
-        if (slotsPicked.length == 0) {
+        verifyButton.unbind();
+
+        if (hasOnlyVerified(slotsPicked) || hasOnlyPresent(slotsPicked) || slotsPicked.length == 0) {
             disableButton(verifyButton);
+
+            if (hasOnlyVerified(slotsPicked) || hasOnlyPresent(slotsPicked)) {
+                verifyButton.click(function() {
+                    toastr.info("All reservations selected are already verified.", "Hold on!");
+                });
+            } else if (slotsPicked.length == 0){
+                verifyButton.click(function() {
+                    toastr.info("There are no reservations selected. Please select reservations to perform this action.", "Hold on!");
+                });
+            }
+
         } else {
             enableButton(verifyButton);
         }
@@ -345,6 +412,9 @@
                 var out = [];
 
                 for (var i = 0; i < result.length; i++) {
+
+                    attendance = "";
+
                     if (result[i].verified == 1) {
                         verifStatus = "Verified";
                         colorStatus = "green";
