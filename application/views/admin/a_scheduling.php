@@ -391,15 +391,16 @@ include 'a_navbar.php';
         updateButton(disableAll_button, hasEnabledSlot(allSlotsDisplayed));
 
         if (allSlotsDisplayed.length != 0) {
+            enableAll_button.unbind();
+            disableAll_button.unbind();
+
             if (enableAll_button.hasClass("disabled")) {
-                enableAll_button.unbind();
                 enableAll_button.click(function () {
                     toastr.info ("All slots are currently enabled. There is no use in enabling them all.", "Hold on!");
                 });
             }
 
             if (disableAll_button.hasClass("disabled")) {
-                disableAll_button.unbind();
                 disableAll_button.click(function () {
                     toastr.info ("All slots are currently disabled. There is no use in disabling them all.", "Hold on!");
                 });
@@ -407,15 +408,16 @@ include 'a_navbar.php';
         }
 
         if (slotsPicked.length == 0) {
+            enable_button.unbind();
+            disable_button.unbind();
+
             if (enable_button.hasClass("disabled")) {
-                enable_button.unbind();
                 enable_button.click(function () {
                     toastr.info ("There are no slots selected. Please select slots to perform this action.", "Hold on!");
                 });
             }
 
             if (disable_button.hasClass("disabled")) {
-                disable_button.unbind();
                 disable_button.click(function () {
                     toastr.info ("There are no slots selected. Please select slots to perform this action.", "Hold on!");
                 });
