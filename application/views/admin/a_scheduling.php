@@ -125,12 +125,12 @@ include 'a_navbar.php';
 
         enable_button.click(function() {
             if ($(this).hasClass("disabled"))
-                toastr.info("You must select slots before performing actions", "Hold On!");
+                toastr.info("You must view a room and select slots before performing this action", "Hold On!");
         });
 
         disable_button.click(function() {
             if ($(this).hasClass("disabled"))
-                toastr.info("You must select slots before performing actions", "Hold On!");
+                toastr.info("You must view a room and select slots before performing this action", "Hold On!");
         });
 
         enableAll_button.click(function() {
@@ -402,6 +402,22 @@ include 'a_navbar.php';
                 disableAll_button.unbind();
                 disableAll_button.click(function () {
                     toastr.info ("All slots are currently disabled. There is no use in disabling them all.", "Hold on!");
+                });
+            }
+        }
+
+        if (slotsPicked.length == 0) {
+            if (enable_button.hasClass("disabled")) {
+                enable_button.unbind();
+                enable_button.click(function () {
+                    toastr.info ("There are no slots selected. Please select slots to perform this action.", "Hold on!");
+                });
+            }
+
+            if (disable_button.hasClass("disabled")) {
+                disable_button.unbind();
+                disable_button.click(function () {
+                    toastr.info ("There are no slots selected. Please select slots to perform this action.", "Hold on!");
                 });
             }
         }
