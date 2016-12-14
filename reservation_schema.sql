@@ -192,7 +192,7 @@ CREATE TABLE `reservation_system`.`archive_reservations` (
   `date` DATE NOT NULL,
   `start_restime` TIME NOT NULL,
   `end_restime` TIME NOT NULL,
-  `verified` BIT NOT NULL DEFAULT 0,
+  `verified` BIT NOT NULL,
   `verificationcode` VARCHAR(40) NOT NULL,
   `attendance` INT NOT NULL DEFAULT 0, 
   PRIMARY KEY (`archive_reservationid`));
@@ -420,9 +420,9 @@ CREATE PROCEDURE `archive_deleted_reservations_by_room` (IN rumid INT)
 BEGIN
 	INSERT INTO `reservation_system`.`archive_reservations`
 	(`computerno`, `room_name`, `userid`, `date`, `start_restime`, 
-	`end_restime`, `verificationcode`, `attendance`)
+	`end_restime`, `verified`, `verificationcode`, `attendance`)
 	SELECT computer.`computerno`, room.`name`,`userid`, `date`, `start_restime`, 
-		   `end_restime`, `verificationcode`, `attendance`
+		   `end_restime`, `verified`, `verificationcode`, `attendance`
 	FROM `reservation_system`.`reservations` reservation, 
 		 `reservation_system`.`rooms` room, `reservation_system`.`computers` computer
 	WHERE rumid = room.roomid AND  
@@ -438,9 +438,9 @@ CREATE PROCEDURE `archive_deleted_reservations_by_computer` (IN compid INT)
 BEGIN
 	INSERT INTO `reservation_system`.`archive_reservations`
 	(`computerno`, `room_name`, `userid`, `date`, `start_restime`, 
-	`end_restime`, `verificationcode`, `attendance`)
+	`end_restime`, `verified`, `verificationcode`, `attendance`)
 	SELECT computer.`computerno`, room.`name`,`userid`, `date`, `start_restime`, 
-		   `end_restime`, `verificationcode`, `attendance`
+		   `end_restime`, `verified`, `verificationcode`, `attendance`
 	FROM `reservation_system`.`reservations` reservation, 
 		 `reservation_system`.`rooms` room, `reservation_system`.`computers` computer
 	WHERE compid = reservation.computerid AND 
@@ -454,15 +454,16 @@ USE `reservation_system`$$
 CREATE PROCEDURE `archive_unconfirmed_reservations` (IN confirmation_limit TIME)
 BEGIN
 	INSERT INTO `reservation_system`.`archive_reservations`
-	(`computerno`, `room_name`, `userid`, `date`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)
+	(`computerno`, `room_name`, `userid`, `date`, `start_restime`, `end_restime`, `verified`, `verificationcode`, `attendance`)
 	SELECT computer.`computerno`, room.`name`,`userid`, `date`, `start_restime`, 
-		   `end_restime`, `verificationcode`, `attendance`
+		   `end_restime`, `verified`, `verificationcode`, `attendance`
 	FROM `reservation_system`.`reservations` reservation, 
 		 `reservation_system`.`rooms` room, `reservation_system`.`computers` computer
 	WHERE TIMEDIFF(NOW(), reservation.`time_reserved`) >= confirmation_limit
-		  AND reservation.computerid = computer.computerid AND room.roomid = computer.roomid;
+		  AND reservation.computerid = computer.computerid AND room.roomid = computer.roomid
+      AND !reservation.verified;
     DELETE FROM `reservation_system`.`reservations`
-    WHERE TIMEDIFF(NOW(), `time_reserved`) >= confirmation_limit;
+    WHERE TIMEDIFF(NOW(), `time_reserved`) >= confirmation_limit AND !verified;
 END$$
 
 DELIMITER $$
@@ -479,9 +480,9 @@ USE `reservation_system`$$
 CREATE PROCEDURE `archive_reservation` (IN reserveid INT)
 BEGIN
 	INSERT `reservation_system`.`archive_reservations`
-	(`computerno`, `room_name`, `userid`, `date`, `start_restime`, `end_restime`, `verificationcode`, `attendance`)
+	(`computerno`, `room_name`, `userid`, `date`, `start_restime`, `end_restime`, `verified`, `verificationcode`, `attendance`)
 	SELECT computer.`computerno`, room.`name`,`userid`, `date`, `start_restime`, 
-		   `end_restime`, `verificationcode`, `attendance`
+		   `end_restime`, `verified`, `verificationcode`, `attendance`
 	FROM `reservation_system`.`reservations` reservation, 
 		 `reservation_system`.`rooms` room, `reservation_system`.`computers` computer
 	WHERE reservation.reservationid = reserveid
