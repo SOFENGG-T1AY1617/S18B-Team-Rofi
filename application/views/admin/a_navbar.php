@@ -52,10 +52,18 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Admin <?=$_SESSION['admin_first_name']?>
-                        <span class="caret"></span>
-                    </a>
+                    <?php if($_SESSION['admin_typeid'] == 1): ?>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Super Admin <?=$_SESSION['admin_first_name']?>
+                            <span class="caret"></span>
+                        </a>
+                    <?php endif;?>
+                    <?php if($_SESSION['admin_typeid'] == 2): ?>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Admin <?=$_SESSION['admin_first_name']?>
+                            <span class="caret"></span>
+                        </a>
+                    <?php endif;?>
                     <ul class="dropdown-menu">
                         <!--<li><a href="#">Modify Account</a></li>
                         <li role="separator" class="divider"></li>-->

@@ -244,11 +244,21 @@
 include 'a_navbar.php';
 ?>
 
+<?php if($_SESSION['admin_typeid'] == 1): ?>
+        <ol class="breadcrumb  col-md-offset-2 col-md-10">
+            <li><a href="#">Super Admin</a></li>
+            <li class="active">Reports</li>
+        </ol>
+<?php endif;?>
 
-<ol class="breadcrumb  col-md-offset-2 col-md-10">
-    <li><a href="#">Admin</a></li>
-    <li class="active">Reports</li>
-</ol>
+<?php if($_SESSION['admin_typeid'] == 2): ?>
+        <ol class="breadcrumb  col-md-offset-2 col-md-10">
+            <li><a href="#">Admin</a></li>
+            <li class="active">Reports</li>
+        </ol>
+<?php endif;?>
+
+
 
 <div class = "row col-md-offset-2 col-md-8">
     <div class = "">
