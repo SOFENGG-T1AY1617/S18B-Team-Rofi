@@ -302,6 +302,17 @@ class moderator_model extends CI_Model
             return 0;
     }
 
+    function queryRoomNamewithRoomID ($id) {
+        $sql = "SELECT name
+                FROM rooms
+                WHERE roomid = ?";
+
+        $roomname = $this->db->query($sql, array($id))->result();
+
+        return $roomname[0]->name;
+
+    }
+
     function queryReservationDetailswithReservationID ($id) {
         $sql = "SELECT userid, verified, attendance
                 FROM reservations

@@ -284,6 +284,9 @@ class ModeratorController extends CI_Controller
         $data['roomid'] = $this->moderator->queryRoomIDwithModeratorID($_SESSION['moderatorid']);
 
         if ($data['roomid'] != 0) {
+
+            $data['roomname'] = $this->moderator->queryRoomNamewithRoomID($data['roomid']);
+
             $this->load->view('moderator/m_header');
             $this->load->view('moderator/home', $data);
         } else {

@@ -803,7 +803,7 @@ include 'm_navbar.php';
                 <div class = "col-md-8 col-md-offset-1">
                     <div class = "panel panel-default">
                         <div class = "panel-heading">
-                            Reservations Currently Selected:
+                            <b><?php echo $roomname ?></b> Reservations Currently Selected: <b class = "pull-right"><?php echo date("M.d, Y"); ?></b>
 
                         </div>
                         <div class = "panel-body">
