@@ -901,105 +901,122 @@ $defaultTab = 1;
                     $("#div-college").hide();
 
                     $(".pager li.nextStep_<?php echo $stepNo ?> a").click(function () {
-
-
-                        //console.log($("#email").val().trim() + "@" + $("#select-email-extension").val());
-                        $("#email_message").css("visibility", "visible");
-                        $.ajax({
-                            url: '<?php echo base_url('submitReservation') ?>',
-                            type: 'POST',
-                            dataType: 'json',
-                            /*data: {
-                                idnumber: $("#id-number").val(),
-                                typeid: $("#select-type").val(),
-                                collegeid: $("#select-college").val(),
-                                email: $("#email").val().trim() + "@" + $("#select-email-extension").val(),
-                                date: $("#text-date").val(),
-                                slots: slotsPicked,
-                                departmentid: currentDeptID
-                            }*/
-                            data: {
-                                userid: $("#id-number").val(),
-                                password: $("#password").val(),
-                                slots: slotsPicked,
-                                departmentid: currentDeptID,
-                            }
-                        })
-                            .done(function(result) {
-                                console.log("done");
-                                console.log(result);
-                                if (result['status'] == "fail") {
-                                    $("#email_message").css("visibility", "hidden");
-                                    var errors = result['errors'];
-                                    console.log(errors);
-                                    if (errors.length > 0) {
-                                        if (errors[0] == "UserID") {
-                                            toastr.error("ID Number isn't valid!", "Oops!")
-                                        }
-                                        else if (errors[0] == "Password") {
-                                            toastr.error("Your password is incorrect!", "Oops!");
-                                        }
-
-                                        /*toast = "You have an error in the following input";
-
-                                        console.log ("NUMBER OF ERRORS: " + errors.length);
-
-                                        if (errors.length > 1) {
-                                            toast = toast + "s: ";
-                                        }
-                                        else {
-                                            toast = toast + ": ";
-                                        }
-
-                                        for (i = 0; i < errors.length - 1; i++) {
-                                            toast = toast + errors[i] + ", ";
-                                        }
-                                        toast = toast + errors[errors.length - 1];
-                                        toastr.error(toast, "Submission failed");*/
-                                    }
-                                    if (result['email_status'] == "fail") {
-                                        toastr.error("An error occurred while trying to reserve. Please try again.", "Submission failed");
-                                    }
-                                    if (result['numReservations_status'] == "fail") {
-                                        var toast = "You've already reserved " + result['reserved'] +
-                                            " slots! You can only have a maximum of " + maxNumberOfSlots + ".";
-                                        toastr.error(toast, "Too many reservations");
-                                    }
-                                    if (result['reservation_status'] == 'fail') {
-                                        var toast = "Sorry, but a slot you picked was already selected: ";
-                                        var reservations = result['sameReservations'];
-                                        for (var i = 0; i < reservations.length - 1; i++) {
-                                            var message = "[" + reservations[i]['date'] + " " +
-                                                reservations[i]['startTime'] + " - " +
-                                                reservations[i]['endTime'] + "], ";
-                                            toast = toast + message;
-                                        }
-
-                                        var message = "[" + reservations[reservations.length - 1]['date'] + " " +
-                                            reservations[reservations.length - 1]['startTime'] + " - " +
-                                            reservations[reservations.length - 1]['endTime'] + "]";
-                                        toast = toast + message;
-
-                                        toastr.error(toast, "Oops!");
-                                    }
-                                }
-                                else {
-
-                                    nextStep(<?php echo $stepNo ?>);
-                                }
-
-                            })
-                            .fail(function() {
-                                console.log("Submission: fail");
-                                toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
-                            })
-                            .always(function() {
-                                console.log("complete");
-                                $("#email_message").css("visibility", "hidden");
-                            });
+                        attemptNextStep();
                     });
 
+                    $("#id-number").on("keypress", function(e) {
+                        if (e.keyCode == 13) {
+                            attemptNextStep();
+                        }
+                    });
+
+                    $("#password").on("keypress", function(e) {
+                        if (e.keyCode == 13) {
+                            attemptNextStep();
+                        }
+                    });
+
+
                 });
+
+                function attemptNextStep () {
+
+
+                    //console.log($("#email").val().trim() + "@" + $("#select-email-extension").val());
+                    $("#email_message").css("visibility", "visible");
+                    $.ajax({
+                        url: '<?php echo base_url('submitReservation') ?>',
+                        type: 'POST',
+                        dataType: 'json',
+                        /*data: {
+                         idnumber: $("#id-number").val(),
+                         typeid: $("#select-type").val(),
+                         collegeid: $("#select-college").val(),
+                         email: $("#email").val().trim() + "@" + $("#select-email-extension").val(),
+                         date: $("#text-date").val(),
+                         slots: slotsPicked,
+                         departmentid: currentDeptID
+                         }*/
+                        data: {
+                            userid: $("#id-number").val(),
+                            password: $("#password").val(),
+                            slots: slotsPicked,
+                            departmentid: currentDeptID,
+                        }
+                    })
+                        .done(function(result) {
+                            console.log("done");
+                            console.log(result);
+                            if (result['status'] == "fail") {
+                                $("#email_message").css("visibility", "hidden");
+                                var errors = result['errors'];
+                                console.log(errors);
+                                if (errors.length > 0) {
+                                    if (errors[0] == "UserID") {
+                                        toastr.error("ID Number isn't valid!", "Oops!")
+                                    }
+                                    else if (errors[0] == "Password") {
+                                        toastr.error("Your password is incorrect!", "Oops!");
+                                    }
+
+                                    /*toast = "You have an error in the following input";
+
+                                     console.log ("NUMBER OF ERRORS: " + errors.length);
+
+                                     if (errors.length > 1) {
+                                     toast = toast + "s: ";
+                                     }
+                                     else {
+                                     toast = toast + ": ";
+                                     }
+
+                                     for (i = 0; i < errors.length - 1; i++) {
+                                     toast = toast + errors[i] + ", ";
+                                     }
+                                     toast = toast + errors[errors.length - 1];
+                                     toastr.error(toast, "Submission failed");*/
+                                }
+                                if (result['email_status'] == "fail") {
+                                    toastr.error("An error occurred while trying to reserve. Please try again.", "Submission failed");
+                                }
+                                if (result['numReservations_status'] == "fail") {
+                                    var toast = "You've already reserved " + result['reserved'] +
+                                        " slots! You can only have a maximum of " + maxNumberOfSlots + ".";
+                                    toastr.error(toast, "Too many reservations");
+                                }
+                                if (result['reservation_status'] == 'fail') {
+                                    var toast = "Sorry, but a slot you picked was already selected: ";
+                                    var reservations = result['sameReservations'];
+                                    for (var i = 0; i < reservations.length - 1; i++) {
+                                        var message = "[" + reservations[i]['date'] + " " +
+                                            reservations[i]['startTime'] + " - " +
+                                            reservations[i]['endTime'] + "], ";
+                                        toast = toast + message;
+                                    }
+
+                                    var message = "[" + reservations[reservations.length - 1]['date'] + " " +
+                                        reservations[reservations.length - 1]['startTime'] + " - " +
+                                        reservations[reservations.length - 1]['endTime'] + "]";
+                                    toast = toast + message;
+
+                                    toastr.error(toast, "Oops!");
+                                }
+                            }
+                            else {
+
+                                nextStep(<?php echo $stepNo ?>);
+                            }
+
+                        })
+                        .fail(function() {
+                            console.log("Submission: fail");
+                            toastr.error("Failed to send email. Please check your connection and try again.", "Submission failed");
+                        })
+                        .always(function() {
+                            console.log("complete");
+                            $("#email_message").css("visibility", "hidden");
+                        });
+                }
 
 
                 function hunt(){
