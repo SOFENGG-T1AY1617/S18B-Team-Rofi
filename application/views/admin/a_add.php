@@ -563,12 +563,7 @@ include 'a_navbar.php';
                         <form>
                             <li class="list-group-item">
                                 <table class="table table-hover" id="<?=$row->buildingid?>table">
-                                    <thead>
-                                    <tr>
-                                        <th><?=$row->type?> Name</th>
-                                        <th>Number of PCs</th>
-                                    </tr>
-                                    </thead>
+  
                                     <tbody>
                                     <?php $i=0; ?>
                                     <?php foreach($rooms as $room):?>
@@ -583,6 +578,14 @@ include 'a_navbar.php';
                                     <?php endforeach;?>
                                     </tbody>
 
+                                    <thead>
+                                    <tr>
+                                        <?php if($i != 0):?>
+                                            <th><?=$row->type?> Name</th>
+                                            <th>Number of PCs</th>
+                                        <?php endif;?>
+                                    </tr>
+                                    </thead>
 
                                 </table>
 
