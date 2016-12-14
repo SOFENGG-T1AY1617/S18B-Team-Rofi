@@ -118,6 +118,32 @@ include 'a_navbar.php';
 
         updateDisplayTimeInModal();
 
+        var enable_button = $("#enable-modal-btn");
+        var disable_button = $("#disable-modal-btn");
+        var enableAll_button = $("#enableAll-all-modal-btn");
+        var disableAll_button = $("#disable-all-modal-btn");
+
+        enable_button.click(function() {
+            if ($(this).hasClass("disabled"))
+                toastr.info("You must select slots before performing actions", "Hold On!");
+        });
+
+        disable_button.click(function() {
+            if ($(this).hasClass("disabled"))
+                toastr.info("You must select slots before performing actions", "Hold On!");
+        });
+
+        enableAll_button.click(function() {
+            if ($(this).hasClass("disabled"))
+                toastr.info("You must view a room with slots before performing this action", "Hold On!");
+        });
+
+        disableAll_button.click(function() {
+            if ($(this).hasClass("disabled"))
+                toastr.info("You must view a room with slots before performing this action", "Hold On!");
+        });
+
+
     });
 
     function disableSlots (slotArray, hour, minute) {
@@ -168,8 +194,6 @@ include 'a_navbar.php';
                             slotArray[existIndex] = currentSlot.attr("id");
 
                             disableSlot(currentSlot);
-
-                            console.log(slotArray);
                         }
 
                         if (isLastChunk) {
@@ -194,6 +218,11 @@ include 'a_navbar.php';
                     .always(function () {
 
                         console.log("complete");
+
+                        syncArrayWithAllSlotsArray(slotArray);
+                        syncArrayWithSlotsPickedArray(slotArray);
+
+                        updateAllButtons();
 
                     });
             }
@@ -273,9 +302,60 @@ include 'a_navbar.php';
                     .always(function () {
 
                         console.log("complete");
+                        syncArrayWithAllSlotsArray(slotArray);
+                        syncArrayWithSlotsPickedArray(slotArray);
+
+                        updateAllButtons();
 
                     });
             }
+
+        }
+    }
+
+    function syncArrayWithAllSlotsArray (slotArray) {
+        for (var i = 0; i < slotArray.length; i++) {
+
+            var splitID = slotArray[i].split("_");
+
+            var comparisonKey = splitID[0] + "_" + splitID[1] + "_" + splitID[2] + "_" + splitID[3];
+
+            for (var j = 0; j < allSlotsDisplayed.length; j++) {
+
+                var splitTargetID = allSlotsDisplayed[j].split("_");
+
+                var targetKey = splitTargetID[0] + "_" + splitTargetID[1] + "_" + splitTargetID[2] + "_" + splitTargetID[3];
+
+                if (targetKey == comparisonKey) {
+                    allSlotsDisplayed[j] = slotArray[i];
+                    break;
+                }
+            }
+
+        }
+
+    }
+
+    function syncArrayWithSlotsPickedArray (slotArray) {
+        for (var i = 0; i < slotArray.length; i++) {
+
+            var splitID = slotArray[i].split("_");
+
+            var comparisonKey = splitID[0] + "_" + splitID[1] + "_" + splitID[2] + "_" + splitID[3];
+
+            for (var j = 0; j < slotsPicked.length; j++) {
+
+                var splitTargetID = slotsPicked[j].split("_");
+
+                var targetKey = splitTargetID[0] + "_" + splitTargetID[1] + "_" + splitTargetID[2] + "_" + splitTargetID[3];
+
+                if (targetKey == comparisonKey) {
+                    slotsPicked[j] = slotArray[i];
+                    break;
+                }
+
+            }
+
         }
     }
 
@@ -285,6 +365,64 @@ include 'a_navbar.php';
         currentTimeContainer.empty();
 
         currentTimeContainer.append(dateSelected);
+    }
+
+    function updateButton (button, enable) {
+
+        if (!enable) {
+            button.addClass("disabled");
+            button.attr("data-toggle", "");
+        } else {
+            button.removeClass("disabled");
+            button.attr("data-toggle", "modal");
+        }
+
+    }
+
+    function updateAllButtons() {
+        var enable_button = $("#enable-modal-btn");
+        var disable_button = $("#disable-modal-btn");
+        var enableAll_button = $("#enableAll-all-modal-btn");
+        var disableAll_button = $("#disable-all-modal-btn");
+
+        updateButton(enable_button, hasDisabledSlot(slotsPicked));
+        updateButton(disable_button, hasEnabledSlot(slotsPicked));
+        updateButton(enableAll_button, hasDisabledSlot(allSlotsDisplayed));
+        updateButton(disableAll_button, hasEnabledSlot(allSlotsDisplayed));
+    }
+
+    function hasDisabledSlot(slotArray) {
+
+        for (var i = 0; i < slotArray.length; i++) {
+            var currentSlot = $("[id='" + slotArray[i] + "']");
+
+            if (isDisabled(currentSlot))
+                return true;
+        }
+
+        return false;
+
+    }
+
+    function hasEnabledSlot(slotArray) {
+
+        for (var i = 0; i < slotArray.length; i++) {
+            var currentSlot = $("[id='" + slotArray[i] + "']");
+
+            if (isEnabled(currentSlot))
+                return true;
+        }
+
+        return false;
+
+    }
+
+    function isDisabled(slot) {
+        return slot.hasClass("disabled");
+    }
+
+    function isEnabled(slot) {
+        return slot.hasClass("enabled");
     }
 
     function highlightHorizontal (cell) {
@@ -356,6 +494,8 @@ include 'a_navbar.php';
             slotsPicked.push(slot.attr("id"));
 
         slot.addClass ('selected');
+
+        updateAllButtons();
     }
 
     function selectSlotX (slot) {
@@ -366,6 +506,8 @@ include 'a_navbar.php';
 
         if (slot.hasClass('selected'))
             slot.removeClass('selected');
+
+        updateAllButtons();
     }
 
     function selectSlotY (slot) {
@@ -376,6 +518,8 @@ include 'a_navbar.php';
 
         if (slot.hasClass('selected'))
             slot.removeClass('selected');
+
+        updateAllButtons();
     }
 
     function deselectSlot (slot) {
@@ -405,6 +549,8 @@ include 'a_navbar.php';
 
         if ($(removeUseSelectorVert).hasClass('used'))
             $(removeUseSelectorVert).removeClass('used');
+
+        updateAllButtons();
     }
 
     function deselectSlotX (slot) {
@@ -420,6 +566,8 @@ include 'a_navbar.php';
             if (slot.hasClass('selectedX'))
                 slot.removeClass('selectedX');
         }
+
+        updateAllButtons();
     }
 
     function deselectSlotY (slot) {
@@ -434,6 +582,8 @@ include 'a_navbar.php';
             if (slot.hasClass('selectedY'))
                 slot.removeClass('selectedY');
         }
+
+        updateAllButtons();
     }
 
     function toggleSlotsVertical (cell) {
@@ -875,6 +1025,8 @@ include 'a_navbar.php';
                 }
 
             }
+
+            updateAllButtons();
         }
     }
 </script>
@@ -1075,11 +1227,11 @@ include 'a_navbar.php';
                 <div class = "panel">
                     <div class = "panel-body">
                         <div class = "row opnSlotsBtn-container">
-                            <button id = "enableAll-all-modal-btn" class = "btn btn-success btn-block" data-toggle = "modal" data-target = "#enableAllModal">Enable all slots in room</button>
+                            <button id = "enableAll-all-modal-btn" class = "btn btn-success btn-block disabled" data-toggle = "" data-target = "#enableAllModal">Enable all slots in room</button>
                         </div>
 
                         <div class = "row clsSlotsBtn-container">
-                            <button id = "disable-all-modal-btn" class = "btn btn-danger btn-block" data-toggle = "modal" data-target = "#disableAllModal">Disable all slots in room</button>
+                            <button id = "disable-all-modal-btn" class = "btn btn-danger btn-block disabled" data-toggle = "" data-target = "#disableAllModal">Disable all slots in room</button>
                         </div>
                     </div>
                 </div>
@@ -1101,8 +1253,8 @@ include 'a_navbar.php';
         <div class = "row">
             <div class = "col-md-10 col-md-offset-1">
                 <div class = "col-md-6 col-md-offset-6 text-right">
-                    <button id = "enable-modal-btn" class = "btn btn-success" data-toggle = "modal" data-target = "#enableModal">Enable slot(s)</button>
-                    <button id = "disable-modal-btn" class = "btn btn-danger" data-toggle = "modal" data-target = "#disableModal">Disable slot(s)</button>
+                    <button id = "enable-modal-btn" class = "btn btn-success disabled" data-toggle = "" data-target = "#enableModal">Enable slot(s)</button>
+                    <button id = "disable-modal-btn" class = "btn btn-danger disabled" data-toggle = "" data-target = "#disableModal">Disable slot(s)</button>
                 </div>
             </div>
         </div>
