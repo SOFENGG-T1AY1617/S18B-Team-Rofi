@@ -407,9 +407,10 @@ include 'a_navbar.php';
             }
         }
 
+        enable_button.unbind();
+        disable_button.unbind();
+
         if (slotsPicked.length == 0) {
-            enable_button.unbind();
-            disable_button.unbind();
 
             if (enable_button.hasClass("disabled")) {
                 enable_button.click(function () {
