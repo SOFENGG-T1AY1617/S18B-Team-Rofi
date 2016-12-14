@@ -389,6 +389,22 @@ include 'a_navbar.php';
         updateButton(disable_button, hasEnabledSlot(slotsPicked));
         updateButton(enableAll_button, hasDisabledSlot(allSlotsDisplayed));
         updateButton(disableAll_button, hasEnabledSlot(allSlotsDisplayed));
+
+        if (allSlotsDisplayed.length != 0) {
+            if (enableAll_button.hasClass("disabled")) {
+                enableAll_button.unbind();
+                enableAll_button.click(function () {
+                    toastr.info ("All slots are currently enabled. There is no use in enabling them all.", "Hold on!");
+                });
+            }
+
+            if (disableAll_button.hasClass("disabled")) {
+                disableAll_button.unbind();
+                disableAll_button.click(function () {
+                    toastr.info ("All slots are currently disabled. There is no use in disabling them all.", "Hold on!");
+                });
+            }
+        }
     }
 
     function hasDisabledSlot(slotArray) {
