@@ -979,6 +979,9 @@ $defaultTab = 1;
                                 if (result['email_status'] == "fail") {
                                     toastr.error("An error occurred while trying to reserve. Please try again.", "Submission failed");
                                 }
+                                if (result['relativeReservations'] == "fail") {
+                                    toastr.error("You already have reservations with a similar time. Try changing some of your reservations.", "Oops!");
+                                }
                                 if (result['numReservations_status'] == "fail") {
                                     var toast = "You've already reserved " + result['reserved'] +
                                         " slots! You can only have a maximum of " + maxNumberOfSlots + ".";

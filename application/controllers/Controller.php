@@ -164,11 +164,21 @@ class Controller extends CI_Controller {
         );
 
         $errors = $this->validateInput($reservationData);
+
         if (count($errors) > 0) {
             $data = array(
                 'status' => 'fail',
                 'errors' => $errors,
             );
+        }
+        else if ($this->hasRelativeReservations($reservationData['userid'], $reservationData['slots'])) {
+
+            $data = array(
+                'status' => 'fail',
+                'errors' => $errors,
+                'relativeReservations' => 'fail'
+            );
+
         }
         else if ((count($reservationData['slots']) +
             ($numReservations = $this->numReservations($reservationData['userid']))) > $this->getMaxReservations($reservationData['userid'], $reservationData['departmentid'])) {
@@ -413,5 +423,20 @@ class Controller extends CI_Controller {
 
             return intval($defaultLimit);
         }
+    }
+
+    private function hasRelativeReservations($studentid, $slots) {
+
+        $parsedSlots = $this->parseSlots($slots);
+
+        foreach ($parsedSlots as $slot) {
+
+            if ($this->student->hasRelativeReservations($studentid, $slot['date'], $slot['startTime']))
+                return true;
+
+        }
+
+        return false;
+
     }
 }

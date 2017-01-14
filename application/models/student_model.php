@@ -216,6 +216,18 @@ class Student_Model extends CI_Model
         return $this->db->query($sql, array($date, $id))->result();
     }
 
+    function hasRelativeReservations($userid, $date, $start) {
+
+        $sql = "SELECT *
+                FROM reservations
+                WHERE userid = ? AND date = ? AND start_restime = ?";
+
+        $result = $this->db->query($sql, array($userid, $date, $start))->result();
+
+        return count($result) > 0;
+
+    }
+
     function queryOngoingReservationsByStudentID($id) {
         $sql = "SELECT * 
                 FROM reservations 
